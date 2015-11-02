@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+  <xs:element name="RESULT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="GeneratedBy"/>
+        <xs:element ref="PARAMS"/>
+        <xs:element ref="CALCULATED"/>
+        <xs:element maxOccurs="unbounded" ref="ANALYSIS_MODIFIER"/>
+        <xs:element maxOccurs="unbounded" ref="PRODUCT"/>
+        <xs:element maxOccurs="unbounded" ref="PEPTIDE"/>
+        <xs:element maxOccurs="unbounded" ref="QUERY_MASS"/>
+        <xs:element maxOccurs="unbounded" ref="HIT"/>
+      </xs:sequence>
+      <xs:attribute name="ENTRIES_SEARCHED" use="required" type="xs:integer"/>
+      <xs:attribute name="ID" use="required" type="xs:NCName"/>
+      <xs:attribute name="TIME_CALCULATED" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GeneratedBy">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="CommandLine"/>
+      </xs:sequence>
+      <xs:attribute name="CompileDate" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="CompileTime" use="required" type="xs:NMTOKEN"/>
+      <xs:attribute name="Program" use="required" type="xs:NCName"/>
+      <xs:attribute name="Version" use="required" type="xs:NMTOKEN"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CommandLine" type="xs:string"/>
+  <xs:element name="PARAMS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="PARAM"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PARAM">
+    <xs:complexType>
+      <xs:attribute name="NAME" use="required" type="xs:NCName"/>
+      <xs:attribute name="VALUE" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CALCULATED">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="OUTPUT"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OUTPUT">
+    <xs:complexType>
+      <xs:attribute name="NAME" use="required" type="xs:NCName"/>
+      <xs:attribute name="VALUE" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ANALYSIS_MODIFIER">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="MODIFIER"/>
+      </xs:sequence>
+      <xs:attribute name="ENRICHED" use="required" type="xs:NCName"/>
+      <xs:attribute name="STATUS" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MODIFIER">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="MODIFIES"/>
+      </xs:sequence>
+      <xs:attribute name="MCAT_REAGENT" use="required" type="xs:NCName"/>
+      <xs:attribute name="NAME" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MODIFIES">
+    <xs:complexType>
+      <xs:attribute name="APPLIES_TO" use="required" type="xs:NCName"/>
+      <xs:attribute name="DELTA_MASS" use="required" type="xs:decimal"/>
+      <xs:attribute name="TYPE" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PRODUCT">
+    <xs:complexType>
+      <xs:attribute name="BY_INDEX" use="required" type="xs:integer"/>
+      <xs:attribute name="BY_TYPE" use="required" type="xs:NCName"/>
+      <xs:attribute name="CHARGE" use="required" type="xs:decimal"/>
+      <xs:attribute name="DB_MHPLUS" use="required" type="xs:decimal"/>
+      <xs:attribute name="DRIFT" type="xs:decimal"/>
+      <xs:attribute name="DRIFT_ERROR" type="xs:decimal"/>
+      <xs:attribute name="HE_EMRT_ID" use="required" type="xs:integer"/>
+      <xs:attribute name="ID" use="required" type="xs:integer"/>
+      <xs:attribute name="INTENSITY" use="required" type="xs:decimal"/>
+      <xs:attribute name="LOSS_TYPE" type="xs:NMTOKEN"/>
+      <xs:attribute name="MASS" use="required" type="xs:decimal"/>
+      <xs:attribute name="MASS_ERROR" use="required" type="xs:decimal"/>
+      <xs:attribute name="MASS_ERROR_PPM" use="required" type="xs:decimal"/>
+      <xs:attribute name="RETENTION_TIME" use="required" type="xs:decimal"/>
+      <xs:attribute name="RT_ERROR" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PEPTIDE">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="MATCH_MODIFIER"/>
+      </xs:sequence>
+      <xs:attribute name="ID" use="required" type="xs:integer"/>
+      <xs:attribute name="MASS" use="required" type="xs:decimal"/>
+      <xs:attribute name="PROT_ID" use="required" type="xs:integer"/>
+      <xs:attribute name="QUERY_MASS_ID" use="required" type="xs:integer"/>
+      <xs:attribute name="SEQUENCE" use="required" type="xs:NCName"/>
+      <xs:attribute name="TYPE" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MATCH_MODIFIER">
+    <xs:complexType>
+      <xs:attribute name="NAME" use="required"/>
+      <xs:attribute name="POS" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="QUERY_MASS">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="MASS_MATCH"/>
+      </xs:sequence>
+      <xs:attribute name="CHARGE" use="required" type="xs:decimal"/>
+      <xs:attribute name="DRIFT" type="xs:decimal"/>
+      <xs:attribute name="ID" use="required" type="xs:integer"/>
+      <xs:attribute name="INTENSITY" use="required" type="xs:decimal"/>
+      <xs:attribute name="LE_ID" use="required" type="xs:integer"/>
+      <xs:attribute name="MASS" use="required" type="xs:decimal"/>
+      <xs:attribute name="RETENTION_TIME" use="required" type="xs:decimal"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="MASS_MATCH">
+    <xs:complexType>
+      <xs:attribute name="AUTO_QC" use="required" type="xs:integer"/>
+      <xs:attribute name="CALC_INTEN" type="xs:decimal"/>
+      <xs:attribute name="CALC_MASS" type="xs:decimal"/>
+      <xs:attribute name="CURATED" use="required" type="xs:integer"/>
+      <xs:attribute name="ID" use="required" type="xs:integer"/>
+      <xs:attribute name="MASS_ERROR" use="required" type="xs:decimal"/>
+      <xs:attribute name="MASS_ERROR_PPM" use="required" type="xs:decimal"/>
+      <xs:attribute name="QUERY_ID" use="required" type="xs:NCName"/>
+      <xs:attribute name="SCORE" use="required" type="xs:decimal"/>
+      <xs:attribute name="TYPE" use="required" type="xs:NCName"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="HIT">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element maxOccurs="unbounded" ref="PROTEIN"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="PROTEIN">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="ENTRY"/>
+        <xs:element ref="ACCESSION"/>
+        <xs:element ref="DESCRIPTION"/>
+        <xs:element ref="MW"/>
+        <xs:element ref="AQ_FMOLES"/>
+        <xs:element ref="AQ_NGRAMS"/>
+        <xs:element ref="PI"/>
+        <xs:element ref="SEQUENCE"/>
+        <xs:element maxOccurs="unbounded" ref="SEQUENCE_MATCH"/>
+      </xs:sequence>
+      <xs:attribute name="AUTO_QC" use="required" type="xs:integer"/>
+      <xs:attribute name="CONFIDENCE_LEVEL" use="required"/>
+      <xs:attribute name="COVERAGE" use="required" type="xs:decimal"/>
+      <xs:attribute name="CURATED" use="required" type="xs:integer"/>
+      <xs:attribute name="FRAG_MATCHES" use="required" type="xs:integer"/>
+      <xs:attribute name="ID" use="required" type="xs:integer"/>
+      <xs:attribute name="PEP_MATCHES" use="required" type="xs:integer"/>
+      <xs:attribute name="PEP_TOTAL" use="required" type="xs:integer"/>
+      <xs:attribute name="RMS_MASS_ERROR_FRAG" use="required" type="xs:decimal"/>
+      <xs:attribute name="RMS_MASS_ERROR_PREC" use="required" type="xs:decimal"/>
+      <xs:attribute name="RMS_RT_ERROR_FRAG" use="required" type="xs:decimal"/>
+      <xs:attribute name="SCORE" use="required" type="xs:decimal"/>
+      <xs:attribute name="VAR_MOD_MATCHES" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ENTRY" type="xs:NMTOKEN"/>
+  <xs:element name="ACCESSION" type="xs:NCName"/>
+  <xs:element name="DESCRIPTION" type="xs:string"/>
+  <xs:element name="MW" type="xs:decimal"/>
+  <xs:element name="AQ_FMOLES" type="xs:decimal"/>
+  <xs:element name="AQ_NGRAMS" type="xs:decimal"/>
+  <xs:element name="PI" type="xs:decimal"/>
+  <xs:element name="SEQUENCE" type="xs:string"/>
+  <xs:element name="SEQUENCE_MATCH">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" ref="FRAGMENT_ION"/>
+      </xs:sequence>
+      <xs:attribute name="COVERAGE" use="required" type="xs:decimal"/>
+      <xs:attribute name="END" use="required" type="xs:integer"/>
+      <xs:attribute name="FRAG_STRING" use="required"/>
+      <xs:attribute name="ID" use="required" type="xs:integer"/>
+      <xs:attribute name="RMS_MASS_ERROR_PROD" use="required" type="xs:decimal"/>
+      <xs:attribute name="RMS_RT_ERROR_PROD" use="required" type="xs:decimal"/>
+      <xs:attribute name="START" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="FRAGMENT_ION">
+    <xs:complexType>
+      <xs:attribute name="IDS" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

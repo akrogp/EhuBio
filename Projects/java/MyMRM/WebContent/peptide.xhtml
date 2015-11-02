@@ -1,0 +1,49 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Peptide search</ui:define>
+		<ui:define name="content">			
+			<h:form>
+				<p:panelGrid columns="2">
+					<f:facet name="header">Search options</f:facet>
+					<h:outputText value="Peptide sequence" />
+					<h:inputText value="#{searchMB.peptideSequence}" />
+				</p:panelGrid>
+				<br/>
+				<p:commandButton value="Search" action="#{searchMB.searchPeptide(databaseMB)}" ajax="false"/>
+			</h:form>
+			<br/>
+			<h:form>
+				<p:dataTable value="#{searchMB.seqPeptides}" rowIndexVar="row" var="item" rendered="#{searchMB.peptideSequence != null}">
+					<f:facet name="header">Results</f:facet>
+					<p:column headerText="massSequence">
+						<h:outputText value="#{item.massSequence}"/>						
+					</p:column>
+					<p:column headerText="precursors">
+						<p:dataTable value="#{item.precursors}" var="pre">
+							<p:column headerText="m/z" style="text-align: right;">
+								<h:outputText value="#{pre.mz}">
+									<f:convertNumber pattern="0.00000"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="charge" style="text-align: center;">#{pre.charge}</p:column>
+							<p:column headerText="# evidences">
+								<p:panelGrid columns="2">
+									<h:outputText value="#{pre.experiments.size()}" />
+									<p:commandButton value="details ..." action="#{searchMB.showDetails(pre,databaseMB)}" ajax="false"/>
+								</p:panelGrid>							
+							</p:column>
+						</p:dataTable>				
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,43 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Home</ui:define>
+		<ui:define name="content">
+		<h:form>
+			<h3>Welcome to the <h:outputText value="#{homeBean.signature}"/> home page</h3><p:separator/>
+			
+			<p>This application aids proteomic laboratories designing targeted proteomics methods for their own equipment by using the data of their shotgun experiments.</p>
+			
+			<p>This website provides the following pages:
+			<p:dataTable value="#{homeBean.pages}" var="page">
+				<f:facet name="header">MyMRM website pages</f:facet>
+				<p:column width="130">
+					<f:facet name="header">Name</f:facet>
+					<h:commandLink value="#{page.name}" action="#{page.getAction()}">&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:commandLink>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Description</f:facet>
+					<h:outputText value="#{page.description}"/>
+				</p:column>
+			</p:dataTable></p>
+						
+			<p>This project has been developed in the context of the <a href="http://www.ehubio.es/" target="_blank">EhuBio</a>
+			collaboration. For further information please contact <a href="mailto:info@ehubio.es">info@ehubio.es</a>.</p>
+			
+			<p style="text-align:right">Site last updated: #{homeBean.lastUpdated}</p>
+			
+			<h3>Latest news</h3><p:separator/>
+			<p:dataList value="#{homeBean.news}" var="latest" itemType="circle">
+				#{latest.date} - #{latest.summary}
+			</p:dataList>
+		</h:form>			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

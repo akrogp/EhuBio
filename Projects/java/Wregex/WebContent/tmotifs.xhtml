@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Training Motifs</ui:define>
+		<ui:define name="content">
+			<h:form enctype="multipart/form-data">
+				<p:panelGrid columns="1" headerClass="cfg_header">
+					<f:facet name="header">Input motifs</f:facet>
+					<h:panelGroup>
+						<p:fileUpload fileUploadListener="#{trainingBean.upload}"
+	            			mode="advanced"     
+	            			sizeLimit="#{initParam['wregex.training']}"
+	            			multiple="false"
+	            			auto="true"  
+	            			label="Select fasta"
+	            			update="@all"
+	            			allowTypes="/(\.|\/)(te?xt|fasta)$/" />
+	            		<h:outputText value="#{trainingBean.fastaSummary}"/>
+            		</h:panelGroup>
+					<h:panelGroup>
+					<p:commandButton value="Refresh" actionListener="#{trainingBean.refresh}" ajax="false"/>
+					<h:outputText value="#{trainingBean.uploadError}" rendered="#{trainingBean.uploadError != null}" style="color:red"/>
+					<h:outputText value="#{trainingBean.trainingError}" rendered="#{trainingBean.uploadError == null and trainingBean.trainingError != null}" style="color:red"/>
+					<h:outputText value="#{trainingBean.inputSummary}" rendered="#{trainingBean.inputSummary != null and trainingBean.uploadError == null and trainingBean.trainingError == null}"/>
+					</h:panelGroup>
+					<p:commandButton value="Download motifs" actionListener="#{trainingBean.downloadInputMotifs}" ajax="false"/>
+				</p:panelGrid>
+				<br/>
+				<p:dataTable value="#{trainingBean.inputList}" var="item" rowIndexVar="row"
+					rendered="#{not empty trainingBean.inputList and trainingBean.trainingError == null}"
+					scrollable="true" scrollHeight="450" liveScroll="true" scrollRows="40">
+					<f:facet name="header">Input motifs - live scroll (scroll and wait for more results)</f:facet>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">#</f:facet>
+						<h:outputText value="#{row + 1}"/>
+					</p:column>
+					<p:column width="300">
+						<f:facet name="header">Entry</f:facet>
+						<h:outputText value="#{item.id}" />
+					</p:column>
+					<p:column width="60" style="text-align:center;">
+						<f:facet name="header">Begin</f:facet>
+						<p:inputText value="#{item.start}" styleClass="trn_pos" />
+					</p:column>
+					<p:column width="60" style="text-align:center;">
+						<f:facet name="header">End</f:facet>
+						<p:inputText value="#{item.end}" styleClass="trn_pos" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Motif</f:facet>
+						<h:outputText value="#{item.motif}" styleClass="trn_seq" />
+					</p:column>
+					<p:column width="70" style="text-align:center;">
+						<f:facet name="header">Weight</f:facet>
+						<p:inputText value="#{item.weight}" styleClass="trn_weight" />
+					</p:column>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">Matched</f:facet>
+						<h:outputText value="#{item.matches}" styleClass="trn_pos" />
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

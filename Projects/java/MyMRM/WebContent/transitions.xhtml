@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Search details</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:dataTable value="#{searchMB.precursor.experiments}" var="ex">
+					<f:facet name="header">
+						Details for precursor: m/z=<h:outputText value="#{searchMB.precursor.mz}">
+							<f:convertNumber pattern="0.00000"/>
+						</h:outputText>
+						charge=#{searchMB.precursor.charge}</f:facet>
+					<p:column headerText="experiment">
+						<p:commandButton value="#{ex.experiment.name}" action="#{filesMB.setExperiment(ex.experiment)}"/>
+					</p:column>
+					<p:column headerText="precursor scores">
+						<p:dataTable value="#{ex.scores}" var="score">
+							<p:column headerText="name">#{score.scoreType.name}</p:column>
+							<p:column headerText="value" style="text-align: right;">
+								<h:outputText value="#{score.value}">
+									<f:convertNumber pattern="0.00E0"/>
+								</h:outputText>
+							</p:column>
+						</p:dataTable>
+					</p:column>
+					<p:column headerText="retention time (s)" style="text-align: right;">
+						<h:outputText value="#{ex.precursor.rt}">
+							<f:convertNumber pattern="0.000"/>
+						</h:outputText>
+					</p:column>
+					<p:column headerText="fragment ions">
+						<p:dataTable value="#{ex.fragments}" var="frag">
+							<p:column headerText="m/z calc." style="text-align: right;">
+								<h:outputText value="#{frag.entity.mz}" style="color:red" rendered="#{frag.entity.mz lt ex.precursor.mz}">
+									<f:convertNumber pattern="0.00000"/>
+								</h:outputText>
+								<h:outputText value="#{frag.entity.mz}" style="color:green" rendered="#{frag.entity.mz ge ex.precursor.mz}">
+									<f:convertNumber pattern="0.00000"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="m/z exp." style="text-align: right;">
+								<h:outputText value="#{frag.mzExp}">
+									<f:convertNumber pattern="0.00000"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="intensity" style="text-align: right;">
+								<h:outputText value="#{frag.entity.intensity}">
+									<f:convertNumber pattern="0.0"/>
+								</h:outputText>								
+							</p:column>
+							<p:column headerText="m/z error" style="text-align: right;">
+								<h:outputText value="#{frag.entity.error}">
+									<f:convertNumber pattern="0.00000"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="m/z error (ppm)" style="text-align: right;">
+								<h:outputText value="#{frag.ppm}">
+									<f:convertNumber pattern="0.00"/>
+								</h:outputText>
+							</p:column>
+							<p:column headerText="ion type">#{frag.type}</p:column>
+						</p:dataTable>					
+					</p:column>
+				</p:dataTable>
+			</h:form>	
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

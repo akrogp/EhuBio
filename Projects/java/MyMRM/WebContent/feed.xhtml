@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Experiments</ui:define>
+		<ui:define name="content">			
+			<h:form>
+				<p:dataTable value="#{databaseMB.experiments}" rowIndexVar="row" var="item">
+					<f:facet name="header">Experiments</f:facet>
+					<p:column headerText="id">
+						<h:outputText value="#{item.entity.id}"/>						
+					</p:column>
+					<p:column headerText="name">
+						<h:outputText value="#{item.entity.name}"/>						
+					</p:column>
+					<p:column headerText="contact">
+						<h:outputText value="#{item.entity.contact}"/>						
+					</p:column>
+					<p:column headerText="instrument">
+						<h:outputText value="#{item.entity.instrumentBean.name}"/>						
+					</p:column>
+					<p:column headerText="ionization">
+						<h:outputText value="#{item.entity.ionizationTypeBean.name}"/>						
+					</p:column>
+					<p:column headerText="fragmentation">
+						<h:outputText value="#{item.entity.fragmentationTypeBean.name}"/>						
+					</p:column>
+					<p:column headerText="chromatography">
+						<h:outputText value="#{item.entity.chromatographyBean.name}"/>						
+					</p:column>
+					<p:column headerText="description">
+						<h:outputText value="#{item.entity.description}"/>						
+					</p:column>
+					<p:column headerText="data">						
+						<p:commandButton value="details ..." rendered="#{item.feed == null}" action="#{filesMB.setExperiment(item.entity)}" ajax="false"/>
+						<h:outputText id="status" value="#{item.feed.status}" rendered="#{item.feed != null}"/>							
+					</p:column>					
+					<p:column headerText="action" style="text-align: center">
+						<h:commandLink actionListener="#{databaseMB.removeExperiment(item)}">
+							<h:graphicImage name="images/remove.png"/>
+						</h:commandLink>
+					</p:column>
+				</p:dataTable>
+				<p:poll interval="1" update="@form"/>
+			</h:form>
+			<br />
+			<h3>Upload a new shotgun experiment:</h3>
+			<h:form enctype="multipart/form-data">
+				<p:panelGrid columns="2">
+					<p:panelGrid columns="2">
+						<f:facet name="header">Experiment data</f:facet>
+						<h:outputText value="Input files:" />
+						<h:panelGroup>
+							<p:fileUpload
+								fileUploadListener="#{experimentMB.uploadFile}"
+								allowTypes="/\.(mzid(\.gz)?|msf)$/" multiple="true" auto="false"
+								mode="advanced" update="@all"/>
+							<h:outputText value="#{experimentMB.files}"/>
+						</h:panelGroup>
+						<h:outputText value="Name:" />
+						<h:panelGroup>					
+							<h:inputText id="name" value="#{experimentMB.entity.name}" required="true"/>
+							<h:message for="name" style="color:red"/>
+						</h:panelGroup>
+						<h:outputText value="Contact:" />
+						<h:inputText value="#{experimentMB.entity.contact}"/>
+						<h:outputText value="Description:" />
+						<h:inputText value="#{experimentMB.entity.description}"/>
+						<h:outputText value="Instrument:" />
+						<p:selectOneMenu value="#{experimentMB.instrument}">
+							<f:selectItems value="#{databaseMB.instruments}" var="inst" itemLabel="#{inst.name}" itemValue="#{inst.id}"/>					
+						</p:selectOneMenu>
+						<h:outputText value="Ionization:" />
+						<p:selectOneMenu value="#{experimentMB.ionization}">
+							<f:selectItems value="#{databaseMB.ionizationTypes}" var="ion" itemLabel="#{ion.name}" itemValue="#{ion.id}"/>					
+						</p:selectOneMenu>
+						<h:outputText value="Fragmentation:" />
+						<p:selectOneMenu value="#{experimentMB.fragmentation}">
+							<f:selectItems value="#{databaseMB.fragmentationTypes}" var="frag" itemLabel="#{frag.name}" itemValue="#{frag.id}"/>					
+						</p:selectOneMenu>
+						<h:outputText value="Chromatography:" />
+						<p:selectOneMenu value="#{experimentMB.chromatography}">
+							<f:selectItems value="#{databaseMB.chromatographies}" var="chr" itemLabel="#{chr.name}" itemValue="#{chr.id}"/>					
+						</p:selectOneMenu>																
+					</p:panelGrid>
+					<p:panelGrid columns="2">
+						<f:facet name="header">Filtering options</f:facet>
+						<h:outputText value="Decoy regex:" />
+						<h:inputText value="#{experimentMB.cfg.decoyRegex}"/>
+						<h:outputText value="PSM score:" />
+						<p:selectOneMenu value="#{experimentMB.cfg.psmScore}">
+							<f:selectItems value="#{databaseMB.scoreTypes}" var="score" itemLabel="#{score}" itemValue="#{score}"/>
+							<p:ajax event="change" update="@form" />
+						</p:selectOneMenu>
+						<h:outputText value="PSM rank threshold:" />
+						<h:inputText value="#{experimentMB.cfg.psmRankThreshold}" />
+						<h:outputText value="Best PSM per peptide:" />
+						<p:selectBooleanCheckbox itemLabel="Enabled" value="#{experimentMB.cfg.bestPsmPerPeptide}"/>
+						<h:outputText value="PSM-level FDR"/>
+						<h:inputText value="#{experimentMB.cfg.psmFdr}" />
+						<h:outputText value="Minimum peptide length" />
+						<h:inputText value="#{experimentMB.cfg.minPeptideLength}" />
+						<h:outputText value="Peptide-level FDR" />
+						<h:inputText value="#{experimentMB.cfg.peptideFdr}" />
+						<h:outputText value="MSF peptide confidence:" rendered="#{experimentMB.usingMsf}"/>
+						<p:selectOneMenu value="#{experimentMB.msfConfidence}" rendered="#{experimentMB.usingMsf}">
+							<f:selectItems value="#{databaseMB.msfConfidences}" var="conf" itemLabel="#{conf}" itemValue="#{conf}"/>					
+						</p:selectOneMenu>
+						<h:outputText value="Protein-level FDR" />
+						<h:inputText value="#{experimentMB.cfg.proteinFdr}" />
+						<h:outputText value="Protein group-level FDR" />
+						<h:inputText value="#{experimentMB.cfg.groupFdr}" />						
+						<h:outputText value="Minimum peptide confidence:" />
+						<p:selectOneMenu value="#{experimentMB.peptideConfidence}">
+							<f:selectItems value="#{databaseMB.peptideConfidences}" var="conf" itemLabel="#{conf}" itemValue="#{conf}"/>					
+						</p:selectOneMenu>
+					</p:panelGrid>
+				</p:panelGrid>
+				<br />
+				<p:commandButton value="Submit" actionListener="#{experimentMB.feed()}" ajax="false" />
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

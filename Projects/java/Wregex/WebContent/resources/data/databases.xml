@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+<databases>
+    <database>
+        <name>Custom fasta file</name>
+        <type>upload</type>
+    </database>
+    <database>
+        <name>ELM</name>
+        <type>elm</type>
+        <path>/media/data/Sequences/ELM/current/elm_classes.tsv</path>
+    </database>
+    <database>
+        <name>COSMIC</name>
+        <type>cosmic</type>
+        <path>/media/data/Sequences/Cosmic/current/CosmicMutantExport.tsv.gz</path>
+        <versionFile>/media/data/Sequences/Cosmic/current/version.txt</versionFile>
+    </database>
+<!--     <database> -->
+<!--         <name>dbPTM</name> -->
+<!--         <type>dbptm</type> -->
+<!--         <path>/media/data/Sequences/dbPTM/dbPTM3.txt</path> -->
+<!--         <version>3.0</version> -->
+<!--     </database> -->
+    <database>
+        <name>Wregex Cache</name>
+        <type>wregex</type>
+        <path>/media/data/Sequences/Wregex</path>
+    </database>
+    <database>
+        <name>UniProtKB/Swiss-Prot Human Proteome</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/UniProt/current/SP_HUMAN.fasta.gz</path>
+        <versionFile>/media/data/Sequences/UniProt/current/version.txt</versionFile>
+    </database>
+<!--     <database> -->
+<!--         <name>Proteins of Cancer Genes</name> -->
+<!--         <type>fasta</type> -->
+<!--         <path>/media/data/Sequences/Fasta/nature12912.fasta</path> -->
+<!--         <versionFile>/media/data/Sequences/Fasta/nature12912.version</versionFile> -->
+<!--     </database> -->
+    <database>
+        <name>NESdb</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/NESdb/current/NESdb.fasta</path>
+        <versionFile>/media/data/Sequences/NESdb/current/NESdb.version</versionFile>
+    </database>
+    <database>
+        <name>ValidNES</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/ValidNES.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/ValidNES.version</versionFile>
+    </database>
+    <database>
+        <name>TotalNES</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/ValidNES-DUBs-Ligases.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/WregexNES.version</versionFile>
+    </database>
+    <database>
+        <name>ScoreNES</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/NES-score.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/WregexNES.version</versionFile>
+    </database>
+</databases>

@@ -1,0 +1,4 @@
+x Make it work again with MS CLR (to avoid GC bug in win)
+- Multirun with proteins
+- Manage indistinguishable peptides (i.e. L/I) as shared if both combinations are present
+- Include FDR support

@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Experiment files</ui:define>
+		<ui:define name="content">			
+			<p:panelGrid columns="2">
+				<f:facet name="header">Details for experiment #{filesMB.experiment.name}</f:facet>
+				<h:outputText value="Name" />
+				<h:outputText value="#{filesMB.experiment.name}" />
+				<h:outputText value="Contact" />
+				<h:outputText value="#{filesMB.experiment.contact}" />
+				<h:outputText value="Instrument" />
+				<h:outputText value="#{filesMB.experiment.instrumentBean.name} (#{filesMB.experiment.instrumentBean.description})" />
+				<h:outputText value="Ionization" />
+				<h:outputText value="#{filesMB.experiment.ionizationTypeBean.name} (#{filesMB.experiment.ionizationTypeBean.description})" />
+				<h:outputText value="Fragmentation" />
+				<h:outputText value="#{filesMB.experiment.fragmentationTypeBean.name} (#{filesMB.experiment.fragmentationTypeBean.description})" />
+				<h:outputText value="Chromatography" />
+				<h:outputText value="#{filesMB.experiment.chromatographyBean.name} (#{filesMB.experiment.chromatographyBean.description})" />
+				<h:outputText value="Description" />
+				<h:outputText value="#{filesMB.experiment.description}" />
+				<h:outputText value="Data files" />
+				<h:outputText value="#{filesMB.experiment.experimentFiles}" />
+			</p:panelGrid>			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

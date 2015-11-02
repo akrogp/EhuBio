@@ -1,0 +1,106 @@
+
+*******************************************************************************
+--------------------------------- IADBs ---------------------------------------
+--------------------- Copyright © 2009 Waters Corporation ---------------------
+Version 2.67.0.0 Compiled: 12/1/2009 2:59 PM
+Run at: 10/12/2010 5:24 PM
+Command Line:
+
+-paraXMLFileName C:\Documents and Settings\user\Local Settings\Temp\plgs3356352963543106917.params -pep3DXMLFileName C:\Documents and Settings\user\Local Settings\Temp\plgs3356352963543106917.xml -proteinFASTAFileName C:\databases\PLGS_2_4_RC7\PROTEORED_FORWARD_ENO\pme6_fwd_eno.fasta_def -outPutDirName C:\Documents and Settings\user\Local Settings\Temp -outputUserDirName C:\Documents and Settings\user\Local Settings\Temp -newWorkflowXML
+
+ Parameter XML file:
+<?xml version="1.0" encoding="UTF-8"?>
+<IA_PARAMS>
+    <FASTA_FORMAT VALUE="DEF"/>
+    <PRECURSOR_MHP_WINDOW_PPM VALUE="-1"/>
+    <PRODUCT_MHP_WINDOW_PPM VALUE="-1"/>
+    <NUM_BY_MATCH_FOR_PEPTIDE_MINIMUM VALUE="3"/>
+    <NUM_PEPTIDE_FOR_PROTEIN_MINIMUM VALUE="1"/>
+    <NUM_BY_MATCH_FOR_PROTEIN_MINIMUM VALUE="7"/>
+    <PROTEIN_MASS_MAXIMUM_AMU VALUE="250000"/>
+    <FALSE_POSITIVE_RATE VALUE="4"/>
+    <AQ_PROTEIN_ACCESSION VALUE="P00924"/>
+    <AQ_PROTEIN_MOLES VALUE="100"/>
+    <MANUAL_RESPONSE_FACTOR VALUE="-1"/>
+    <DIGESTS>
+        <ANALYSIS_DIGESTOR MISSED_CLEAVAGES="1">
+            <AMINO_ACID_SEQUENCE_DIGESTOR NAME="Trypsin">
+                <CLEAVES_AT AMINO_ACID="K" POSITION="C-TERM">
+                    <EXCLUDES AMINO_ACID="P" POSITION="N-TERM"/>
+                </CLEAVES_AT>
+                <CLEAVES_AT AMINO_ACID="R" POSITION="C-TERM">
+                    <EXCLUDES AMINO_ACID="P" POSITION="N-TERM"/>
+                </CLEAVES_AT>
+            </AMINO_ACID_SEQUENCE_DIGESTOR>
+        </ANALYSIS_DIGESTOR>
+    </DIGESTS>
+    <MODIFICATIONS>
+        <ANALYSIS_MODIFIER ENRICHED="FALSE" STATUS="FIXED">
+            <MODIFIER MCAT_REAGENT="No" NAME="Carbamidomethyl+C">
+                <MODIFIES APPLIES_TO="C" DELTA_MASS="57.0215" TYPE="SIDECHAIN"/>
+            </MODIFIER>
+        </ANALYSIS_MODIFIER>
+        <ANALYSIS_MODIFIER ENRICHED="FALSE" STATUS="VARIABLE">
+            <MODIFIER MCAT_REAGENT="No" NAME="Acetyl+N-TERM">
+                <MODIFIES APPLIES_TO="ALL" DELTA_MASS="42.0106" TYPE="N-TERM"/>
+            </MODIFIER>
+        </ANALYSIS_MODIFIER>
+        <ANALYSIS_MODIFIER ENRICHED="FALSE" STATUS="VARIABLE">
+            <MODIFIER MCAT_REAGENT="No" NAME="Deamidation+N">
+                <MODIFIES APPLIES_TO="N" DELTA_MASS=".9840" TYPE="SIDECHAIN"/>
+            </MODIFIER>
+        </ANALYSIS_MODIFIER>
+        <ANALYSIS_MODIFIER ENRICHED="FALSE" STATUS="VARIABLE">
+            <MODIFIER MCAT_REAGENT="No" NAME="Deamidation+Q">
+                <MODIFIES APPLIES_TO="Q" DELTA_MASS=".9840" TYPE="SIDECHAIN"/>
+            </MODIFIER>
+        </ANALYSIS_MODIFIER>
+        <ANALYSIS_MODIFIER ENRICHED="FALSE" STATUS="VARIABLE">
+            <MODIFIER MCAT_REAGENT="No" NAME="Oxidation+M">
+                <MODIFIES APPLIES_TO="M" DELTA_MASS="15.9949" TYPE="SIDECHAIN"/>
+            </MODIFIER>
+        </ANALYSIS_MODIFIER>
+    </MODIFICATIONS>
+</IA_PARAMS>
+
+
+  Input parameters                                values
+*******************************************************************************
+ Parameter XML file:       "C:\Documents and Settings\user\Local Settings\Temp\plgs3356352963543106917.params"
+ Spectrum  XML File:       "C:\Documents and Settings\user\Local Settings\Temp\plgs3356352963543106917.xml"
+ Protein   FAS File:       "C:\databases\PLGS_2_4_RC7\PROTEORED_FORWARD_ENO\pme6_fwd_eno.fasta_def"
+ Output Directory:         "C:\Documents and Settings\user\Local Settings\Temp"
+ User Output Directory:    "C:\Documents and Settings\user\Local Settings\Temp"
+
+ Raw Input File: "E:\raw_data_2010\Proteored_2010\PROTEORED_1_101008_003.raw"
+ Acquired Name: "PROTEORED_1_101008_003"
+ Acquired Date: "11-Oct-2010"
+ Acquired Time: "10:37:37"
+ Sample Description: "MSE 04 microg"
+
+Resolution                  = 11937.83
+Precursor MHPlus Window PPM = 8.376732
+Product MHPlus Window PPM   = 20.94183
+Max MHPlus Window PPM       = 41.88366
+Precursor prod Window (min) = 0.0637
+Report homologs             = True
+Min fragments per peptide   = 3
+Min peptides per protein    = 1
+Min fragments per protein   = 7
+Max False positive rate     = 4
+Max protein mass            = 250000
+Min ratio by to theoretical = 0.3
+Min sumProdInten/precInten  = 0.03
+Max sumProdInten/precInten  = 1
+Max simultaneous varMods    = 3
+ScoreFactors                = 1, 9, 3.5, 1, 1.9, 1, 2, 1
+
+Read 16784 LE ions, 152683 HE ions, 13503 bins in 4.0947868 seconds
+Read 40592 proteins in 3.208975 seconds
+Matched 21903 out of 1509185 peptides in digest to 21903 matches in 7791  of 40592 proteins
+Elapsed Time : 50.7164156
+Matched 8705 out of 1509185 peptides in digest to 8705 matches in 3544  of 40592 proteins
+Calibrating AutoCurate Thresholds using 3838 distraction peptides
+Red-Yellow Threshold is 4.93 which is 2.50 stddevs above the mean
+Yellow-Green Threshold is 5.75 which is 4.00 stddevs above the mean
+Total processing time: 127.5633639 seconds

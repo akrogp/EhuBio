@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+
+body { padding: 0px; margin: 20px; }
+caption, .caption { font-size: 120%; color: darkgreen; text-align: left; }
+th, td { padding-left: 2px; padding-right: 2px; }
+th { text-align: left; }
+tr.odd { background-color: #e0e0e0; }
+tr.even { background-color: #fefefe; }
+table { border: 2px black solid; border-collapse: collapse; }
+
+#tabs {
+	border-bottom: .2em solid darkgreen;
+	margin: 0;
+	padding: 0;
+}
+#tabs li { 
+	display:inline; 
+	border-top: .1em solid darkgreen;
+	border-left: .1em solid darkgreen;
+	border-right: .1em solid darkgreen;
+}
+#tabs li a {
+	text-decoration: none;
+	padding: 0.25em 1em;
+	color: #000;
+}
+#page1 #tabs li#tab1 a, #page2 #tabs li#tab2 a, #page3 #tabs li#tab3 a, .page4 li#tab4 a {
+	padding: 0.25em 1em;
+	background-color: darkgreen;
+	color: #fff;
+}

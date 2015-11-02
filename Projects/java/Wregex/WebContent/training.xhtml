@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Training</ui:define>
+		<ui:define name="htmlhead">
+			<meta name="description" content="Wregex training page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
+		</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:panelGrid columns="2" headerClass="cfg_header">
+					<f:facet name="header">Training parameters</f:facet>
+					<p:commandButton value="Input motifs" action="tmotifs" ajax="false"/>
+					<h:outputText value="#{trainingBean.inputSummary}"
+						rendered="#{trainingBean.inputSummary != null}" />
+					<h:outputText
+						value="You must upload a fasta file with training motifs"
+						rendered="#{trainingBean.inputSummary == null}" style="color:red" />
+
+					<p:commandButton value="Regular expression" actionListener="#{trainingBean.refresh}" ajax="false"/>
+					<p:inputText value="#{trainingBean.regex}" styleClass="trn_regex" />
+
+					<p:commandButton value="Refresh" actionListener="#{trainingBean.refresh}" ajax="false"/>
+					<h:outputText value="#{trainingBean.trainingSummary}"
+						rendered="#{trainingBean.trainingSummary != null and trainingBean.trainingError == null}" />
+					<h:outputText value="Define a regex matching any training motif"
+						rendered="#{trainingBean.trainingError == null and trainingBean.trainingSummary == null}"
+						style="color:red" />
+					<h:outputText value="#{trainingBean.trainingError}"
+						rendered="#{trainingBean.trainingError != null}"
+						style="color:red" />
+
+					<p:commandButton value="Download PSSM" actionListener="#{trainingBean.downloadPssm}" ajax="false"/>
+				</p:panelGrid>
+				<p />
+				<p:dataTable value="#{trainingBean.trainingList}" var="item" rowIndexVar="row"
+					rendered="#{not empty trainingBean.trainingList and trainingBean.trainingError == null}"
+					scrollable="true" scrollHeight="450" liveScroll="true" scrollRows="40">
+					<f:facet name="header">Training motifs - live scroll (scroll and wait for more results)</f:facet>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">#</f:facet>
+						<h:outputText value="#{row + 1}"/>
+					</p:column>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">Valid</f:facet>
+						<h:graphicImage name="images/ok.png" rendered="#{item.valid}"/>
+						<h:graphicImage name="images/ko.png" rendered="#{!item.valid}"/>
+					</p:column>
+					<p:column width="300">
+						<f:facet name="header">Entry</f:facet>
+						<h:outputText value="#{item.name}" styleClass="trn_name" />
+					</p:column>
+					<p:column width="50" style="text-align:right;">
+						<f:facet name="header">Begin</f:facet>
+						<h:outputText value="#{item.start}" styleClass="trn_pos" />
+					</p:column>
+					<p:column width="50" style="text-align:right;">
+						<f:facet name="header">End</f:facet>
+						<h:outputText value="#{item.end}" styleClass="trn_pos" />
+					</p:column>
+					<p:column>
+						<f:facet name="header">Motif</f:facet>
+						<h:outputText value="#{item.alignment}" styleClass="trn_seq" />
+					</p:column>
+					<p:column width="50">
+						<f:facet name="header">Weight</f:facet>
+						<h:outputText value="#{item.weightAsString}"
+							styleClass="trn_weight" />
+					</p:column>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">"!"</f:facet>
+						<h:outputText value="#{item.combinations}" styleClass="trn_pos" />
+					</p:column>
+					<p:column width="50">
+						<f:facet name="header">Weight'</f:facet>
+						<h:outputText value="#{item.dividedWeightAsString}"
+							styleClass="trn_weight" />
+					</p:column>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">Action</f:facet>
+						<h:panelGroup layout="block" rendered="#{item.valid}">
+							<p:commandLink actionListener="#{item.remove}" update="@form">
+								<h:graphicImage name="images/trash.png"/>
+							</p:commandLink>
+						</h:panelGroup>
+						<h:panelGroup layout="block" rendered="#{!item.valid}">
+							<p:commandLink actionListener="#{item.recycle}" update="@form">
+								<h:graphicImage name="images/recycle.png"/>
+							</p:commandLink>
+						</h:panelGroup>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test.csproj", "{05B67A68-A34F-42E2-8BE4-0C09B024FFD0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ebi", "..\..\Libs\Database\Ebi\Ebi.csproj", "{24FE7A85-8B58-4B38-B50B-C111DE9A7ADA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hupo", "..\..\Libs\Proteomics\Hupo\Hupo.csproj", "{89969C87-0FB2-45E7-8B89-E76849528F00}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05B67A68-A34F-42E2-8BE4-0C09B024FFD0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B67A68-A34F-42E2-8BE4-0C09B024FFD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B67A68-A34F-42E2-8BE4-0C09B024FFD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B67A68-A34F-42E2-8BE4-0C09B024FFD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24FE7A85-8B58-4B38-B50B-C111DE9A7ADA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24FE7A85-8B58-4B38-B50B-C111DE9A7ADA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24FE7A85-8B58-4B38-B50B-C111DE9A7ADA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24FE7A85-8B58-4B38-B50B-C111DE9A7ADA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{89969C87-0FB2-45E7-8B89-E76849528F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{89969C87-0FB2-45E7-8B89-E76849528F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{89969C87-0FB2-45E7-8B89-E76849528F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{89969C87-0FB2-45E7-8B89-E76849528F00}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Test.csproj
+	EndGlobalSection
+EndGlobal

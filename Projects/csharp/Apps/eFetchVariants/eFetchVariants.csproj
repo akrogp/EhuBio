@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{FA1712D2-D462-4C51-8E66-ED38D242B9B8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>eFetchVariants</RootNamespace>
+    <AssemblyName>eFetchVariants</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Externalconsole>true</Externalconsole>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Main.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Libs\Database\Ncbi\Ncbi.csproj">
+      <Project>{318AA793-930F-4AC3-BEB1-9D705F245B8C}</Project>
+      <Name>Ncbi</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libs\Database\Ehu\Ehu.csproj">
+      <Project>{D1BB15E0-E29F-4D80-BC57-AC95CACB7D91}</Project>
+      <Name>Ehu</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Libs\Database\Ebi\Ebi.csproj">
+      <Project>{24FE7A85-8B58-4B38-B50B-C111DE9A7ADA}</Project>
+      <Name>Ebi</Name>
+    </ProjectReference>
+  </ItemGroup>
+</Project>

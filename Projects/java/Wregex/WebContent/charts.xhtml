@@ -1,0 +1,237 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+<ui:composition template="./template.xhtml">
+<ui:define name="title">Home</ui:define>
+<ui:define name="htmlhead">
+<meta name="description" content="Wregex home page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
+<style type="text/css">
+text {
+  font-size: 11px;
+  pointer-events: none;
+}
+
+text.parent {
+  fill: #1f77b4;
+}
+
+circle {
+  fill: #ccc;
+  stroke: #999;
+  pointer-events: all;
+}
+
+circle.parent {
+  fill: #1f77b4;
+  fill-opacity: .1;
+  stroke: steelblue;
+}
+
+circle.parent:hover {
+  stroke: #ff7f0e;
+  stroke-width: .5px;
+}
+
+circle.child {
+  pointer-events: all;
+}
+
+circle.child:hover {
+  stroke: #ff7f0e;
+  stroke-width: .5px;
+}
+
+#tooltip {
+  text-align:center;  
+  z-index: 1000;
+  position: absolute;
+  display: none;
+  width: 230px;
+  margin-top: 20px;
+  font-size: 12px;
+  line-height: 16px;
+  padding: 10px;
+  border-radius: 3px;
+  background: rgba(255,255,255,0.9);
+  color: #000;
+  box-shadow: 0 1px 5px rgba(0,0,0,0.4);
+  -moz-box-shadow: 0 1px 5px rgba(0,0,0,0.4);  
+  border:1px solid rgba(200,200,200,0.85);
+  text-align:center;
+}
+
+#tooltip .name {
+  text-transform: uppercase;
+  text-align: left;
+  font-size: 10px;
+  margin-bottom: 2px;
+  color:#666;
+  text-align:center;  
+}
+
+#tooltip .rule{
+  height:1px;
+  margin:1px auto 3px;
+  background:#ddd;
+  width:130px;
+}
+
+#tooltip .description {
+  text-align: left;
+  font-size: 13px;
+  text-align:center;  
+}
+
+#tooltip .discretion{
+  color:#666;
+  font-size: 11px;   
+  text-align:center;  
+  font-style:italic;
+}
+
+#tooltip .valuesContainer {
+  padding-top:7px;  
+}
+
+#tooltip .value {
+  text-align:center;
+  right:10px;
+  top:28px;
+  font-size: 16px;
+  text-align:center;  
+  overflow:hidden;
+  font-weight:bold;
+}
+</style>
+</ui:define>
+<ui:define name="content">
+	<h:form>
+	<h:panelGroup rendered="#{!statisticsBean.initialized}">
+		Statistics are beeing updated, please try again in 15 minutes ...
+	</h:panelGroup>
+	<h:panelGroup rendered="#{statisticsBean.initialized}">
+		<div style="width:500px;margin-right:20px;float:left;">
+			<p:selectOneMenu value="#{statisticsBean.chart}" valueChangeListener="#{statisticsBean.onChangeChart}">
+				<f:selectItem itemLabel="COSMIC missense mutations" itemValue="COSMIC" />
+<!-- 				<f:selectItem itemLabel="dbPTM experimental PTMs" itemValue="dbPTM" /> -->
+				<p:ajax update="@form"/>
+			</p:selectOneMenu>			
+			<h3>#{statisticsBean.title}</h3>
+			<p:dataList value="#{statisticsBean.displayTips}" var="tip" itemType="circle">
+				<f:facet name="header">Display considerations:</f:facet>
+				#{tip}
+			</p:dataList>
+			<div id="tooltip">
+				<div class="name"></div>
+				<div class="rule"></div>
+				<div class="description"></div>
+				<div class="discretion"></div>
+				<div class="valuesContainer">
+					<span class="value"></span>
+				</div>
+			</div>
+		</div>
+		<div id="graph" style="float:left;"/>		
+	    <script type="text/javascript" src="http://mbostock.github.io/d3/talk/20111116/d3/d3.js"></script>
+	    <script type="text/javascript" src="http://mbostock.github.io/d3/talk/20111116/d3/d3.layout.js"></script>
+	    <script type="text/javascript">
+var w = 610,
+    h = 610,
+    r = 600,
+    x = d3.scale.linear().range([0, r]),
+    y = d3.scale.linear().range([0, r]),
+    node,
+    root;
+
+var pack = d3.layout.pack()
+    .size([r, r])
+    .value(function(d) { return d.size; })
+
+//var vis = d3.select("#prebody").append("svg:svg")
+var vis = d3.select("#graph").append("svg:svg")
+    .attr("width", w)
+    .attr("height", h)
+  .append("svg:g")
+    .attr("transform", "translate(" + (w - r) / 2 + "," + (h - r) / 2 + ")");
+
+d3.json("json.xhtml", function(data) {
+  node = root = data;
+
+  var nodes = pack.nodes(root);
+
+  vis.selectAll("circle")
+      .data(nodes)
+    .enter().append("svg:circle")
+      .attr("class", function(d) { return d.children ? "parent" : "child"; })
+      .attr("cx", function(d) { return d.x; })
+      .attr("cy", function(d) { return d.y; })
+      .attr("r", function(d) { return d.r; })
+      .on("click", function(d) { return zoom(node == d ? root : d); })
+      .on("mouseover",function(d,i) {
+    	  var el = d3.select(this);
+          var xpos = Number(el.attr('cx'));
+          var ypos = Number(el.attr('cy'))+100-d.r/2-10;
+          d3.select("#tooltip")
+          	//.style('top',ypos+"px")
+          	//.style('left',xpos+"px")
+          	.style('display', d.name.length == 0 ? 'none': 'block');
+          d3.select("#tooltip .name")
+          	.text(d.name);
+          d3.select("#tooltip .description")
+        	.text(d.description);
+          d3.select("#tooltip .discretion")
+    		.text(d.discretion);
+          d3.select("#tooltip .value")
+      		.text(d.result);
+      })
+      .on("mouseout",function(d) {          
+          d3.select("#tooltip").style('display','none')}
+      );
+
+  vis.selectAll("text")
+      .data(nodes)
+    .enter().append("svg:text")
+      .attr("class", function(d) { return d.children ? "parent" : "child"; })
+      .attr("x", function(d) { return d.x; })
+      .attr("y", function(d) { return d.y; })
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .style("opacity", function(d) { return d.r > 20 ? 1 : 0; })
+      .text(function(d) { return d.name; });
+
+  d3.select(window).on("click", function() { zoom(root); });
+});
+
+function zoom(d, i) {
+  var k = r / d.r / 2;
+  x.domain([d.x - d.r, d.x + d.r]);
+  y.domain([d.y - d.r, d.y + d.r]);
+
+  var t = vis.transition()
+      .duration(d3.event.altKey ? 7500 : 750);
+
+  t.selectAll("circle")
+      .attr("cx", function(d) { return x(d.x); })
+      .attr("cy", function(d) { return y(d.y); })
+      .attr("r", function(d) { return k * d.r; });
+
+  t.selectAll("text")
+      .attr("x", function(d) { return x(d.x); })
+      .attr("y", function(d) { return y(d.y); })
+      .style("opacity", function(d) { return k * d.r > 20 ? 1 : 0; });
+
+  node = d;
+  d3.event.stopPropagation();
+}
+</script>		
+	</h:panelGroup>
+	</h:form>
+</ui:define>		
+</ui:composition>
+</h:body>
+</html>

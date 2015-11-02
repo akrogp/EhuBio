@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!DOCTYPE project>
+<motifs>
+    <motif>
+        <name>NES/CRM1</name>
+        <summary>Leucine-rich nuclear export signal (NES) binding to the CRM1 exportin protein</summary>
+        <replaces>TRG_NES_CRM1_1</replaces>
+        <definition>
+            <name>Recommended</name>
+            <description>Regular expression updated and PSSM computed with ValidNES, DUBs and Ligases without assay scores</description>
+            <regex>([DEQS].{0,1})([LIMA])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NES-total.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Relaxed</name>
+            <description>Use when more candidates needed. Regular expression relaxed and PSSM computed with ValidNES, DUBs and Ligases without assay scores</description>
+            <regex>([LIVMFAWY])(.{2,3})([LIVMFAWY])([^P]{2,3})([LIVMFAWY])([^P])([LIVMFAWY])</regex>
+            <pssm>NES-total-phi.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex A</name>
+            <description>Regular expression derived from ELM and PSSM computed with NESsential training set</description>
+            <regex>([DEQ].{0,1})([LIM])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NESsential.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex B</name>
+            <description>Regular expression derived from ELM and PSSM computed with ValidNES and DUBs</description>
+            <regex>([DEQ].{0,1})([LIM])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>ValidNES-DUBs.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex C</name>
+            <description>Regular expression updated and PSSM computed with DUBs and Ligases without assay scores</description>
+            <regex>([DEQS].{0,1})([LIMA])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NES-no-score.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex D</name>
+            <description>Regular expression updated and PSSM computed with DUBs and Ligases using assay scores</description>
+            <regex>([DEQS].{0,1})([LIMA])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NES-score.pssm</pssm>
+        </definition>
+        <reference>
+            <authors>Prieto, G., Fullaondo, A. and Rodriguez, J. A.</authors>
+            <year>2014</year>
+            <title>Prediction of nuclear export signals using weighted regular expressions (Wregex)</title>
+            <journal>Bioinformatics</journal>
+            <doi>10.1093/bioinformatics/btu016</doi>
+            <link>http://bioinformatics.oxfordjournals.org/content/30/9/1220</link>            
+        </reference>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NES_CRM1_1.html</link>
+        </reference>
+    </motif>
+    <motif>
+        <name>LxCxE/Rb</name>
+        <replaces>LIG_Rb_LxCxE_1</replaces>
+        <summary>Interacts with the Retinoblastoma protein</summary>
+        <definition>
+            <name>Original</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 32 instances available at ELM</description>
+            <regex>([LI])(.)(C)(.)([DE])</regex>
+            <pssm>Rb-short.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Extended</name>
+            <description>Extended regular expression considering flanking residues interaction. The PSSM has been computed from the 32 instances available at ELM</description>
+            <regex>(.)([LI])(.)(C)(.)([DE])(.)(.)(.)</regex>
+            <pssm>Rb-extended.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/LIG_Rb_LxCxE_1.html</link>
+        </reference>
+        <reference>
+            <authors>Singh, M., Krajewski, M., Mikolajka, A., and Holak, T. A.</authors>
+            <year>2005</year>
+            <title>Molecular determinants for the complex formation between the retinoblastoma protein and LXCXE sequences</title>
+            <journal>J. Biol. Chem.</journal>
+            <volume>280</volume>
+            <pages>37868–37876</pages>
+            <doi>10.1074/jbc.M504877200</doi>
+            <link>http://www.jbc.org/content/280/45/37868.short</link>            
+        </reference>        
+    </motif>
+	<motif>
+        <name>NLS_Bipartite</name>
+        <replaces>TRG_NLS_Bipartite_1</replaces>
+        <summary>Bipartite variant of the classical basically charged NLS</summary>
+        <definition>
+            <name>ELME000276</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 9 instances available at ELM</description>
+            <regex>([KR])([KR])(.{7,15})([^DE])(?:(?:(K)([RK]))|(?:(R)(K)))(?:(?:([^DE])([KR]))|(?:([KR])([^DE])))([^DE])</regex>
+            <pssm>TRG_NLS_Bipartite_1.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NLS_Bipartite_1.html</link>
+        </reference>
+    </motif>
+	<motif>
+        <name>NLS_MonoCore</name>
+        <replaces>TRG_NLS_MonoCore_2</replaces>
+        <summary>Monopartite variant of the classical basically charged NLS. Strong core version</summary>
+        <definition>
+            <name>ELME000270</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 17 instances available at ELM</description>
+            <regex>([^DE])(?:(?:(K)([RK]))|(RK))([KRP])([KR])([^DE])</regex>
+            <pssm>TRG_NLS_MonoCore_2.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NLS_MonoCore_2.html</link>
+        </reference>
+    </motif>
+	<motif>
+        <name>NLS_MonoExtC</name>
+        <replaces>TRG_NLS_MonoExtC_3</replaces>
+        <summary>Monopartite variant of the classical basically charged NLS. C-extended version</summary>
+        <definition>
+            <name>ELME000278</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 18 instances available at ELM</description>
+            <regex>([^DE])(?:(?:(K)([RK]))|(RK))(?:(?:([^DE])([KR]))|(?:([KR])([^DE])))(?:(?:([PKR]))|(?:([^DE])([DE])))</regex>
+            <pssm>TRG_NLS_MonoExtC_3.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NLS_MonoExtC_3.html</link>
+        </reference>
+    </motif>
+	<motif>
+        <name>NLS_MonoExtN</name>
+        <replaces>TRG_NLS_MonoExtN_4</replaces>
+        <summary>Monopartite variant of the classical basically charged NLS. N-extended version</summary>
+        <definition>
+            <name>ELME000271</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 26 instances available at ELM</description>
+            <regex>(?:(?:([PKR])(.{0,1})([^DE]))|(?:([PKR])))(?:(?:(K)([RK]))|(RK))(?:(?:([^DE])([KR]))|(?:([KR])([^DE])))([^DE])</regex>
+            <pssm>TRG_NLS_MonoExtN_4.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NLS_MonoExtN_4.html</link>
+        </reference>
+    </motif>
+</motifs>

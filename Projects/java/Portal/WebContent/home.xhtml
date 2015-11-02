@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Home</ui:define>
+		<ui:define name="content">
+		<h:form>
+			<h3>Welcome to EhuBio</h3><p:separator/>
+			<p>Welcome to the EhuBio home page.</p>
+			<p>We present free software projects related to bioinformatics and developed in collaboration between
+			the <a href="http://det.bi.ehu.es/" target="blank">Department of Communications Engineering</a>,
+			the <a href="http://www.gaf.ehu.es/s0163-home1/es" target="blank">Department of Genetics, Physical Anthropology and Animal Physiology</a>, and
+			the <a href="http://www.bqybm.ehu.es/s0042-home1/es/" target="blank">Department of Biochemistry and Molecular Biology</a>
+			of the <a href="http://www.ehu.es" target="blank">University of the Basque Country (UPV/EHU)</a>.</p>
+
+			<p:dataTable value="#{homeBean.projects}" var="prj">
+				<f:facet name="header">EhuBio Bioinformatics Projects</f:facet>
+				<p:column width="100">
+					<f:facet name="header">Name</f:facet>
+					<a href="#{prj.url}" target="_blank">#{prj.name}&nbsp;<img src="/resources/images/link.png" height="15"/></a>
+				</p:column>
+				<p:column>
+					<f:facet name="header">Description</f:facet>
+					<h:outputText value="#{prj.description}"/>
+				</p:column>
+			</p:dataTable>						
+			
+			<br/><p><i>Funding</i>: The maintenance of this website is supported by the Basque Country Government Department of Industry
+			(SAIOTEK S-PE12UN005) and the University of the Basque Country (UFI11/20).</p>
+			
+			<p>For further information please contact <a href="mailto:info@ehubio.es">info@ehubio.es</a>.</p>
+		</h:form>			
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

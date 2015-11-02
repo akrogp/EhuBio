@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+	<persistence-unit name="MyMRM">
+		<class>es.ehubio.mymrm.data.Chromatography</class>
+		<class>es.ehubio.mymrm.data.Experiment</class>
+		<class>es.ehubio.mymrm.data.Instrument</class>
+		<class>es.ehubio.mymrm.data.InstrumentType</class>
+		<class>es.ehubio.mymrm.data.Peptide</class>
+		<class>es.ehubio.mymrm.data.Precursor</class>
+		<class>es.ehubio.mymrm.data.Transition</class>
+		<class>es.ehubio.mymrm.data.FragmentationType</class>
+		<class>es.ehubio.mymrm.data.IonizationType</class>
+		<class>es.ehubio.mymrm.data.PeptideEvidence</class>
+		<class>es.ehubio.mymrm.data.Score</class>
+		<class>es.ehubio.mymrm.data.ScoreType</class>
+		<class>es.ehubio.mymrm.data.ExperimentFile</class>
+		<class>es.ehubio.mymrm.data.Fragment</class>
+		<class>es.ehubio.mymrm.data.IonType</class>
+		<properties>
+			<property name="hibernate.connection.username" value="mymrm"/>
+			<property name="hibernate.connection.password" value="MyMRM"/>
+			<property name="hibernate.connection.url" value="jdbc:mysql://localhost:3306/MyMRM"/>
+			<property name="hibernate.connection.driver_class" value="com.mysql.jdbc.Driver"/>
+		</properties>
+	</persistence-unit>
+</persistence>

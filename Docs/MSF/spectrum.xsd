@@ -1,0 +1,213 @@
+<xs:schema attributeFormDefault="unqualified" elementFormDefault="qualified" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:element name="MassSpectrum">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="Header">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:byte" name="SpectrumID"/>
+              <xs:element type="xs:string" name="InstrumentName"/>
+              <xs:element type="xs:string" name="DataType"/>
+              <xs:element type="xs:byte" name="LowPosition"/>
+              <xs:element type="xs:short" name="HighPosition"/>
+              <xs:element type="xs:float" name="BasePeakPosition"/>
+              <xs:element type="xs:float" name="BasePeakIntensity"/>
+              <xs:element type="xs:float" name="TotalIntensity"/>
+              <xs:element name="SpectrumIdentifiers">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="SpectrumIdentifier">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:byte" name="FileID"/>
+                            <xs:attribute type="xs:byte" name="ScanNumber"/>
+                            <xs:attribute type="xs:byte" name="MasterScanNumber"/>
+                            <xs:attribute type="xs:float" name="RetentionTime"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="ScanEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:string" name="ActivationTypes"/>
+              <xs:element name="ActivationEnergies">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:byte" name="double"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="IonizationSource"/>
+              <xs:element type="xs:string" name="IsMultiplexed"/>
+              <xs:element type="xs:float" name="IsolationMass"/>
+              <xs:element type="xs:byte" name="IsolationWidth"/>
+              <xs:element type="xs:string" name="MassAnalyzer"/>
+              <xs:element type="xs:string" name="MSOrder"/>
+              <xs:element type="xs:string" name="Polarity"/>
+              <xs:element type="xs:string" name="ScanRate"/>
+              <xs:element type="xs:string" name="ScanType"/>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PrecursorInfo">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="SpectrumHeader">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:byte" name="SpectrumID"/>
+                    <xs:element type="xs:string" name="InstrumentName"/>
+                    <xs:element type="xs:string" name="DataType"/>
+                    <xs:element type="xs:float" name="LowPosition"/>
+                    <xs:element type="xs:float" name="HighPosition"/>
+                    <xs:element type="xs:float" name="BasePeakPosition"/>
+                    <xs:element type="xs:int" name="BasePeakIntensity"/>
+                    <xs:element type="xs:float" name="TotalIntensity"/>
+                    <xs:element name="SpectrumIdentifiers">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="SpectrumIdentifier">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:string">
+                                  <xs:attribute type="xs:byte" name="FileID"/>
+                                  <xs:attribute type="xs:byte" name="ScanNumber"/>
+                                  <xs:attribute type="xs:byte" name="MasterScanNumber"/>
+                                  <xs:attribute type="xs:float" name="RetentionTime"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="ScanEvent">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element type="xs:string" name="ActivationTypes"/>
+                    <xs:element name="ActivationEnergies">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element type="xs:byte" name="double"/>
+                        </xs:sequence>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element type="xs:string" name="IonizationSource"/>
+                    <xs:element type="xs:string" name="IsMultiplexed"/>
+                    <xs:element type="xs:short" name="IsolationMass"/>
+                    <xs:element type="xs:byte" name="IsolationWidth"/>
+                    <xs:element type="xs:string" name="MassAnalyzer"/>
+                    <xs:element type="xs:string" name="MSOrder"/>
+                    <xs:element type="xs:string" name="Polarity"/>
+                    <xs:element type="xs:string" name="ScanRate"/>
+                    <xs:element type="xs:string" name="ScanType"/>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="MonoisotopicPeakCentroids">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Peak">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:float" name="X"/>
+                            <xs:attribute type="xs:int" name="Y"/>
+                            <xs:attribute type="xs:byte" name="Z"/>
+                            <xs:attribute type="xs:int" name="R"/>
+                            <xs:attribute type="xs:float" name="SN"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="MeasuredMonoisotopicPeakCentroids">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Peak">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:float" name="X"/>
+                            <xs:attribute type="xs:int" name="Y"/>
+                            <xs:attribute type="xs:byte" name="Z"/>
+                            <xs:attribute type="xs:int" name="R"/>
+                            <xs:attribute type="xs:float" name="SN"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="IsotopeClusterPeakCentroids">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="Peak" maxOccurs="unbounded" minOccurs="0">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute type="xs:float" name="X" use="optional"/>
+                            <xs:attribute type="xs:float" name="Y" use="optional"/>
+                            <xs:attribute type="xs:byte" name="Z" use="optional"/>
+                            <xs:attribute type="xs:int" name="R" use="optional"/>
+                            <xs:attribute type="xs:float" name="SN" use="optional"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                </xs:complexType>
+              </xs:element>
+              <xs:element type="xs:string" name="IsotopeClusterProfilePoints"/>
+            </xs:sequence>
+            <xs:attribute type="xs:byte" name="SpectrumNumber"/>
+            <xs:attribute type="xs:byte" name="Charge"/>
+            <xs:attribute type="xs:float" name="SinglyChargedMass"/>
+            <xs:attribute type="xs:string" name="PrecursorMassOrigin"/>
+            <xs:attribute type="xs:int" name="Intensity"/>
+            <xs:attribute type="xs:int" name="Resolution"/>
+            <xs:attribute type="xs:float" name="SignalToNoise"/>
+            <xs:attribute type="xs:byte" name="InstrumentDeterminedCharge"/>
+            <xs:attribute type="xs:float" name="InstrumentDeterminedMonoisotopicMass"/>
+            <xs:attribute type="xs:float" name="PercentIsolationInterference"/>
+            <xs:attribute type="xs:byte" name="IonInjectTime"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="PeakCentroids">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="Peak" maxOccurs="unbounded" minOccurs="0">
+                <xs:complexType>
+                  <xs:simpleContent>
+                    <xs:extension base="xs:string">
+                      <xs:attribute type="xs:float" name="X" use="optional"/>
+                      <xs:attribute type="xs:float" name="Y" use="optional"/>
+                      <xs:attribute type="xs:byte" name="Z" use="optional"/>
+                      <xs:attribute type="xs:int" name="R" use="optional"/>
+                      <xs:attribute type="xs:float" name="SN" use="optional"/>
+                    </xs:extension>
+                  </xs:simpleContent>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+        <xs:element type="xs:string" name="ProfilePoints"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema> 

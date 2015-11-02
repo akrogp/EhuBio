@@ -1,0 +1,124 @@
+@CHARSET "UTF-8";
+
+/* General HTML tags */
+html,
+body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	font-family: verdana;
+	background-color: #fff;   
+}
+
+p, ul, ol{
+	margin: 0;
+	padding: 0 0 18px 0;
+}
+
+a, a:visited {
+	text-decoration: none;
+}
+
+img { 
+	border: 0;
+}
+
+/* Page template */
+#container {
+	height: 100%;
+	min-height: 100%;
+	position: relative;
+}
+
+#titlebar {
+	/*background: url('/resources/images/wregex.png') left center no-repeat, url('/resources/images/ehu.png') right center no-repeat, linear-gradient(to top right, #eee, #000);*/
+	background: rgb(238,238,238); /* Old browsers */
+	background: -moz-linear-gradient(45deg,  rgba(238,238,238,1) 0%, rgba(0,0,0,1) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left bottom, right top, color-stop(0%,rgba(238,238,238,1)), color-stop(100%,rgba(0,0,0,1))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(45deg, rgba(238,238,238,1) 0%,rgba(0,0,0,1) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(45deg, rgba(238,238,238,1) 0%,rgba(0,0,0,1) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(45deg, rgba(238,238,238,1) 0%,rgba(0,0,0,1) 100%); /* IE10+ */
+	background: linear-gradient(45deg, rgba(238,238,238,1) 0%,rgba(0,0,0,1) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#eeeeee', endColorstr='#000000',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+	height: 78px;
+	width: 100%;	
+}
+
+#menubar {
+	background: #5b5b5b;
+	padding: 3px 10px;
+	font-size: 14px;
+	color: white;
+	text-decoration: none;
+}
+
+#body {
+	padding: 4px;
+	padding-top: 14px;
+	padding-bottom: 14px;   /* Height of the footer */   
+}
+
+#footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 14px;
+	background: #5b5b5b;
+	font-size: 10px;
+	color: white;
+	text-decoration: none;
+	font-style : italic;
+}
+
+/* PrimeFaces */
+.ui-button-text {
+	display:none;
+}
+
+.ui-widget, .ui-widget .ui-widget {
+	font-size: 14px !important;
+}
+
+/* Icons */
+div.ok {
+	content: url(/resources/images/ok.png);
+}
+
+div.ko {
+	content: url(/resources/images/ko.png);
+}
+
+div.trash {
+	content: url(/resources/images/trash.png);
+}
+
+div.recycle {
+	content: url(/resources/images/recycle.png);
+}
+
+/* Training */
+.trn_name {	
+}
+.trn_pos {
+	width: 40px;
+	text-align: right;
+}
+.trn_seq {
+	width: 300px;
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+  	display: inline-block;
+  	text-align: left;
+}
+.trn_weight {
+	width: 50px;
+	text-align: right;
+}
+.trn_regex {
+	width: 700px;
+}
+
+.cfg_header {
+	text-align: left;
+}

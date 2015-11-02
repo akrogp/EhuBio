@@ -1,0 +1,52 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<h:outputStylesheet name="css/style.css" />
+	<title>Wregex: <ui:insert name="title" /></title>
+	<ui:insert name="htmlhead" />
+	<!-- Piwik -->
+	<script type="text/javascript">
+	  var _paq = _paq || [];
+	  _paq.push(['trackPageView']);
+	  _paq.push(['enableLinkTracking']);
+	  (function() {
+	    var u=(("https:" == document.location.protocol) ? "https" : "http") + "://www.ehubio.es/piwik/";
+	    _paq.push(['setTrackerUrl', u+'piwik.php']);
+	    _paq.push(['setSiteId', 2]);
+	    var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0]; g.type='text/javascript';
+	    g.defer=true; g.async=true; g.src=u+'piwik.js'; s.parentNode.insertBefore(g,s);
+	  })();
+	</script>
+	<noscript><p><img src="http://www.ehubio.es/piwik/piwik.php?idsite=2" style="border:0;" alt="" /></p></noscript>
+	<!-- End Piwik Code -->
+</h:head>
+<h:body>
+	<div id="container">
+	<div id="titlebar">
+		<a href="http://wregex.ehubio.es" target="_blank"><h:graphicImage name="images/wregex.png" style="float:left;margin-left:10px;"/></a>
+		<a href="http://www.ehu.es" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
+	</div>
+	<div id="menubar">
+		<ui:repeat var="page" value="#{homeBean.firstPages}">
+			<h:link value="#{page.name}" outcome="#{page.action}" style="color:white"/> &nbsp; | &nbsp;
+		</ui:repeat>		
+		<!--<h:link value="Search" outcome="search" style="color:white"/> &nbsp; | &nbsp;
+		<h:link value="Charts" outcome="charts" style="color:white"/> &nbsp; | &nbsp;
+		<h:link value="Training" outcome="training" style="color:white"/> &nbsp; | &nbsp;
+		<h:link value="Documentation" outcome="documentation" style="color:white"/> &nbsp; | &nbsp;
+		<h:link value="Downloads" outcome="downloads" style="color:white"/>-->
+		<h:link value="#{homeBean.lastPage.name}" outcome="#{homeBean.lastPage.action}" style="color:white"/>
+	</div>
+	<div id="body">
+	<ui:insert name="content" />
+	</div>
+	<!--<div id="footer">
+		<div style="float:left;margin-left:10px;">Copyright (C) 2013 Gorka Prieto (UPV/EHU)</div>
+		<div style="float:right;margin-right:10px;">Funding: Basque Country Government (SAIOTEK S-PE12UN005), University of the Basque Country (UFI11/20).</div>				
+	</div>-->
+	</div>
+</h:body>
+</html>

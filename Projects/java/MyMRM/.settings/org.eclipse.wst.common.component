@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="MyMRM">
+        <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <dependent-module archiveName="EhuBio.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EhuBio/EhuBio">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="mysql-connector-java.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib//usr/share/java/mysql-connector-java.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="primefaces-4.0.jar" deploy-path="/WEB-INF/lib" handle="module:/classpath/lib//home/gorka/Aplicaciones/libs/primefaces-4.0/primefaces-4.0.jar">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="MyMRM"/>
+        <property name="java-output-path" value="/MyMRM/build/classes"/>
+    </wb-module>
+</project-modules>

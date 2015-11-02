@@ -1,0 +1,30 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Databases</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:dataTable value="#{databaseMB.fastas}" var="item">
+					<f:facet name="header">Manage fasta databases</f:facet>
+					<p:column headerText="file">#{item.name}</p:column>
+					<p:column headerText="action" style="text-align: center">
+						<p:commandLink actionListener="#{databaseMB.removeFasta(item)}" ajax="false">
+							<h:graphicImage name="images/remove.png"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<h:form enctype="multipart/form-data">
+				<p:fileUpload fileUploadListener="#{databaseMB.uploadFasta}"
+					allowTypes="/\.fasta(\.gz)?$/" multiple="true" auto="flase" mode="advanced" update="@all"/>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

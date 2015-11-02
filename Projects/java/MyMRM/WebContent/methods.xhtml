@@ -1,0 +1,134 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Materials and methods</ui:define>		
+		<ui:define name="content">
+			<h:form rendered="#{not empty databaseMB.instrumentTypes}">
+				<p:dataTable value="#{databaseMB.instrumentsNull}" rowIndexVar="row" var="item">
+					<f:facet name="header">Instruments</f:facet>
+					<p:column headerText="type">
+						<h:outputText value="#{item.instrumentTypeBean.name}" rendered="#{item != null}"/>
+						<p:selectOneMenu value="#{instrumentMB.typeId}" rendered="#{item == null}">
+							<f:selectItems value="#{databaseMB.instrumentTypes}" var="type" itemLabel="#{type.name}" itemValue="#{type.id}"/>					
+						</p:selectOneMenu>
+					</p:column>
+					<p:column headerText="name">
+						<h:outputText value="#{item.name}" rendered="#{item != null}"/>
+						<p:inputText value="#{instrumentMB.entity.name}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="description">
+						<h:outputText value="#{item.description}" rendered="#{item != null}"/>
+						<p:inputText value="#{instrumentMB.entity.description}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="action" style="text-align: center">
+						<p:commandLink rendered="#{item != null}" actionListener="#{databaseMB.removeInstrument(item)}" ajax="false">
+							<h:graphicImage name="images/remove.png"/>
+						</p:commandLink>
+						<p:commandLink rendered="#{item == null}" actionListener="#{databaseMB.addInstrument(instrumentMB)}" ajax="false">
+							<h:graphicImage name="images/add.png"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<br/>
+			<h:form>
+				<p:dataTable value="#{databaseMB.instrumentTypesNull}" rowIndexVar="row" var="item">
+					<f:facet name="header">Instrument Types</f:facet>
+					<p:column headerText="name">
+						<h:outputText value="#{item.name}" rendered="#{item != null}"/>
+						<p:inputText value="#{instrumentTypeMB.entity.name}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="description">
+						<h:outputText value="#{item.description}" rendered="#{item != null}"/>
+						<p:inputText value="#{instrumentTypeMB.entity.description}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="action" style="text-align: center">
+						<p:commandLink rendered="#{item != null}" actionListener="#{databaseMB.removeInstrumentType(item)}" ajax="false">
+							<h:graphicImage name="images/remove.png"/>
+						</p:commandLink>
+						<p:commandLink rendered="#{item == null}" actionListener="#{databaseMB.addInstrumentType(instrumentTypeMB)}" ajax="false">
+							<h:graphicImage name="images/add.png"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<br/>
+			<h:form>
+				<p:dataTable value="#{databaseMB.fragmentationTypesNull}" rowIndexVar="row" var="item">
+					<f:facet name="header">Fragmentation Types</f:facet>
+					<p:column headerText="name">
+						<h:outputText value="#{item.name}" rendered="#{item != null}"/>
+						<p:inputText value="#{fragmentationTypeMB.entity.name}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="description">
+						<h:outputText value="#{item.description}" rendered="#{item != null}"/>
+						<p:inputText value="#{fragmentationTypeMB.entity.description}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="action" style="text-align: center">
+						<p:commandLink rendered="#{item != null}" actionListener="#{databaseMB.removeFragmentationType(item)}" ajax="false">
+							<h:graphicImage name="images/remove.png"/>
+						</p:commandLink>
+						<p:commandLink rendered="#{item == null}" actionListener="#{databaseMB.addFragmentationType(fragmentationTypeMB)}" ajax="false">
+							<h:graphicImage name="images/add.png"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<br/>
+			<h:form>
+				<p:dataTable value="#{databaseMB.ionizationTypesNull}" rowIndexVar="row" var="item">
+					<f:facet name="header">Ionization Types</f:facet>
+					<p:column headerText="name">
+						<h:outputText value="#{item.name}" rendered="#{item != null}"/>
+						<p:inputText value="#{ionizationTypeMB.entity.name}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="description">
+						<h:outputText value="#{item.description}" rendered="#{item != null}"/>
+						<p:inputText value="#{ionizationTypeMB.entity.description}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="action" style="text-align: center">
+						<p:commandLink rendered="#{item != null}" actionListener="#{databaseMB.removeIonizationType(item)}" ajax="false">
+							<h:graphicImage name="images/remove.png"/>
+						</p:commandLink>
+						<p:commandLink rendered="#{item == null}" actionListener="#{databaseMB.addIonizationType(ionizationTypeMB)}" ajax="false">
+							<h:graphicImage name="images/add.png"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+			<br/>
+			<h:form>
+				<p:dataTable value="#{databaseMB.chromatograhiesNull}" rowIndexVar="row" var="item">
+					<f:facet name="header">Chromatography</f:facet>
+					<p:column headerText="name">
+						<h:outputText value="#{item.name}" rendered="#{item != null}"/>
+						<p:inputText value="#{chromatographyMB.entity.name}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="description">
+						<h:outputText value="#{item.description}" rendered="#{item != null}"/>
+						<p:inputText value="#{chromatographyMB.entity.description}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="gradient length">
+						<h:outputText value="#{item.gradientLength}" rendered="#{item != null}"/>
+						<p:inputText value="#{chromatographyMB.entity.gradientLength}" rendered="#{item == null}"/>
+					</p:column>
+					<p:column headerText="action" style="text-align: center">
+						<p:commandLink rendered="#{item != null}" actionListener="#{databaseMB.removeChromatography(item)}" ajax="false">
+							<h:graphicImage name="images/remove.png"/>
+						</p:commandLink>
+						<p:commandLink rendered="#{item == null}" actionListener="#{databaseMB.addChromatography(chromatographyMB)}" ajax="false">
+							<h:graphicImage name="images/add.png"/>
+						</p:commandLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

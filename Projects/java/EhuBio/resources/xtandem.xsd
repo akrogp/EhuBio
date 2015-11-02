@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:GAML="http://www.bioml.com/gaml/" xmlns:jaxb="http://java.sun.com/xml/ns/jaxb" jaxb:version="2.1">
+  <xs:element name="bioml">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="group" maxOccurs="unbounded">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="protein" maxOccurs="unbounded">
+                <xs:complexType>
+                  <xs:sequence>
+                    <xs:element name="note" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="label" type="xs:string" use="required"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="file" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="type" type="xs:string" use="required"/>
+                            <xs:attribute name="URL" type="xs:string" use="required"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="peptide" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="domain" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="aa" maxOccurs="unbounded">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="type" type="xs:string" use="required"/>
+                                        <xs:attribute name="at" type="xs:int" use="required"/>
+                                        <xs:attribute name="modified" type="xs:double" use="required"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="id" type="xs:string" use="required"/>
+                              <xs:attribute name="start" type="xs:int" use="required"/>
+                              <xs:attribute name="end" type="xs:int" use="required"/>
+                              <xs:attribute name="expect" type="xs:double" use="required"/>
+                              <xs:attribute name="mh" type="xs:double" use="required"/>
+                              <xs:attribute name="delta" type="xs:double" use="required"/>
+                              <xs:attribute name="hyperscore" type="xs:double" use="required"/>
+                              <xs:attribute name="nextscore" type="xs:double" use="required"/>
+                              <xs:attribute name="y_score" type="xs:double" use="required"/>
+                              <xs:attribute name="y_ions" type="xs:int" use="required"/>
+                              <xs:attribute name="b_score" type="xs:double" use="required"/>
+                              <xs:attribute name="b_ions" type="xs:int" use="required"/>
+                              <xs:attribute name="pre" type="xs:string" use="required"/>
+                              <xs:attribute name="post" type="xs:string" use="required"/>
+                              <xs:attribute name="seq" type="xs:string" use="required"/>
+                              <xs:attribute name="missed_cleavages" type="xs:int" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="start" type="xs:int" use="required"/>
+                        <xs:attribute name="end" type="xs:int" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="expect" type="xs:double" use="required"/>
+                  <xs:attribute name="id" type="xs:double" use="required"/>
+                  <xs:attribute name="uid" type="xs:int" use="required"/>
+                  <xs:attribute name="label" type="xs:string" use="required"/>
+                  <xs:attribute name="sumI" type="xs:double" use="required"/>
+                </xs:complexType>
+              </xs:element>
+              <xs:element name="group" minOccurs="0" maxOccurs="1">
+                <xs:complexType>
+				  <xs:annotation>
+                    <xs:appinfo>
+                      <jaxb:class name="Support" />
+                    </xs:appinfo>
+                  </xs:annotation>
+                  <xs:sequence>
+                    <xs:element name="note" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:simpleContent>
+                          <xs:extension base="xs:string">
+                            <xs:attribute name="label" type="xs:string" use="required"/>
+                          </xs:extension>
+                        </xs:simpleContent>
+                      </xs:complexType>
+                    </xs:element>
+                    <xs:element name="trace" minOccurs="0" maxOccurs="1">
+                      <xs:complexType>
+                        <xs:sequence>
+                          <xs:element name="attribute" maxOccurs="unbounded">
+                            <xs:complexType>
+                              <xs:simpleContent>
+                                <xs:extension base="xs:double">
+                                  <xs:attribute name="type" type="xs:string" use="required"/>
+                                </xs:extension>
+                              </xs:simpleContent>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Xdata" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="values" minOccurs="0" maxOccurs="1">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="byteorder" type="xs:string" use="required"/>
+                                        <xs:attribute name="format" type="xs:string" use="required"/>
+                                        <xs:attribute name="numvalues" type="xs:int" use="required"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="label" type="xs:string" use="required"/>
+                              <xs:attribute name="units" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                          <xs:element name="Ydata" minOccurs="0" maxOccurs="1">
+                            <xs:complexType>
+                              <xs:sequence>
+                                <xs:element name="values" minOccurs="0" maxOccurs="1">
+                                  <xs:complexType>
+                                    <xs:simpleContent>
+                                      <xs:extension base="xs:string">
+                                        <xs:attribute name="byteorder" type="xs:string" use="required"/>
+                                        <xs:attribute name="format" type="xs:string" use="required"/>
+                                        <xs:attribute name="numvalues" type="xs:int" use="required"/>
+                                      </xs:extension>
+                                    </xs:simpleContent>
+                                  </xs:complexType>
+                                </xs:element>
+                              </xs:sequence>
+                              <xs:attribute name="label" type="xs:string" use="required"/>
+                              <xs:attribute name="units" type="xs:string" use="required"/>
+                            </xs:complexType>
+                          </xs:element>
+                        </xs:sequence>
+                        <xs:attribute name="id" type="xs:int" use="required"/>
+                        <xs:attribute name="label" type="xs:string" use="required"/>
+                        <xs:attribute name="type" type="xs:string" use="required"/>
+                      </xs:complexType>
+                    </xs:element>
+                  </xs:sequence>
+                  <xs:attribute name="type" type="xs:string" use="required"/>
+                  <xs:attribute name="label" type="xs:string" use="required"/>
+                </xs:complexType>
+              </xs:element>
+            </xs:sequence>
+            <xs:attribute name="id" type="xs:int" use="required"/>
+            <xs:attribute name="mh" type="xs:double" use="required"/>
+            <xs:attribute name="z" type="xs:int" use="required"/>
+            <xs:attribute name="rt" type="xs:double" use="required"/>
+            <xs:attribute name="expect" type="xs:string" use="required"/>
+            <xs:attribute name="label" type="xs:string" use="required"/>
+            <xs:attribute name="type" type="xs:string" use="required"/>
+            <xs:attribute name="sumI" type="xs:double" use="required"/>
+            <xs:attribute name="maxI" type="xs:double" use="required"/>
+            <xs:attribute name="fI" type="xs:double" use="required"/>
+            <xs:attribute name="act" type="xs:int" use="required"/>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+      <xs:attribute name="label" type="xs:string" use="required"/>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

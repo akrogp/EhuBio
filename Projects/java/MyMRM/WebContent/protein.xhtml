@@ -1,0 +1,69 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Protein search</ui:define>
+		<ui:define name="content">
+			<h:form rendered="#{empty databaseMB.fastas}">
+				To perform a protein search you must first <p:commandButton value="upload" action="databases"/> a fasta file.
+			</h:form>
+			<h:panelGroup rendered="#{not empty databaseMB.fastas}">			
+				<h:form>
+					<p:panelGrid columns="2">
+						<f:facet name="header">Search options</f:facet>
+						<h:outputText value="Protein accession" />
+						<h:panelGroup>
+							<h:inputText id="acc" value="#{searchMB.proteinAccession}" required="true" requiredMessage="Enter a protein accession in the selected fasta file"/>
+							<h:message for="acc" style="color:red"/>
+						</h:panelGroup>
+						<h:outputText value="Fasta file" />
+						<p:selectOneMenu value="#{searchMB.fastaFile}">
+							<f:selectItems value="#{databaseMB.fastas}" var="fasta" itemLabel="#{fasta.name}" itemValue="#{fasta.name}"/>					
+						</p:selectOneMenu>
+						<h:outputText value="Enzyme" />
+						<p:selectOneMenu value="#{searchMB.enzyme}">
+							<f:selectItems value="#{searchMB.enzymes}" var="e" itemLabel="#{e.description}" itemValue="#{e}"/>					
+						</p:selectOneMenu>
+						<h:outputText value="Minimum peptide length"/>
+						<h:panelGroup>
+							<p:inputText id="len" value="#{searchMB.minPeptideLength}" required="true">
+								<f:validateLongRange minimum="0" maximum="20"/>
+							</p:inputText>
+							<h:message for="len" style="color:red"/>						
+						</h:panelGroup>
+					</p:panelGrid>
+					<br/>
+					<p:commandButton value="Search" action="#{searchMB.searchProtein(databaseMB)}" ajax="false"/>
+				</h:form>
+				<br/>
+				<h:form rendered="#{searchMB.protein != null}">
+					<p:dataTable value="#{searchMB.candidates}" rowIndexVar="row" var="can">
+						<f:facet name="header">Results for #{searchMB.proteinAccession}</f:facet>
+						<p:column headerText="peptide">
+							#{can.peptide}
+						</p:column>
+						<p:column headerText="type">
+							#{can.peptide.confidence}
+						</p:column>
+						<p:column headerText="proteins">
+							#{can.peptide.proteins}
+						</p:column>
+						<p:column headerText="sequence">
+							#{can.peptide.sequence}
+						</p:column>
+						<p:column headerText="action">
+							<p:commandButton value="Details ..." rendered="#{can.available}" action="#{searchMB.searchProteinPeptide(databaseMB,can.peptide.sequence)}"/>
+							<h:outputText value="Not available" rendered="#{!can.available}"/>
+						</p:column>						
+					</p:dataTable>
+				</h:form>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui">
+
+<h:body>
+	<ui:composition template="./template.xhtml">
+		<ui:define name="title">Search</ui:define>
+		<ui:define name="htmlhead">
+			<meta name="description" content="Wregex search page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
+		</ui:define>
+		<ui:define name="content">
+<!-- 			<h:form enctype="multipart/form-data" rendered="#{searchBean.initialized}"> -->
+			<h:form enctype="multipart/form-data">
+				<p:panelGrid headerClass="cfg_header">
+					<f:facet name="header">Search configuration</f:facet>
+					
+					<p:row>
+						<p:column>Motif:</p:column>
+						<p:column>
+							<p:selectOneMenu value="#{searchBean.motif}"
+								valueChangeListener="#{searchBean.onChangeMotif}">
+								<f:selectItem itemLabel="--- Select motif ---"
+									itemValue="Default" />
+<!-- 								<f:selectItem itemLabel="All motifs" itemValue="All" /> -->
+								<f:selectItem itemLabel="Custom" itemValue="Custom" />
+								<f:selectItems value="#{searchBean.wregexMotifs}" />
+								<f:selectItem
+									itemLabel="--- #{searchBean.elmInformation.fullName} ---"
+									itemValue="ELM" />
+								<f:selectItems value="#{searchBean.elmMotifs}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+							<p:selectOneMenu value="#{searchBean.configuration}"
+								valueChangeListener="#{searchBean.onChangeDefinition}"
+								rendered="#{searchBean.motifInformation != null and !searchBean.custom }">
+								<f:selectItem itemLabel="--- Select configuration ---" itemValue="Default" />
+								<f:selectItems value="#{searchBean.definitions}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+						</p:column>
+						<p:column rendered="#{searchBean.useAuxMotif}">
+							<p:selectOneMenu value="#{searchBean.auxMotif}"
+								valueChangeListener="#{searchBean.onChangeAuxMotif}">
+								<f:selectItem itemLabel="--- Select motif ---"
+									itemValue="Default" />
+								<f:selectItems value="#{searchBean.wregexMotifs}" />
+								<f:selectItem
+									itemLabel="--- #{searchBean.elmInformation.fullName} ---"
+									itemValue="ELM" />
+								<f:selectItems value="#{searchBean.elmMotifs}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+							<p:selectOneMenu value="#{searchBean.auxConfiguration}"
+								valueChangeListener="#{searchBean.onChangeAuxDefinition}"
+								rendered="#{searchBean.auxMotifInformation != null}">
+								<f:selectItem itemLabel="--- Select configuration ---" itemValue="Default" />
+								<f:selectItems value="#{searchBean.auxDefinitions}" />
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+					
+					<p:row rendered="#{searchBean.showMotifDetails}">
+						<p:column>Summary:</p:column>
+						<p:column>#{searchBean.summary}</p:column>
+						<p:column rendered="#{searchBean.useAuxMotif}">#{searchBean.auxSummary}</p:column>
+					</p:row>
+					
+					<p:row rendered="#{searchBean.showMotifDetails}">
+						<p:column>Description:</p:column>
+						<p:column>#{searchBean.description}</p:column>
+						<p:column rendered="#{searchBean.useAuxMotif}">#{searchBean.auxDescription}</p:column>
+					</p:row>
+					
+					<p:row rendered="#{searchBean.showMotifDetails}">
+						<p:column>References:</p:column>
+						<p:column>					
+							<p:dataList value="#{searchBean.references}" var="ref" type="ordered" emptyMessage="">
+								<h:outputLink value="#{ref.link}" target="_blank">
+									<h:outputText value="#{ref.html}" escape="false"/>&nbsp;<h:graphicImage name="images/link.png" height="15"/>
+								</h:outputLink>
+							</p:dataList>
+						</p:column>
+						<p:column rendered="#{searchBean.useAuxMotif}">					
+							<p:dataList value="#{searchBean.auxReferences}" var="ref" type="ordered" emptyMessage="">
+								<h:outputLink value="#{ref.link}" target="_blank">
+									<h:outputText value="#{ref.html}" escape="false"/>&nbsp;<h:graphicImage name="images/link.png" height="15"/>
+								</h:outputLink>
+							</p:dataList>
+						</p:column>					
+					</p:row>
+					
+					<p:row rendered="#{searchBean.showMotifDetails or searchBean.custom}">
+						<p:column>Regex:</p:column>
+						<p:column>
+							<h:outputText value="#{searchBean.regex}" rendered="#{!searchBean.custom and !searchBean.allMotifs}"/>
+							<h:outputText value="All Wregex and ELM regular expressions" rendered="#{searchBean.allMotifs}"/>
+							<p:inputText value="#{searchBean.customRegex}" rendered="#{searchBean.custom}" styleClass="trn_regex" onchange="submit()"/>
+						</p:column>
+						<p:column rendered="#{searchBean.useAuxMotif}">#{searchBean.auxRegex}</p:column>
+					</p:row>
+					
+					<p:row rendered="#{searchBean.showMotifDetails or searchBean.custom}">
+						<p:column>PSSM file:</p:column>
+						<p:column>
+							<h:panelGroup rendered="#{!searchBean.custom and !searchBean.allMotifs}">
+								<h:outputText value="#{searchBean.pssm}" />
+								<h:outputText
+									value="Not available (scores will not be available)"
+									rendered="#{searchBean.motifInformation != null and searchBean.pssm == null}" />
+								<p:commandButton value="Download"
+									actionListener="#{searchBean.downloadPssm}"
+									rendered="#{searchBean.pssm != null}" ajax="false" />
+							</h:panelGroup>
+							<h:outputText
+								value="Scores will be available only for motifs with a PSSM (Wregex but not ELM)"
+								rendered="#{searchBean.allMotifs}" />
+							<h:panelGroup rendered="#{searchBean.custom}">
+								<p:fileUpload fileUploadListener="#{searchBean.uploadPssm}"
+									mode="advanced" sizeLimit="#{initParam['wregex.pssm']}"
+									multiple="false" auto="true" label="Select PSSM" update="@form"
+									allowTypes="/(\.|\/)(te?xt|pssm)$/" style="width:400px;" />
+								<h:outputText id="pssm" value="#{searchBean.pssmSummary}" />
+							</h:panelGroup>
+						</p:column>
+						<p:column rendered="#{searchBean.useAuxMotif}">
+							#{searchBean.auxPssm}
+							<p:commandButton value="Download"
+								actionListener="#{searchBean.downloadAuxPssm}"
+								rendered="#{searchBean.auxPssm != null}" ajax="false" />
+						</p:column>					
+            		</p:row>
+            		
+            		<p:row>
+            			<p:column>Target:</p:column>
+            			<p:column colspan="#{searchBean.useAuxMotif ? 2 : 1}">
+							<p:panelGrid style="border-style:hidden;">
+								<p:row>
+								<p:column>
+									<p:selectOneMenu value="#{searchBean.target}"
+										valueChangeListener="#{searchBean.onChangeTarget}">
+										<f:selectItem itemLabel="--- Select target ---" itemValue="Default" />
+										<f:selectItems value="#{searchBean.targets}" />
+										<p:ajax update="@form" />
+									</p:selectOneMenu>
+								</p:column>
+								<p:column rendered="#{searchBean.uploadTarget}">
+									<p:fileUpload fileUploadListener="#{searchBean.uploadFasta}"
+										mode="advanced" sizeLimit="#{initParam['wregex.fasta']}"
+										multiple="false" auto="true" label="Select fasta"
+										update="@form" allowTypes="/(\.|\/)(te?xt|fasta)$/"
+										style="width:400px;" />
+								</p:column>
+								<p:column rendered="#{searchBean.fastaSummary != null}">
+									<h:outputText id="fasta" value="#{searchBean.fastaSummary}" />
+								</p:column>
+								</p:row>
+							</p:panelGrid>
+						</p:column>						
+            		</p:row>
+            	
+            		<p:row>
+            			<p:column>Options:</p:column>	
+						<p:column colspan="#{searchBean.useAuxMotif ? 2 : 1}">
+							<p:selectBooleanCheckbox itemLabel="Grouping" value="#{searchBean.grouping}" valueChangeListener="#{searchBean.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>
+							&nbsp;
+							<!--<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{searchBean.useAuxMotif}" valueChangeListener="#{searchBean.onChangeOption}" update="@form">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>
+							&nbsp;-->
+							<p:selectBooleanCheckbox itemLabel="#{searchBean.cosmicInformation.fullName}" value="#{searchBean.cosmic}" valueChangeListener="#{searchBean.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>
+							&nbsp;
+							<!--<p:selectBooleanCheckbox itemLabel="#{searchBean.dbPtmInformation.fullName}" value="#{searchBean.dbPtm}" valueChangeListener="#{searchBean.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>-->
+						</p:column>
+					</p:row>
+					
+					<p:row rendered="#{searchBean.configError != null}">
+						<p:column>Status:</p:column>
+						<p:column colspan="#{searchBean.useAuxMotif ? 2 : 1}">
+							<h:outputText value="#{searchBean.configError}" style="color:red"/>
+						</p:column>						
+					</p:row>
+					
+					<p:row rendered="#{searchBean.configError == null and searchBean.results == null}">
+						<p:column>
+							<p:commandButton value="Search!" actionListener="#{searchBean.search}" ajax="false"/>
+						</p:column>
+						<p:column colspan="#{searchBean.useAuxMotif ? 2 : 1}">
+							<h:outputText id="search" value="#{searchBean.searchError}" rendered="#{searchBean.searchError != null}" style="color:red"/>
+						</p:column>
+					</p:row>
+					
+					<p:row rendered="#{searchBean.results != null and searchBean.configError == null and searchBean.searchError == null}">
+						<p:column>Results:</p:column>
+						<p:column colspan="#{searchBean.useAuxMotif ? 2 : 1}">
+							<h:outputText value="#{searchBean.numberOfResults}"/>&nbsp;
+							<p:commandButton value="Download as CSV" rendered="#{not empty searchBean.results}" actionListener="#{searchBean.downloadCsv}" ajax="false"/>
+							<p:commandButton value="Download as ALN" rendered="#{not empty searchBean.results}" actionListener="#{searchBean.downloadAln}" ajax="false"/>
+						</p:column>
+					</p:row>
+				</p:panelGrid>
+				
+				<br/>
+				<p:dataTable value="#{searchBean.results}" rowIndexVar="row" var="item" rendered="#{searchBean.results != null and searchBean.configError == null}" scrollable="true" scrollHeight="300" liveScroll="true" scrollRows="40">
+					<f:facet name="header">Search results - live scroll (scroll and wait for more results)</f:facet>
+					<p:column width="50" style="text-align:center;">
+						<f:facet name="header">#</f:facet>
+						<h:outputText value="#{row + 1}"/>
+					</p:column>
+					<p:column width="200">
+						<f:facet name="header">Entry</f:facet>
+						<h:outputText value="#{item.entry}"/>
+					</p:column>
+					<p:column styleClass="trn_pos">
+						<f:facet name="header">Start</f:facet>
+						<h:outputText value="#{item.start}"/>
+					</p:column>
+					<p:column styleClass="trn_pos">
+						<f:facet name="header">End</f:facet>
+						<h:outputText value="#{item.end}"/>
+					</p:column>
+					<p:column rendered="#{searchBean.allMotifs}" width="200">
+						<f:facet name="header">Motif</f:facet>
+						<h:outputLink value="#{item.motifUrl}" target="_blank">#{item.motif}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+					</p:column>
+					<p:column>
+						<f:facet name="header">Sequence</f:facet>
+						<h:outputText value="#{item.alignment}"/>
+					</p:column>
+					<p:column rendered="#{searchBean.cosmic and searchBean.usingPssm}">
+						<f:facet name="header">Mutant</f:facet>
+						<h:outputText value="#{item.mutLeft}"/>
+						<h:outputText value="#{item.mutAa}" style="color:red"/>
+						<h:outputText value="#{item.mutRight}"/>
+					</p:column>
+					<p:column styleClass="trn_pos">
+						<f:facet name="header">"!"</f:facet>
+						<h:outputText value="#{item.combinations}"/>
+					</p:column>
+					<p:column styleClass="trn_weight">
+						<f:facet name="header">Score</f:facet>
+						<h:outputText value="#{item.scoreAsString}" rendered="#{searchBean.usingPssm}" />
+						<h:outputText value="N/A" rendered="#{!searchBean.usingPssm}"/>
+					</p:column>
+					<p:column rendered="#{searchBean.assayScores}" styleClass="trn_weight">
+						<f:facet name="header">Assay</f:facet>
+						<h:outputText value="#{item.assayAsString}"/>
+					</p:column>
+					<p:column styleClass="trn_weight" rendered="#{searchBean.useAuxMotif}">
+						<f:facet name="header">Aux score</f:facet>
+						<h:outputText value="#{item.auxScoreAsString}"/>
+					</p:column>		
+					<p:column rendered="#{searchBean.cosmic}" width="100">
+						<f:facet name="header">Gene</f:facet>
+						<h:outputText value="#{item.gene}"/>
+					</p:column>
+					<p:column rendered="#{searchBean.cosmic}" width="80" style="text-align:center;">
+						<f:facet name="header">COSMIC missense</f:facet>
+						<h:outputText rendered="#{item.cosmicUrl == null}" value="#{item.cosmicMissenseAsString}"/>
+						<h:outputLink rendered="#{item.cosmicUrl != null}" value="#{item.cosmicUrl}" target="_blank">#{item.cosmicMissenseAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+					</p:column>
+					<p:column rendered="#{searchBean.cosmic and searchBean.usingPssm}" width="80" style="text-align:center;">
+						<f:facet name="header">Mutation impact</f:facet>
+						<h:outputText value="NA" rendered="#{item.mutScore == null}"/>
+						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore lt 0}" style="color:red"/>
+						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore gt 0}" style="color:blue"/>
+						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore == 0}"/>						
+					</p:column>
+					<p:column rendered="#{searchBean.dbPtm}" width="80" style="text-align:center;">
+						<f:facet name="header">dbPTM entries</f:facet>
+						<h:outputText rendered="#{item.dbPtmUrl == null}" value="#{item.dbPtmsAsString}"/>
+						<h:outputLink rendered="#{item.dbPtmUrl != null}" value="#{item.dbPtmUrl}" target="_blank">#{item.dbPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+<!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!searchBean.initialized}"/> -->
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

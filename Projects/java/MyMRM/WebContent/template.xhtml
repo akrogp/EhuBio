@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<h:head>
+	<h:outputStylesheet name="css/style.css" />
+	<title>MyMRM: <ui:insert name="title" /></title>
+	<ui:insert name="htmlhead" />
+</h:head>
+<h:body>
+	<div id="container">
+	<div id="titlebar">
+		<h:graphicImage name="images/MyMRM.png" style="float:left;margin-left:10px;"/>
+		<a href="http://www.ehu.es" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
+	</div>
+	<div id="menubar">
+		<ui:repeat var="page" value="#{homeBean.firstPages}">
+			<h:link value="#{page.name}" outcome="#{page.action}" style="color:white"/> &nbsp; | &nbsp;
+		</ui:repeat>		
+		<h:link value="#{homeBean.lastPage.name}" outcome="#{homeBean.lastPage.action}" style="color:white"/>
+	</div>
+	<div id="body">
+	<ui:insert name="content" />
+	</div>
+	<!--<div id="footer">
+		<div style="float:left;margin-left:10px;">Copyright (C) 2013 Gorka Prieto (UPV/EHU)</div>
+		<div style="float:right;margin-right:10px;">Funding: Basque Country Government (SAIOTEK S-PE12UN005), University of the Basque Country (UFI11/20).</div>				
+	</div>-->
+	</div>
+</h:body>
+</html>
