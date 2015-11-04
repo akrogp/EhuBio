@@ -419,7 +419,7 @@ public class SearchBean implements Serializable {
 		cachedAlnPath = null;
 		File dir = getSearchCache();
 		if( dir == null )
-			return null;
+			return null;		
 		String[] files = dir.list(new FilenameFilter() {			
 			@Override
 			public boolean accept(File dir, String name) {
@@ -443,6 +443,7 @@ public class SearchBean implements Serializable {
 				List<ResultEx> results = new ArrayList<>(len);
 				for( int i = 0; i < len; i++ )
 					results.add(loadSearchItem(dis));
+				initPssm();
 				return results;
 			} catch( Exception e ) {
 				logger.severe(e.getMessage());

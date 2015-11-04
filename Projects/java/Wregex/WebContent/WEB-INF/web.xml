@@ -76,9 +76,9 @@
 		<param-value>home</param-value>
 	</context-param>	
 
-	<!-- ***** Specify session timeout of thirty (30) minutes. ***** -->
+	<!-- ***** Specify session timeout of ten (10) minutes. ***** -->
 	<session-config>
-		<session-timeout>30</session-timeout>
+		<session-timeout>10</session-timeout>
 	</session-config>	
 
 	<!-- Welcome page -->
