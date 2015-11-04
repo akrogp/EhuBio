@@ -455,6 +455,7 @@ public class SearchBean implements Serializable {
 		File dir = getSearchCache();
 		if( dir == null )
 			return;
+		boolean delete = false;
 		long id = System.currentTimeMillis();
 		File file = new File(dir,String.format("%s-search.dat.gz", id));
 		try( DataOutputStream dos = new DataOutputStream(Streams.getBinWriter(file)); ) {
@@ -468,10 +469,16 @@ public class SearchBean implements Serializable {
 			cachedAlnPath = new File(dir, String.format("%s-search.aln.gz", id)).getAbsolutePath();
 			try( Writer wr = Streams.getTextWriter(cachedAlnPath); ) {
 				ResultEx.saveAln(wr, results);
+			} catch( Exception e ) {
+				logger.severe(String.format("Could not save ALN cache: %s", e.getMessage()));
+				new File(cachedAlnPath).delete();
 			}
 		} catch( Exception e ) {
 			logger.severe(e.getMessage());
+			delete = true;
 		}
+		if( delete )
+			file.delete();
 	}
 	
 	private void saveSearchItem( DataOutputStream dos, ResultEx result ) throws IOException {
@@ -483,7 +490,10 @@ public class SearchBean implements Serializable {
 		dos.writeDouble(result.getScore());
 		dos.writeInt(result.getGroups().size());
 		for( String group : result.getGroups() )
-			dos.writeUTF(group);
+			if( group == null )
+				dos.writeUTF("@null");
+			else
+				dos.writeUTF(group);
 		dos.writeUTF(result.getMatch());
 		dos.writeUTF(result.getName());
 		dos.writeUTF(result.toString());
@@ -511,8 +521,12 @@ public class SearchBean implements Serializable {
 		result.setScore(dis.readDouble());
 		int ngroups = dis.readInt();
 		List<String> groups = new ArrayList<String>(ngroups);
-		for( int j = 0; j < ngroups; j++ )
-			groups.add(dis.readUTF());
+		for( int j = 0; j < ngroups; j++ ) {
+			String group = dis.readUTF();
+			if( group.equals("@null") )
+				group = null;
+			groups.add(group);
+		}
 		result.setGroups(groups);
 		result.setMatch(dis.readUTF());
 		result.setName(dis.readUTF());
