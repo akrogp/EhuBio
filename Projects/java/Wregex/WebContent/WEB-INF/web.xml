@@ -32,6 +32,11 @@
 		<param-name>wregex.allMotifs</param-name>
 		<param-value>350</param-value>
 	</context-param>
+	<!-- Cache search results -->
+	<context-param>
+		<param-name>wregex.cacheSearch</param-name>
+		<param-value>1</param-value>
+	</context-param>
 
 	<context-param>
 		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>

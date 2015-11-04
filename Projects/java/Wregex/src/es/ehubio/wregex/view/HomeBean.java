@@ -67,6 +67,7 @@ public class HomeBean implements Serializable {
 		addPage(page);
 		
 		news = new ArrayList<>();
+//		news.add(new LatestNew("Nov 04, 2015", "Search results are now cached"));
 //		news.add(new LatestNew("Feb 08, 2015", "Updated to COSMIC v71"));
 //		news.add(new LatestNew("Jan 28, 2015", "Included NESdb in target database list"));
 //		news.add(new LatestNew("Jan 26, 2015", "Included support for a second auxiliary motif"));

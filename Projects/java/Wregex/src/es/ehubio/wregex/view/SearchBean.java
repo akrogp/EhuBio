@@ -2,16 +2,23 @@ package es.ehubio.wregex.view;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Serializable;
+import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -21,15 +28,21 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
+import es.ehubio.db.fasta.Fasta.SequenceType;
+import es.ehubio.io.Streams;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.Pssm;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
+import es.ehubio.wregex.Result;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
+import es.ehubio.wregex.data.CachedResult;
 import es.ehubio.wregex.data.DatabaseInformation;
 import es.ehubio.wregex.data.MotifDefinition;
 import es.ehubio.wregex.data.MotifInformation;
@@ -43,6 +56,7 @@ import es.ehubio.wregex.view.DatabasesBean.ReloadException;
 @SessionScoped
 public class SearchBean implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private final static Logger logger = Logger.getLogger(SearchBean.class.getName());
 	private String motif, auxMotif;
 	private String definition, auxDefinition;
 	private String target;
@@ -54,6 +68,7 @@ public class SearchBean implements Serializable {
 	private String customPssm;
 	private String searchError;
 	private List<ResultEx> results = null;
+	private String cachedAlnPath;
 	private boolean usingPssm;
 	private boolean grouping = true;
 	private boolean cosmic = false;
@@ -349,16 +364,21 @@ public class SearchBean implements Serializable {
 	
 	public void search() {
 		searchError = null;		
-		try {						
-			List<ResultGroupEx> resultGroups = allMotifs == false ? singleSearch() : allSearch();
-			results = Services.expand(resultGroups, grouping);
-			if( useAuxMotif )
-				searchAux();
-			if( cosmic )
-				searchCosmic();
-			if( dbPtm )
-				searchDbPtm();
-			Collections.sort(results);
+		try {
+			updateAssayScores();
+			results = loadSearchCache();
+			if( results == null ) {
+				List<ResultGroupEx> resultGroups = allMotifs == false ? singleSearch() : allSearch();
+				results = Services.expand(resultGroups, grouping);
+				if( useAuxMotif )
+					searchAux();
+				if( cosmic )
+					searchCosmic();
+				if( dbPtm )
+					searchDbPtm();
+				Collections.sort(results);
+				saveSearchCache(results);
+			}
 		} catch( IOException e ) {
 			searchError = "File error: " + e.getMessage();
 		} catch( PssmBuilderException e ) {
@@ -370,16 +390,147 @@ public class SearchBean implements Serializable {
 		}
 	}
 	
-	private List<ResultGroupEx> singleSearch() throws NumberFormatException, Exception {
+	private void initPssm() throws IOException, PssmBuilderException {
 		if( !custom && getPssm() != null )
 			pssm = services.getPssm(getPssm());
-		usingPssm = pssm == null ? false : true;
-		String regex = custom ? getCustomRegex() : getRegex();
-		Wregex wregex = new Wregex(regex, pssm);
-		updateAssayScores();
+		usingPssm = pssm == null ? false : true;		
+	}
+	
+	private String getSingleRegex() {
+		return custom ? getCustomRegex() : getRegex();
+	}
+	
+	private List<ResultGroupEx> singleSearch() throws NumberFormatException, Exception {
+		initPssm();		
+		Wregex wregex = new Wregex(getSingleRegex(), pssm);
 		return Services.search(wregex, motifInformation, inputGroups, assayScores, services.getInitNumber("wregex.watchdogtimer")*1000);
 	}
 	
+	private File getSearchCache() {
+		if( services.getInitNumber("wregex.cacheSearch") == 0 )
+			return null;
+		DatabaseInformation cacheDb = databases.getDbWregex(); 
+		if( cacheDb == null || useAuxMotif || dbPtm || assayScores || custom )
+			return null;
+		return new File(cacheDb.getPath());
+	}
+
+	private List<ResultEx> loadSearchCache() {
+		cachedAlnPath = null;
+		File dir = getSearchCache();
+		if( dir == null )
+			return null;
+		String[] files = dir.list(new FilenameFilter() {			
+			@Override
+			public boolean accept(File dir, String name) {
+				return name.contains("-search.dat");
+			}
+		});
+		for( String file : files ) {
+			File cache = new File(dir,file);
+			try( DataInputStream dis = new DataInputStream(Streams.getBinReader(cache)); ) {
+				if( !dis.readUTF().equals(getRegex()) )
+					continue;
+				if( !dis.readUTF().equals(getPssm()) )
+					continue;
+				if( dis.readBoolean() != grouping )
+					continue;
+				if( dis.readBoolean() != cosmic )
+					continue;
+				logger.info("Using cached search");
+				cachedAlnPath = cache.getAbsolutePath().replaceAll("\\.dat", ".aln");
+				int len = dis.readInt();
+				List<ResultEx> results = new ArrayList<>(len);
+				for( int i = 0; i < len; i++ )
+					results.add(loadSearchItem(dis));
+				return results;
+			} catch( Exception e ) {
+				logger.severe(e.getMessage());
+			}
+		}
+		return null;
+	}
+
+	private void saveSearchCache(List<ResultEx> results) {
+		File dir = getSearchCache();
+		if( dir == null )
+			return;
+		long id = System.currentTimeMillis();
+		File file = new File(dir,String.format("%s-search.dat.gz", id));
+		try( DataOutputStream dos = new DataOutputStream(Streams.getBinWriter(file)); ) {
+			dos.writeUTF(getRegex());
+			dos.writeUTF(getPssm());
+			dos.writeBoolean(grouping);
+			dos.writeBoolean(cosmic);
+			dos.writeInt(results.size());
+			for( ResultEx result : results )
+				saveSearchItem(dos, result);
+			cachedAlnPath = new File(dir, String.format("%s-search.aln.gz", id)).getAbsolutePath();
+			try( Writer wr = Streams.getTextWriter(cachedAlnPath); ) {
+				ResultEx.saveAln(wr, results);
+			}
+		} catch( Exception e ) {
+			logger.severe(e.getMessage());
+		}
+	}
+	
+	private void saveSearchItem( DataOutputStream dos, ResultEx result ) throws IOException {
+		dos.writeUTF(result.getEntry());
+		dos.writeInt(result.getStart());
+		dos.writeInt(result.getEnd());
+		dos.writeUTF(result.getAlignment());
+		dos.writeInt(result.getCombinations());
+		dos.writeDouble(result.getScore());
+		dos.writeInt(result.getGroups().size());
+		for( String group : result.getGroups() )
+			dos.writeUTF(group);
+		dos.writeUTF(result.getMatch());
+		dos.writeUTF(result.getName());
+		dos.writeUTF(result.toString());
+		dos.writeUTF(result.getAccession());
+		dos.writeUTF(result.getMotif());
+		dos.writeUTF(result.getFasta().getHeader());
+		dos.writeUTF(result.getFasta().getSequence());
+		if( cosmic ) {
+			dos.writeUTF(result.getGene());
+			dos.writeInt(result.getCosmicMissense());
+			if( result.getCosmicMissense() >= 0 ) {
+				dos.writeUTF(result.getMutSequence());
+				dos.writeDouble(result.getMutScore());
+			}
+		}
+	}
+	
+	private CachedResult loadSearchItem( DataInputStream dis ) throws IOException, InvalidSequenceException {
+		CachedResult result = new CachedResult();
+		result.setEntry(dis.readUTF());
+		result.setStart(dis.readInt());
+		result.setEnd(dis.readInt());
+		result.setAlignement(dis.readUTF());
+		result.setCombinations(dis.readInt());
+		result.setScore(dis.readDouble());
+		int ngroups = dis.readInt();
+		List<String> groups = new ArrayList<String>(ngroups);
+		for( int j = 0; j < ngroups; j++ )
+			groups.add(dis.readUTF());
+		result.setGroups(groups);
+		result.setMatch(dis.readUTF());
+		result.setName(dis.readUTF());
+		result.setString(dis.readUTF());
+		result.setAccession(dis.readUTF());
+		result.setMotif(dis.readUTF());
+		result.setFasta(new Fasta(dis.readUTF(), dis.readUTF(), SequenceType.PROTEIN));
+		if( cosmic ) {
+			result.setGene(dis.readUTF());
+			result.setCosmicMissense(dis.readInt());
+			if( result.getCosmicMissense() >= 0 ) {
+				result.setMutSequence(dis.readUTF());							
+				result.setMutScore(dis.readDouble());
+			}
+		}
+		return result;
+	}
+
 	private List<ResultGroupEx> allSearch() throws Exception {
 		assayScores = false;
 		//long div = getWregexMotifs().size() + getElmMotifs().size();
@@ -463,7 +614,7 @@ public class SearchBean implements Serializable {
 		return searchError;
 	}
 
-	public List<ResultEx> getResults() {
+	public List<? extends ResultEx> getResults() {
 		if( searchError == null )			
 			return results;
 		return null;
@@ -517,7 +668,12 @@ public class SearchBean implements Serializable {
 	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+baseFileName+".aln\"");
 		try {
 			OutputStream output = ec.getResponseOutputStream();
-			ResultEx.saveAln(new OutputStreamWriter(output), results);
+			if( cachedAlnPath != null )
+				try(InputStream input = Streams.getBinReader(cachedAlnPath) ) {
+					IOUtils.copy(input,output);
+				}
+			else
+				ResultEx.saveAln(new OutputStreamWriter(output), results);			
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

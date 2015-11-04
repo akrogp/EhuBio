@@ -48,20 +48,20 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public int compareTo(ResultEx o) {
 		// 1. Mutation effect
-		if( mutScore == null && o.mutScore != null )
+		if( getMutScore() == null && o.getMutScore() != null )
 			return 1;
-		if( mutScore != null && o.mutScore == null )
+		if( getMutScore() != null && o.getMutScore() == null )
 			return -1;
-		if( mutScore != null && o.mutScore != null ) {
-			if( Math.abs(mutScore) > Math.abs(o.mutScore) )
+		if( getMutScore() != null && o.getMutScore() != null ) {
+			if( Math.abs(getMutScore()) > Math.abs(o.getMutScore()) )
 				return -1;
-			if( Math.abs(mutScore) < Math.abs(o.mutScore) )
+			if( Math.abs(getMutScore()) < Math.abs(o.getMutScore()) )
 				return 1;
 		}
 		// 2. Mutation count
-		if( cosmicMissense > o.cosmicMissense )
+		if( getCosmicMissense() > o.getCosmicMissense() )
 			return -1;
-		if( cosmicMissense < o.cosmicMissense )
+		if( getCosmicMissense() < o.getCosmicMissense() )
 			return 1;
 		// 3. Wregex Score
 		if( getScore() > o.getScore() )
@@ -69,16 +69,16 @@ public class ResultEx implements Comparable<ResultEx> {
 		if( getScore() < o.getScore() )
 			return 1;
 		// 4. Aux Score
-		if( auxScore == null && o.auxScore != null )
+		if( getAuxScore() == null && o.getAuxScore() != null )
 			return 1;
-		if( auxScore != null && o.auxScore == null )
+		if( getAuxScore() != null && o.getAuxScore() == null )
 			return -1;
-		if( auxScore != null && o.auxScore != null )
-			return (int)Math.signum(o.auxScore - auxScore);
+		if( getAuxScore() != null && o.getAuxScore() != null )
+			return (int)Math.signum(o.getAuxScore() - getAuxScore());
 		// 5. PTMs
-		if( dbPtms > o.dbPtms )
+		if( getDbPtms() > o.getDbPtms() )
 			return -1;
-		if( dbPtms < o.dbPtms )
+		if( getDbPtms() < o.getDbPtms() )
 			return 1;
 		// 6. Wregex Combinations
 		if( getCombinations() > o.getCombinations() )
@@ -91,10 +91,6 @@ public class ResultEx implements Comparable<ResultEx> {
 		if( getMatch().length() < o.getMatch().length() )
 			return 1;
 		return 0;
-	}
-
-	public boolean equals(Object obj) {
-		return result.equals(obj);
 	}
 
 	public String getAlignment() {
@@ -172,10 +168,6 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public int getStart() {
 		return result.getStart();
-	}
-
-	public int hashCode() {
-		return result.hashCode();
 	}
 
 	public boolean overlaps(Result result) {
