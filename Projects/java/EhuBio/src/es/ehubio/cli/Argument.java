@@ -2,9 +2,14 @@ package es.ehubio.cli;
 
 public class Argument {
 	public Argument(int id, Character shortOption, String longOption) {
+		this(id,shortOption,longOption,false);
+	}
+	
+	public Argument(int id, Character shortOption, String longOption, boolean optional) {
 		this.id = id;
 		this.shortOption = shortOption;
 		this.longOption = longOption;
+		this.optional = optional;
 	}
 	@Override
 	public String toString() {
