@@ -6,6 +6,14 @@ public class Argument {
 		this.shortOption = shortOption;
 		this.longOption = longOption;
 	}
+	@Override
+	public String toString() {
+		return String.format(
+			"%s%s",
+			getLongOption()==null ? getShortOption() : getLongOption(),
+			getParam()==null ? "" : "="+getParam()
+		);
+	}
 	public Character getShortOption() {
 		return shortOption;
 	}
@@ -29,6 +37,9 @@ public class Argument {
 	}
 	public void setOptional(boolean optional) {
 		this.optional = optional;
+	}
+	public void setOptional() {
+		setOptional(true);
 	}
 	public int getId() {
 		return id;

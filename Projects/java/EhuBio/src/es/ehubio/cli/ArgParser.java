@@ -6,12 +6,19 @@ import java.util.List;
 import java.util.Map;
 
 public class ArgParser {
-	private final String command;
+	private final static String TAB = "        ";
+	private final static int WIDTH = 80;
+	private final String command, description;	
 	private final List<Argument> opts = new ArrayList<Argument>();
 	private final Map<Integer, Argument> mapArgs = new HashMap<Integer, Argument>();
 	
 	public ArgParser( String command ) {
+		this(command, null);
+	}
+	
+	public ArgParser( String command, String description ) {
 		this.command = command;
+		this.description = description;
 	}
 	
 	public void addOption( Argument opt ) {
@@ -45,7 +52,6 @@ public class ArgParser {
 						throw new ArgException(String.format("Invalid option '%c'", arg));
 					if( opt.getParam() != null && j < args[i].length()-1 )
 						throw new ArgException(String.format("Parameter required for option '%c'", arg));
-					opts.add(opt);
 				}
 			} else if( args[i].length() == 1 )
 				opt = findShortOpt(args[i].charAt(0));
@@ -78,12 +84,15 @@ public class ArgParser {
 	
 	public String getUsage() {
 		StringBuilder str = new StringBuilder();
-		str.append(String.format("Prototype:\n\t%s\n", buildPrototype()));
-		str.append('\n');
-		str.append("Options:");
-		str.append('\n');
+		str.append("Prototype:\n");
+		addLines(str, buildPrototype(), 1, true);
+		if( description != null ) {
+			str.append("\nDescription:\n");
+			addLines(str, description, 1);
+		}
+		str.append("\nOptions:\n");
 		for( Argument opt : opts ) {
-			str.append('\t');
+			str.append(TAB);
 			if( opt.getShortOption() != null ) {
 				str.append(String.format("-%c", opt.getShortOption()));
 				if( opt.getLongOption() != null )
@@ -95,9 +104,22 @@ public class ArgParser {
 				str.append(String.format(" <%s>", opt.getParam()));
 			str.append('\n');
 			if( opt.getDescription() != null )
-				str.append(String.format("\t\t%s\n", opt.getDescription()));
+				addLines(str, opt.getDescription(), 2);
 		}
 		return str.toString();
+	}
+	
+	private void addLines(StringBuilder str, String text, int tabs) {
+		addLines(str, text, tabs, false);
+	}
+	
+	private void addLines(StringBuilder str, String text, int tabs, boolean indent ) {
+		for( String line : Terminal.splitLine(text, WIDTH-tabs*TAB.length(),indent?TAB:null) ) {
+			for( int i = 0; i < tabs; i++ )
+				str.append(TAB);
+			str.append(line);
+			str.append('\n');
+		}
 	}
 	
 	private String buildPrototype() {
@@ -113,15 +135,14 @@ public class ArgParser {
 				shortMandatory.add(opt);
 		}
 		StringBuilder str = new StringBuilder(command);
-		str.append(' ');
 		if( !shortOptional.isEmpty() ) {
-			str.append("[-");
+			str.append(" [-");
 			for( Argument opt : shortOptional )
 				str.append(opt.getShortOption());
 			str.append("] ");
 		}
 		if( !shortMandatory.isEmpty() ) {
-			str.append('-');
+			str.append(" -");
 			for( Argument opt : shortMandatory )
 				str.append(opt.getShortOption());
 		}
