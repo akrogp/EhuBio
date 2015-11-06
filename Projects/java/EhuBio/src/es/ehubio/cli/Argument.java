@@ -72,9 +72,12 @@ public class Argument {
 	public String getDefaultValue() {
 		return defaultValue;
 	}
-	public void setDefaultValue(String defaultValue) {
-		this.defaultValue = defaultValue;
+	public void setDefaultValue(Object defaultValue) {
+		this.defaultValue = defaultValue.toString();
 		setOptional();
+	}
+	public void setDefaultValue() {
+		setDefaultValue(getParamName());
 	}
 	private final int id;
 	private final Character shortOption;

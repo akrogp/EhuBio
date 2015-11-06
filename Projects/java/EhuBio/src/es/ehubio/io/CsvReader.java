@@ -1,18 +1,18 @@
 package es.ehubio.io;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class CsvReader {
+public class CsvReader implements Closeable {
 	private final String sep;
 	private final boolean useHeader;
 	private final boolean filterMarks;
 	private BufferedReader br;
-	private Map<String, Integer> header = new HashMap<>();
+	private Map<String, Integer> header = new LinkedHashMap<String, Integer>();
 	private String[] fields;
 	private String line;
 	
@@ -42,9 +42,10 @@ public class CsvReader {
 	}
 	
 	public void open( String path ) throws IOException {
-		open(new FileReader(path));
+		open(Streams.getTextReader(path));
 	}
 	
+	@Override
 	public void close() throws IOException {
 		if( br != null )
 			br.close();
@@ -121,6 +122,10 @@ public class CsvReader {
 	
 	public String[] getHeaders() {
 		return header.keySet().toArray(new String[0]);
+	}
+	
+	public String getHeaderName( int field ) {
+		return getHeaders()[field];
 	}
 	
 	private String parseField( String field ) {

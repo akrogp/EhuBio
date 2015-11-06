@@ -27,6 +27,8 @@ public class ArgParser {
 	}
 	
 	public void addOption( Argument opt ) {
+		if( mapOpts.containsKey(opt.getId()) )
+			throw new AssertionError("Duplicated option");
 		mapOpts.put(opt.getId(), opt);
 	}
 	
@@ -46,11 +48,22 @@ public class ArgParser {
 		return mapArgs.get(id);
 	}
 	
+	public boolean hasArgument( int id ) {
+		return mapArgs.containsKey(id);
+	}
+	
 	public String getValue( int id ) {
 		Argument arg = getArgument(id);
 		if( arg == null )
 			return null;
 		return arg.getValue();
+	}
+	
+	public Integer getIntValue( int id ) {
+		String value = getValue(id);
+		if( value == null )
+			return null;
+		return Integer.parseInt(value);
 	}
 	
 	private List<Argument> parseOpts( String[] args ) throws ArgException {
