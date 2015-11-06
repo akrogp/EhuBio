@@ -59,5 +59,12 @@ public final class Strings {
 		return name.toString();
 	}
 	
+	public static String[] fromArray( Object[] array ) {
+		String[] result = new String[array.length];
+		for( int i = 0; i < array.length; i++ )
+			result[i] = array[i].toString();
+		return result;
+	}
+	
 	private static Pattern mergePattern;
 }

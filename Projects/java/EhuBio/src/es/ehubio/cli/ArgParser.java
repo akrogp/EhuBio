@@ -1,15 +1,20 @@
 package es.ehubio.cli;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import es.ehubio.io.CsvUtils;
 
 public class ArgParser {
 	private final static String TAB = "        ";
 	private final static int WIDTH = 80;
 	private final String command, description;	
-	private final List<Argument> opts = new ArrayList<Argument>();
+	private final Map<Integer, Argument> mapOpts = new LinkedHashMap<Integer, Argument>();
 	private final Map<Integer, Argument> mapArgs = new HashMap<Integer, Argument>();
 	
 	public ArgParser( String command ) {
@@ -22,7 +27,11 @@ public class ArgParser {
 	}
 	
 	public void addOption( Argument opt ) {
-		opts.add(opt);
+		mapOpts.put(opt.getId(), opt);
+	}
+	
+	public Collection<Argument> getOptions() {
+		return mapOpts.values();
 	}
 	
 	public List<Argument> parseArgs( String[] args ) throws ArgException {
@@ -35,6 +44,13 @@ public class ArgParser {
 	
 	public Argument getArgument( int id ) {
 		return mapArgs.get(id);
+	}
+	
+	public String getValue( int id ) {
+		Argument arg = getArgument(id);
+		if( arg == null )
+			return null;
+		return arg.getValue();
 	}
 	
 	private List<Argument> parseOpts( String[] args ) throws ArgException {
@@ -50,7 +66,7 @@ public class ArgParser {
 					opt = findShortOpt(arg);
 					if( opt == null )
 						throw new ArgException(String.format("Invalid option '%c'", arg));
-					if( opt.getParam() != null && j < args[i].length()-1 )
+					if( opt.getParamName() != null && j < args[i].length()-1 )
 						throw new ArgException(String.format("Parameter required for option '%c'", arg));
 				}
 			} else if( args[i].length() == 1 )
@@ -59,21 +75,32 @@ public class ArgParser {
 				opt = findLongOpt(args[i]);
 			if( opt == null )
 				throw new ArgException(String.format("Invalid option '%s'", args[i]));
-			if( opt.getParam() != null ) {
+			if( opt.usesParam() ) {
 				i++;
 				if( i == args.length || args[i].startsWith("-") )
 					throw new ArgException(String.format("Parameter required for option '%s'", args[i-1]));
-				opt.setParam(args[i]);
+				if( opt.getChoices() != null && !opt.getChoices().contains(args[i]) )
+					throw new ArgException(String.format("Invalid value '%s' for option '%s'", args[i], args[i-1]));
+				opt.setValue(args[i]);
 			}
 			opts.add(opt);
 			mapArgs.put(opt.getId(), opt);
 		}
+		addDefaults();
 		return opts;
 	}	
 	
+	private void addDefaults() {
+		for( Argument opt : getOptions() )
+			if( opt.getDefaultValue() != null && getArgument(opt.getId()) == null ) {
+				opt.setValue(opt.getDefaultValue());
+				mapArgs.put(opt.getId(), opt);
+			}
+	}
+
 	private int checkMandatory(List<Argument> opts) {
 		int count = 0;
-		for( Argument opt : this.opts )
+		for( Argument opt : getOptions() )
 			if( !opt.isOptional() )
 				count++;
 		for( Argument opt : opts )
@@ -91,7 +118,7 @@ public class ArgParser {
 			addLines(str, description, 1);
 		}
 		str.append("\nOptions:\n");
-		for( Argument opt : opts ) {
+		for( Argument opt : getOptions() ) {
 			str.append(TAB);
 			if( opt.getShortOption() != null ) {
 				str.append(String.format("-%c", opt.getShortOption()));
@@ -100,13 +127,22 @@ public class ArgParser {
 			}
 			if( opt.getLongOption() != null )
 				str.append(String.format("--%s", opt.getLongOption()));
-			if( opt.getParam() != null )
-				str.append(String.format(" <%s>", opt.getParam()));
+			if( opt.getChoices() != null )
+				str.append(String.format(" %s", formatChoices(opt.getChoices())));
+			else if( opt.getParamName() != null )
+				str.append(String.format(" <%s>", opt.getParamName()));			
 			str.append('\n');
 			if( opt.getDescription() != null )
 				addLines(str, opt.getDescription(), 2);
+			if( opt.getDefaultValue() != null )
+				addLines(str, String.format("Default: '%s'.", opt.getDefaultValue()), 2);
 		}
-		return str.toString();
+		return str.toString().trim();
+	}
+	
+	private String formatChoices( Set<String> choices ) {
+		//return choices.toString().replaceAll(", ", "|");
+		return CsvUtils.getCsv('|', choices.toArray());
 	}
 	
 	private void addLines(StringBuilder str, String text, int tabs) {
@@ -126,8 +162,8 @@ public class ArgParser {
 		List<Argument> shortOptional = new ArrayList<Argument>();
 		List<Argument> shortMandatory = new ArrayList<Argument>();
 		List<Argument> expanded = new ArrayList<Argument>();
-		for( Argument opt : opts ) {
-			if( opt.getParam() != null || opt.getShortOption() == null )
+		for( Argument opt : getOptions() ) {
+			if( opt.getParamName() != null || opt.getChoices() != null || opt.getShortOption() == null )
 				expanded.add(opt);
 			else if( opt.isOptional() )
 				shortOptional.add(opt);
@@ -157,9 +193,12 @@ public class ArgParser {
 				str.append("--");
 				str.append(opt.getLongOption());
 			}
-			if( opt.getParam() != null ) {
+			if( opt.getChoices() != null ) {
+				str.append(' ');
+				str.append(formatChoices(opt.getChoices()));
+			} else if( opt.getParamName() != null ) {
 				str.append(" <");
-				str.append(opt.getParam());
+				str.append(opt.getParamName());
 				str.append('>');
 			}
 			if( opt.isOptional() )
@@ -169,14 +208,15 @@ public class ArgParser {
 	}
 	
 	private Argument findLongOpt( String arg ) {
-		for( Argument opt : opts )
+		arg = arg.substring(2);
+		for( Argument opt : getOptions() )
 			if( opt.getLongOption() != null && opt.getLongOption().equals(arg) )
 				return opt;
 		return null;
 	}
 	
 	private Argument findShortOpt( char arg ) {
-		for( Argument opt : opts )
+		for( Argument opt : getOptions() )
 			if( opt.getShortOption() != null && opt.getShortOption() == arg )
 				return opt;
 		return null;
