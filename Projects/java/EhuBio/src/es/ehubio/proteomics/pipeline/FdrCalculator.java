@@ -95,7 +95,7 @@ public class FdrCalculator {
 		updateGroupScores(list, type, updatePvalues);
 	}
 	
-	private void updateDecoyScores( Collection<? extends Decoyable> items, ScoreType type, ScoreType pValue, ScoreType localFdr, ScoreType qValue, ScoreType fdrScore ) {
+	public void updateDecoyScores( Collection<? extends Decoyable> items, ScoreType type, ScoreType pValue, ScoreType localFdr, ScoreType qValue, ScoreType fdrScore ) {
 		if( items.isEmpty() )
 			return;
 		
@@ -108,7 +108,8 @@ public class FdrCalculator {
 		
 		Map<Double,ScoreGroup> mapScores = new HashMap<>();
 		getLocalFdr(list,type,pValue!=null,mapScores);
-		getQValues(list,type,mapScores);
+		if( qValue != null )
+			getQValues(list,type,mapScores);
 		if( fdrScore != null )
 			getFdrScores(list,type,mapScores);		
 		
@@ -117,8 +118,10 @@ public class FdrCalculator {
 			ScoreGroup scoreGroup = mapScores.get(item.getScoreByType(type).getValue());
 			if( pValue != null )
 				item.setScore(new Score(pValue, scoreGroup.getpValue()));
-			item.setScore(new Score(localFdr,scoreGroup.getFdr()));
-			item.setScore(new Score(qValue,scoreGroup.getqValue()));
+			if( localFdr != null )
+				item.setScore(new Score(localFdr,scoreGroup.getFdr()));
+			if( qValue != null )
+				item.setScore(new Score(qValue,scoreGroup.getqValue()));
 			if( fdrScore != null )
 				item.setScore(new Score(fdrScore,scoreGroup.getFdrScore()));
 			//System.out.println(String.format("%s,%s,%s,%s,%s",psm.getScoreByType(type).getValue(),scoreGroup.getpValue(),scoreGroup.getFdr(),scoreGroup.getqValue(),scoreGroup.getFdrScore()));
