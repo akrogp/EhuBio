@@ -23,6 +23,7 @@ public class Spectrum {
 	private Double intensity;
 	private List<Peak> peaks = new ArrayList<>();
 	private String repName;
+	private String uniqueString;
 	
 	public Spectrum() {
 		id = idCount++;
@@ -64,7 +65,11 @@ public class Spectrum {
 	}
 	
 	public String getUniqueString() {
-		return toString();
+		return uniqueString == null ? toString() : uniqueString;
+	}
+	
+	public void setUniqueString( String uniqueString ) {
+		this.uniqueString = uniqueString;
 	}
 	
 	public String getScan() {
