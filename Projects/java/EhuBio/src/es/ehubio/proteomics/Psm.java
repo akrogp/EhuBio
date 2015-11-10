@@ -154,7 +154,9 @@ public class Psm extends DecoyBase {
 	
 	@Override
 	protected String buildUniqueString() {
-		return toString();
+		if( getSpectrum() == null || getPeptide() == null )
+			return toString();
+		return String.format("%s-%s", getSpectrum().getUniqueString(), getPeptide().getUniqueString());
 	}
 
 	public List<FragmentIon> getIons() {
