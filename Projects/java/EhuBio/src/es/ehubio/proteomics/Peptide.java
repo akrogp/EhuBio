@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 /**
@@ -131,9 +132,9 @@ public class Peptide extends AmbiguityPart {
 			if( mass == null )
 				str.append("(?)");
 			else if( mass < 0 )
-				str.append(String.format("(%.2f)", mass));
+				str.append(String.format(Locale.ENGLISH, "(%.2f)", mass));
 			else
-				str.append(String.format("(+%.2f)", mass));
+				str.append(String.format(Locale.ENGLISH, "(+%.2f)", mass));
 		}			
 	}
 	

@@ -88,6 +88,8 @@ public class ConfigDetector {
 			int count = proteinSubset <= 0 ? data.getProteins().size() : proteinSubset;
 			boolean valid = true;
 			for( Protein protein : data.getProteins() ) {
+				if( protein.getSequence() == null )
+					continue;
 				String protSeq = protein.getSequence().toLowerCase();
 				Set<String> peptides = new HashSet<>(Arrays.asList(Digester.digestSequence(protSeq,enzyme)));
 				for( Peptide peptide : protein.getPeptides() ) {
@@ -153,6 +155,18 @@ public class ConfigDetector {
 		return config;
 	}
 	
+	public Searcher.Config getSearching( MsMsData data ) {
+		int minLen = getMinPeptideLength(data);
+		int maxLen = getMaxPeptideLength(data);
+		List<Modification> mods = getMods(data);
+		List<Aminoacid> varMods = new ArrayList<>();
+		for( Modification mod : mods )
+			if( !mod.isFixed() )
+				varMods.add(mod.getAa());
+		int maxMods = getMaxModsPerPeptide(data, varMods);
+		return new Searcher.Config(minLen, maxLen, maxMods, varMods);
+	}
+	
 	private int getNtermCut( Protein protein ) {
 		if( Character.toLowerCase(protein.getSequence().charAt(0)) != 'm' )
 			return 0;
@@ -169,6 +183,8 @@ public class ConfigDetector {
 	}
 	
 	private boolean usesDP( Protein protein ) {
+		if( protein.getSequence() == null )
+			return false;
 		for( Peptide peptide : protein.getPeptides() )
 			if( peptide.getSequence().toLowerCase().endsWith("d") ) {
 				int i = protein.getSequence().indexOf(peptide.getSequence())+peptide.getSequence().length();

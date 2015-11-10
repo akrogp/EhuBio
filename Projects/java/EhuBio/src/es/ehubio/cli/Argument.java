@@ -73,8 +73,12 @@ public class Argument {
 		return defaultValue;
 	}
 	public void setDefaultValue(Object defaultValue) {
-		this.defaultValue = defaultValue.toString();
-		setOptional();
+		if( defaultValue == null )
+			this.defaultValue = null;
+		else {
+			this.defaultValue = defaultValue.toString();
+			setOptional();
+		}
 	}
 	public void setDefaultValue() {
 		setDefaultValue(getParamName());
