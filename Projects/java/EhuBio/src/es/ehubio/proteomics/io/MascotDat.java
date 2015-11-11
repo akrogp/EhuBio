@@ -95,7 +95,7 @@ public class MascotDat extends MsMsFile {
 		String[] fields = str.split(",");
 		Psm psm = new Psm();
 		psm.setRank(rank);
-		psm.setScore(new Score(ScoreType.MASCOT_SCORE, Double.parseDouble(fields[7])));
+		psm.putScore(new Score(ScoreType.MASCOT_SCORE, Double.parseDouble(fields[7])));
 		if( charge != null )
 			psm.setCharge(charge);
 		return psm;

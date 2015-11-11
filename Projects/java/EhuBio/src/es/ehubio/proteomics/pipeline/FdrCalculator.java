@@ -117,13 +117,13 @@ public class FdrCalculator {
 		for( Decoyable item : list ) {
 			ScoreGroup scoreGroup = mapScores.get(item.getScoreByType(type).getValue());
 			if( pValue != null )
-				item.setScore(new Score(pValue, scoreGroup.getpValue()));
+				item.putScore(new Score(pValue, scoreGroup.getpValue()));
 			if( localFdr != null )
-				item.setScore(new Score(localFdr,scoreGroup.getFdr()));
+				item.putScore(new Score(localFdr,scoreGroup.getFdr()));
 			if( qValue != null )
-				item.setScore(new Score(qValue,scoreGroup.getqValue()));
+				item.putScore(new Score(qValue,scoreGroup.getqValue()));
 			if( fdrScore != null )
-				item.setScore(new Score(fdrScore,scoreGroup.getFdrScore()));
+				item.putScore(new Score(fdrScore,scoreGroup.getFdrScore()));
 			//System.out.println(String.format("%s,%s,%s,%s,%s",psm.getScoreByType(type).getValue(),scoreGroup.getpValue(),scoreGroup.getFdr(),scoreGroup.getqValue(),scoreGroup.getFdrScore()));
 		}
 	}

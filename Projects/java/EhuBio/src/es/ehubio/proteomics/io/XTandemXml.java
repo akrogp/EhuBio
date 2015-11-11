@@ -76,8 +76,8 @@ public class XTandemXml extends MsMsFile {
 				psm.setCalcMz(d.getMh());
 				psm.setMassError(d.getDelta());
 				psm.setCharge(group.getZ());
-				psm.setScore(new Score(ScoreType.XTANDEM_EVALUE, d.getExpect()));
-				psm.setScore(new Score(ScoreType.XTANDEM_HYPERSCORE, d.getHyperscore()));
+				psm.putScore(new Score(ScoreType.XTANDEM_EVALUE, d.getExpect()));
+				psm.putScore(new Score(ScoreType.XTANDEM_HYPERSCORE, d.getHyperscore()));
 			}
 		}
 		MsMsData data = new MsMsData();

@@ -122,13 +122,13 @@ public final class Plgs extends MsMsFile {
 			psm.setMassPpm(match.getMASSERRORPPM().doubleValue());
 			psm.setCharge(mass.getCHARGE().intValue());
 			double score = match.getSCORE().doubleValue();
-			psm.setScore(new Score(ScoreType.PSM_PLGS_SCORE, score));
+			psm.putScore(new Score(ScoreType.PSM_PLGS_SCORE, score));
 			if( isUsingThresholds() ) {
 				int num;
 				if( score >= YellowGreenTh ) num = 3;
 				else if( score >= RedYellowTh ) num = 2;
 				else num = 1;
-				psm.setScore(new Score(ScoreType.PSM_PLGS_COLOR, num));
+				psm.putScore(new Score(ScoreType.PSM_PLGS_COLOR, num));
 			}
 			
 			Spectrum spectrum = new Spectrum();
@@ -157,7 +157,7 @@ public final class Plgs extends MsMsFile {
 				protein.setName(p.getENTRY());
 				protein.setDescription(p.getDESCRIPTION());
 				protein.setSequence(p.getSEQUENCE());
-				protein.setScore(new Score(ScoreType.PROTEIN_PLGS_SCORE, p.getSCORE().doubleValue()));
+				protein.putScore(new Score(ScoreType.PROTEIN_PLGS_SCORE, p.getSCORE().doubleValue()));
 			}
 		return mapProteins;
 	}

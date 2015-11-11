@@ -73,7 +73,7 @@ public class ScoreIntegrator {
 		for( Psm psm : psms ) {			
 			Score pValue = psm.getScoreByType(ScoreType.PSM_P_VALUE);
 			Score spHpp = new Score(ScoreType.LPS_SCORE, -Math.log10(pValue.getValue()));
-			psm.setScore(spHpp);
+			psm.putScore(spHpp);
 		}
 	}
 	
@@ -91,9 +91,9 @@ public class ScoreIntegrator {
 				Mq += factor;
 				score += factor*peptide.getScoreByType(ScoreType.LPP_SCORE).getValue();
 			}
-			protein.setScore(new Score(ScoreType.LPQ_SCORE, score));
-			protein.setScore(new Score(ScoreType.MQ_OVALUE, Mq));
-			protein.setScore(new Score(ScoreType.NQ_OVALUE, protein.getPeptides().size()));
+			protein.putScore(new Score(ScoreType.LPQ_SCORE, score));
+			protein.putScore(new Score(ScoreType.MQ_OVALUE, Mq));
+			protein.putScore(new Score(ScoreType.NQ_OVALUE, protein.getPeptides().size()));
 		}
 	}
 	
@@ -119,11 +119,11 @@ public class ScoreIntegrator {
 				MgObs += protein.getScoreByType(ScoreType.MQ_OVALUE).getValue();
 			}
 			Score score = new Score(ScoreType.LPG_SCORE,LPG);
-			group.setScore(score);
+			group.putScore(score);
 			score = new Score(ScoreType.MG_EVALUE,MgExp);
-			group.setScore(score);
+			group.putScore(score);
 			score = new Score(ScoreType.MG_OVALUE,MgObs);
-			group.setScore(score);
+			group.putScore(score);
 		}
 	}
 		
@@ -181,8 +181,8 @@ public class ScoreIntegrator {
 			Result expected = random.getExpected(protein);
 			/*if( expected == null )
 				System.out.println(String.format("%s: %s", protein.getAccession(), protein.isDecoy()));*/
-			protein.setScore(new Score(ScoreType.NQ_EVALUE, expected.getNq()*factor.getNq()));
-			protein.setScore(new Score(ScoreType.MQ_EVALUE, expected.getMq()*factor.getMq()));
+			protein.putScore(new Score(ScoreType.NQ_EVALUE, expected.getNq()*factor.getNq()));
+			protein.putScore(new Score(ScoreType.MQ_EVALUE, expected.getMq()*factor.getMq()));
 		}
 	}
 	
@@ -234,7 +234,7 @@ public class ScoreIntegrator {
 		for( Protein protein : proteins ) {
 			double Mq = shared ? protein.getScoreByType(ScoreType.MQ_EVALUE).getValue() : protein.getScoreByType(ScoreType.NQ_EVALUE).getValue();
 			double LPQ = protein.getScoreByType(ScoreType.LPQ_SCORE).getValue();
-			protein.setScore(new Score(ScoreType.LPQCORR_SCORE, LPQ/Mq));
+			protein.putScore(new Score(ScoreType.LPQCORR_SCORE, LPQ/Mq));
 		}
 	}
 	
@@ -275,7 +275,7 @@ public class ScoreIntegrator {
 			}
 			
 			double LPQcorr = sum < 1e-30 ? 30 : -Math.log10(sum);
-			protein.setScore(new Score(lpcScore, LPQcorr));
+			protein.putScore(new Score(lpcScore, LPQcorr));
 		}
 	}
 	
@@ -289,7 +289,7 @@ public class ScoreIntegrator {
 			//sum = -Math.log10(sum);
 			//double LPQcorr = sum > 290 ? 300 : (LPQ/Mq+sum)/2;
 			double LPQcorr = sum < 1e-40 ? 30 : -0.75*Math.log10(sum);
-			protein.setScore(new Score(lpcScore, LPQcorr));
+			protein.putScore(new Score(lpcScore, LPQcorr));
 		}
 	}
 	
@@ -388,7 +388,7 @@ public class ScoreIntegrator {
 		for( DecoyBase subitem : subitems )
 			s += subitem.getScoreByType(lowScore).getValue();
 		Score spHpp = new Score(upScore,s);
-		item.setScore(spHpp);
+		item.putScore(spHpp);
 	}
 	
 	private static final Logger logger = Logger.getLogger(ScoreIntegrator.class.getName()); 

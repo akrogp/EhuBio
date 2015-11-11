@@ -35,7 +35,7 @@ public class MayuCsv extends MsMsFile {
 			spectra.add(spectrum);
 			Psm psm = new Psm();
 			psm.linkSpectrum(spectrum);
-			psm.setScore(new Score(ScoreType.PROPHET_PROBABILITY,Double.parseDouble(fields[4])));
+			psm.putScore(new Score(ScoreType.PROPHET_PROBABILITY,Double.parseDouble(fields[4])));
 			String peptideId = fields[1]+fields[3];
 			Peptide peptide = mapPeptide.get(peptideId);
 			if( peptide == null ) {

@@ -22,7 +22,7 @@ public interface Decoyable {
 	 * @param score
 	 * @return true if there was not a previous score of the same type
 	 */
-	boolean setScore(Score score);
+	Score putScore(Score score);
 	
 	/**
 	 * 

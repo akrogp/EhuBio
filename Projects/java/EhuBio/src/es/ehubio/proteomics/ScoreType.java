@@ -43,7 +43,13 @@ public enum ScoreType {
 	LPG_SCORE(null,"group-level LPG score","Sum of LPQ scores of the proteins in the group",true),
 	MG_EVALUE(null,"group-level expected Mg value","Sum of expected Mq values of the proteins in the group",false),
 	MG_OVALUE(null,"group-level observed Mg value","Sum of observed Mq values of the proteins in the group",false),
-	LPGCORR_SCORE(null,"group-level LPGcorr score","LPG score corrected according to Mq value",true);
+	LPGCORR_SCORE(null,"group-level LPGcorr score","LPG score corrected according to Mq value",true),
+	LP_SCORE(null,"LP score","Cologarithm of p-value",true),
+	LPCORR_SCORE(null,"LPCorr score","LP score corrected according to M value",true),
+	N_EVALUE(null,"Expected N-value","Expected number of non-normalized randon matching peptides",false),
+	N_OVALUE(null,"Observed N-value","Observed number of non-normalized randon matching peptides",false),
+	M_EVALUE(null,"Expected M-value","Expected number of normalized randon matching peptides",false),
+	M_OVALUE(null,"Observed M-value","Observed number of normalized randon matching peptides",false);
 	
 	private final String accession;
 	private final String name;
@@ -100,6 +106,11 @@ public enum ScoreType {
 	
 	public static ScoreType getByName( String name ) {
 		return mapName.get(name);
+	}
+	
+	public static ScoreType getByName( String name, ScoreType defaultType ) {
+		ScoreType type = getByName(name);
+		return type != null ? type : defaultType;
 	}
 	
 	@Override

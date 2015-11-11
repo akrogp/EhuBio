@@ -223,8 +223,8 @@ public class ProteomeDiscovererMsf extends MsMsFile {
 			psm.setCharge(entries.getInt("zCalc"));
 			psm.setCalcMz(entries.getDouble("mzCalc"));
 			psm.setExpMz(entries.getDouble("mExp")/psm.getCharge());
-			psm.setScore(new Score(ScoreType.SEQUEST_XCORR, entries.getDouble("xcorr")));
-			psm.setScore(new Score(ScoreType.PEPTIDE_MSF_CONFIDENCE, entries.getInt("ConfidenceLevel")));
+			psm.putScore(new Score(ScoreType.SEQUEST_XCORR, entries.getDouble("xcorr")));
+			psm.putScore(new Score(ScoreType.PEPTIDE_MSF_CONFIDENCE, entries.getInt("ConfidenceLevel")));
 		}
 		return result;
 	}

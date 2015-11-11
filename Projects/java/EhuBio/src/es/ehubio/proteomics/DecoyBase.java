@@ -11,8 +11,8 @@ public abstract class DecoyBase implements Decoyable {
 	private String uniqueString;
 
 	@Override
-	public boolean setScore(Score score) {
-		return scores.put(score.getType(), score) == null;
+	public Score putScore(Score score) {
+		return scores.put(score.getType(), score);
 	}
 
 	@Override

@@ -424,7 +424,7 @@ public final class Mzid extends MsMsFile {
 				type = ScoreType.getByAccession(cv.getAccession());
 			}
 			if( type != null )				
-				psm.setScore(new Score(type, param.getName(), Double.parseDouble(param.getValue())));
+				psm.putScore(new Score(type, param.getName(), Double.parseDouble(param.getValue())));
 		}
 	}	
 	
