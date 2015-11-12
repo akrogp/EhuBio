@@ -48,6 +48,9 @@ public class Argument {
 		for( String param : params )
 			choices.add(param);
 	}
+	public void setBoolean() {
+		setChoices(Boolean.TRUE.toString(), Boolean.FALSE.toString());
+	}
 	public boolean usesParam() {
 		return getParamName() != null || getChoices() != null;
 	}

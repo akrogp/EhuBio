@@ -66,6 +66,13 @@ public class ArgParser {
 		return Integer.parseInt(value);
 	}
 	
+	public Boolean getBooleanValue( int id ) {
+		String value = getValue(id);
+		if( value == null )
+			return null;
+		return Boolean.parseBoolean(value);
+	}
+	
 	private List<Argument> parseOpts( String[] args ) throws ArgException {
 		mapArgs.clear();
 		List<Argument> opts = new ArrayList<Argument>();
