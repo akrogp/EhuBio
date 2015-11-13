@@ -26,6 +26,14 @@ public class ArgParser {
 		this.description = description;
 	}
 	
+	public String getCommand() {
+		return command;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+	
 	public void addOption( Argument opt ) {
 		if( mapOpts.containsKey(opt.getId()) )
 			throw new AssertionError("Duplicated option");
