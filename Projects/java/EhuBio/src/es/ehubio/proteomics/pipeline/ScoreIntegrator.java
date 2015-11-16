@@ -241,28 +241,28 @@ public class ScoreIntegrator {
 	public static void modelRandomProteins( Collection<? extends Decoyable> proteins, boolean shared, boolean fast ) {		
 		if( fast ) {
 			logger.info("Modelling aprox. random peptide-protein matching ...");
-			modelRandomAprox(proteins, shared, ScoreType.MQ_EVALUE, ScoreType.LPQ_SCORE, ScoreType.LPQCORR_SCORE);
+			modelRandomAprox(proteins, shared?ScoreType.MQ_EVALUE:ScoreType.NQ_EVALUE, ScoreType.LPQ_SCORE, ScoreType.LPQCORR_SCORE);
 		} else {
 			logger.info("Modelling random peptide-protein matching ...");
-			modelRandom(proteins, shared, ScoreType.MQ_EVALUE, ScoreType.LPQ_SCORE, ScoreType.LPQCORR_SCORE);
+			modelRandom(proteins, shared?ScoreType.MQ_EVALUE:ScoreType.NQ_EVALUE, ScoreType.LPQ_SCORE, ScoreType.LPQCORR_SCORE);
 		}
 	}
 	
 	public static void modelRandomGroups( Collection<? extends Decoyable> groups, boolean fast ) {		
 		if( fast ) {
 			logger.info("Modelling aprox. random peptide-group matching ...");
-			modelRandomAprox(groups, true, ScoreType.MG_EVALUE, ScoreType.LPG_SCORE, ScoreType.LPGCORR_SCORE);
+			modelRandomAprox(groups, ScoreType.MG_EVALUE, ScoreType.LPG_SCORE, ScoreType.LPGCORR_SCORE);
 		} else {
 			logger.info("Modelling random peptide-group matching ...");
-			modelRandom(groups, true, ScoreType.MG_EVALUE, ScoreType.LPG_SCORE, ScoreType.LPGCORR_SCORE);
+			modelRandom(groups, ScoreType.MG_EVALUE, ScoreType.LPG_SCORE, ScoreType.LPGCORR_SCORE);
 		}
 	}
 	
-	private static void modelRandom( Collection<? extends Decoyable> proteins, boolean shared, ScoreType mScore, ScoreType lpScore, ScoreType lpcScore ) {
+	public static void modelRandom( Collection<? extends Decoyable> proteins, ScoreType mScore, ScoreType lpScore, ScoreType lpcScore ) {
 		double loge = Math.log(10.0);
 		double epsilon = 1e-30;
 		for( Decoyable protein : proteins ) {
-			double Mq = shared ? protein.getScoreByType(mScore).getValue() : protein.getScoreByType(ScoreType.NQ_EVALUE).getValue();			
+			double Mq = protein.getScoreByType(mScore).getValue();			
 			double LPQ = protein.getScoreByType(lpScore).getValue()*loge;
 			
 			int n1 = searchInf(Mq, LPQ, 1, (int)Math.round(Mq), 1, epsilon);
@@ -279,10 +279,10 @@ public class ScoreIntegrator {
 		}
 	}
 	
-	private static void modelRandomAprox( Collection<? extends Decoyable> proteins, boolean shared, ScoreType mScore, ScoreType lpScore, ScoreType lpcScore ) {		
+	public static void modelRandomAprox( Collection<? extends Decoyable> proteins, ScoreType mScore, ScoreType lpScore, ScoreType lpcScore ) {		
 		double loge = Math.log(10.0);
 		for( Decoyable protein : proteins ) {
-			double Mq = shared ? protein.getScoreByType(mScore).getValue() : protein.getScoreByType(ScoreType.NQ_EVALUE).getValue();			
+			double Mq = protein.getScoreByType(mScore).getValue();			
 			double LPQ = protein.getScoreByType(lpScore).getValue()*loge;
 			GammaDistribution gamma = new GammaDistribution(Mq, 1);
 			double sum = 1-gamma.cumulativeProbability(LPQ);
