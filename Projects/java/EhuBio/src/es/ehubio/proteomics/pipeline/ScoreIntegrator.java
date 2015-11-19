@@ -136,7 +136,7 @@ public class ScoreIntegrator {
 		logger.info(String.format("Random matching model fit: R²(Nq)=%s, R²(Mq)=%s", fitness.getR2n(), fitness.getR2m()));
 		return new ModelFitness(factor.getNq(), factor.getMq(), fitness.getNm(), fitness.getMm(), fitness.getR2n(), fitness.getR2m());
 	}
-	
+			
 	private static Result getCorrectionFactors(Collection<Protein> proteins, RandomMatcher random) {
 		List<Double> listNq = new ArrayList<>();
 		List<Double> listMq = new ArrayList<>();

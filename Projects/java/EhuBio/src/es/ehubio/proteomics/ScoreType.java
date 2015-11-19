@@ -49,8 +49,10 @@ public enum ScoreType {
 	FDR_SCORE(null,"FDRScore","FDRScore",false),
 	LP_SCORE(null,"LP score","Cologarithm of p-value",true),
 	LPCORR_SCORE(null,"LPCorr score","LP score corrected according to M value",true),
+	N_DVALUE(null,"Database N-value","Number of non-normalized randon matching peptides calculated from DB",false),
 	N_EVALUE(null,"Expected N-value","Expected number of non-normalized randon matching peptides",false),
 	N_OVALUE(null,"Observed N-value","Observed number of non-normalized randon matching peptides",false),
+	M_DVALUE(null,"Database M-value","Number of normalized randon matching peptides calculated from DB",false),
 	M_EVALUE(null,"Expected M-value","Expected number of normalized randon matching peptides",false),
 	M_OVALUE(null,"Observed M-value","Observed number of normalized randon matching peptides",false);
 	

@@ -11,12 +11,16 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
+import es.ehubio.MathUtil;
 import es.ehubio.Strings;
 import es.ehubio.io.CsvUtils;
 import es.ehubio.proteomics.AmbiguityGroup;
 import es.ehubio.proteomics.DecoyBase;
+import es.ehubio.proteomics.Decoyable;
 import es.ehubio.proteomics.MsMsData;
 import es.ehubio.proteomics.Peptide;
 import es.ehubio.proteomics.Protein;
@@ -264,7 +268,29 @@ public class EhubioCsv extends MsMsFile {
 		job.end();
 	}
 	
-	private static void drawPlot(Graphics g, String title, String xlabel, double[] x, String ylabel, double[] y, double mean, double r2 ) {
+	public static void saveModel(Collection<? extends Decoyable> items, ScoreType obsType, ScoreType expType, String title, String path) throws FileNotFoundException {
+		List<Double> obs = new ArrayList<>(items.size());
+		List<Double> exp = new ArrayList<>(items.size());
+		double[] x = new double[items.size()];
+		double[] y = new double[items.size()];
+		int i = 0;
+		for( Decoyable item : items ) {
+			x[i] = item.getScoreByType(expType).getValue();
+			exp.add(x[i]);
+			y[i] = item.getScoreByType(obsType).getValue();
+			obs.add(y[i]);
+			i++;
+		}
+		double mean = MathUtil.mean(obs);
+		double r2 = MathUtil.r2(obs, exp);
+		PDFJob job = new PDFJob(new FileOutputStream(path),title);
+		Graphics g = job.getGraphics(PageFormat.LANDSCAPE);		
+		drawPlot(g, title, expType.getName(), x, obsType.getName(), y, mean, r2);
+		g.dispose();
+		job.end();
+	}
+	
+	private static void drawPlot(Graphics g, String title, String xlabel, double[] x, String ylabel, double[] y, double mean, double r2 ) {		
 		Color cAxes = Color.BLACK;
 		Color cExp = Color.MAGENTA;
 		Color cMean = Color.RED;
@@ -295,7 +321,7 @@ public class EhubioCsv extends MsMsFile {
 		g.setColor(cAxes);		
 		g.drawLine(x0, 0, x0, y0);
 		g.drawLine(x0, y0, w-1, y0);
-		g.drawString(xlabel,(w-fm.stringWidth(xlabel))/2,h-1);
+		g.drawString(xlabel,(w-fm.stringWidth(xlabel))/2,h-1);		
 		g.drawString(ylabel, 0, (h-fm.getHeight())/2);
 		g.drawString(title, x0+(w-x0-fm.stringWidth(title))/2, fm.getHeight());
 
@@ -315,6 +341,16 @@ public class EhubioCsv extends MsMsFile {
 			g.fillRect((int)Math.round(x[i]/xmax)+x0-2, y0-(int)Math.round(y[i]/ymax)-2, 4, 4);
 		g.drawString(String.format("R^2=%.2f", r2), x0+10, 3*fm.getHeight());
 	}
+	
+	/*private static void drawStringRotated(Graphics g, double x, double y, double degress, String str) {
+		Graphics2D g2 = (Graphics2D)g;
+		degress = degress/180*Math.PI;
+		g2.translate(x, y);
+		g2.rotate(degress);
+		g2.drawString(str, 0, 0);
+		g2.rotate(-degress);
+		g2.translate(-x, -y);		
+	}*/
 	
 	private static Object getScore( DecoyBase item, ScoreType type ) {
 		Score score = item.getScoreByType(type);
