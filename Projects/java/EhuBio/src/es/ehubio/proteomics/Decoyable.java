@@ -30,6 +30,11 @@ public interface Decoyable {
 	 */
 	Collection<Score> getScores();
 	
+	default void putScores(Collection<Score> scores) {
+		for( Score score : scores )
+			putScore(score);
+	}
+	
 	/**
 	 * 
 	 * @param type

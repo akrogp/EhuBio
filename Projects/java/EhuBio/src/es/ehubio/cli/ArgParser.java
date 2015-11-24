@@ -1,5 +1,6 @@
 package es.ehubio.cli;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import es.ehubio.Numbers;
 import es.ehubio.io.CsvUtils;
 
 public class ArgParser {
@@ -79,6 +81,18 @@ public class ArgParser {
 		if( value == null )
 			return null;
 		return Boolean.parseBoolean(value);
+	}
+	
+	public Double getDoubleValue( int id ) {
+		String value = getValue(id);
+		if( value == null )
+			return null;
+		Double result = null;
+		try {
+			result = Numbers.parseDouble(value);
+		} catch (ParseException e) {
+		}
+		return result;
 	}
 	
 	private List<Argument> parseOpts( String[] args ) throws ArgException {
