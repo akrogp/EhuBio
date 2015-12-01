@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import es.ehubio.io.CsvUtils;
 
 public final class Strings {
 	public static String capitalizeFirst( String str ) {
@@ -31,7 +31,7 @@ public final class Strings {
 		Collections.sort(list);
 	
 		// Merge strings
-		if( mergePattern == null )
+		/*if( mergePattern == null )
 			mergePattern = Pattern.compile("[0-9a-zA-Z]+");
 		Matcher matcher = mergePattern.matcher(list.get(0));
 		if( !matcher.find() )
@@ -55,9 +55,44 @@ public final class Strings {
 				name.append(base);
 				wildcard = false;
 			}
+		}*/
+				
+		int i;
+		for( i = 0; i < list.get(0).length(); i++ ) {
+			int j;
+			for( j = 1; j < list.size(); j++ )
+				if( list.get(j).charAt(i) != list.get(0).charAt(i) )
+					break;
+			if( j != list.size() )
+				break;
 		}
+		if( i < 3 )
+			return CsvUtils.getCsv('+', list.toArray());
+		
+		StringBuilder name = new StringBuilder();
+		name.append(list.get(0).substring(0, i));
+		int j = 0;
+		if( list.get(0).length() == i ) {
+			name.append('+');
+			j++;
+		}
+		name.append('[');
+		for( ; j < list.size(); j++ ) {			
+			name.append(list.get(j).substring(i));
+			if( j < list.size()-1 )
+				name.append("|");
+		}
+		name.append(']');
 		return name.toString();
 	}
+	
+	/*public static void main( String[] args ) {
+		Set<String> set = new HashSet<>();
+		set.add("hola-2");
+		set.add("hola-3");
+		set.add("hola");
+		System.out.println(merge(set));
+	}*/
 	
 	public static String[] fromArray( Object[] array ) {
 		String[] result = new String[array.length];
@@ -66,5 +101,5 @@ public final class Strings {
 		return result;
 	}
 	
-	private static Pattern mergePattern;
+	//private static Pattern mergePattern;
 }
