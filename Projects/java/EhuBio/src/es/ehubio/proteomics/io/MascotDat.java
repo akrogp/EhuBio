@@ -4,10 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
 
+import es.ehubio.Numbers;
 import es.ehubio.model.ProteinModificationType;
 import es.ehubio.proteomics.MsMsData;
 import es.ehubio.proteomics.Peptide;
@@ -38,7 +40,7 @@ public class MascotDat extends MsMsFile {
 		Map<String, Protein> mapProtein = new HashMap<>();
 		BufferedReader br = new BufferedReader(new InputStreamReader(input));
 		String mgf = getMgf(br);
-		Map<String, Integer> mapCharges = loadCharges(br);
+		Map<String, String> mapExp = loadExp(br);
 		String line;
 		String[] fields;
 		int count = 0;
@@ -60,7 +62,7 @@ public class MascotDat extends MsMsFile {
 				count++;
 				continue;
 			}
-			Psm psm = getPsm(rank,mapCharges.get(query),fields[0]);
+			Psm psm = getPsm(rank,mapExp.get(query),fields[0]);
 			psm.linkSpectrum(spectrum);
 			psm.linkPeptide(peptide);
 			for( String protLine : fields[1].split(",") ) {
@@ -75,9 +77,9 @@ public class MascotDat extends MsMsFile {
 		return data;
 	}
 
-	private Map<String, Integer> loadCharges(BufferedReader br) throws IOException {
-		Map<String, Integer> mapCharges = new HashMap<>();
-		String line, charge;
+	private Map<String, String> loadExp(BufferedReader br) throws IOException {
+		Map<String, String> mapCharges = new HashMap<>();
+		String line;
 		String[] fields;
 		while( (line=br.readLine()) != null ) {
 			if( !mapCharges.isEmpty() && line.startsWith("--") )
@@ -85,19 +87,21 @@ public class MascotDat extends MsMsFile {
 			if( !line.startsWith("qexp") )
 				continue;
 			fields = line.split("=");
-			charge = fields[1].split(",")[1];
-			mapCharges.put(fields[0].substring(4), Integer.parseInt(charge.substring(0, charge.length()-1)));
+			mapCharges.put(fields[0].substring(4),fields[1]);
 		}
 		return mapCharges;
 	}
 
-	private Psm getPsm(int rank, Integer charge, String str) {
+	private Psm getPsm(int rank, String exp, String str) throws ParseException {
 		String[] fields = str.split(",");
 		Psm psm = new Psm();
 		psm.setRank(rank);
 		psm.putScore(new Score(ScoreType.MASCOT_SCORE, Double.parseDouble(fields[7])));
-		if( charge != null )
-			psm.setCharge(charge);
+		if( exp != null ) {
+			String[] subs = exp.split(",");
+			psm.setExpMz(Numbers.parseDouble(subs[0]));
+			psm.setCharge(Integer.parseInt(subs[1].substring(0, subs[1].length()-1)));
+		}
 		return psm;
 	}
 
