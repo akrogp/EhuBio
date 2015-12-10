@@ -39,7 +39,6 @@ import es.ehubio.io.Streams;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.Pssm;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
-import es.ehubio.wregex.Result;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
 import es.ehubio.wregex.data.CachedResult;
@@ -508,6 +507,7 @@ public class SearchBean implements Serializable {
 			if( result.getCosmicMissense() >= 0 ) {
 				dos.writeUTF(result.getMutSequence());
 				dos.writeDouble(result.getMutScore());
+				dos.writeUTF(result.getCosmicUrl());
 			}
 		}
 	}
@@ -541,6 +541,7 @@ public class SearchBean implements Serializable {
 			if( result.getCosmicMissense() >= 0 ) {
 				result.setMutSequence(dis.readUTF());							
 				result.setMutScore(dis.readDouble());
+				result.setCosmicUrl(dis.readUTF());
 			}
 		}
 		return result;

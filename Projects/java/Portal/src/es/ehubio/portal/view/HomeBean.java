@@ -23,7 +23,8 @@ public class HomeBean implements Serializable {
 		project.setDescription(
 			"A software tool for aminoacid motif searching termed Wregex (weighted regular expression). " +
 			"Our novel approach combines regular expressions with a Position-Specific Scoring Matrix (PSSM).");
-		project.setUrl("http://wregex.ehubio.es");
+		//project.setUrl("http://wregex.ehubio.es");
+		project.setUrl("http://ehubio.ehu.eus/wregex");
 		projects.add(project);
 		
 		project = new Project();
