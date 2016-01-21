@@ -42,20 +42,22 @@ public class MascotDat extends MsMsFile {
 		String mgf = getMgf(br);
 		Map<String, String> mapExp = loadExp(br);
 		String line;
-		String[] fields;
+		String[] fields, lfields;
 		int count = 0;
 		while( (line=br.readLine()) != null ) {
 			if( !mapSpectra.isEmpty() && line.startsWith("--") )
 				break;
 			if( line.length() < 20 || line.charAt(0) != 'q' || !Character.isDigit(line.charAt(1)) )
-				continue;
-			fields = line.split("_");
+				continue;			
+			fields = line.split("=",2);
 			if( fields.length != 2 )
 				continue;
-			String query = fields[0].substring(1);			
+			lfields = fields[0].split("_");			
+			if( lfields.length != 2 )
+				continue;
+			String query = lfields[0].substring(1);			
 			Spectrum spectrum = getSpectrum(query, mgf, mapSpectra);
-			fields = fields[1].split("=");
-			int rank = Integer.parseInt(fields[0].substring(1));
+			int rank = Integer.parseInt(lfields[1].substring(1));
 			fields = fields[1].split(";");
 			Peptide peptide = getPeptide(fields[0], mapPeptide);
 			if( peptide == null ) {

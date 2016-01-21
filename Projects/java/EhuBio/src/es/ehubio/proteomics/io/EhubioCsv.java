@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
+import java.awt.HeadlessException;
 import java.awt.Rectangle;
 import java.awt.print.PageFormat;
 import java.io.File;
@@ -14,6 +15,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 
 import es.ehubio.MathUtil;
 import es.ehubio.Strings;
@@ -32,7 +34,7 @@ import es.ehubio.proteomics.pipeline.ScoreIntegrator.ModelFitness;
 import gnu.jpdf.PDFJob;
 
 public class EhubioCsv extends MsMsFile {
-	//private final static Logger logger = Logger.getLogger(EhubioCsv.class.getName());
+	private final static Logger logger = Logger.getLogger(EhubioCsv.class.getName());
 	private final MsMsData data;
 	private final static char SEP = '\t';
 	private final static char INTER = ',';
@@ -302,11 +304,17 @@ public class EhubioCsv extends MsMsFile {
 		int w = bounds.width;
 		int h = bounds.height;
 		
-		Font f = new Font("TimesRoman", Font.PLAIN, 16);
+		Font f = new Font("TimesRoman", Font.PLAIN, FONT_SIZE);
 		g.setFont(f);
-		FontMetrics fm = g.getFontMetrics(f);
-		int x0 = fm.stringWidth(ylabel);
-		int y0 = h-1-fm.getHeight();
+		FontMetrics fm = null;
+		try {
+			fm = g.getFontMetrics(f);
+		} catch(HeadlessException e) {
+			fm = null;
+			logger.warning("Using approximated font metrics");
+		}
+		int x0 = stringWidth(fm,ylabel);
+		int y0 = h-1-getHeight(fm);
 		
 		double max = x[0];
 		for( int i = 1; i < x.length; i++ ) {
@@ -321,25 +329,33 @@ public class EhubioCsv extends MsMsFile {
 		g.setColor(cAxes);		
 		g.drawLine(x0, 0, x0, y0);
 		g.drawLine(x0, y0, w-1, y0);
-		g.drawString(xlabel,(w-fm.stringWidth(xlabel))/2,h-1);		
-		g.drawString(ylabel, 0, (h-fm.getHeight())/2);
-		g.drawString(title, x0+(w-x0-fm.stringWidth(title))/2, fm.getHeight());
+		g.drawString(xlabel,(w-stringWidth(fm,xlabel))/2,h-1);		
+		g.drawString(ylabel, 0, (h-getHeight(fm))/2);
+		g.drawString(title, x0+(w-x0-stringWidth(fm,title))/2, getHeight(fm));
 
 		g.setColor(cMean);
 		int yMean = y0-(int)Math.round(mean/ymax);
 		g.drawLine(x0, yMean, w-1, yMean);
 		String strMean = String.format("mean=%.1f", mean);
-		g.drawString(strMean, w-fm.stringWidth(strMean), yMean-1);
+		g.drawString(strMean, w-stringWidth(fm,strMean), yMean-1);
 		g.setColor(cExp);
 		g.drawLine(x0, y0, w-1, 0);
 		
 		g.setColor(cData);				
 		String strMax = String.format("%.0f", max);
-		g.drawString(strMax, x0-fm.stringWidth(strMax), fm.getHeight());
-		g.drawString(strMax, w-fm.stringWidth(strMax)-1, h-1);		
+		g.drawString(strMax, x0-stringWidth(fm,strMax), getHeight(fm));
+		g.drawString(strMax, w-stringWidth(fm,strMax)-1, h-1);		
 		for( int i = 0; i < x.length; i++ )
 			g.fillRect((int)Math.round(x[i]/xmax)+x0-2, y0-(int)Math.round(y[i]/ymax)-2, 4, 4);
-		g.drawString(String.format("R^2=%.2f", r2), x0+10, 3*fm.getHeight());
+		g.drawString(String.format("R^2=%.2f", r2), x0+10, 3*getHeight(fm));
+	}
+	
+	private static int stringWidth(FontMetrics fm, String str) {
+		return fm != null ? fm.stringWidth(str) : str.length()*FONT_SIZE;
+	}
+	
+	private static int getHeight(FontMetrics fm) {
+		return fm != null ? fm.getHeight() : (int)(FONT_SIZE*1.5);
 	}
 	
 	/*private static void drawStringRotated(Graphics g, double x, double y, double degress, String str) {
@@ -363,4 +379,6 @@ public class EhubioCsv extends MsMsFile {
 	public String getFilenameExtension() {
 		return "tsv";
 	}
+	
+	private static final int FONT_SIZE = 16;
 }
