@@ -33,7 +33,8 @@ public class Filter {
 	private int maxPeptideLength = 0;
 	private Boolean filterDecoyPeptides;
 	private boolean uniquePeptides = false;
-	private int minPeptideReplicates = 0;	
+	private int minPeptideReplicates = 0;
+	private boolean filterSpecialAminoacids = false;
 	
 	private Score proteinScoreThreshold;
 	private int minProteinReplicates = 0;	
@@ -106,6 +107,14 @@ public class Filter {
 
 	public void setUniquePeptides(boolean uniquePeptides) {
 		this.uniquePeptides = uniquePeptides;
+	}
+	
+	public boolean isFilterSpecialAminoacids() {
+		return filterSpecialAminoacids;
+	}
+
+	public void setFilterSpecialAminoacids(boolean filterSpecialAminoacids) {
+		this.filterSpecialAminoacids = filterSpecialAminoacids;
 	}
 	
 	public int getMinPeptideLength() {
@@ -300,6 +309,10 @@ public class Filter {
 				continue;
 			}
 			if( getMinPeptideReplicates() > 1 && peptide.getReplicates().size() < getMinPeptideReplicates() ) {
+				unlinkPeptide(peptide);
+				continue;
+			}
+			if( peptide.getSequence().toLowerCase().matches(".*[bjzx].*") ) {
 				unlinkPeptide(peptide);
 				continue;
 			}
@@ -586,5 +599,5 @@ public class Filter {
 			if( peptide.getPsms().isEmpty() )
 				unlinkPeptide(peptide);
 		}
-	}
+	}	
 }

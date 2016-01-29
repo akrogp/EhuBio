@@ -57,7 +57,6 @@ public class ProteomeDiscovererTxt extends MsMsFile {
 		Map<String,Peptide> peptides = new HashMap<>();
 		Map<String,Protein> proteins = new HashMap<>();
 		Map<String,List<Protein>> ext = null;
-		int count = 0;
 		
 		if( relations != null )
 			ext = loadExternalRelations(relations, proteins);
@@ -70,10 +69,6 @@ public class ProteomeDiscovererTxt extends MsMsFile {
 				scans.put(scan, spectrum);
 			}
 			Peptide newPeptide = loadPeptide(input);
-			if( newPeptide.getSequence().toLowerCase().matches(".*[bjzx].*") ) {
-				count++;
-				continue;
-			}
 			Peptide peptide = peptides.get(newPeptide.getUniqueString());
 			if( peptide == null ) {
 				peptides.put(newPeptide.getUniqueString(), newPeptide);
@@ -87,9 +82,6 @@ public class ProteomeDiscovererTxt extends MsMsFile {
 			else
 				loadProteins(ext,peptide);
 		}
-		
-		if( count != 0 )
-			logger.warning(String.format("Ignored %d peptides with [bjzx] ...", count));
 		
 		MsMsData data = new MsMsData();
 		data.loadFromSpectra(scans.values());

@@ -220,7 +220,8 @@ public class ProteomeDiscovererMsf extends MsMsFile {
 			psm.linkSpectrum(spectrum);
 			psm.linkPeptide(peptide);
 			psm.setRank(entries.getInt("SearchEngineRank"));
-			psm.setCharge(entries.getInt("zCalc"));
+			int zCalc = entries.getInt("zCalc");
+			psm.setCharge(zCalc == 0 ? entries.getInt("zExp") : zCalc);
 			psm.setCalcMz(entries.getDouble("mzCalc"));
 			psm.setExpMz(entries.getDouble("mExp")/psm.getCharge());
 			psm.putScore(new Score(ScoreType.SEQUEST_XCORR, entries.getDouble("xcorr")));

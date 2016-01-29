@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.logging.Logger;
 
 import es.ehubio.Numbers;
 import es.ehubio.model.ProteinModificationType;
@@ -43,7 +42,6 @@ public class MascotDat extends MsMsFile {
 		Map<String, String> mapExp = loadExp(br);
 		String line;
 		String[] fields, lfields;
-		int count = 0;
 		while( (line=br.readLine()) != null ) {
 			if( !mapSpectra.isEmpty() && line.startsWith("--") )
 				break;
@@ -60,10 +58,6 @@ public class MascotDat extends MsMsFile {
 			int rank = Integer.parseInt(lfields[1].substring(1));
 			fields = fields[1].split(";");
 			Peptide peptide = getPeptide(fields[0], mapPeptide);
-			if( peptide == null ) {
-				count++;
-				continue;
-			}
 			Psm psm = getPsm(rank,mapExp.get(query),fields[0]);
 			psm.linkSpectrum(spectrum);
 			psm.linkPeptide(peptide);
@@ -72,8 +66,6 @@ public class MascotDat extends MsMsFile {
 				protein.linkPeptide(peptide);
 			}
 		}
-		if( count != 0 )
-			logger.warning(String.format("Ignored %d peptides with [bjzx] ...", count));
 		MsMsData data = new MsMsData();
 		data.loadFromSpectra(mapSpectra.values());
 		return data;
@@ -122,8 +114,6 @@ public class MascotDat extends MsMsFile {
 	private Peptide getPeptide(String pepLine, Map<String, Peptide> mapPeptide) {
 		String[] fields = pepLine.split(",");		
 		String seq = fields[4];
-		if( seq.toLowerCase().matches(".*[bjzx].*") )
-			return null;
 		Peptide newPeptide = new Peptide();
 		newPeptide.setSequence(seq);
 		String mods = fields[6];
@@ -167,5 +157,5 @@ public class MascotDat extends MsMsFile {
 		return null;
 	}
 	
-	 private static final Logger logger = Logger.getLogger(MascotDat.class.getName());
+	//private static final Logger logger = Logger.getLogger(MascotDat.class.getName());
 }
