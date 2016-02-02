@@ -121,9 +121,11 @@ public class MascotDat extends MsMsFile {
 			throw new UnsupportedOperationException("Terminal modifications not supported");
 		for( int i = 1; i < mods.length()-1; i++ ) {
 			if( mods.charAt(i) == '0' )
-				continue;			
-			if( Character.toLowerCase(seq.charAt(i-1)) != 'm' )
-				throw new UnsupportedOperationException("Only oxidation of methionine is supported");
+				continue;
+			char aa = Character.toLowerCase(seq.charAt(i-1)); 
+			if( aa != 'm' && aa != 'x' )
+				//throw new UnsupportedOperationException("Only oxidation of methionine is supported");
+				throw new UnsupportedOperationException(String.format("Modification not supported: %s, %s", seq, mods));
 			Ptm ptm = new Ptm();
 			ptm.setPosition(i);
 			ptm.setType(ProteinModificationType.OXIDATION);
