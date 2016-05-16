@@ -29,7 +29,9 @@ public class CfgDetectorTest {
 		assertNotNull(searchConfig);
 	}
 
-	private static final String DATA = "/home/gorka/Descargas/Temp/Oscar/OscarTarget.msf";
-	private static final String FASTA = "/home/gorka/Descargas/Temp/Oscar/uniprot-brachyspira_totaldb_151122.fasta.gz";
+	//private static final String DATA = "/home/gorka/Descargas/Temp/Oscar/OscarTarget.msf";
+	//private static final String FASTA = "/home/gorka/Descargas/Temp/Oscar/uniprot-brachyspira_totaldb_151122.fasta.gz";
+	private static final String DATA = "/home/gorka/Descargas/Temp/CIMA/UPV-MCF7-XT";
+	private static final String FASTA = "/home/gorka/Bio/Proyectos/Proteómica/spHPP/Work/Flow/letter/Pandey/ensemblCrap.fasta.gz";
 	private static final int MAX = 1000;
 }

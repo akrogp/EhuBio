@@ -117,8 +117,7 @@ circle.child:hover {
 	<h:panelGroup rendered="#{statisticsBean.initialized}">
 		<div style="width:500px;margin-right:20px;float:left;">
 			<p:selectOneMenu value="#{statisticsBean.chart}" valueChangeListener="#{statisticsBean.onChangeChart}">
-				<f:selectItem itemLabel="COSMIC missense mutations" itemValue="COSMIC" />
-<!-- 				<f:selectItem itemLabel="dbPTM experimental PTMs" itemValue="dbPTM" /> -->
+				<f:selectItems value="#{statisticsBean.items}"/>
 				<p:ajax update="@form"/>
 			</p:selectOneMenu>			
 			<h3>#{statisticsBean.title}</h3>

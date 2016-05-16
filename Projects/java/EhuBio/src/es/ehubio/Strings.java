@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import es.ehubio.io.CsvUtils;
 
@@ -30,33 +32,7 @@ public final class Strings {
 		List<String> list = new ArrayList<>(strings);
 		Collections.sort(list);
 	
-		// Merge strings
-		/*if( mergePattern == null )
-			mergePattern = Pattern.compile("[0-9a-zA-Z]+");
-		Matcher matcher = mergePattern.matcher(list.get(0));
-		if( !matcher.find() )
-			return null;
-		String base = matcher.group();
-		StringBuilder name = new StringBuilder(base);
-		boolean wildcard = false;
-		for( int i = 1; i < list.size(); i++ ) {
-			matcher = mergePattern.matcher(list.get(i));
-			if( !matcher.find() )
-				return null;
-			String next = matcher.group();
-			if( next.equals(base) ) {
-				if( !wildcard ) {
-					name.append('*');
-					wildcard = true;
-				}
-			} else {
-				base = next;
-				name.append('+');
-				name.append(base);
-				wildcard = false;
-			}
-		}*/
-				
+		// Merge strings				
 		int i;
 		for( i = 0; i < list.get(0).length(); i++ ) {
 			int j;
@@ -86,14 +62,6 @@ public final class Strings {
 		return name.toString();
 	}
 	
-	/*public static void main( String[] args ) {
-		Set<String> set = new HashSet<>();
-		set.add("hola-2");
-		set.add("hola-3");
-		set.add("hola");
-		System.out.println(merge(set));
-	}*/
-	
 	public static String[] fromArray( Object[] array ) {
 		String[] result = new String[array.length];
 		for( int i = 0; i < array.length; i++ )
@@ -101,5 +69,22 @@ public final class Strings {
 		return result;
 	}
 	
-	//private static Pattern mergePattern;
+	public static String match(Pattern pattern, String target) {
+		Matcher matcher = pattern.matcher(target);
+		if( !matcher.find() || matcher.groupCount() < 1 )
+			return null;
+		return matcher.group(1);
+	}
+	
+	public static int counti(String str, char ch) {
+		return count(str.toLowerCase(), Character.toLowerCase(ch));
+	}
+	
+	public static int count(String str, char ch) {
+		int count = 0;
+		for( int i = 0; i < str.length(); i++ )
+			if( str.charAt(i) == ch )
+				count++;
+		return count;
+	}
 }

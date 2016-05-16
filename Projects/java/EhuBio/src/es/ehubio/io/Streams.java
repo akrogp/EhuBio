@@ -1,5 +1,6 @@
 package es.ehubio.io;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,6 +14,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -61,5 +64,27 @@ public class Streams {
 	
 	public static boolean isGzip( String path ) {
 		return path.toLowerCase().endsWith(".gz");
+	}
+	
+	public static List<String> readLines( String path ) throws FileNotFoundException, IOException {
+		List<String> lines = new ArrayList<>();
+		try( BufferedReader br = new BufferedReader(getTextReader(path)) ) {
+			String line;
+			while( (line = br.readLine()) != null ) {
+				line = line.trim();
+				if( !line.isEmpty() )
+					lines.add(line);
+			}
+		}
+		return lines;
+	}
+	
+	public static String readComplete( String path ) throws FileNotFoundException, IOException {
+		StringBuilder sb = new StringBuilder();
+		for( String line : readLines(path) ) {
+			sb.append(line);
+			sb.append('\n');
+		}
+		return sb.toString();
 	}
 }

@@ -16,6 +16,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.wregex.Pssm;
@@ -27,6 +28,7 @@ import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
+import es.ehubio.wregex.data.Versions;
 
 @ManagedBean
 @ApplicationScoped
@@ -52,15 +54,24 @@ public class StatisticsBean {
 	private List<String> displayTips = new ArrayList<>();	
 	private String chart = "COSMIC";
 	private String title;
+	private final List<SelectItem> items;
 	
 	public StatisticsBean() {		
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
+		items = new ArrayList<SelectItem>();
+		items.add(new SelectItem("COSMIC", "COSMIC missense mutations"));
+		if( Versions.DEV )
+			items.add(new SelectItem("dbPTM", "dbPTM experimental PTMs"));
 	}	
 
 	@PostConstruct
 	public void init() {
 		loadChart( chart );
-	}	
+	}
+	
+	public List<SelectItem> getItems() {
+		return items;
+	}
 	
 	private void loadChart( String chart ) {
 		boolean ok = false;

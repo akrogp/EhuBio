@@ -30,6 +30,7 @@ import es.ehubio.wregex.data.MotifConfiguration;
 import es.ehubio.wregex.data.MotifDefinition;
 import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.MotifReference;
+import es.ehubio.wregex.data.Versions;
 
 @ManagedBean
 @ApplicationScoped
@@ -85,6 +86,8 @@ public class DatabasesBean implements Serializable {
 		mapFasta = new HashMap<>();
 		targets = new ArrayList<>();
 		for( DatabaseInformation database : databaseConfiguration.getDatabases() ) {
+			if( Versions.PROD && database.getWregexVersion() != null && Versions.MAJOR < database.getWregexVersion() )
+				continue;
 			if( database.getType().equals("elm") ) {
 				elm = database;
 				refreshElm();

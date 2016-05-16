@@ -169,17 +169,19 @@
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							&nbsp;
-							<!--<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{searchBean.useAuxMotif}" valueChangeListener="#{searchBean.onChangeOption}" update="@form">
-								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>
-							&nbsp;-->
+							<h:panelGroup rendered="#{homeBean.development}">
+								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{searchBean.useAuxMotif}" valueChangeListener="#{searchBean.onChangeOption}" update="@form">
+									<p:ajax event="change" update="@form" />
+								</p:selectBooleanCheckbox>
+								&nbsp;
+							</h:panelGroup>
 							<p:selectBooleanCheckbox itemLabel="#{searchBean.cosmicInformation.fullName}" value="#{searchBean.cosmic}" valueChangeListener="#{searchBean.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							&nbsp;
-							<!--<p:selectBooleanCheckbox itemLabel="#{searchBean.dbPtmInformation.fullName}" value="#{searchBean.dbPtm}" valueChangeListener="#{searchBean.onChangeOption}">
+							<p:selectBooleanCheckbox itemLabel="#{searchBean.dbPtmInformation.fullName}" value="#{searchBean.dbPtm}" valueChangeListener="#{searchBean.onChangeOption}" rendered="#{homeBean.development}">
 								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>-->
+							</p:selectBooleanCheckbox>
 						</p:column>
 					</p:row>
 					

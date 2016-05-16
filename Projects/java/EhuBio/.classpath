@@ -38,5 +38,9 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="/home/gorka/Aplicaciones/libs/jersey-2.16/api/javax.ws.rs-api-2.0.1.jar"/>
+	<classpathentry kind="lib" path="/home/gorka/Aplicaciones/libs/jersey-2.16/lib/jersey-client.jar"/>
+	<classpathentry kind="lib" path="/home/gorka/Aplicaciones/libs/jersey-2.16/lib/jersey-common.jar"/>
+	<classpathentry kind="lib" path="/home/gorka/Aplicaciones/libs/jersey-2.16/lib/jersey-media-jaxb.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

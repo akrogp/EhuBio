@@ -12,11 +12,18 @@
 			<meta name="description" content="Wregex documentation. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
 		</ui:define>
 		<ui:define name="content">
-		<p>Following there is the Wregex user manual. For a technical explanation on the Wregex approach, please refer to:<br/><br/>
-		<i><a href="http://bioinformatics.oxfordjournals.org/content/early/2014/01/09/bioinformatics.btu016.abstract" target="_blank">
+		<p>Following there is the Wregex user manual. For a technical explanation on the Wregex approach, please refer to:</p>
+
+		<p><i><a href="http://bioinformatics.oxfordjournals.org/content/30/9/1220" target="_blank">
 		Prediction of nuclear export signals using weighted regular expressions (Wregex)</a></i><br/>
 		Gorka Prieto; Asier Fullaondo; Jose A. Rodriguez<br/>
 		Bioinformatics 2014; doi: 10.1093/bioinformatics/btu016</p>
+		
+		<p><i><a href="http://www.nature.com/articles/srep25869" target="_blank">
+		Proteome-wide search for functional motifs altered in tumors: Prediction of nuclear export signals inactivated by cancer-related mutations</a></i><br/>
+		Gorka Prieto; Asier Fullaondo; Jose A. Rodriguez<br/>
+		Scientific Reports 2016; doi: 10.1038/srep25869</p>
+
 		<p:separator/>
 		
 		<h3>Table of Contents</h3>
@@ -118,10 +125,10 @@
 		done by running it on a local servlet 2.5 container like Apache Tomcat, or creating a custom Java front-end
 		using the provided Wregex Java class. Both the *.war binary file and the Java code can be accessed from the
 		Downloads page.</p>
-		<p>Wregex execution at wregex.ehubio.es has some constraints, i.e. input fasta file size and execution time
+		<p>Wregex execution at #{homeBean.webUrl} has some constraints, i.e. input fasta file size and execution time
 		in order to avoid denial of service to other users. This constrains can be avoided when running Wregex
-		locally. For more information, please go to the <a href="https://code.google.com/p/ehu-bio/wiki/Wregex" target="_blank">
-		Wregex Google Code page</a></p>.				
+		locally. For more information, please go to the <a href="#{homeBean.wikiUrl}" target="_blank">
+		Wregex Wiki page</a>.</p>				
 		
 		</ui:define>
 	</ui:composition>

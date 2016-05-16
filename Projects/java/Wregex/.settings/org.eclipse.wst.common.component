@@ -2,6 +2,7 @@
     <wb-module deploy-name="wregex">
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
         <dependent-module archiveName="EhuBio.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EhuBio/EhuBio">
             <dependency-type>uses</dependency-type>
         </dependent-module>

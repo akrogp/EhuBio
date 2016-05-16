@@ -202,8 +202,10 @@ public class ConfigDetector {
 				if( peptide.getSequence().toLowerCase().matches(".*[bjzx].*") )
 					continue;
 				missedCleavages = Math.max(missedCleavages, Digester.digestSequence(peptide.getSequence(),enzyme).length-1);
-				/*if( missedCleavages > 2 )
-					System.out.println(peptide.getSequence());*/
+				/*if( missedCleavages > 2 ) {
+					System.out.println(peptide.getSequence());
+					missedCleavages = 2;
+				}*/
 			}
 			if( --count == 0 )
 				break;

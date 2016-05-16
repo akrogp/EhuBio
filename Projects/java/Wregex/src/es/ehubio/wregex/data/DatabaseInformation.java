@@ -101,12 +101,21 @@ public class DatabaseInformation implements Serializable {
 		return file.exists();
 	}
 
+	public Integer getWregexVersion() {
+		return wregexVersion;
+	}
+
+	public void setWregexVersion(Integer wregexVersion) {
+		this.wregexVersion = wregexVersion;
+	}
+
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String type;
 	private String path;
 	private String version;
 	private String versionFile;
+	private Integer wregexVersion;
 	private long lastModifiedVersion = -1;
 	private long lastModified = -1;
 }
