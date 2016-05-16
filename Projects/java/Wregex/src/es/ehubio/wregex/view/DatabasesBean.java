@@ -86,7 +86,7 @@ public class DatabasesBean implements Serializable {
 		mapFasta = new HashMap<>();
 		targets = new ArrayList<>();
 		for( DatabaseInformation database : databaseConfiguration.getDatabases() ) {
-			if( Versions.PROD && database.getWregexVersion() != null && Versions.MAJOR < database.getWregexVersion() )
+			if( Versions.PROD && database.getWregexVersion() != null && (database.getWregexVersion() == 0 || Versions.MAJOR < database.getWregexVersion()) )
 				continue;
 			if( database.getType().equals("elm") ) {
 				elm = database;
