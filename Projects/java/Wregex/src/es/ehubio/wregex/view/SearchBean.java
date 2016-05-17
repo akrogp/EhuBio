@@ -416,6 +416,8 @@ public class SearchBean implements Serializable {
 
 	private List<ResultEx> loadSearchCache() {
 		cachedAlnPath = null;
+		if( targetInformation == null || !targetInformation.getType().equals("fasta") )
+			return null;
 		File dir = getSearchCache();
 		if( dir == null )
 			return null;		
@@ -428,6 +430,8 @@ public class SearchBean implements Serializable {
 		for( String file : files ) {
 			File cache = new File(dir,file);
 			try( DataInputStream dis = new DataInputStream(Streams.getBinReader(cache)); ) {
+				if( !dis.readUTF().equals(targetInformation.getPath()) )
+					continue;
 				if( !dis.readUTF().equals(getRegex()) )
 					continue;
 				if( !dis.readUTF().equals(getPssm()) )
@@ -452,6 +456,8 @@ public class SearchBean implements Serializable {
 	}
 
 	private void saveSearchCache(List<ResultEx> results) {
+		if( targetInformation == null || !targetInformation.getType().equals("fasta") )
+			return;
 		File dir = getSearchCache();
 		if( dir == null )
 			return;
@@ -459,6 +465,7 @@ public class SearchBean implements Serializable {
 		long id = System.currentTimeMillis();
 		File file = new File(dir,String.format("%s-search.dat.gz", id));
 		try( DataOutputStream dos = new DataOutputStream(Streams.getBinWriter(file)); ) {
+			dos.writeUTF(targetInformation.getPath());
 			dos.writeUTF(getRegex());
 			dos.writeUTF(getPssm());
 			dos.writeBoolean(grouping);
