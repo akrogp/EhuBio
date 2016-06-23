@@ -1,4 +1,4 @@
-package es.ehubio.db.ebi.test;
+package es.ehubio.db.test;
 
 import static org.junit.Assert.*;
 
