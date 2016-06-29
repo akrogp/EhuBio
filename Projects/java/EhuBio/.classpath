@@ -38,5 +38,6 @@
 			<attribute name="owner.project.facets" value="java"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry exported="true" kind="lib" path="/home/gorka/Aplicaciones/libs/json-20160212.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

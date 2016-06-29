@@ -22,4 +22,22 @@ public class DnaUtils {
 		}			
 		return builder.toString();
 	}
+	
+	public static String translate( String dna, Map<String, Codon> code ) {
+		StringBuilder prot = new StringBuilder();
+		dna = dna.toUpperCase();
+		int i, len = dna.length();
+		for( i = 0; i < len-3; i++ ) {
+			Codon codon = code.get(dna.substring(i,i+3));
+			if( codon.isStart() )
+				break;
+		}
+		for( ; i < len; i+= 3 ) {
+			Codon codon = code.get(dna.substring(i,i+3));
+			if( codon.isStop() )
+				break;
+			prot.append(codon.getAa().letter);
+		}
+		return prot.toString();
+	}
 }

@@ -50,7 +50,7 @@ public final class Fasta {
 		if( description != null )
 			header.append(description);
 		this.header = header.toString();
-		this.sequence = sequence;
+		this.sequence = trim(sequence);
 		this.type = type;
 		this.accession = accession;
 		this.entry = accession;
@@ -66,7 +66,7 @@ public final class Fasta {
 	public Fasta( String header, HeaderParser parser, String sequence, SequenceType type ) throws InvalidSequenceException {
 		assert header != null && sequence != null;
 		this.header = header;
-		this.sequence = sequence.trim().replaceAll("[ \t]", "");		
+		this.sequence = trim(sequence);		
 		this.type = type;
 		checkSequence(this.sequence, type);
 		this.entry = header.split("[ \t]")[0];
@@ -81,6 +81,31 @@ public final class Fasta {
 			proteinName = parser.getProteinName();
 			geneName = parser.getGeneName();
 		}
+	}
+	
+	public Fasta( String fasta, SequenceType type ) throws InvalidSequenceException {
+		int off = fasta.indexOf('\n');
+		header = fasta.substring(0, off).trim();
+		sequence = trim(fasta.substring(off+1));
+		this.type = type;
+		checkSequence(sequence, type);
+		HeaderParser parser = guessParser(header);
+		this.entry = header.split("[ \t]")[0];
+		if( parser == null ) {
+			accession = null;
+			description = null;
+			proteinName = null;
+			geneName = null;
+		} else {
+			accession = parser.getAccession();
+			description = parser.getDescription();
+			proteinName = parser.getProteinName();
+			geneName = parser.getGeneName();
+		}
+	}
+	
+	private static String trim( String seq ) {
+		return seq.trim().replaceAll("[ \t\r\n]", "");
 	}
 	
 	public static HeaderParser guessParser( String header ) {
