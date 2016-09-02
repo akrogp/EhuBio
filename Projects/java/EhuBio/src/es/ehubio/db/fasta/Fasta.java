@@ -117,6 +117,9 @@ public final class Fasta {
 		parser = new NextprotParser();
 		if( parser.parse(header) )
 			return parser;
+		parser = new GencodeParser();
+		if( parser.parse(header) )
+			return parser;
 		
 		parser = new DefaultParser();
 		parser.parse(header);		
