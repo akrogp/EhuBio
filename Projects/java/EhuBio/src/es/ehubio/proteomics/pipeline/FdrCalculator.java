@@ -19,32 +19,38 @@ import es.ehubio.proteomics.Score;
 import es.ehubio.proteomics.ScoreType;
 
 public class FdrCalculator {
+	public static enum FdrFormula {DT, D2TD, MAYU};
+	
 	private static final Logger logger = Logger.getLogger(FdrCalculator.class.getName());
-	private final boolean countDecoy;
+	private final FdrFormula fdrFormula;
 	
 	/**
 	 * If true uses FDR=2*D/(T+D), else FDR=D/T
 	 * 
 	 * @param countDecoy
 	 */
-	public FdrCalculator( boolean countDecoy ) {
-		this.countDecoy = countDecoy;
+	public FdrCalculator( FdrFormula fdrFormula ) {
+		this.fdrFormula = fdrFormula;
 	}
 	
 	public FdrCalculator() {
-		this(false);
-	}
-
-	public boolean isCountDecoy() {
-		return countDecoy;
+		this(FdrFormula.DT);
 	}
 	
-	public double getFdr( int decoy, int target ) {
-		if( target == 0 )
+	public double getFdr( int d, int t, int nd, int nt ) {
+		if( t == 0 )
 			return 0.0;
-		if( isCountDecoy() )
-			return (2.0*decoy)/(target+decoy);
-		return ((double)decoy)/target;
+		switch(fdrFormula) {
+			case DT:
+				return ((double)d)/t;
+			case D2TD:
+				return (2.0*d)/(t+d);
+			case MAYU:
+				double dcorr = nd <= d ? d : ((double)d)*(nt-t)/(nd-d);
+				return dcorr/t;
+			default:
+				throw new RuntimeException("FDR formula not supported");
+		}
 	}
 	
 	public void updatePsmScores( Collection<Psm> psms, ScoreType type, boolean updatePvalues ) {
@@ -128,7 +134,7 @@ public class FdrCalculator {
 		}
 	}
 	
-	public FdrResult getFdr( Collection<? extends Decoyable> items ) {
+	public FdrResult getGlobalFdr( Collection<? extends Decoyable> items ) {
 		int decoy = 0;
 		int target = 0;
 		for( Decoyable item : items ) {
@@ -139,15 +145,15 @@ public class FdrCalculator {
 			else
 				target++;
 		}
-		return new FdrResult(decoy, target);
+		return new FdrResult(decoy, target, 0, 0);
 	}
 	
 	public void logFdrs(MsMsData data) {
 		logger.info(String.format("FDR -> PSM: %s, Peptide: %s, Protein: %s, Group: %s",
-			getFdr(data.getPsms()).getRatio(),
-			getFdr(data.getPeptides()).getRatio(),
-			getFdr(data.getProteins()).getRatio(),
-			getFdr(data.getGroups()).getRatio()));
+			getGlobalFdr(data.getPsms()).getRatio(),
+			getGlobalFdr(data.getPeptides()).getRatio(),
+			getGlobalFdr(data.getProteins()).getRatio(),
+			getGlobalFdr(data.getGroups()).getRatio()));
 	}
 	
 	private void sort( List<? extends Decoyable> list, final ScoreType type ) {
@@ -161,12 +167,12 @@ public class FdrCalculator {
 	}
 	
 	private void getLocalFdr(List<Decoyable> list, ScoreType type, boolean pValue, Map<Double,ScoreGroup> mapScores) {
-		// Count total decoy number (for p-values)
-		int totalDecoys = 0;
-		if( pValue )
-			for( Decoyable item : list )
-				if( Boolean.TRUE.equals(item.getDecoy()) )
-					totalDecoys++;
+		// Count total decoy and target numbers (for p-values and MAYU)
+		int totalDecoys = 0, totalTargets;
+		for( Decoyable item : list )
+			if( Boolean.TRUE.equals(item.getDecoy()) )
+				totalDecoys++;
+		totalTargets = list.size()-totalDecoys;
 
 		// Traverse from best to worst to calculate local FDRs and p-values
 		int decoy = 0, target = 0;
@@ -189,7 +195,7 @@ public class FdrCalculator {
 				scoreGroup = new ScoreGroup();
 				mapScores.put(score, scoreGroup);
 			}
-			scoreGroup.setFdr(getFdr(decoy,target));
+			scoreGroup.setFdr(getFdr(decoy,target,totalDecoys,totalTargets));
 			if( pValue ) {
 				scoreGroup.setpValue(totalDecoys==0?0:(decoy+pOff)/totalDecoys);
 				if( pOff < 0 )
@@ -235,14 +241,16 @@ public class FdrCalculator {
 	}
 	
 	public class FdrResult {
-		private final int target;
-		private final int decoy;
+		private final int target, totalTargets;
+		private final int decoy, totalDecoys;
 		private final double fdr;
 		
-		public FdrResult( int decoy, int target ) {
+		public FdrResult( int decoy, int target, int totalDecoys, int totalTargets ) {
 			this.decoy = decoy;
-			this.target = target;			
-			fdr = getFdr(decoy, target); 
+			this.target = target;
+			this.totalDecoys = totalDecoys;
+			this.totalTargets = totalTargets;
+			fdr = getFdr(decoy, target, totalDecoys, totalTargets); 
 		}
 
 		public int getTarget() {
@@ -255,6 +263,14 @@ public class FdrCalculator {
 
 		public double getRatio() {
 			return fdr;
+		}
+
+		public int getTotalTargets() {
+			return totalTargets;
+		}
+
+		public int getTotalDecoys() {
+			return totalDecoys;
 		}		
 	}
 	

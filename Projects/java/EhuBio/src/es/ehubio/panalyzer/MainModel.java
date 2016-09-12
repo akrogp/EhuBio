@@ -51,7 +51,7 @@ public class MainModel {
 	private State state;
 	private Set<ScoreType> psmScoreTypes, peptideScoreTypes, proteinScoreTypes;
 	private File reportFile = null;
-	private final FdrCalculator fdrCalc = new FdrCalculator(false);
+	private final FdrCalculator fdrCalc = new FdrCalculator();
 	
 	public MainModel() {
 		resetTotal();	
@@ -289,19 +289,19 @@ public class MainModel {
 	}
 	
 	public FdrResult getPsmFdr() {
-		return fdrCalc.getFdr(getData().getPsms());
+		return fdrCalc.getGlobalFdr(getData().getPsms());
 	}
 	
 	public FdrResult getPeptideFdr() {
-		return fdrCalc.getFdr(getData().getPeptides());
+		return fdrCalc.getGlobalFdr(getData().getPeptides());
 	}
 	
 	public FdrResult getProteinFdr() {
-		return fdrCalc.getFdr(getData().getProteins());
+		return fdrCalc.getGlobalFdr(getData().getProteins());
 	}
 	
 	public FdrResult getGroupFdr() {
-		return fdrCalc.getFdr(getData().getGroups());
+		return fdrCalc.getGlobalFdr(getData().getGroups());
 	}
 	
 	public List<FdrReport> getFdrReport() {
