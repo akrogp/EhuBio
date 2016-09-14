@@ -23,14 +23,20 @@ public class FdrCalculator {
 	
 	private static final Logger logger = Logger.getLogger(FdrCalculator.class.getName());
 	private final FdrFormula fdrFormula;
+	private final int binSize;
 	
 	/**
 	 * If true uses FDR=2*D/(T+D), else FDR=D/T
 	 * 
 	 * @param countDecoy
 	 */
-	public FdrCalculator( FdrFormula fdrFormula ) {
+	public FdrCalculator( FdrFormula fdrFormula, int binSize ) {
 		this.fdrFormula = fdrFormula;
+		this.binSize = binSize;
+	}
+	
+	public FdrCalculator( FdrFormula fdrFormula ) {
+		this(fdrFormula, 0);
 	}
 	
 	public FdrCalculator() {
