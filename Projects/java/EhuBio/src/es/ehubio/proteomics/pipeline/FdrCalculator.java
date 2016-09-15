@@ -23,7 +23,7 @@ public class FdrCalculator {
 	
 	private static final Logger logger = Logger.getLogger(FdrCalculator.class.getName());
 	private final FdrFormula fdrFormula;
-	private final int binSize;
+	private final int binSize;	// TO-DO
 	
 	/**
 	 * If true uses FDR=2*D/(T+D), else FDR=D/T
@@ -45,14 +45,18 @@ public class FdrCalculator {
 	
 	public double getFdr( int d, int t, int nd, int nt ) {
 		if( t == 0 )
-			return 0.0;
+			return 1.0;
 		switch(fdrFormula) {
 			case DT:
 				return ((double)d)/t;
 			case D2TD:
 				return (2.0*d)/(t+d);
 			case MAYU:
-				double dcorr = nd <= d ? d : ((double)d)*(nt-t)/(nd-d);
+				double dcorr;
+				if( nt-t < 20 || nd-d < 20 )
+					dcorr = d;
+				else
+					dcorr = ((double)d)*(nt-t)/(nd-d);
 				return dcorr/t;
 			default:
 				throw new RuntimeException("FDR formula not supported");
@@ -187,6 +191,8 @@ public class FdrCalculator {
 		Double score;
 		ScoreGroup scoreGroup;
 		for( int i = list.size()-1; i >= 0; i-- ) {
+			if( i == 1 )
+				System.out.println();
 			item = list.get(i);
 			score = item.getScoreByType(type).getValue();
 			scoreGroup = mapScores.get(score);
