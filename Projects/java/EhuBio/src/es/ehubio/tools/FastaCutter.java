@@ -13,7 +13,8 @@ public class FastaCutter {
 		List<Fasta> fastas = Fasta.readEntries(FASTA, SequenceType.PROTEIN);
 		Map<String, Fasta> map = new HashMap<>(fastas.size());
 		for( Fasta fasta : fastas )
-			map.put(fasta.getEntry(), fasta);
+			//map.put(fasta.getEntry(), fasta);
+			map.put(fasta.getAccession(), fasta);
 		CsvReader input = new CsvReader(",", false);
 		input.open(INPUT);
 		while( input.readLine() != null ) {

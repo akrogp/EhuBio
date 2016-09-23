@@ -11,7 +11,7 @@ public class Untraslator {
 		CsvReader input = new CsvReader(",", false);
 		input.open(INPUT);
 		while( input.readLine() != null ) {
-			String acc = input.getField(0).split("\\|")[1];
+			String acc = input.getField(0);//input.getField(0).split("\\|")[1];
 			String symbol = UniProtUtils.canonicalAccesion(acc); 
 			String protSeq = input.getField(1).toUpperCase();
 			String dna = Ensembl.untranslate(symbol, protSeq);
@@ -19,6 +19,7 @@ public class Untraslator {
 				log.severe(String.format("Could not find original CDS for %s", acc));
 			else
 				System.out.println(String.format("%s:\t%s", acc, dna));
+				//System.out.println(dna);
 		}
 		input.close();
 	}

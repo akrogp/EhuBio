@@ -19,30 +19,36 @@ import es.ehubio.proteomics.Score;
 import es.ehubio.proteomics.ScoreType;
 
 public class FdrCalculator {
-	public static enum FdrFormula {DT, D2TD, MAYU};
+	private enum FdrFormula {DT, D2TD, MAYU};
 	
 	private static final Logger logger = Logger.getLogger(FdrCalculator.class.getName());
 	private final FdrFormula fdrFormula;
-	private final int binSize;	// TO-DO
-	
-	/**
-	 * If true uses FDR=2*D/(T+D), else FDR=D/T
-	 * 
-	 * @param countDecoy
-	 */
-	public FdrCalculator( FdrFormula fdrFormula, int binSize ) {
-		this.fdrFormula = fdrFormula;
-		this.binSize = binSize;
-	}
-	
-	public FdrCalculator( FdrFormula fdrFormula ) {
-		this(fdrFormula, 0);
-	}
+	//private final int binSize;	// TO-DO
 	
 	public FdrCalculator() {
 		this(FdrFormula.DT);
 	}
+		
+	private FdrCalculator( FdrFormula fdrFormula ) {
+		this.fdrFormula = fdrFormula;
+	}
 	
+	public static FdrCalculator newSeparatedFdr() {
+		return new FdrCalculator(FdrFormula.DT);
+	}
+	
+	public static FdrCalculator newConcatenatedFdr() {
+		return new FdrCalculator(FdrFormula.D2TD);
+	}
+	
+	public static FdrCalculator newMayuFdr(int binSize) {
+		if( binSize != 0 )
+			throw new UnsupportedOperationException("MAYU DB partitioning still not supported");
+		FdrCalculator fdrCalculator = new FdrCalculator(FdrFormula.MAYU);
+		//fdrCalculator.binSize = binSize;
+		return fdrCalculator;
+	}	
+		
 	public double getFdr( int d, int t, int nd, int nt ) {
 		if( t == 0 )
 			return 1.0;
@@ -52,12 +58,10 @@ public class FdrCalculator {
 			case D2TD:
 				return (2.0*d)/(t+d);
 			case MAYU:
-				double dcorr;
-				if( nt-t < 20 || nd-d < 20 )
-					dcorr = d;
-				else
-					dcorr = ((double)d)*(nt-t)/(nd-d);
-				return dcorr/t;
+				double fdr = ((double)d)/t;
+				if( fdr > 0.1 || nt-t < 10 || nd-d < 10 )
+					return fdr;
+				return ((double)d)*(nt-t)/(nd-d)/t;
 			default:
 				throw new RuntimeException("FDR formula not supported");
 		}
@@ -143,7 +147,7 @@ public class FdrCalculator {
 			//System.out.println(String.format("%s,%s,%s,%s,%s",psm.getScoreByType(type).getValue(),scoreGroup.getpValue(),scoreGroup.getFdr(),scoreGroup.getqValue(),scoreGroup.getFdrScore()));
 		}
 	}
-	
+
 	public FdrResult getGlobalFdr( Collection<? extends Decoyable> items ) {
 		int decoy = 0;
 		int target = 0;
@@ -191,8 +195,6 @@ public class FdrCalculator {
 		Double score;
 		ScoreGroup scoreGroup;
 		for( int i = list.size()-1; i >= 0; i-- ) {
-			if( i == 1 )
-				System.out.println();
 			item = list.get(i);
 			score = item.getScoreByType(type).getValue();
 			scoreGroup = mapScores.get(score);

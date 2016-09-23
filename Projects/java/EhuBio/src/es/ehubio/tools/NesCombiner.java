@@ -5,8 +5,13 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import es.ehubio.collections.Identificator;
+import es.ehubio.collections.Utils;
+import es.ehubio.db.fasta.Fasta;
+import es.ehubio.db.fasta.Fasta.SequenceType;
 import es.ehubio.io.CsvReader;
 import es.ehubio.io.CsvUtils;
 
@@ -85,7 +90,8 @@ public class NesCombiner {
 		return results;
 	}
 	
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws Exception {
+		Map<String,Fasta> map = readFasta(REV_FASTA);
 		List<Result> wregex = readWregex(WREGEX);
 		List<Result> nesMapper = readNesMapper(NES_MAPPER);
 		Set<Result> excluded = new HashSet<>();
@@ -95,29 +101,56 @@ public class NesCombiner {
 			Result overlap = getOverlap(result,nesMapper);
 			if( overlap != null )
 				excluded.add(overlap);
-			printResult(out,result,overlap);
+			printResult(out,result,overlap,map);
 		}
 		for( Result result : nesMapper )
 			if( !excluded.contains(result) )
-				printResult(out,null,result);
+				printResult(out,null,result,map);
 		out.close();
-	}
-	
-	private static void printHeader(PrintWriter out) {
-		out.println(CsvUtils.getCsv(SEP,
-				"Entry", "Wregex pos", "NESmapper pos", "Wregex seq", "NESmapper seq", "Wregex score", "NESmapper score"));
+	}	
+
+	private static Map<String, Fasta> readFasta(String revFasta) throws Exception {
+		if( revFasta == null )
+			return null;
+		Map<String, Fasta> map = Utils.getMap(Fasta.readEntries(REV_FASTA, SequenceType.PROTEIN),new Identificator<Fasta>() {
+			@Override
+			public String getId(Fasta fasta) {
+				return fasta.getEntry();
+			}
+		});
+		return map;
 	}
 
-	private static void printResult(PrintWriter out, Result wregex, Result nesMapper) {
-		out.println(CsvUtils.getCsv(SEP,
-				wregex == null ? nesMapper.getEntry() : wregex.getEntry(),
+	private static void printHeader(PrintWriter out) {
+		out.print(CsvUtils.getCsv(SEP,
+				"Entry", "Wregex pos", "NESmapper pos", "Wregex seq", "NESmapper seq", "Wregex score", "NESmapper score"));
+		if( REV_FASTA != null ) {
+			out.print(SEP);
+			out.print("Wregex pos (orig)");
+			out.print(SEP);
+			out.print("NESmapper pos (orig)");
+		}
+		out.println();
+	}
+
+	private static void printResult(PrintWriter out, Result wregex, Result nesMapper, Map<String, Fasta> map) {
+		String entry = wregex == null ? nesMapper.getEntry() : wregex.getEntry(); 
+		out.print(CsvUtils.getCsv(SEP, entry,
 				wregex == null ? "" : String.format("%d..%d", wregex.getBegin(), wregex.getEnd()),
 				nesMapper == null ? "" : String.format("%d..%d", nesMapper.getBegin(), nesMapper.getEnd()),
 				wregex == null ? "" : wregex.getSeq(),
 				nesMapper == null ? "" : nesMapper.getSeq(),
 				wregex == null ? "" : wregex.getScore(),
 				nesMapper == null ? "" : nesMapper.getScore()
-		)); 
+		));
+		if( map != null ) {
+			int len = map.get(entry).getSequence().length();
+			out.print(SEP);
+			out.print(wregex == null ? "" : String.format("%d..%d", len-wregex.getEnd()+1, len-wregex.getBegin()+1));
+			out.print(SEP);
+			out.print(nesMapper == null ? "" : String.format("%d..%d", len-nesMapper.getEnd()+1, len-nesMapper.getBegin()+1));
+		}
+		out.println();
 	}
 
 	private static Result getOverlap(Result item, List<Result> results) {
@@ -132,8 +165,9 @@ public class NesCombiner {
 		return null;
 	}
 
-	private static final String WREGEX = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/Wregex.csv";
-	private static final String NES_MAPPER = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/NESmapper.csv";
-	private static final String OUTPUT = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/Joined.csv";
+	private static final String WREGEX = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/WregexRev.csv";
+	private static final String NES_MAPPER = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/NESmapperRev.csv";
+	private static final String OUTPUT = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/JoinedRev.csv";
+	private static final String REV_FASTA = "/home/gorka/Bio/Proyectos/NES/Estudios/Wregex3.0/Joint/CargoCancer-UniProt.rev.fasta"; 
 	private static final char SEP = '\t';
 }
