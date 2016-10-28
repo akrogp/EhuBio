@@ -19,11 +19,12 @@ import es.ehubio.proteomics.Score;
 import es.ehubio.proteomics.ScoreType;
 
 public class FdrCalculator {
-	private enum FdrFormula {DT, D2TD, MAYU};
+	private enum FdrFormula {DT, D2TD, MAYU, PICKED, REFINED};
 	
 	private static final Logger logger = Logger.getLogger(FdrCalculator.class.getName());
 	private final FdrFormula fdrFormula;
-	//private final int binSize;	// TO-DO
+	private String decoyPrefix;
+	private int targetSize, decoySize;
 	
 	public FdrCalculator() {
 		this(FdrFormula.DT);
@@ -41,18 +42,30 @@ public class FdrCalculator {
 		return new FdrCalculator(FdrFormula.D2TD);
 	}
 	
-	public static FdrCalculator newMayuFdr(int binSize) {
-		if( binSize != 0 )
-			throw new UnsupportedOperationException("MAYU DB partitioning still not supported");
+	public static FdrCalculator newMayuFdr(int targetSize, int decoySize) {
 		FdrCalculator fdrCalculator = new FdrCalculator(FdrFormula.MAYU);
-		//fdrCalculator.binSize = binSize;
+		fdrCalculator.targetSize = targetSize;
+		fdrCalculator.decoySize = decoySize;
 		return fdrCalculator;
-	}	
+	}
+	
+	public static FdrCalculator newPickedFdr(String decoyPrefix) {
+		FdrCalculator fdrCalculator = new FdrCalculator(FdrFormula.PICKED);
+		fdrCalculator.decoyPrefix = decoyPrefix;
+		return fdrCalculator;
+	}
+	
+	public static FdrCalculator newRefinedFdr(String decoyPrefix) {
+		FdrCalculator fdrCalculator = new FdrCalculator(FdrFormula.REFINED);
+		fdrCalculator.decoyPrefix = decoyPrefix;
+		return fdrCalculator;
+	}
 		
 	public double getFdr( int d, int t, int nd, int nt ) {
 		if( t == 0 )
 			return 1.0;
 		switch(fdrFormula) {
+			case PICKED:
 			case DT:
 				return ((double)d)/t;
 			case D2TD:
@@ -124,10 +137,15 @@ public class FdrCalculator {
 		for( Decoyable item : items )
 			if( !item.skipFdr() )
 				list.add(item);
+		if( fdrFormula == FdrFormula.PICKED )
+			list = doCompetition(list, type);
 		sort(list,type);
 		
 		Map<Double,ScoreGroup> mapScores = new HashMap<>();
-		getLocalFdr(list,type,pValue!=null,mapScores);
+		if( fdrFormula == FdrFormula.REFINED )
+			getRefinedFdr(list,type,mapScores);
+		else
+			getLocalFdr(list,type,pValue!=null,mapScores);
 		if( qValue != null )
 			getQValues(list,type,mapScores);
 		if( fdrScore != null )
@@ -146,6 +164,28 @@ public class FdrCalculator {
 				item.putScore(new Score(fdrScore,scoreGroup.getFdrScore()));
 			//System.out.println(String.format("%s,%s,%s,%s,%s",psm.getScoreByType(type).getValue(),scoreGroup.getpValue(),scoreGroup.getFdr(),scoreGroup.getqValue(),scoreGroup.getFdrScore()));
 		}
+	}	
+
+	private List<Decoyable> doCompetition(List<Decoyable> list, ScoreType scoreType) {
+		List<Decoyable> result = new ArrayList<>();
+		Map<String, Decoyable> map = new HashMap<>();
+		for( Decoyable item : list ) {
+			String id = item.toString();
+			if( Boolean.TRUE.equals(item.getDecoy()) )
+				id = id.replaceAll(decoyPrefix, "");
+			Decoyable prev = map.get(id);
+			if( prev != null ) {
+				int comp = item.getScoreByType(scoreType).compare(prev.getScoreByType(scoreType).getValue());
+				if( comp < 0 )
+					continue;
+				if( comp == 0 )
+					result.add(prev);	// target and decoy with the same score
+			}
+			map.put(id, item);
+		}
+		result.addAll(map.values());
+		logger.info(String.format("%d (target+decoy) entries resulted into %d after competition", list.size(), result.size()));
+		return result;
 	}
 
 	public FdrResult getGlobalFdr( Collection<? extends Decoyable> items ) {
@@ -209,7 +249,10 @@ public class FdrCalculator {
 				scoreGroup = new ScoreGroup();
 				mapScores.put(score, scoreGroup);
 			}
-			scoreGroup.setFdr(getFdr(decoy,target,totalDecoys,totalTargets));
+			if( targetSize != 0 && decoySize != 0 )
+				scoreGroup.setFdr(getFdr(decoy,target,decoySize,targetSize));
+			else
+				scoreGroup.setFdr(getFdr(decoy,target,totalDecoys,totalTargets));
 			if( pValue ) {
 				scoreGroup.setpValue(totalDecoys==0?0:(decoy+pOff)/totalDecoys);
 				if( pOff < 0 )
@@ -218,6 +261,54 @@ public class FdrCalculator {
 		}
 	}
 	
+	private void getRefinedFdr(List<Decoyable> list, ScoreType scoreType, Map<Double, ScoreGroup> mapScores) {
+		int d0, db=0, to, tb=0, t=0, d=0;
+		double score, fdr;
+		Decoyable item, target, decoy;
+		ScoreGroup scoreGroup;
+		for( int i = list.size()-1; i >= 0; i-- ) {
+			item = list.get(i);
+			if( Boolean.TRUE.equals(item.getDecoy()) ) {
+				d++;
+				decoy = item;
+				target = findItem(list, i+1, decoy.toString().replaceFirst(decoyPrefix, ""));
+				if( target != null )
+					if( target.getScoreByType(scoreType).compare(decoy.getScoreByType(scoreType).getValue()) > 0 )
+						tb++;
+					else if( decoy.getScoreByType(scoreType).compare(target.getScoreByType(scoreType).getValue()) > 0 )
+						db++;
+			} else {
+				t++;
+				target = item;
+				decoy = findItem(list, i+1, decoyPrefix+target.toString());
+				if( decoy != null )
+					if( decoy.getScoreByType(scoreType).compare(target.getScoreByType(scoreType).getValue()) > 0 )
+						db++;
+					else if( target.getScoreByType(scoreType).compare(decoy.getScoreByType(scoreType).getValue()) > 0 )
+						tb++;
+			}
+			to = t-tb-db;
+			d0 = d-db-tb;
+			fdr = ((double)d0+2*db)/((double)db+tb+to);
+			score = item.getScoreByType(scoreType).getValue();
+			scoreGroup = mapScores.get(score);
+			if( scoreGroup == null ) {
+				scoreGroup = new ScoreGroup();
+				mapScores.put(score, scoreGroup);
+			}
+			scoreGroup.setFdr(fdr);
+		}
+	}
+	
+	private static Decoyable findItem(List<Decoyable> items, int from, String id) {
+		for( int i = from; i < items.size(); i++ ) {
+			Decoyable item = items.get(i);
+			if( item.equals(id) )
+				return item;
+		}		
+		return null;
+	}
+		
 	private void getQValues(List<Decoyable> list, ScoreType type, Map<Double, ScoreGroup> mapScores) {
 		// Traverse from worst to best to calculate q-values
 		double min = mapScores.get(list.get(0).getScoreByType(type).getValue()).getFdr();		
