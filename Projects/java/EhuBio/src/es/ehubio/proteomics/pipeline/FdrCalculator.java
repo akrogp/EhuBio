@@ -179,7 +179,7 @@ public class FdrCalculator {
 				if( comp < 0 )
 					continue;
 				if( comp == 0 )
-					result.add(prev);	// target and decoy with the same score
+					result.add(prev);	// target and decoy with the same score, add both
 			}
 			map.put(id, item);
 		}
@@ -227,6 +227,14 @@ public class FdrCalculator {
 			if( Boolean.TRUE.equals(item.getDecoy()) )
 				totalDecoys++;
 		totalTargets = list.size()-totalDecoys;
+		int mayuTargets, mayuDecoys;
+		if( targetSize != 0 && decoySize != 0 ) {
+			mayuTargets = targetSize;
+			mayuDecoys = decoySize;
+		} else {
+			mayuTargets = totalTargets;
+			mayuDecoys = totalDecoys;
+		}
 
 		// Traverse from best to worst to calculate local FDRs and p-values
 		int decoy = 0, target = 0;
@@ -249,10 +257,7 @@ public class FdrCalculator {
 				scoreGroup = new ScoreGroup();
 				mapScores.put(score, scoreGroup);
 			}
-			if( targetSize != 0 && decoySize != 0 )
-				scoreGroup.setFdr(getFdr(decoy,target,decoySize,targetSize));
-			else
-				scoreGroup.setFdr(getFdr(decoy,target,totalDecoys,totalTargets));
+			scoreGroup.setFdr(getFdr(decoy,target,mayuDecoys,mayuTargets));
 			if( pValue ) {
 				scoreGroup.setpValue(totalDecoys==0?0:(decoy+pOff)/totalDecoys);
 				if( pOff < 0 )
@@ -262,7 +267,7 @@ public class FdrCalculator {
 	}
 	
 	private void getRefinedFdr(List<Decoyable> list, ScoreType scoreType, Map<Double, ScoreGroup> mapScores) {
-		int d0, db=0, to, tb=0, t=0, d=0;
+		int d0, db=0, to, tb=0, td=0, t=0, d=0;
 		double score, fdr;
 		Decoyable item, target, decoy;
 		ScoreGroup scoreGroup;
@@ -277,6 +282,8 @@ public class FdrCalculator {
 						tb++;
 					else if( decoy.getScoreByType(scoreType).compare(target.getScoreByType(scoreType).getValue()) > 0 )
 						db++;
+					else
+						td++;
 			} else {
 				t++;
 				target = item;
@@ -289,7 +296,7 @@ public class FdrCalculator {
 			}
 			to = t-tb-db;
 			d0 = d-db-tb;
-			fdr = ((double)d0+2*db)/((double)db+tb+to);
+			fdr = ((double)d0+2*db+td)/((double)db+tb+to+td);
 			score = item.getScoreByType(scoreType).getValue();
 			scoreGroup = mapScores.get(score);
 			if( scoreGroup == null ) {
