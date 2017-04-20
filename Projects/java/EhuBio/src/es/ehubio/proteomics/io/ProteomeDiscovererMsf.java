@@ -137,7 +137,11 @@ public class ProteomeDiscovererMsf extends MsMsFile {
 		try {
 			fileInfos = statement.executeQuery("SELECT FileName FROM SpectrumFileInfos;");
 		} catch( SQLException e ) {
-			fileInfos = statement.executeQuery("SELECT FileName FROM FileInfos;");
+			try {
+				fileInfos = statement.executeQuery("SELECT FileName FROM FileInfos;");
+			} catch( SQLException e2 ) {
+				fileInfos = statement.executeQuery("SELECT FileName FROM WorkflowInputFiles;");
+			}
 		}
 		fileInfos.next();
 		String fileName = fileInfos.getString(1);

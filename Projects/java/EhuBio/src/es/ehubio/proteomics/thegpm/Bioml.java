@@ -10,6 +10,7 @@ package es.ehubio.proteomics.thegpm;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -515,7 +516,7 @@ public class Bioml {
         @XmlAttribute(name = "z", required = true)
         protected int z;
         @XmlAttribute(name = "rt", required = true)
-        protected double rt;
+        protected String rt;
         @XmlAttribute(name = "expect", required = true)
         protected String expect;
         @XmlAttribute(name = "label", required = true)
@@ -636,7 +637,7 @@ public class Bioml {
          * Gets the value of the rt property.
          * 
          */
-        public double getRt() {
+        public String getRt() {
             return rt;
         }
 
@@ -644,7 +645,7 @@ public class Bioml {
          * Sets the value of the rt property.
          * 
          */
-        public void setRt(double value) {
+        public void setRt(String value) {
             this.rt = value;
         }
 

@@ -49,6 +49,7 @@ public enum ScoreType {
 	FDR_SCORE(null,"FDRScore","FDRScore",false),
 	LP_SCORE(null,"LP score","Cologarithm of p-value",true),
 	LPCORR_SCORE(null,"LPCorr score","LP score corrected",true),
+	LP_RANK(null,"LP of rank","Cologaritm of rank",true),
 	ID_COUNT(null,"ID count","Number of times identified",true),
 	N_DVALUE(null,"N(db)","Number of non-normalized randon matching peptides calculated from DB",false),
 	N_EVALUE(null,"N(exp)","Expected number of non-normalized randon matching peptides",false),

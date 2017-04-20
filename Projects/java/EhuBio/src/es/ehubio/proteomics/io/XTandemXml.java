@@ -59,7 +59,7 @@ public class XTandemXml extends MsMsFile {
 			Spectrum spectrum = new Spectrum();
 			spectrum.setFileName(mgf);
 			spectrum.setFileId(group.getId()+"");
-			spectrum.setRt(group.getRt());
+			//spectrum.setRt(group.getRt());
 			spectrum.setIntensity(group.getSumI());
 			spectra.add(spectrum);
 			psms.clear();
