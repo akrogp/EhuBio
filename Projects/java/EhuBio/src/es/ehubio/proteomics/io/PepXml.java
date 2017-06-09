@@ -81,17 +81,17 @@ public class PepXml extends MsMsFile {
 					} else if (name.equals("mod_aminoacid_mass") ) {
 						//double mass = Double.parseDouble(getAttribute(element, "mass"));
 						int pos = Integer.parseInt(getAttribute(element, "position"));
-						char aa = peptide.getSequence().toLowerCase().charAt(pos-1); 
+						char aa = peptide.getSequence().toLowerCase().charAt(pos-1);
+						Ptm ptm = new Ptm();
+						ptm.setPosition(pos);
 						if( aa == 'c' )
-							break;
-						else if( aa == 'm' ) {
-							Ptm ptm = new Ptm();
-							ptm.setPosition(pos);
+							ptm.setType(ProteinModificationType.CARBAMIDOMETHYLATION);
+						else if( aa == 'm' )
 							ptm.setType(ProteinModificationType.OXIDATION);
-							ptm.guessMissing(null);
-							peptide.addPtm(ptm);
-						} else
+						else
 							throw new Exception("Unsupported PTM");
+						ptm.guessMissing(null);
+						peptide.addPtm(ptm);
 					} else if (name.equals("search_score") ) {
 						if( getAttribute(element, "name").equals("xcorr") )
 							psm.putScore(new Score(ScoreType.SEQUEST_XCORR, Double.parseDouble(getAttribute(element, "value"))));
