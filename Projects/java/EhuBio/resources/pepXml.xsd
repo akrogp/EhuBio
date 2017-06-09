@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+   <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified">
+         <!-- XML Schema Generated from XML Document on Fri Jun 09 2017 19:04:51 GMT+0200 (CEST) -->
+         <!-- with XmlGrid.net Free Online Service http://xmlgrid.net -->
+         <xs:element name="msms_pipeline_analysis">
+               <xs:complexType>
+                     <xs:sequence>
+                           <xs:element name="msms_run_summary">
+                                 <xs:complexType>
+                                       <xs:sequence>
+                                             <xs:element name="sample_enzyme">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="specificity">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="cut" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="no_cut" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="sense" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                         <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="search_summary">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="search_database">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="local_path" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="type" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                               <xs:element name="enzymatic_search_constraint">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="enzyme" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="max_num_internal_cleavages" type="xs:int"></xs:attribute>
+                                                                           <xs:attribute name="min_number_termini" type="xs:int"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                               <xs:element name="aminoacid_modification" maxOccurs="unbounded">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="aminoacid" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="massdiff" type="xs:double"></xs:attribute>
+                                                                           <xs:attribute name="mass" type="xs:double"></xs:attribute>
+                                                                           <xs:attribute name="variable" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="symbol" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                               <xs:element name="parameter" maxOccurs="unbounded">
+                                                                     <xs:complexType>
+                                                                           <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                           <xs:attribute name="value" type="xs:string"></xs:attribute>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                         <xs:attribute name="base_name" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="search_engine" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="search_engine_version" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="precursor_mass_type" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="fragment_mass_type" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="search_id" type="xs:int"></xs:attribute>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                             <xs:element name="spectrum_query" maxOccurs="unbounded">
+                                                   <xs:complexType>
+                                                         <xs:sequence>
+                                                               <xs:element name="search_result">
+                                                                     <xs:complexType>
+                                                                           <xs:sequence>
+                                                                                 <xs:element name="search_hit" maxOccurs="unbounded">
+                                                                                       <xs:complexType>
+                                                                                             <xs:sequence>
+                                                                                                   <xs:element name="modification_info">
+                                                                                                         <xs:complexType>
+                                                                                                               <xs:sequence>
+                                                                                                                     <xs:element name="mod_aminoacid_mass" maxOccurs="unbounded">
+                                                                                                                           <xs:complexType>
+                                                                                                                                 <xs:attribute name="position" type="xs:int"></xs:attribute>
+                                                                                                                                 <xs:attribute name="mass" type="xs:double"></xs:attribute>
+                                                                                                                           </xs:complexType>
+                                                                                                                     </xs:element>
+                                                                                                               </xs:sequence>
+                                                                                                               <xs:attribute name="modified_peptide" type="xs:string"></xs:attribute>
+                                                                                                         </xs:complexType>
+                                                                                                   </xs:element>
+                                                                                                   <xs:element name="search_score" maxOccurs="unbounded">
+                                                                                                         <xs:complexType>
+                                                                                                               <xs:attribute name="name" type="xs:string"></xs:attribute>
+                                                                                                               <xs:attribute name="value" type="xs:double"></xs:attribute>
+                                                                                                         </xs:complexType>
+                                                                                                   </xs:element>
+                                                                                             </xs:sequence>
+                                                                                             <xs:attribute name="hit_rank" type="xs:int"></xs:attribute>
+                                                                                             <xs:attribute name="peptide" type="xs:string"></xs:attribute>
+                                                                                             <xs:attribute name="peptide_prev_aa" type="xs:string"></xs:attribute>
+                                                                                             <xs:attribute name="peptide_next_aa" type="xs:string"></xs:attribute>
+                                                                                             <xs:attribute name="protein" type="xs:string"></xs:attribute>
+                                                                                             <xs:attribute name="num_tot_proteins" type="xs:int"></xs:attribute>
+                                                                                             <xs:attribute name="num_matched_ions" type="xs:int"></xs:attribute>
+                                                                                             <xs:attribute name="tot_num_ions" type="xs:int"></xs:attribute>
+                                                                                             <xs:attribute name="calc_neutral_pep_mass" type="xs:double"></xs:attribute>
+                                                                                             <xs:attribute name="massdiff" type="xs:double"></xs:attribute>
+                                                                                             <xs:attribute name="num_tol_term" type="xs:int"></xs:attribute>
+                                                                                             <xs:attribute name="num_missed_cleavages" type="xs:int"></xs:attribute>
+                                                                                             <xs:attribute name="num_matched_peptides" type="xs:int"></xs:attribute>
+                                                                                       </xs:complexType>
+                                                                                 </xs:element>
+                                                                           </xs:sequence>
+                                                                     </xs:complexType>
+                                                               </xs:element>
+                                                         </xs:sequence>
+                                                         <xs:attribute name="spectrum" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="spectrumNativeID" type="xs:string"></xs:attribute>
+                                                         <xs:attribute name="start_scan" type="xs:int"></xs:attribute>
+                                                         <xs:attribute name="end_scan" type="xs:int"></xs:attribute>
+                                                         <xs:attribute name="precursor_neutral_mass" type="xs:double"></xs:attribute>
+                                                         <xs:attribute name="assumed_charge" type="xs:int"></xs:attribute>
+                                                         <xs:attribute name="index" type="xs:int"></xs:attribute>
+                                                         <xs:attribute name="retention_time_sec" type="xs:double"></xs:attribute>
+                                                   </xs:complexType>
+                                             </xs:element>
+                                       </xs:sequence>
+                                       <xs:attribute name="base_name" type="xs:string"></xs:attribute>
+                                       <xs:attribute name="msManufacturer" type="xs:string"></xs:attribute>
+                                       <xs:attribute name="msModel" type="xs:string"></xs:attribute>
+                                       <xs:attribute name="raw_data_type" type="xs:string"></xs:attribute>
+                                       <xs:attribute name="raw_data" type="xs:string"></xs:attribute>
+                                 </xs:complexType>
+                           </xs:element>
+                     </xs:sequence>
+                     <!--<xs:attribute name="xmlns" type="xs:string"></xs:attribute>
+                     <xs:attribute name="xmlns:xsi" type="xs:string"></xs:attribute>
+                     <xs:attribute name="xsi:schemaLocation" type="xs:string"></xs:attribute>-->
+                     <xs:attribute name="date" type="xs:dateTime"></xs:attribute>                     
+                     <xs:attribute name="summary_xml" type="xs:string"></xs:attribute>
+               </xs:complexType>
+         </xs:element>
+   </xs:schema>
