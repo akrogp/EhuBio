@@ -284,7 +284,7 @@ public class Filter {
 				unlinkPeptide(peptide);
 				continue;
 			}
-			if( peptide.getProteins().isEmpty() ) {
+			if( !data.getProteins().isEmpty() && peptide.getProteins().isEmpty() ) {
 				unlinkPeptide(peptide);
 				continue;
 			}
@@ -312,7 +312,7 @@ public class Filter {
 				unlinkPeptide(peptide);
 				continue;
 			}
-			if( peptide.getSequence().toLowerCase().matches(".*[bjzx].*") ) {
+			if( filterSpecialAminoacids && peptide.getSequence().toLowerCase().matches(".*[bjzx].*") ) {
 				unlinkPeptide(peptide);
 				continue;
 			}

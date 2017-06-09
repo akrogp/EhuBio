@@ -169,6 +169,7 @@ public class FdrCalculator {
 	private List<Decoyable> doCompetition(List<Decoyable> list, ScoreType scoreType) {
 		List<Decoyable> result = new ArrayList<>();
 		Map<String, Decoyable> map = new HashMap<>();
+		//List<Decoyable> db = new ArrayList<>();
 		for( Decoyable item : list ) {
 			String id = item.toString();
 			if( Boolean.TRUE.equals(item.getDecoy()) )
@@ -180,9 +181,19 @@ public class FdrCalculator {
 					continue;
 				if( comp == 0 )
 					result.add(prev);	// target and decoy with the same score, add both
+				/*else
+					db.add(item);*/
 			}
 			map.put(id, item);
 		}
+		/*Collections.sort(db, new Comparator<Decoyable>() {
+			@Override
+			public int compare(Decoyable o1, Decoyable o2) {
+				return o2.getScoreByType(scoreType).compare(o1.getScoreByType(scoreType).getValue());
+			}
+		});
+		Decoyable ex = db.get(0);
+		System.out.println(String.format("%s, %f", ex.toString(), ex.getScoreByType(scoreType).getValue()));*/
 		result.addAll(map.values());
 		logger.info(String.format("%d (target+decoy) entries resulted into %d after competition", list.size(), result.size()));
 		return result;

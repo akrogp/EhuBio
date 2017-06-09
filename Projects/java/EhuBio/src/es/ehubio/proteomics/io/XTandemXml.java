@@ -1,6 +1,7 @@
 package es.ehubio.proteomics.io;
 
 import java.io.InputStream;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class XTandemXml extends MsMsFile {
 		return loadBioml(bioml);
 	}
 
-	private MsMsData loadBioml(Bioml bioml) {
+	private MsMsData loadBioml(Bioml bioml) throws ParseException {
 		String mgf = bioml.getLabel().split("'")[1];
 		Set<Spectrum> spectra = new HashSet<>();
 		Map<Integer, Protein> mapProteins = new HashMap<>();
@@ -104,15 +105,15 @@ public class XTandemXml extends MsMsFile {
 		return protein;
 	}
 	
-	private Peptide loadPeptide(Map<String, Peptide> mapPeptides, Domain d) {
+	private Peptide loadPeptide(Map<String, Peptide> mapPeptides, Domain d) throws ParseException {
 		Peptide newPeptide = new Peptide();
 		newPeptide.setSequence(d.getSeq());
 		for( Aa aa : d.getAa() ) {
-			Ptm ptm = new Ptm();
-			ptm.setPosition(aa.getAt());
+			Ptm ptm = new Ptm();	
+			ptm.setPosition(aa.getAt()-d.getStart()+1);
 			ptm.setMassDelta(aa.getModified());
 			ptm.setResidues(aa.getType());
-			ptm.guessMissing(null);
+			ptm.guessMissing(d.getSeq());
 			newPeptide.addPtm(ptm);
 		}
 		Peptide peptide = mapPeptides.get(newPeptide.getUniqueString());

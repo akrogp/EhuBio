@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -60,7 +61,7 @@ public final class Plgs extends MsMsFile {
 		return data;
 	}
 
-	private MsMsData loadData(Reader rd, boolean loadFragments) throws JAXBException, IOException {
+	private MsMsData loadData(Reader rd, boolean loadFragments) throws JAXBException, IOException, ParseException {
 		JAXBContext jaxbContext = JAXBContext.newInstance(RESULT.class);
 		Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
 		
@@ -80,7 +81,7 @@ public final class Plgs extends MsMsFile {
 		return data;
 	}
 
-	private void loadPeptides(RESULT result, Map<Integer, Protein> mapProteins, Map<Integer, Psm> mapPsms) {
+	private void loadPeptides(RESULT result, Map<Integer, Protein> mapProteins, Map<Integer, Psm> mapPsms) throws ParseException {
 		for( PEPTIDE p : result.getPEPTIDE() ) {
 			Protein protein = mapProteins.get(p.getPROTID().intValue());
 			if( protein == null )

@@ -40,6 +40,7 @@ public abstract class MsMsFile {
 			list.add(new Plgs());
 			list.add(new XTandemXml());
 			list.add(new MascotDat());
+			list.add(new PepXml());
 		/*} else {
 			for( String name : dir.list() ) {
 				if( !name.endsWith(".class") )
@@ -63,11 +64,15 @@ public abstract class MsMsFile {
 		
 		MsMsData data = null;
 		for( File file : dir.listFiles() ) {
-			MsMsData tmp = autoLoadFile(file.getAbsolutePath(), loadFragments);
-			if( data == null )
-				data = tmp;
-			else
-				data.mergeFromPeptide(tmp);
+			try {
+				MsMsData tmp = autoLoadFile(file.getAbsolutePath(), loadFragments);
+				if( data == null )
+					data = tmp;
+				else
+					data.mergeFromPeptide(tmp);
+			} catch (Exception e) {
+				e.printStackTrace();				
+			}
 		}
 		return data;
 	}

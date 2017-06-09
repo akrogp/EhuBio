@@ -111,7 +111,7 @@ public class MascotDat extends MsMsFile {
 		return protein;
 	}
 
-	private Peptide getPeptide(String pepLine, Map<String, Peptide> mapPeptide) {
+	private Peptide getPeptide(String pepLine, Map<String, Peptide> mapPeptide) throws ParseException {
 		String[] fields = pepLine.split(",");		
 		String seq = fields[4];
 		Peptide newPeptide = new Peptide();
