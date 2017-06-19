@@ -119,8 +119,8 @@ public class PepXml extends MsMsFile {
 				psm.linkSpectrum(spectrum);
 				psm.linkPeptide(peptide);
 				psm.setCharge(query.getAssumedCharge());
-				psm.setExpMz(query.getPrecursorNeutralMass()/query.getAssumedCharge());
-				psm.setCalcMz(hit.getCalcNeutralPepMass()/query.getAssumedCharge());
+				psm.setExpMz(query.getPrecursorNeutralMass());
+				psm.setCalcMz(hit.getCalcNeutralPepMass());
 				psm.setRank(hit.getHitRank());
 				for(SearchScore hitScore : hit.getSearchScore() ) {
 					ScoreType scoreType;

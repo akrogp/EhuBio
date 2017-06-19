@@ -1,16 +1,20 @@
 package es.ehubio.proteomics.io;
 
+import java.io.File;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Unmarshaller;
 
+import es.ehubio.Numbers;
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.fasta.HeaderParser;
 import es.ehubio.proteomics.MsMsData;
@@ -51,17 +55,21 @@ public class XTandemXml extends MsMsFile {
 	}
 
 	private MsMsData loadBioml(Bioml bioml) throws ParseException {
-		String mgf = bioml.getLabel().split("'")[1];
+		String mgfPath = bioml.getLabel().split("'")[1];
+		String mgfName = new File(mgfPath).getName();
+		Matcher match = PATTERN.matcher(mgfName);
+		mgfName = match.replaceAll("");
 		Set<Spectrum> spectra = new HashSet<>();
 		Map<Integer, Protein> mapProteins = new HashMap<>();
 		Map<String,Peptide> mapPeptides = new HashMap<>();
 		Set<Peptide> psms = new HashSet<>();
 		for( Group group : bioml.getGroup() ) {
 			Spectrum spectrum = new Spectrum();
-			spectrum.setFileName(mgf);
+			spectrum.setFileName(mgfPath);
 			spectrum.setFileId(group.getId()+"");
-			//spectrum.setRt(group.getRt());
+			spectrum.setRt(Numbers.optDouble(group.getRt()));
 			spectrum.setIntensity(group.getSumI());
+			spectrum.setScan(findScan(group, mgfName));
 			spectra.add(spectrum);
 			psms.clear();
 			for( es.ehubio.proteomics.thegpm.Bioml.Group.Protein p : group.getProtein() ) {
@@ -86,6 +94,17 @@ public class XTandemXml extends MsMsFile {
 		data.updateRanks(ScoreType.XTANDEM_EVALUE);
 		return data;
 	}	
+
+	private String findScan(Group group, String mgfName) {		
+		if( group.getGroup() == null )
+			return null;
+		String scan = group.getGroup().getNote().getValue();
+		if( scan.startsWith(mgfName) ) {
+			return scan.substring(mgfName.length()+1).split("\\.")[0];			
+		} else if( scan.startsWith("spectrum=") )
+			return scan.split("=")[1];
+		return scan;
+	}
 
 	private Protein loadProtein(Map<Integer, Protein> mapProteins, es.ehubio.proteomics.thegpm.Bioml.Group.Protein p) {
 		Protein protein = mapProteins.get(p.getUid());
@@ -123,4 +142,6 @@ public class XTandemXml extends MsMsFile {
 		}
 		return peptide;
 	}
+	
+	private static final Pattern PATTERN = Pattern.compile("\\.[^\\.]+$");
 }
