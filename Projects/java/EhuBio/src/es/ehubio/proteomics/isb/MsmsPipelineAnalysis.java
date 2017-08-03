@@ -10,6 +10,7 @@ package es.ehubio.proteomics.isb;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlAttribute;
@@ -19,206 +20,6 @@ import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-
-/**
- * <p>Clase Java para anonymous complex type.
- * 
- * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
- * 
- * <pre>
- * &lt;complexType>
- *   &lt;complexContent>
- *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *       &lt;sequence>
- *         &lt;element name="msms_run_summary">
- *           &lt;complexType>
- *             &lt;complexContent>
- *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                 &lt;sequence>
- *                   &lt;element name="sample_enzyme">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;sequence>
- *                             &lt;element name="specificity">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;attribute name="cut" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="no_cut" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="sense" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                           &lt;/sequence>
- *                           &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="search_summary">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;sequence>
- *                             &lt;element name="search_database">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;attribute name="local_path" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                             &lt;element name="enzymatic_search_constraint">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;attribute name="enzyme" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="max_num_internal_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                     &lt;attribute name="min_number_termini" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                             &lt;element name="aminoacid_modification" maxOccurs="unbounded">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;attribute name="aminoacid" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                                     &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                                     &lt;attribute name="variable" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="symbol" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                             &lt;element name="parameter" maxOccurs="unbounded">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                     &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                           &lt;/sequence>
- *                           &lt;attribute name="base_name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="search_engine" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="search_engine_version" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="precursor_mass_type" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="fragment_mass_type" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="search_id" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                   &lt;element name="spectrum_query" maxOccurs="unbounded">
- *                     &lt;complexType>
- *                       &lt;complexContent>
- *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                           &lt;sequence>
- *                             &lt;element name="search_result">
- *                               &lt;complexType>
- *                                 &lt;complexContent>
- *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                     &lt;sequence>
- *                                       &lt;element name="search_hit" maxOccurs="unbounded">
- *                                         &lt;complexType>
- *                                           &lt;complexContent>
- *                                             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                               &lt;sequence>
- *                                                 &lt;element name="modification_info">
- *                                                   &lt;complexType>
- *                                                     &lt;complexContent>
- *                                                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                                         &lt;sequence>
- *                                                           &lt;element name="mod_aminoacid_mass" maxOccurs="unbounded">
- *                                                             &lt;complexType>
- *                                                               &lt;complexContent>
- *                                                                 &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                                                   &lt;attribute name="position" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                                                   &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                                                                 &lt;/restriction>
- *                                                               &lt;/complexContent>
- *                                                             &lt;/complexType>
- *                                                           &lt;/element>
- *                                                         &lt;/sequence>
- *                                                         &lt;attribute name="modified_peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                                       &lt;/restriction>
- *                                                     &lt;/complexContent>
- *                                                   &lt;/complexType>
- *                                                 &lt;/element>
- *                                                 &lt;element name="search_score" maxOccurs="unbounded">
- *                                                   &lt;complexType>
- *                                                     &lt;complexContent>
- *                                                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
- *                                                         &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                                         &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                                                       &lt;/restriction>
- *                                                     &lt;/complexContent>
- *                                                   &lt;/complexType>
- *                                                 &lt;/element>
- *                                               &lt;/sequence>
- *                                               &lt;attribute name="hit_rank" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                               &lt;attribute name="peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                               &lt;attribute name="peptide_prev_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                               &lt;attribute name="peptide_next_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                               &lt;attribute name="protein" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                                               &lt;attribute name="num_tot_proteins" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                               &lt;attribute name="num_matched_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                               &lt;attribute name="tot_num_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                               &lt;attribute name="calc_neutral_pep_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                                               &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                                               &lt;attribute name="num_tol_term" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                               &lt;attribute name="num_missed_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                               &lt;attribute name="num_matched_peptides" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                                             &lt;/restriction>
- *                                           &lt;/complexContent>
- *                                         &lt;/complexType>
- *                                       &lt;/element>
- *                                     &lt;/sequence>
- *                                   &lt;/restriction>
- *                                 &lt;/complexContent>
- *                               &lt;/complexType>
- *                             &lt;/element>
- *                           &lt;/sequence>
- *                           &lt;attribute name="spectrum" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="spectrumNativeID" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                           &lt;attribute name="start_scan" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                           &lt;attribute name="end_scan" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                           &lt;attribute name="precursor_neutral_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                           &lt;attribute name="assumed_charge" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                           &lt;attribute name="index" type="{http://www.w3.org/2001/XMLSchema}int" />
- *                           &lt;attribute name="retention_time_sec" type="{http://www.w3.org/2001/XMLSchema}double" />
- *                         &lt;/restriction>
- *                       &lt;/complexContent>
- *                     &lt;/complexType>
- *                   &lt;/element>
- *                 &lt;/sequence>
- *                 &lt;attribute name="base_name" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="msManufacturer" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="msModel" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="raw_data_type" type="{http://www.w3.org/2001/XMLSchema}string" />
- *                 &lt;attribute name="raw_data" type="{http://www.w3.org/2001/XMLSchema}string" />
- *               &lt;/restriction>
- *             &lt;/complexContent>
- *           &lt;/complexType>
- *         &lt;/element>
- *       &lt;/sequence>
- *       &lt;attribute name="date" type="{http://www.w3.org/2001/XMLSchema}dateTime" />
- *       &lt;attribute name="summary_xml" type="{http://www.w3.org/2001/XMLSchema}string" />
- *     &lt;/restriction>
- *   &lt;/complexContent>
- * &lt;/complexType>
- * </pre>
- * 
- * 
- */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "", propOrder = {
     "msmsRunSummary"
@@ -306,194 +107,6 @@ public class MsmsPipelineAnalysis {
         this.summaryXml = value;
     }
 
-
-    /**
-     * <p>Clase Java para anonymous complex type.
-     * 
-     * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-     * 
-     * <pre>
-     * &lt;complexType>
-     *   &lt;complexContent>
-     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *       &lt;sequence>
-     *         &lt;element name="sample_enzyme">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;sequence>
-     *                   &lt;element name="specificity">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;attribute name="cut" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="no_cut" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="sense" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                 &lt;/sequence>
-     *                 &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="search_summary">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;sequence>
-     *                   &lt;element name="search_database">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;attribute name="local_path" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                   &lt;element name="enzymatic_search_constraint">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;attribute name="enzyme" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="max_num_internal_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                           &lt;attribute name="min_number_termini" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                   &lt;element name="aminoacid_modification" maxOccurs="unbounded">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;attribute name="aminoacid" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                           &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                           &lt;attribute name="variable" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="symbol" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                   &lt;element name="parameter" maxOccurs="unbounded">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                           &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                 &lt;/sequence>
-     *                 &lt;attribute name="base_name" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="search_engine" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="search_engine_version" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="precursor_mass_type" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="fragment_mass_type" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="search_id" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *         &lt;element name="spectrum_query" maxOccurs="unbounded">
-     *           &lt;complexType>
-     *             &lt;complexContent>
-     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                 &lt;sequence>
-     *                   &lt;element name="search_result">
-     *                     &lt;complexType>
-     *                       &lt;complexContent>
-     *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                           &lt;sequence>
-     *                             &lt;element name="search_hit" maxOccurs="unbounded">
-     *                               &lt;complexType>
-     *                                 &lt;complexContent>
-     *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                                     &lt;sequence>
-     *                                       &lt;element name="modification_info">
-     *                                         &lt;complexType>
-     *                                           &lt;complexContent>
-     *                                             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                                               &lt;sequence>
-     *                                                 &lt;element name="mod_aminoacid_mass" maxOccurs="unbounded">
-     *                                                   &lt;complexType>
-     *                                                     &lt;complexContent>
-     *                                                       &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                                                         &lt;attribute name="position" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                                         &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                                                       &lt;/restriction>
-     *                                                     &lt;/complexContent>
-     *                                                   &lt;/complexType>
-     *                                                 &lt;/element>
-     *                                               &lt;/sequence>
-     *                                               &lt;attribute name="modified_peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                             &lt;/restriction>
-     *                                           &lt;/complexContent>
-     *                                         &lt;/complexType>
-     *                                       &lt;/element>
-     *                                       &lt;element name="search_score" maxOccurs="unbounded">
-     *                                         &lt;complexType>
-     *                                           &lt;complexContent>
-     *                                             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-     *                                               &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                               &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                                             &lt;/restriction>
-     *                                           &lt;/complexContent>
-     *                                         &lt;/complexType>
-     *                                       &lt;/element>
-     *                                     &lt;/sequence>
-     *                                     &lt;attribute name="hit_rank" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                     &lt;attribute name="peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                     &lt;attribute name="peptide_prev_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                     &lt;attribute name="peptide_next_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                     &lt;attribute name="protein" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                                     &lt;attribute name="num_tot_proteins" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                     &lt;attribute name="num_matched_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                     &lt;attribute name="tot_num_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                     &lt;attribute name="calc_neutral_pep_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                                     &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                                     &lt;attribute name="num_tol_term" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                     &lt;attribute name="num_missed_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                     &lt;attribute name="num_matched_peptides" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                                   &lt;/restriction>
-     *                                 &lt;/complexContent>
-     *                               &lt;/complexType>
-     *                             &lt;/element>
-     *                           &lt;/sequence>
-     *                         &lt;/restriction>
-     *                       &lt;/complexContent>
-     *                     &lt;/complexType>
-     *                   &lt;/element>
-     *                 &lt;/sequence>
-     *                 &lt;attribute name="spectrum" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="spectrumNativeID" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *                 &lt;attribute name="start_scan" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                 &lt;attribute name="end_scan" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                 &lt;attribute name="precursor_neutral_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *                 &lt;attribute name="assumed_charge" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                 &lt;attribute name="index" type="{http://www.w3.org/2001/XMLSchema}int" />
-     *                 &lt;attribute name="retention_time_sec" type="{http://www.w3.org/2001/XMLSchema}double" />
-     *               &lt;/restriction>
-     *             &lt;/complexContent>
-     *           &lt;/complexType>
-     *         &lt;/element>
-     *       &lt;/sequence>
-     *       &lt;attribute name="base_name" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="msManufacturer" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="msModel" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="raw_data_type" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *       &lt;attribute name="raw_data" type="{http://www.w3.org/2001/XMLSchema}string" />
-     *     &lt;/restriction>
-     *   &lt;/complexContent>
-     * &lt;/complexType>
-     * </pre>
-     * 
-     * 
-     */
     @XmlAccessorType(XmlAccessType.FIELD)
     @XmlType(name = "", propOrder = {
         "sampleEnzyme",
@@ -716,37 +329,6 @@ public class MsmsPipelineAnalysis {
             this.rawData = value;
         }
 
-
-        /**
-         * <p>Clase Java para anonymous complex type.
-         * 
-         * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-         * 
-         * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;sequence>
-         *         &lt;element name="specificity">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;attribute name="cut" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="no_cut" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="sense" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *       &lt;/sequence>
-         *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
-         * </pre>
-         * 
-         * 
-         */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
             "specificity"
@@ -806,26 +388,6 @@ public class MsmsPipelineAnalysis {
                 this.name = value;
             }
 
-
-            /**
-             * <p>Clase Java para anonymous complex type.
-             * 
-             * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-             * 
-             * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;attribute name="cut" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="no_cut" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="sense" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
-             * </pre>
-             * 
-             * 
-             */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
             public static class Specificity {
@@ -913,75 +475,6 @@ public class MsmsPipelineAnalysis {
 
         }
 
-
-        /**
-         * <p>Clase Java para anonymous complex type.
-         * 
-         * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-         * 
-         * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;sequence>
-         *         &lt;element name="search_database">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;attribute name="local_path" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *         &lt;element name="enzymatic_search_constraint">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;attribute name="enzyme" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="max_num_internal_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                 &lt;attribute name="min_number_termini" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *         &lt;element name="aminoacid_modification" maxOccurs="unbounded">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;attribute name="aminoacid" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *                 &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *                 &lt;attribute name="variable" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="symbol" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *         &lt;element name="parameter" maxOccurs="unbounded">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                 &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *       &lt;/sequence>
-         *       &lt;attribute name="base_name" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="search_engine" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="search_engine_version" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="precursor_mass_type" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="fragment_mass_type" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="search_id" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
-         * </pre>
-         * 
-         * 
-         */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
             "searchDatabase",
@@ -1262,28 +755,6 @@ public class MsmsPipelineAnalysis {
                 this.searchId = value;
             }
 
-
-            /**
-             * <p>Clase Java para anonymous complex type.
-             * 
-             * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-             * 
-             * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;attribute name="aminoacid" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-             *       &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-             *       &lt;attribute name="variable" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="symbol" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
-             * </pre>
-             * 
-             * 
-             */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
             public static class AminoacidModification {
@@ -1421,26 +892,6 @@ public class MsmsPipelineAnalysis {
 
             }
 
-
-            /**
-             * <p>Clase Java para anonymous complex type.
-             * 
-             * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-             * 
-             * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;attribute name="enzyme" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="max_num_internal_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *       &lt;attribute name="min_number_termini" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
-             * </pre>
-             * 
-             * 
-             */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
             public static class EnzymaticSearchConstraint {
@@ -1526,25 +977,6 @@ public class MsmsPipelineAnalysis {
 
             }
 
-
-            /**
-             * <p>Clase Java para anonymous complex type.
-             * 
-             * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-             * 
-             * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
-             * </pre>
-             * 
-             * 
-             */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
             public static class Parameter {
@@ -1604,25 +1036,6 @@ public class MsmsPipelineAnalysis {
 
             }
 
-
-            /**
-             * <p>Clase Java para anonymous complex type.
-             * 
-             * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-             * 
-             * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;attribute name="local_path" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *       &lt;attribute name="type" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
-             * </pre>
-             * 
-             * 
-             */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "")
             public static class SearchDatabase {
@@ -1684,97 +1097,6 @@ public class MsmsPipelineAnalysis {
 
         }
 
-
-        /**
-         * <p>Clase Java para anonymous complex type.
-         * 
-         * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-         * 
-         * <pre>
-         * &lt;complexType>
-         *   &lt;complexContent>
-         *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *       &lt;sequence>
-         *         &lt;element name="search_result">
-         *           &lt;complexType>
-         *             &lt;complexContent>
-         *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                 &lt;sequence>
-         *                   &lt;element name="search_hit" maxOccurs="unbounded">
-         *                     &lt;complexType>
-         *                       &lt;complexContent>
-         *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                           &lt;sequence>
-         *                             &lt;element name="modification_info">
-         *                               &lt;complexType>
-         *                                 &lt;complexContent>
-         *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                                     &lt;sequence>
-         *                                       &lt;element name="mod_aminoacid_mass" maxOccurs="unbounded">
-         *                                         &lt;complexType>
-         *                                           &lt;complexContent>
-         *                                             &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                                               &lt;attribute name="position" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                                               &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *                                             &lt;/restriction>
-         *                                           &lt;/complexContent>
-         *                                         &lt;/complexType>
-         *                                       &lt;/element>
-         *                                     &lt;/sequence>
-         *                                     &lt;attribute name="modified_peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                                   &lt;/restriction>
-         *                                 &lt;/complexContent>
-         *                               &lt;/complexType>
-         *                             &lt;/element>
-         *                             &lt;element name="search_score" maxOccurs="unbounded">
-         *                               &lt;complexType>
-         *                                 &lt;complexContent>
-         *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-         *                                     &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                                     &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *                                   &lt;/restriction>
-         *                                 &lt;/complexContent>
-         *                               &lt;/complexType>
-         *                             &lt;/element>
-         *                           &lt;/sequence>
-         *                           &lt;attribute name="hit_rank" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                           &lt;attribute name="peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                           &lt;attribute name="peptide_prev_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                           &lt;attribute name="peptide_next_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                           &lt;attribute name="protein" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *                           &lt;attribute name="num_tot_proteins" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                           &lt;attribute name="num_matched_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                           &lt;attribute name="tot_num_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                           &lt;attribute name="calc_neutral_pep_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *                           &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *                           &lt;attribute name="num_tol_term" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                           &lt;attribute name="num_missed_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                           &lt;attribute name="num_matched_peptides" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *                         &lt;/restriction>
-         *                       &lt;/complexContent>
-         *                     &lt;/complexType>
-         *                   &lt;/element>
-         *                 &lt;/sequence>
-         *               &lt;/restriction>
-         *             &lt;/complexContent>
-         *           &lt;/complexType>
-         *         &lt;/element>
-         *       &lt;/sequence>
-         *       &lt;attribute name="spectrum" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="spectrumNativeID" type="{http://www.w3.org/2001/XMLSchema}string" />
-         *       &lt;attribute name="start_scan" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *       &lt;attribute name="end_scan" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *       &lt;attribute name="precursor_neutral_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *       &lt;attribute name="assumed_charge" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *       &lt;attribute name="index" type="{http://www.w3.org/2001/XMLSchema}int" />
-         *       &lt;attribute name="retention_time_sec" type="{http://www.w3.org/2001/XMLSchema}double" />
-         *     &lt;/restriction>
-         *   &lt;/complexContent>
-         * &lt;/complexType>
-         * </pre>
-         * 
-         * 
-         */
         @XmlAccessorType(XmlAccessType.FIELD)
         @XmlType(name = "", propOrder = {
             "searchResult"
@@ -2016,79 +1338,6 @@ public class MsmsPipelineAnalysis {
                 this.retentionTimeSec = value;
             }
 
-
-            /**
-             * <p>Clase Java para anonymous complex type.
-             * 
-             * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-             * 
-             * <pre>
-             * &lt;complexType>
-             *   &lt;complexContent>
-             *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *       &lt;sequence>
-             *         &lt;element name="search_hit" maxOccurs="unbounded">
-             *           &lt;complexType>
-             *             &lt;complexContent>
-             *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *                 &lt;sequence>
-             *                   &lt;element name="modification_info">
-             *                     &lt;complexType>
-             *                       &lt;complexContent>
-             *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *                           &lt;sequence>
-             *                             &lt;element name="mod_aminoacid_mass" maxOccurs="unbounded">
-             *                               &lt;complexType>
-             *                                 &lt;complexContent>
-             *                                   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *                                     &lt;attribute name="position" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                                     &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-             *                                   &lt;/restriction>
-             *                                 &lt;/complexContent>
-             *                               &lt;/complexType>
-             *                             &lt;/element>
-             *                           &lt;/sequence>
-             *                           &lt;attribute name="modified_peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *                         &lt;/restriction>
-             *                       &lt;/complexContent>
-             *                     &lt;/complexType>
-             *                   &lt;/element>
-             *                   &lt;element name="search_score" maxOccurs="unbounded">
-             *                     &lt;complexType>
-             *                       &lt;complexContent>
-             *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-             *                           &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *                           &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}double" />
-             *                         &lt;/restriction>
-             *                       &lt;/complexContent>
-             *                     &lt;/complexType>
-             *                   &lt;/element>
-             *                 &lt;/sequence>
-             *                 &lt;attribute name="hit_rank" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                 &lt;attribute name="peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *                 &lt;attribute name="peptide_prev_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *                 &lt;attribute name="peptide_next_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *                 &lt;attribute name="protein" type="{http://www.w3.org/2001/XMLSchema}string" />
-             *                 &lt;attribute name="num_tot_proteins" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                 &lt;attribute name="num_matched_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                 &lt;attribute name="tot_num_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                 &lt;attribute name="calc_neutral_pep_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-             *                 &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-             *                 &lt;attribute name="num_tol_term" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                 &lt;attribute name="num_missed_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *                 &lt;attribute name="num_matched_peptides" type="{http://www.w3.org/2001/XMLSchema}int" />
-             *               &lt;/restriction>
-             *             &lt;/complexContent>
-             *           &lt;/complexType>
-             *         &lt;/element>
-             *       &lt;/sequence>
-             *     &lt;/restriction>
-             *   &lt;/complexContent>
-             * &lt;/complexType>
-             * </pre>
-             * 
-             * 
-             */
             @XmlAccessorType(XmlAccessType.FIELD)
             @XmlType(name = "", propOrder = {
                 "searchHit"
@@ -2127,69 +1376,6 @@ public class MsmsPipelineAnalysis {
                     return this.searchHit;
                 }
 
-
-                /**
-                 * <p>Clase Java para anonymous complex type.
-                 * 
-                 * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-                 * 
-                 * <pre>
-                 * &lt;complexType>
-                 *   &lt;complexContent>
-                 *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                 *       &lt;sequence>
-                 *         &lt;element name="modification_info">
-                 *           &lt;complexType>
-                 *             &lt;complexContent>
-                 *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                 *                 &lt;sequence>
-                 *                   &lt;element name="mod_aminoacid_mass" maxOccurs="unbounded">
-                 *                     &lt;complexType>
-                 *                       &lt;complexContent>
-                 *                         &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                 *                           &lt;attribute name="position" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *                           &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-                 *                         &lt;/restriction>
-                 *                       &lt;/complexContent>
-                 *                     &lt;/complexType>
-                 *                   &lt;/element>
-                 *                 &lt;/sequence>
-                 *                 &lt;attribute name="modified_peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-                 *               &lt;/restriction>
-                 *             &lt;/complexContent>
-                 *           &lt;/complexType>
-                 *         &lt;/element>
-                 *         &lt;element name="search_score" maxOccurs="unbounded">
-                 *           &lt;complexType>
-                 *             &lt;complexContent>
-                 *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                 *                 &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-                 *                 &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}double" />
-                 *               &lt;/restriction>
-                 *             &lt;/complexContent>
-                 *           &lt;/complexType>
-                 *         &lt;/element>
-                 *       &lt;/sequence>
-                 *       &lt;attribute name="hit_rank" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *       &lt;attribute name="peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-                 *       &lt;attribute name="peptide_prev_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-                 *       &lt;attribute name="peptide_next_aa" type="{http://www.w3.org/2001/XMLSchema}string" />
-                 *       &lt;attribute name="protein" type="{http://www.w3.org/2001/XMLSchema}string" />
-                 *       &lt;attribute name="num_tot_proteins" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *       &lt;attribute name="num_matched_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *       &lt;attribute name="tot_num_ions" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *       &lt;attribute name="calc_neutral_pep_mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-                 *       &lt;attribute name="massdiff" type="{http://www.w3.org/2001/XMLSchema}double" />
-                 *       &lt;attribute name="num_tol_term" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *       &lt;attribute name="num_missed_cleavages" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *       &lt;attribute name="num_matched_peptides" type="{http://www.w3.org/2001/XMLSchema}int" />
-                 *     &lt;/restriction>
-                 *   &lt;/complexContent>
-                 * &lt;/complexType>
-                 * </pre>
-                 * 
-                 * 
-                 */
                 @XmlAccessorType(XmlAccessType.FIELD)
                 @XmlType(name = "", propOrder = {
                     "modificationInfo",
@@ -2593,36 +1779,6 @@ public class MsmsPipelineAnalysis {
                         this.numMatchedPeptides = value;
                     }
 
-
-                    /**
-                     * <p>Clase Java para anonymous complex type.
-                     * 
-                     * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-                     * 
-                     * <pre>
-                     * &lt;complexType>
-                     *   &lt;complexContent>
-                     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                     *       &lt;sequence>
-                     *         &lt;element name="mod_aminoacid_mass" maxOccurs="unbounded">
-                     *           &lt;complexType>
-                     *             &lt;complexContent>
-                     *               &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                     *                 &lt;attribute name="position" type="{http://www.w3.org/2001/XMLSchema}int" />
-                     *                 &lt;attribute name="mass" type="{http://www.w3.org/2001/XMLSchema}double" />
-                     *               &lt;/restriction>
-                     *             &lt;/complexContent>
-                     *           &lt;/complexType>
-                     *         &lt;/element>
-                     *       &lt;/sequence>
-                     *       &lt;attribute name="modified_peptide" type="{http://www.w3.org/2001/XMLSchema}string" />
-                     *     &lt;/restriction>
-                     *   &lt;/complexContent>
-                     * &lt;/complexType>
-                     * </pre>
-                     * 
-                     * 
-                     */
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "", propOrder = {
                         "modAminoacidMass"
@@ -2767,25 +1923,6 @@ public class MsmsPipelineAnalysis {
 
                     }
 
-
-                    /**
-                     * <p>Clase Java para anonymous complex type.
-                     * 
-                     * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
-                     * 
-                     * <pre>
-                     * &lt;complexType>
-                     *   &lt;complexContent>
-                     *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
-                     *       &lt;attribute name="name" type="{http://www.w3.org/2001/XMLSchema}string" />
-                     *       &lt;attribute name="value" type="{http://www.w3.org/2001/XMLSchema}double" />
-                     *     &lt;/restriction>
-                     *   &lt;/complexContent>
-                     * &lt;/complexType>
-                     * </pre>
-                     * 
-                     * 
-                     */
                     @XmlAccessorType(XmlAccessType.FIELD)
                     @XmlType(name = "")
                     public static class SearchScore {

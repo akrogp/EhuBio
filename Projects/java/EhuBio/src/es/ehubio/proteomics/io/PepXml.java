@@ -82,7 +82,7 @@ public class PepXml extends MsMsFile {
 				continue;
 			Spectrum spectrum = new Spectrum();
 			spectrum.setFileName(mgf);
-			spectrum.setFileId(query.getSpectrumNativeID());
+			spectrum.setFileId(query.getSpectrumNativeID()!=null?query.getSpectrumNativeID():query.getSpectrum());
 			spectrum.setScan(query.getStartScan().toString());
 			spectrum.setRt(query.getRetentionTimeSec());
 			spectra.add(spectrum);
@@ -133,7 +133,9 @@ public class PepXml extends MsMsFile {
 					else if( hitScore.getName().equalsIgnoreCase("sprank") )
 						scoreType = ScoreType.SEQUEST_SPRANK;
 					else if( hitScore.getName().equalsIgnoreCase("expect") )
-						scoreType = ScoreType.SEQUEST_EVALUE;
+						scoreType = ScoreType.EVALUE;
+					else if( hitScore.getName().equalsIgnoreCase("hyperscore") )
+						scoreType = ScoreType.XTANDEM_HYPERSCORE;
 					else
 						continue;
 					psm.putScore(new Score(scoreType, hitScore.getValue()));
