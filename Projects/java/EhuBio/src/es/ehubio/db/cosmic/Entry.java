@@ -104,23 +104,23 @@ public class Entry {
 	public void setMutationZygosity(String mutationZygosity) {
 		this.mutationZygosity = mutationZygosity;
 	}
-	public String getMutationNcbi36GenomePosition() {
-		return mutationNcbi36GenomePosition;
+	public String getMutationGenomePosition() {
+		return mutationGenomePosition;
 	}
-	public void setMutationNcbi36GenomePosition(String mutationNcbi36GenomePosition) {
-		this.mutationNcbi36GenomePosition = mutationNcbi36GenomePosition;
+	public void setMutationGenomePosition(String mutationGenomePosition) {
+		this.mutationGenomePosition = mutationGenomePosition;
 	}
-	public String getMutationGrch37GenomePosition() {
-		return mutationGrch37GenomePosition;
+	public String getGrch() {
+		return grch;
 	}
-	public void setMutationGrch37GenomePosition(String mutationGrch37GenomePosition) {
-		this.mutationGrch37GenomePosition = mutationGrch37GenomePosition;
+	public void setGrch(String grch) {
+		this.grch = grch;
 	}
-	public String getMutationGrch37Strand() {
-		return mutationGrch37Strand;
+	public String getMutationStrand() {
+		return mutationStrand;
 	}
-	public void setMutationGrch37Strand(String mutationGrch37Strand) {
-		this.mutationGrch37Strand = mutationGrch37Strand;
+	public void setMutationStrand(String mutationStrand) {
+		this.mutationStrand = mutationStrand;
 	}
 	public String getSnp() {
 		return snp;
@@ -193,9 +193,9 @@ public class Entry {
 	private String mutationAa;
 	private String mutationDescription;
 	private String mutationZygosity;
-	private String mutationNcbi36GenomePosition;
-	private String mutationGrch37GenomePosition;
-	private String mutationGrch37Strand;
+	private String mutationGenomePosition;	
+	private String mutationStrand;
+	private String grch;
 	private String snp;
 	private String fathmmPrediction;
 	private String mutationSomaticStatus;

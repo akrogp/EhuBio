@@ -42,9 +42,9 @@ public class Cosmic {
 		entry.setMutationAa(rd.getField("Mutation AA"));
 		entry.setMutationDescription(rd.getField("Mutation Description"));
 		entry.setMutationZygosity(rd.getField("Mutation zygosity"));
-		entry.setMutationNcbi36GenomePosition(rd.getField("Mutation NCBI36 genome position"));
-		entry.setMutationGrch37GenomePosition(rd.getField("Mutation GRCh37 genome position"));
-		entry.setMutationGrch37Strand(rd.getField("Mutation GRCh37 strand"));
+		entry.setMutationGenomePosition(rd.getField("Mutation genome position"));
+		entry.setGrch(rd.getField("GRCh"));
+		entry.setMutationStrand(rd.getField("Mutation strand"));
 		entry.setSnp(rd.getField("SNP"));
 		entry.setFathmmPrediction(rd.getField("FATHMM prediction"));
 		entry.setMutationSomaticStatus(rd.getField("Mutation somatic status"));
