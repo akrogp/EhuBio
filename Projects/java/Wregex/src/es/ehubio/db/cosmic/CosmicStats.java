@@ -31,12 +31,13 @@ public class CosmicStats {
 	public static Map<String,CosmicStats> load( String path ) throws FileNotFoundException, IOException {
 		Map<String,CosmicStats> results = new HashMap<>();
 		CosmicStats result = null;
+		String isSnp = "y";
 		
 		Cosmic cosmic = new Cosmic();
 		cosmic.openTsvGz(path);
 		Entry entry;
 		while( (entry=cosmic.nextEntry()) != null ) {
-			if( entry.getMutationAa() == null )
+			if( entry.getMutationAa() == null || isSnp.equalsIgnoreCase(entry.getSnp()) )
 				continue;
 			ProteinMutation mut = Hgvs.parseProteinMutation(entry.getMutationAa());
 			if( mut == null || mut.getType() != ProteinMutation.Type.Missense )

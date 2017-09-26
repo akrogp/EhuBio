@@ -17,13 +17,13 @@
         <versionFile>/media/data/Sequences/Cosmic/current/version.txt</versionFile>
         <wregexVersion>2</wregexVersion>
     </database>
-    <database>
-        <name>dbPTM</name>
-        <type>dbptm</type>
-        <path>/media/data/Sequences/dbPTM/dbPTM3.txt</path>
-        <version>3.0</version>
-        <wregexVersion>0</wregexVersion>
-    </database>
+<!--     <database> -->
+<!--         <name>dbPTM</name> -->
+<!--         <type>dbptm</type> -->
+<!--         <path>/media/data/Sequences/dbPTM/dbPTM3.txt</path> -->
+<!--         <version>3.0</version> -->
+<!--         <wregexVersion>0</wregexVersion> -->
+<!--     </database> -->
     <database>
         <name>Wregex Cache</name>
         <type>wregex</type>
@@ -36,13 +36,13 @@
         <versionFile>/media/data/Sequences/UniProt/current/version.txt</versionFile>
         <wregexVersion>2</wregexVersion>
     </database>
-    <database>
-        <name>Proteins of Cancer Genes</name>
-        <type>fasta</type>
-        <path>/media/data/Sequences/Fasta/nature12912.fasta</path>
-        <versionFile>/media/data/Sequences/Fasta/nature12912.version</versionFile>
-        <wregexVersion>0</wregexVersion>
-    </database>
+<!--     <database> -->
+<!--         <name>Proteins of Cancer Genes</name> -->
+<!--         <type>fasta</type> -->
+<!--         <path>/media/data/Sequences/Fasta/nature12912.fasta</path> -->
+<!--         <versionFile>/media/data/Sequences/Fasta/nature12912.version</versionFile> -->
+<!--         <wregexVersion>0</wregexVersion> -->
+<!--     </database> -->
     <database>
         <name>NESdb</name>
         <type>fasta</type>

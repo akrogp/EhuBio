@@ -108,6 +108,8 @@ public class HomeBean implements Serializable {
 	}
 
 	private void setWregexLog2(List<LatestNew> news) {
+		news.add(new LatestNew("Sep 26, 2017", "Wregex v2.1 published"));
+		news.add(new LatestNew("Sep 14, 2017", "Updated to latest versions of COSMIC and UniProt"));
 		news.add(new LatestNew("May 12, 2016", "Wregex v2.0 published in Scientific Reports"));
 		news.add(new LatestNew("Dec 29, 2014", "Finished COSMIC support"));
 		news.add(new LatestNew("Apr 16, 2014", "Included time constraints to avoid denial of service to other users"));
