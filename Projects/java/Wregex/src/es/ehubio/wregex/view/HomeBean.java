@@ -81,6 +81,9 @@ public class HomeBean implements Serializable {
 	}
 	
 	private void setWregexLogDev(List<LatestNew> news2) {
+		news.add(new LatestNew("Sep 28, 2017", "Included support for coarse/fine PSSM"));
+		news.add(new LatestNew("Sep 26, 2017", "Filtered SNPs from COSMIC"));
+		news.add(new LatestNew("Sep 14, 2017", "Updated to latest versions of COSMIC and UniProt"));
 		news.add(new LatestNew("May 12, 2016", "Wregex v2.0 published in Scientific Reports"));
 		news.add(new LatestNew("Nov 04, 2015", "Search results are now cached"));
 		news.add(new LatestNew("Feb 08, 2015", "Updated to COSMIC v71"));

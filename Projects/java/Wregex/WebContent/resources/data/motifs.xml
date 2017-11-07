@@ -145,4 +145,84 @@
 <!--             <link>http://elm.eu.org/elms/elmPages/TRG_NLS_MonoExtN_4.html</link> -->
 <!--         </reference> -->
 <!--     </motif> -->
+	<motif>
+        <name>SUMO_for</name>
+        <replaces>MOD_SUMO_for_1</replaces>
+        <summary>Motif recognised for modification by SUMO-1</summary>
+        <definition>
+            <name>GPS-SUMO-Ext</name>
+            <description>Original ELM regular expression expanded for considering 3 extra amino acids at both sides. The PSSM has been computed from 545 valid matches for 912 motifs of the GPS-SUMO training dataset</description>
+            <regex>(.{3})([VILMAFP])(K)(.)(E)(.{3})</regex>
+            <pssm>GPS-SUMO-Ext3.pssm</pssm>
+        </definition>
+        <definition>
+            <name>GPS-SUMO</name>
+            <description>Original ELM regular expression. The PSSM has been computed from 545 valid matches for 912 motifs of the GPS-SUMO training dataset</description>
+            <regex>([VILMAFP])(K)(.)(E)</regex>
+            <pssm>GPS-SUMO-Fine.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Hendriks</name>
+            <description>Original ELM regular expression. The PSSM has been computed from 772 valid matches for 2058 motifs of the Hendriks' dataset with score >= 4</description>
+            <regex>([VILMAFP])(K)(.)(E)</regex>
+            <pssm>HendriksScore4.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/MOD_SUMO_for_1</link>
+        </reference>
+        <reference>
+            <authors>Qi Zhao, Yubin Xie, Yueyuan Zheng, Shuai Jiang, Wenzhong Liu, Weiping Mu, Zexian Liu, Yong Zhao, Yu Xue, Jian Ren</authors>
+            <year>2014</year>
+            <title>GPS-SUMO: a tool for the prediction of sumoylation sites and SUMO-interaction motifs</title>
+            <journal>Nucleic Acids Research</journal>
+            <doi>10.1093/nar/gku383</doi>
+            <link>https://doi.org/10.1093/nar/gku383</link>
+        </reference>
+        <reference>
+            <authors>Hendriks I. A., Vertegaal A. C.</authors>
+            <year>2016</year>
+            <title>A comprehensive compilation of SUMO proteomics</title>
+            <journal>Nat Rev Mol Cell Biol.</journal>
+            <doi>10.1038/nrm.2016.81</doi>
+            <link>https://www.nature.com/articles/nrm.2016.81</link>
+        </reference>
+    </motif>
+    <motif>
+        <name>SUMO_rev</name>
+        <replaces>MOD_SUMO_rev_2</replaces>
+        <summary>Inverted version of the cannonical SUMO motif</summary>
+        <definition>
+            <name>GPS-SUMO-Ext</name>
+            <description>Inverted SUMO regular expression expanded for considering 3 extra amino acids at both sides. The PSSM has been computed from 96 valid matches for 912 input motifs of the GPS-SUMO training dataset</description>
+            <regex>(.{3})([DE])(.)(K)(.{0,1})([AIFLMPSTV])(.{3})</regex>
+            <pssm>GPS-SUMO-Rev-Ext3.pssm</pssm>
+        </definition>
+        <definition>
+            <name>GPS-SUMO</name>
+            <description>Original ELM regular expression. The PSSM has been computed from 193 valid matches for 912 input motifs of the GPS-SUMO training dataset</description>
+            <regex>([SDE])(.{0,5})([DE])(.)(K)(.{0,1})([AIFLMPSTV])</regex>
+            <pssm>GPS-SUMO-Rev.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>hhttp://elm.eu.org/elms/MOD_SUMO_rev_2</link>
+        </reference>
+        <reference>
+            <authors>Qi Zhao, Yubin Xie, Yueyuan Zheng, Shuai Jiang, Wenzhong Liu, Weiping Mu, Zexian Liu, Yong Zhao, Yu Xue, Jian Ren</authors>
+            <year>2014</year>
+            <title>GPS-SUMO: a tool for the prediction of sumoylation sites and SUMO-interaction motifs</title>
+            <journal>Nucleic Acids Research</journal>
+            <doi>10.1093/nar/gku383</doi>
+            <link>https://doi.org/10.1093/nar/gku383</link>
+        </reference>
+        <reference>
+            <authors>Hendriks I. A., Vertegaal A. C.</authors>
+            <year>2016</year>
+            <title>A comprehensive compilation of SUMO proteomics</title>
+            <journal>Nat Rev Mol Cell Biol.</journal>
+            <doi>10.1038/nrm.2016.81</doi>
+            <link>https://www.nature.com/articles/nrm.2016.81</link>
+        </reference>
+    </motif>
 </motifs>

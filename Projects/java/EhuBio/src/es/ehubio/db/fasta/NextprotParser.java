@@ -47,6 +47,11 @@ public class NextprotParser implements HeaderParser {
 	}
 	
 	@Override
+	public String getGeneAccession() {
+		return null;
+	}
+	
+	@Override
 	public String getHeader() {
 		return header;
 	}

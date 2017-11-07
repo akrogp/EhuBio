@@ -52,6 +52,11 @@ public class UniprotParser implements HeaderParser {
 	}
 	
 	@Override
+	public String getGeneAccession() {
+		return null;
+	}
+	
+	@Override
 	public String getHeader() {		
 		return header;
 	}

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import javax.naming.OperationNotSupportedException;
 import javax.xml.bind.JAXBContext;
@@ -32,6 +33,8 @@ import es.ehubio.proteomics.isb.MsmsPipelineAnalysis.MsmsRunSummary.SpectrumQuer
 import es.ehubio.proteomics.isb.MsmsPipelineAnalysis.MsmsRunSummary.SpectrumQuery.SearchResult.SearchHit.SearchScore;
 
 public class PepXml extends MsMsFile {
+	private static Logger LOG = Logger.getLogger(PepXml.class.getName());
+	
 	private static class XMLReaderWithoutNamespace extends StreamReaderDelegate {
 	    public XMLReaderWithoutNamespace(XMLStreamReader reader) {
 	      super(reader);
@@ -95,8 +98,7 @@ public class PepXml extends MsMsFile {
 					pepId = hit.getPeptide();
 				Peptide peptide = mapPeptides.get(pepId);
 				if( peptide == null ) {
-					peptide = new Peptide();
-					mapPeptides.put(pepId, peptide);
+					peptide = new Peptide();					
 					peptide.setSequence(hit.getPeptide());
 					if( modInfo != null )
 						for( ModAminoacidMass mod : modInfo.getModAminoacidMass() ) {
@@ -109,11 +111,18 @@ public class PepXml extends MsMsFile {
 								ptm.setType(ProteinModificationType.CARBAMIDOMETHYLATION);
 							else if( aa == 'm' )
 								ptm.setType(ProteinModificationType.OXIDATION);
-							else
-								throw new Exception("Unsupported PTM");
+							else {
+								//throw new Exception();
+								peptide = null;
+								LOG.severe(String.format("Unsupported PTM: %f@%c, peptide ignored!", mod.getMass(), aa));
+								break;
+							}
 							ptm.guessMissing(null);
 							peptide.addPtm(ptm);
-						}					
+						}
+					if( peptide == null )
+						continue;
+					mapPeptides.put(pepId, peptide);
 				}
 				Psm psm = new Psm();
 				psm.linkSpectrum(spectrum);

@@ -34,8 +34,9 @@
 					<h:outputText value="#{trainingBean.trainingError}"
 						rendered="#{trainingBean.trainingError != null}"
 						style="color:red" />
-
-					<p:commandButton value="Download PSSM" actionListener="#{trainingBean.downloadPssm}" ajax="false"/>
+						
+					<p:commandButton value="Download Coarse PSSM" actionListener="#{trainingBean.downloadPssm(false)}" ajax="false"/>
+					<p:commandButton value="Download Fine PSSM" actionListener="#{trainingBean.downloadPssm(true)}" ajax="false"/>
 				</p:panelGrid>
 				<p />
 				<p:dataTable value="#{trainingBean.trainingList}" var="item" rowIndexVar="row"

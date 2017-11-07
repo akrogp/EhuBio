@@ -8,7 +8,12 @@ import java.util.regex.Pattern;
 
 public class Numbers {
 	public static double parseDouble( String str ) throws ParseException {
-		return DecimalFormat.getInstance(Locale.ENGLISH).parse(str.trim().toUpperCase().replaceAll("\\+","")).doubleValue();
+		return DecimalFormat.getInstance(Locale.ENGLISH).parse(str
+				.trim()
+				.toUpperCase()
+				.replaceAll("\\+","")
+				.replace(',', '.')
+			).doubleValue();
 	}
 	
 	public static double parseDoubleDiscarding( String str ) throws ParseException {

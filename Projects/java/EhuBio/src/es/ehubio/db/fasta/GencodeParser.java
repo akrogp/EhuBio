@@ -16,6 +16,7 @@ public class GencodeParser implements HeaderParser {
 			return false;
 		name = fields[5];	// Transcript name
 		geneName = fields[6];
+		geneAccession = fields[2];
 		this.header = header;
 		description = "";
 		return true;
@@ -42,6 +43,11 @@ public class GencodeParser implements HeaderParser {
 	}
 	
 	@Override
+	public String getGeneAccession() {
+		return geneAccession;
+	}
+	
+	@Override
 	public String getHeader() {		
 		return header;
 	}
@@ -50,5 +56,6 @@ public class GencodeParser implements HeaderParser {
 	private String name;
 	private String description;
 	private String geneName;
+	private String geneAccession;
 	private String header;
 }

@@ -24,10 +24,10 @@ import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.InputMotif;
 import es.ehubio.wregex.Pssm;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
-import es.ehubio.wregex.data.Services;
 import es.ehubio.wregex.Trainer;
 import es.ehubio.wregex.TrainingGroup;
 import es.ehubio.wregex.TrainingMotif;
+import es.ehubio.wregex.data.Services;
 
 @ManagedBean
 @SessionScoped
@@ -79,7 +79,7 @@ public class TrainingBean implements Serializable {
 		refresh();
 	}
 	
-	public void downloadPssm() {
+	public void downloadPssm(boolean fine) {
 		if( trainer == null )
 			return;
 		
@@ -100,7 +100,7 @@ public class TrainingBean implements Serializable {
 
 		try {
 			OutputStream output = ec.getResponseOutputStream();
-			pssm.save(new OutputStreamWriter(output),
+			pssm.save(new OutputStreamWriter(output), fine,
 				"Generated from wregex (v1.0)",
 				"Trained with " + getTrainingSummary(),
 				"Regex: " + trainer.getRegex(),

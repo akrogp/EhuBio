@@ -23,6 +23,7 @@ public final class Fasta {
 	private final String description;
 	private final String proteinName;
 	private final String geneName;
+	private final String geneAccession;
 	
 	public enum SequenceType {
 		PROTEIN, DNA, RNA
@@ -57,6 +58,7 @@ public final class Fasta {
 		this.description = description;
 		proteinName = null;
 		geneName = null;
+		geneAccession = null;
 	}
 	
 	public Fasta( String header, String sequence, SequenceType type ) throws InvalidSequenceException {
@@ -75,11 +77,13 @@ public final class Fasta {
 			description = null;
 			proteinName = null;
 			geneName = null;
+			geneAccession = null;
 		} else {
 			accession = parser.getAccession();
 			description = parser.getDescription();
 			proteinName = parser.getProteinName();
 			geneName = parser.getGeneName();
+			geneAccession = parser.getGeneAccession();
 		}
 	}
 	
@@ -96,11 +100,13 @@ public final class Fasta {
 			description = null;
 			proteinName = null;
 			geneName = null;
+			geneAccession = null;
 		} else {
 			accession = parser.getAccession();
 			description = parser.getDescription();
 			proteinName = parser.getProteinName();
 			geneName = parser.getGeneName();
+			geneAccession = parser.getGeneAccession();
 		}
 	}
 	
@@ -175,6 +181,10 @@ public final class Fasta {
 	
 	public String getGeneName() {
 		return geneName;
+	}
+	
+	public String getGeneAccession() {
+		return geneAccession;
 	}
 	
 	public static List<Fasta> readEntries( String path, SequenceType type ) throws IOException, InvalidSequenceException {

@@ -35,6 +35,11 @@ public class DefaultParser implements HeaderParser {
 	public String getGeneName() {
 		return null;
 	}
+	
+	@Override
+	public String getGeneAccession() {
+		return null;
+	}
 
 	@Override
 	public String getHeader() {

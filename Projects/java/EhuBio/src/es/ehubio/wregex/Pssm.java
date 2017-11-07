@@ -5,9 +5,11 @@ import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import es.ehubio.io.Streams;
@@ -64,8 +66,8 @@ public final class Pssm {
 		return builder.build();
 	}
 	
-	public void save(Writer writer, String... header) {
-		DecimalFormat df=new DecimalFormat("0");
+	public void save(Writer writer, boolean fine, String... header) {
+		DecimalFormat df=new DecimalFormat(fine ? "0.0" : "0", DecimalFormatSymbols.getInstance(Locale.US));
 		PrintWriter pw = new PrintWriter(writer);
 		for( String str : header )
 			pw.println("# " + str);
