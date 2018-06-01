@@ -4,8 +4,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.faces.context.ExternalContext;
 
@@ -86,6 +88,42 @@ public class Services {
 					results.add(r);
 		}
 		return results;
+	}
+	
+	public static List<ResultEx> filter(List<ResultEx> candidates, boolean filterEqual, double scoreThreshold) {
+		List<ResultEx> results = candidates;
+		if( scoreThreshold > 0.0 )
+			results = filterPoor(results, scoreThreshold);
+		if( filterEqual )
+			results = filterEqual(results);
+		return results;
+	}
+	
+	private static List<ResultEx> filterEqual(List<ResultEx> candidates) {
+		List<ResultEx> results = new ArrayList<>();
+		Set<String> sequences = new HashSet<>();
+		for ( ResultEx candidate : candidates ) {
+			if ( sequences.contains(candidate.getMatch().toLowerCase()) )
+				continue;
+			sequences.add(candidate.getMatch().toLowerCase());
+			results.add(candidate);
+		}
+		return results;
+	}
+	
+	private static List<ResultEx> filterPoor(List<ResultEx> candidates, double th) {
+		List<ResultEx> results = new ArrayList<>();
+		for ( ResultEx candidate : candidates )
+			if ( candidate.getScore() >= th )
+				results.add(candidate);
+		return results;
+	}
+	
+	public static void flanking(List<ResultEx> results, int flanking) {
+		if( flanking <= 0 )
+			return;
+		for ( ResultEx res : results )
+			res.addFlanking(flanking);
 	}
 	
 	public static void searchAux(Wregex wregex, List<ResultEx> results) {

@@ -150,7 +150,13 @@
         <replaces>MOD_SUMO_for_1</replaces>
         <summary>Motif recognised for modification by SUMO-1</summary>
         <definition>
-            <name>GPS-SUMO-Ext</name>
+            <name>GPS-SUMO-Ext3i</name>
+            <description>Original ELM regular expression expanded for considering 3 extra amino acids at both sides with independent weights. The PSSM has been computed from 545 valid matches for 912 motifs of the GPS-SUMO training dataset</description>
+            <regex>(.)(.)(.)([VILMAFP])(K)(.)(E)(.)(.)(.)</regex>
+            <pssm>GPS-SUMO-Ext3i.pssm</pssm>
+        </definition>
+        <definition>
+            <name>GPS-SUMO-Ext3</name>
             <description>Original ELM regular expression expanded for considering 3 extra amino acids at both sides. The PSSM has been computed from 545 valid matches for 912 motifs of the GPS-SUMO training dataset</description>
             <regex>(.{3})([VILMAFP])(K)(.)(E)(.{3})</regex>
             <pssm>GPS-SUMO-Ext3.pssm</pssm>

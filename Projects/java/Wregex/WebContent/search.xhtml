@@ -170,6 +170,18 @@
 							</p:selectBooleanCheckbox>
 							&nbsp;
 							<h:panelGroup rendered="#{homeBean.development}">
+								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchBean.filterEqual}" valueChangeListener="#{searchBean.onChangeOption}">
+									<p:ajax event="change" update="@form" />
+								</p:selectBooleanCheckbox>
+								&nbsp;Threshold:
+								<p:spinner value="#{searchBean.scoreThreshold}" valueChangeListener="#{searchBean.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
+									<p:ajax event="change" update="@form" />
+								</p:spinner>
+								&nbsp;Flanking:
+								<p:spinner value="#{searchBean.flanking}" valueChangeListener="#{searchBean.onChangeOption}" min="0" suffix=" aa" size="5">
+									<p:ajax event="change" update="@form" />
+								</p:spinner>
+								&nbsp;
 								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{searchBean.useAuxMotif}" valueChangeListener="#{searchBean.onChangeOption}" update="@form">
 									<p:ajax event="change" update="@form" />
 								</p:selectBooleanCheckbox>

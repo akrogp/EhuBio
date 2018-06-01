@@ -12,7 +12,7 @@ import es.ehubio.io.Streams;
 
 public class ExtractUniprot {
 	public static void main(String[] args) throws Exception {
-		if ( args.length != 3 ) {
+		if ( args.length != 2 ) {
 			System.out.println(String.format("Usage:\n%s <acc_list.txt> <file1.fasta> [<file2.fasta> ...]", ExtractUniprot.class.getName()));
 			return;
 		}

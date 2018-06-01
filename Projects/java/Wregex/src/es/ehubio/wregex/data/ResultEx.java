@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
+
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.io.CsvUtils;
 import es.ehubio.wregex.Result;
@@ -26,10 +28,17 @@ public class ResultEx implements Comparable<ResultEx> {
 	private Double mutScore;
 	private Wregex wregex;
 	private Double auxScore;
+	private String sequence;
+	private String alignment;
+	private int flanking = 0;
 	private static final char separator = ',';
 	
 	public ResultEx( Result result ) {
 		this.result = result;
+		if( result != null ) {
+			setAlignment(result.getAlignment());
+			setSequence(result.getMatch());
+		}
 	}
 	
 	public ResultEx( ResultEx result ) {
@@ -44,6 +53,8 @@ public class ResultEx implements Comparable<ResultEx> {
 		setMutScore(result.getMutScore());
 		setWregex(result.getWregex());
 		setAuxScore(result.getAuxScore());
+		setAlignment(result.getAlignment());
+		setSequence(result.getMatch());
 	}
 
 	public int compareTo(ResultEx o) {
@@ -92,9 +103,40 @@ public class ResultEx implements Comparable<ResultEx> {
 			return 1;
 		return 0;
 	}
-
-	public String getAlignment() {
-		return result.getAlignment();
+	
+	public void addFlanking( int flanking ) {
+		int start = getStart() - flanking - 1;
+		int end = getEnd() + flanking - 1;
+		int padleft = 0;
+		int padright = 0;
+		String seq = getFasta().getSequence();
+		if( start < 0 ) {
+			padleft = -start;
+			start = 0;
+		}
+		if( end > seq.length() - 1 ) {
+			padright = end - seq.length() + 1;
+			end = seq.length() - 1;
+		}
+		StringBuilder newSeq = new StringBuilder();
+		StringBuilder newAln = new StringBuilder();
+		while( padleft-- > 0 ) {
+			newSeq.append('-');
+			newAln.append('-');
+		}
+		newSeq.append(seq.substring(start, end+1));
+		newAln.append(seq.substring(start, getStart()-1));
+		newAln.append('<');
+		newAln.append(result.getAlignment());
+		newAln.append('>');
+		newAln.append(seq.substring(getEnd(), end+1));
+		while( padright-- > 0 ) {
+			newSeq.append('-');
+			newAln.append('-');
+		}
+		setSequence(newSeq.toString());
+		setAlignment(newAln.toString());
+		this.flanking = flanking;
 	}
 
 	public double getAssay() {
@@ -179,7 +221,55 @@ public class ResultEx implements Comparable<ResultEx> {
 	}	
 	
 	public static void saveAln(Writer wr, List<ResultEx> results) {
-		Result.saveAln(wr, getResults(results)); 		
+		//Result.saveAln(wr, getResults(results));
+		
+		PrintWriter pw = new PrintWriter(wr);
+		int groups = results.get(0).getGroups().size();
+		int flanking = results.get(0).flanking;
+		int[] sizes = new int[groups];
+		int name = 0, i;
+		int last = 0;
+		
+		// Calculate lengths for further alignment
+		for( i = 0; i < groups; i++ )
+			sizes[i] = 0;
+		for( ResultEx result : results ) {
+			if( result.getName().length() > name )
+				name = result.getName().length();
+			for( i = 0; i < groups; i++ )
+				if( result.getGroups().get(i).length() > sizes[i] )
+					sizes[i] = result.getGroups().get(i).length();
+			if( flanking > 0 ) {
+				int dif = sizes[groups-1] - result.getGroups().get(groups-1).length();
+				if( dif > last )
+					last = dif;
+			}
+		}
+		if( last > flanking )
+			last = flanking;
+		
+		// Write ALN
+		pw.println("CLUSTAL 2.1 multiple sequence alignment (by WREGEX)\n\n");
+		for( ResultEx result : results ) {
+			StringBuilder line = new StringBuilder();
+			line.append(StringUtils.rightPad(result.getName(), name+4));
+			if ( flanking > 0 )
+				line.append(result.getSequence().substring(0, flanking));
+			for( i = 0; i < groups; i++ )
+				line.append(StringUtils.rightPad(result.getGroups().get(i),sizes[i],'-'));
+			if( flanking > 0 ) {				
+				int removed = 0;
+				while( line.charAt(line.length()-1) == '-' ) {
+					line.deleteCharAt(line.length()-1);
+					removed++;
+				}
+				int len = result.getSequence().length();
+				line.append(result.getSequence().substring(len-flanking, len-last+removed));
+			}
+			pw.println(line.toString());
+		}
+		pw.println();
+		pw.flush();
 	}
 	
 	public static void saveCsv(Writer wr, List<ResultEx> results, boolean assays, boolean aux, boolean cosmic, boolean dbPtm ) {
@@ -201,7 +291,8 @@ public class ResultEx implements Comparable<ResultEx> {
 			fields.add(""+result.getStart());
 			fields.add(""+result.getEnd());
 			fields.add(""+result.getCombinations());
-			fields.add(result.getMatch());
+			//fields.add(result.getMatch());
+			fields.add(result.getSequence());
 			fields.add(result.getAlignment());
 			fields.add(""+result.getScore());
 			if( assays ) {
@@ -223,12 +314,12 @@ public class ResultEx implements Comparable<ResultEx> {
 		pw.flush();
 	}
 	
-	private static List<Result> getResults( List<ResultEx> results ) {
+	/*private static List<Result> getResults( List<ResultEx> results ) {
 		List<Result> list = new ArrayList<>();
-		for( ResultEx result : results )
+		for( ResultEx result : results ) 
 			list.add(result.result);
 		return list;
-	}
+	}*/
 	
 	public String getAccession() {
 		if( result.getFasta().getAccession() == null )
@@ -365,5 +456,21 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public void setAuxScore(Double auxScore) {
 		this.auxScore = auxScore;
+	}
+
+	public String getSequence() {
+		return sequence;
+	}
+
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
+	}
+
+	public String getAlignment() {
+		return alignment;
+	}
+
+	public void setAlignment(String alignment) {
+		this.alignment = alignment;
 	}
 }

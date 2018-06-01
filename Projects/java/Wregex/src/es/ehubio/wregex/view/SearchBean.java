@@ -70,6 +70,8 @@ public class SearchBean implements Serializable {
 	private String cachedAlnPath;
 	private boolean usingPssm;
 	private boolean grouping = true;
+	private boolean filterEqual = false;
+	private double scoreThreshold = 0.0;
 	private boolean cosmic = false;
 	private boolean dbPtm = false;
 	private boolean useAuxMotif = false; 
@@ -81,6 +83,7 @@ public class SearchBean implements Serializable {
 	@ManagedProperty(value="#{databasesBean}")
 	private DatabasesBean databases;
 	private final Services services;
+	private int flanking = 0;
 	
 	public SearchBean() {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
@@ -368,7 +371,9 @@ public class SearchBean implements Serializable {
 			results = loadSearchCache();
 			if( results == null ) {
 				List<ResultGroupEx> resultGroups = allMotifs == false ? singleSearch() : allSearch();
-				results = Services.expand(resultGroups, grouping);
+				results = Services.expand(resultGroups, grouping);				
+				results = Services.filter(results, filterEqual, scoreThreshold);
+				Services.flanking(results, flanking);
 				if( useAuxMotif )
 					searchAux();
 				if( cosmic )
@@ -430,6 +435,8 @@ public class SearchBean implements Serializable {
 		for( String file : files ) {
 			File cache = new File(dir,file);
 			try( DataInputStream dis = new DataInputStream(Streams.getBinReader(cache)); ) {
+				if( !dis.readUTF().equals("WCV3") )
+					continue;
 				if( !dis.readUTF().equals(targetInformation.getPath()) )
 					continue;
 				if( !dis.readUTF().equals(getRegex()) )
@@ -439,6 +446,12 @@ public class SearchBean implements Serializable {
 				if( dis.readBoolean() != grouping )
 					continue;
 				if( dis.readBoolean() != cosmic )
+					continue;
+				if( dis.readBoolean() != filterEqual )
+					continue;
+				if( dis.readDouble() != scoreThreshold )
+					continue;
+				if( dis.readInt() != flanking )
 					continue;
 				logger.info("Using cached search");
 				cachedAlnPath = cache.getAbsolutePath().replaceAll("\\.dat", ".aln");
@@ -465,11 +478,15 @@ public class SearchBean implements Serializable {
 		long id = System.currentTimeMillis();
 		File file = new File(dir,String.format("%s-search.dat.gz", id));
 		try( DataOutputStream dos = new DataOutputStream(Streams.getBinWriter(file)); ) {
+			dos.writeUTF("WCV3");
 			dos.writeUTF(targetInformation.getPath());
 			dos.writeUTF(getRegex());
 			dos.writeUTF(getPssm());
 			dos.writeBoolean(grouping);
 			dos.writeBoolean(cosmic);
+			dos.writeBoolean(filterEqual);
+			dos.writeDouble(scoreThreshold);
+			dos.writeInt(flanking);
 			dos.writeInt(results.size());
 			for( ResultEx result : results )
 				saveSearchItem(dos, result);
@@ -502,6 +519,7 @@ public class SearchBean implements Serializable {
 			else
 				dos.writeUTF(group);
 		dos.writeUTF(result.getMatch());
+		dos.writeUTF(result.getSequence());
 		dos.writeUTF(result.getName());
 		dos.writeUTF(result.toString());
 		dos.writeUTF(result.getAccession());
@@ -537,6 +555,7 @@ public class SearchBean implements Serializable {
 		}
 		result.setGroups(groups);
 		result.setMatch(dis.readUTF());
+		result.setSequence(dis.readUTF());
 		result.setName(dis.readUTF());
 		result.setString(dis.readUTF());
 		result.setAccession(dis.readUTF());
@@ -664,6 +683,14 @@ public class SearchBean implements Serializable {
 
 	public void setGrouping(boolean grouping) {
 		this.grouping = grouping;
+	}
+	
+	public boolean isFilterEqual() {
+		return filterEqual;
+	}
+
+	public void setFilterEqual(boolean filterEqual) {
+		this.filterEqual = filterEqual;
 	}
 	
 	public void downloadCsv() {
@@ -832,5 +859,21 @@ public class SearchBean implements Serializable {
 	
 	public boolean isShowMotifDetails() {
 		return motifInformation != null || (isUseAuxMotif() && auxMotifInformation != null);
+	}
+
+	public int getFlanking() {
+		return flanking;
+	}
+
+	public void setFlanking(int flanking) {
+		this.flanking = flanking;
+	}
+
+	public double getScoreThreshold() {
+		return scoreThreshold;
+	}
+
+	public void setScoreThreshold(double scoreThreshold) {
+		this.scoreThreshold = scoreThreshold;
 	}
 }

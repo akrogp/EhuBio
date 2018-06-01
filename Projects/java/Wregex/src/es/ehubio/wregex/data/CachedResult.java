@@ -13,6 +13,7 @@ public class CachedResult extends ResultEx {
 	private Fasta fasta;
 	private List<String> groups;
 	private String match;
+	private String sequence;
 	private String name;
 	private double score;
 	private int start;
@@ -57,6 +58,11 @@ public class CachedResult extends ResultEx {
 	@Override
 	public String getMatch() {
 		return match;
+	}
+	
+	@Override
+	public String getSequence() {
+		return sequence;
 	}
 	
 	@Override
@@ -115,6 +121,10 @@ public class CachedResult extends ResultEx {
 
 	public void setMatch(String match) {
 		this.match = match;
+	}
+	
+	public void setSequence(String sequence) {
+		this.sequence = sequence;
 	}
 
 	public void setName(String name) {
