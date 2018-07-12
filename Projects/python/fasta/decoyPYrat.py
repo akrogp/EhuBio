@@ -156,7 +156,7 @@ for line in fasta:
 			
 			#write decoy protein accession and sequence to file
 			dcount += 1
-			outfa.write('>' + args.dprefix + '_' + line[1:])
+			outfa.write('>' + args.dprefix + line[1:])
 			outfa.write(decoyseq + '\n')
 			
 		seq = '';
