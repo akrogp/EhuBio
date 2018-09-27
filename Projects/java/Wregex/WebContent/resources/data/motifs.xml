@@ -54,37 +54,37 @@
             <link>http://elm.eu.org/elms/elmPages/TRG_NES_CRM1_1.html</link>
         </reference>
     </motif>
-<!--     <motif> -->
-<!--         <name>LxCxE/Rb</name> -->
-<!--         <replaces>LIG_Rb_LxCxE_1</replaces> -->
-<!--         <summary>Interacts with the Retinoblastoma protein</summary> -->
-<!--         <definition> -->
-<!--             <name>Original</name> -->
-<!--             <description>Original ELM regular expression. The PSSM has been computed from the 32 instances available at ELM</description> -->
-<!--             <regex>([LI])(.)(C)(.)([DE])</regex> -->
-<!--             <pssm>Rb-short.pssm</pssm> -->
-<!--         </definition> -->
-<!--         <definition> -->
-<!--             <name>Extended</name> -->
-<!--             <description>Extended regular expression considering flanking residues interaction. The PSSM has been computed from the 32 instances available at ELM</description> -->
-<!--             <regex>(.)([LI])(.)(C)(.)([DE])(.)(.)(.)</regex> -->
-<!--             <pssm>Rb-extended.pssm</pssm> -->
-<!--         </definition> -->
-<!--         <reference> -->
-<!--             <name>Original ELM entry</name> -->
-<!--             <link>http://elm.eu.org/elms/elmPages/LIG_Rb_LxCxE_1.html</link> -->
-<!--         </reference> -->
-<!--         <reference> -->
-<!--             <authors>Singh, M., Krajewski, M., Mikolajka, A., and Holak, T. A.</authors> -->
-<!--             <year>2005</year> -->
-<!--             <title>Molecular determinants for the complex formation between the retinoblastoma protein and LXCXE sequences</title> -->
-<!--             <journal>J. Biol. Chem.</journal> -->
-<!--             <volume>280</volume> -->
-<!--             <pages>37868–37876</pages> -->
-<!--             <doi>10.1074/jbc.M504877200</doi> -->
-<!--             <link>http://www.jbc.org/content/280/45/37868.short</link>             -->
-<!--         </reference>         -->
-<!--     </motif> -->
+    <motif>
+        <name>LxCxE/Rb</name>
+        <replaces>LIG_Rb_LxCxE_1</replaces>
+        <summary>Interacts with the Retinoblastoma protein</summary>
+        <definition>
+            <name>Original</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 32 instances available at ELM</description>
+            <regex>([LI])(.)(C)(.)([DE])</regex>
+            <pssm>Rb-short.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Extended</name>
+            <description>Extended regular expression considering flanking residues interaction. The PSSM has been computed from the 32 instances available at ELM</description>
+            <regex>(.)([LI])(.)(C)(.)([DE])(.)(.)(.)</regex>
+            <pssm>Rb-extended.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/LIG_Rb_LxCxE_1.html</link>
+        </reference>
+        <reference>
+            <authors>Singh, M., Krajewski, M., Mikolajka, A., and Holak, T. A.</authors>
+            <year>2005</year>
+            <title>Molecular determinants for the complex formation between the retinoblastoma protein and LXCXE sequences</title>
+            <journal>J. Biol. Chem.</journal>
+            <volume>280</volume>
+            <pages>37868–37876</pages>
+            <doi>10.1074/jbc.M504877200</doi>
+            <link>http://www.jbc.org/content/280/45/37868.short</link>            
+        </reference>        
+    </motif>
 <!-- 	<motif> -->
 <!--         <name>NLS_Bipartite</name> -->
 <!--         <replaces>TRG_NLS_Bipartite_1</replaces> -->

@@ -53,7 +53,9 @@ public class CsvReader implements Closeable {
 	}
 	
 	public String[] readLine() throws IOException  {
-		line = br.readLine();
+		do {
+			line = br.readLine();
+		} while(line != null && line.startsWith("#"));
 		if( line == null )
 			return null;
 		fields = line.split(sep);
