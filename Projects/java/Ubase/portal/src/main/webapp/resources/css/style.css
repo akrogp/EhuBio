@@ -16,6 +16,10 @@ img {
 	border: 0;
 }
 
+h1 {
+	text-align: center;
+}
+
 /* Page template */
 #content {   
 }
@@ -29,5 +33,3 @@ img {
 	text-decoration: none;
 	font-style : italic;
 }
-
-/* PrimeFaces */

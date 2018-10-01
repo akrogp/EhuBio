@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+	<p:steps styleClass="custom" activeIndex="#{feedView.step}" rendered="#{feedView.step lt 3}">
+	    <p:menuitem value="Experiment info" />
+	    <p:menuitem value="File upload" />
+	    <p:menuitem value="Finish submission" />
+	</p:steps>
+	<br/>
+	<p:messages showDetail="true"/>
+	<h:form rendered="#{feedView.step==0}">
+		<p:panelGrid columns="2">			
+			<p:outputLabel value="Contact person" for="contactName"/>
+			<p:inputText value="#{feedView.experiment.contactName}" id="contactName" required="true"/>
+			<p:outputLabel value="Contact e-mail" for="contactMail"/>
+			<p:inputText value="#{feedView.experiment.contactMail}" id="contactMail" required="true" validatorMessage="E-mail address not valid">
+				<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+			</p:inputText>
+			<p:outputLabel value="Organism" for="organism"/>
+			<p:inputText value="#{feedView.experiment.organism}" id="organism" required="true"/>
+			<p:outputLabel value="Stimulus" for="stimulus"/>
+			<p:inputText value="#{feedView.experiment.stimulus}" id="stimulus"/>
+			<p:outputLabel value="Description" for="description"/>
+			<p:inputTextarea value="#{feedView.experiment.description}" id="description" />
+		</p:panelGrid>
+		<br/>
+		<p:commandButton value="Continue" ajax="false" action="#{feedView.nextStep()}"/>
+		<p:commandButton value="Cancel" ajax="false" action="#{feedView.finish()}"/>
+	</h:form>
+	
+	<h:form rendered="#{feedView.step==1}" enctype="multipart/form-data">	
+		<p:dataTable value="#{feedView.providerFiles}" var="inputFile">
+			<f:facet name="header">#{feedView.providerName} files</f:facet>
+			<p:column>
+				#{inputFile.name}
+			</p:column>
+			<p:column>
+				<p:fileUpload mode="simple" skinSimple="true" value="#{inputFile.file}" update="@form"
+					sizeLimit="10000000" allowTypes="/(\.|\/)(txt|csv|tsv)$/"/>
+			</p:column>
+		</p:dataTable>
+		<br/>
+		<p:commandButton value="Continue" ajax="false" action="#{feedView.nextStep()}"/>
+		<p:commandButton value="Cancel" ajax="false" action="#{feedView.finish()}"/>
+	</h:form>
+	
+	<h:form rendered="#{feedView.step==2}">
+		<p:commandButton value="Submit" ajax="false" action="#{feedView.submit()}"/>
+		<p:commandButton value="Cancel" ajax="false" action="#{feedView.finish()}"/>
+	</h:form>
+	
+	<h:form rendered="#{feedView.step gt 2}">
+		<p:commandButton value="Finish" ajax="false" action="#{feedView.finish()}"/>
+	</h:form>
+	
+	</ui:define>
+	</ui:composition>
+</html>

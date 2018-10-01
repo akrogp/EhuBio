@@ -7,13 +7,29 @@
 
 <h:head>
 <h:outputStylesheet library="css" name="style.css"/>
+<h:outputStylesheet library="css" name="faces.css"/>
 <title><ui:insert name="title">Ubase</ui:insert></title>
 </h:head> 
 <h:body>
-<h1><ui:insert name="caption">Ubiquitination database</ui:insert></h1>
+
+<h1>Ubase: The Ubiquitination Database</h1>
+
+<p:tabMenu activeIndex="#{param.tab}">
+    <p:menuitem value="Home" outcome="index" icon="ui-icon-home">
+        <f:param name="tab" value="0" />
+    </p:menuitem>
+    <p:menuitem value="Researcher" outcome="search" icon="ui-icon-search">
+        <f:param name="tab" value="1" />
+    </p:menuitem>
+    <p:menuitem value="Contributor" outcome="contributor" icon="ui-icon-person">
+        <f:param name="tab" value="2" />
+    </p:menuitem>
+</p:tabMenu>
+
 <div id="content">
 <ui:insert name="content"/>
 </div>
+
 <div id="footer">
 <hr/>
 <ui:insert name="footer">Ubase, Copyright (C) 2018-2019 Gorka Prieto (UPV/EHU)</ui:insert>
