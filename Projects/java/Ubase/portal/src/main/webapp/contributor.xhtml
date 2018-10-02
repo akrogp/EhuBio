@@ -13,7 +13,7 @@
 	    <p:menuitem value="Finish submission" />
 	</p:steps>
 	<br/>
-	<p:messages showDetail="true"/>
+	<p:messages showDetail="#{feedView.step gt 0}"/>
 	<h:form rendered="#{feedView.step==0}">
 		<p:panelGrid columns="2">			
 			<p:outputLabel value="Contact person" for="contactName"/>

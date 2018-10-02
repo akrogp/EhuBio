@@ -1,6 +1,8 @@
 package es.ehubio.ubase.dl.providers;
 
-public class FileType {
+import java.io.File;
+
+public abstract class FileType {
 	private String name, description;
 	
 	public FileType() {
@@ -31,4 +33,6 @@ public class FileType {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public abstract boolean checkSignature(File file);
 }

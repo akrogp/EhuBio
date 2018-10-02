@@ -5,6 +5,8 @@ import java.io.Serializable;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import es.ehubio.ubase.dl.providers.Provider;
 
@@ -12,6 +14,8 @@ import es.ehubio.ubase.dl.providers.Provider;
 @Stateless
 public class Ubase implements Serializable {
 	private static final long serialVersionUID = 1L;
+	@PersistenceContext
+	private EntityManager em;
 
 	public void submit(Provider provider, File data) throws Exception {
 		

@@ -48,20 +48,43 @@ public class FeedView extends BaseView implements Serializable {
 		switch (step) {
 			case 0: step++; break;
 			case 1:
-				if( isUploadReady() && uploadFiles() )
-					step++;
-				else
+				if( !isUploadReady() ) {
 					showError("Required files missing");
+					break;
+				}
+				if( !uploadFiles() ) {
+					showError("Problem uploading files, try again later");
+					break;
+				}
+				String sig;
+				if( (sig=checkSignatures()) != null ) {
+					showError("Invalid file signature: " + sig);
+					break;
+				}
+				step++;
 				break;
 		}
 	}
 	
-	private boolean uploadFiles() throws IOException {
-		if( directory == null )
-			directory = Files.createTempDirectory(Paths.get("/tmp"), "ubase-").toFile();
-		for( InputFile inputFile : getProviderFiles() ) 
-			FileUtils.copyInputStreamToFile(inputFile.getFile().getInputstream(), new File(directory, inputFile.getName()));
-		return true;
+	private String checkSignatures() {
+		for( FileType inputFile : getProvider().getInputFiles() ) {
+			File file = new File(directory, inputFile.getName());
+			if( !inputFile.checkSignature(file) )
+				return inputFile.getName();
+		}
+		return null;
+	}
+
+	private boolean uploadFiles() {
+		try {
+			if( directory == null )
+				directory = Files.createTempDirectory(Paths.get("/tmp"), "ubase-").toFile();
+			for( InputFile inputFile : getProviderFiles() ) 
+				FileUtils.copyInputStreamToFile(inputFile.getFile().getInputstream(), new File(directory, inputFile.getName()));
+			return true;
+		} catch (Exception e) {
+			return false;
+		}
 	}
 	
 	public Provider getProvider() {
