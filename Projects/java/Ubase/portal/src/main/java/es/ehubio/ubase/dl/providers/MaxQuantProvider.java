@@ -1,7 +1,12 @@
 package es.ehubio.ubase.dl.providers;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.persistence.EntityManager;
 
 public class MaxQuantProvider implements Provider {
 
@@ -24,6 +29,25 @@ public class MaxQuantProvider implements Provider {
 			types.add(new CsvFileType("GlyGly (K)Sites.txt", null, GLY_PROB, GLY_SIG));
 		}
 		return types;
+	}
+	
+	@Override
+	public List<String> getSamples(File data) {
+		List<String> samples = new ArrayList<>();
+		File file = new File(data, "peptides.txt");
+		try( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
+			String[] fields = br.readLine().split("\\t");
+			for( String field : fields )
+				if( field.startsWith("Experiment ") )
+					samples.add(field.substring(11));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return samples;
+	}
+	
+	@Override
+	public void persist(EntityManager em, File data) {
 	}
 	
 	private List<FileType> types;

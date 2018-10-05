@@ -18,11 +18,14 @@
     <p:menuitem value="Home" outcome="index" icon="ui-icon-home">
         <f:param name="tab" value="0" />
     </p:menuitem>
-    <p:menuitem value="Researcher" outcome="search" icon="ui-icon-search">
+    <p:menuitem value="Search" outcome="search" icon="ui-icon-search">
         <f:param name="tab" value="1" />
     </p:menuitem>
-    <p:menuitem value="Contributor" outcome="contributor" icon="ui-icon-person">
+    <p:menuitem value="Submit" outcome="contributor" icon="ui-icon-person">
         <f:param name="tab" value="2" />
+    </p:menuitem>
+    <p:menuitem value="Admin" outcome="admin" icon="ui-icon-wrench">
+        <f:param name="tab" value="3" />
     </p:menuitem>
 </p:tabMenu>
 
@@ -31,6 +34,7 @@
 </div>
 
 <div id="footer">
+<br/>
 <hr/>
 <ui:insert name="footer">Ubase, Copyright (C) 2018-2019 Gorka Prieto (UPV/EHU)</ui:insert>
 </div>

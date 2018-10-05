@@ -3,7 +3,7 @@
 /* General HTML tags */
 html,
 body {
-	height: 100%;
+	/*height: 100%;*/
 	font-family: verdana;
 	background-color: #fff;   
 }
@@ -25,10 +25,10 @@ h1 {
 }
 
 #footer {
-	position:absolute;
+	/*position:absolute;
 	bottom:0;
 	width:100%;
-	height:40px;
+	height:40px;*/
 	font-size: 10px;
 	text-decoration: none;
 	font-style : italic;
