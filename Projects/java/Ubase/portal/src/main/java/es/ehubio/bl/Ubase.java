@@ -15,6 +15,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.apache.commons.io.FileUtils;
+
 import es.ehubio.dl.input.Metadata;
 import es.ehubio.dl.input.Metafile;
 import es.ehubio.ubase.Locator;
@@ -43,10 +45,20 @@ public class Ubase implements Serializable {
 			}
 		});
 		for( File file : files ) {
-			Metadata metadata = Metafile.load(new File(file,META_FILE));
+			File metafile = new File(file,META_FILE);
+			if( !file.exists() )
+				continue;
+			Metadata metadata = Metafile.load(metafile);
 			metadata.setData(file);
 			results.add(metadata);
 		}
 		return results;
+	}
+
+	public void publish(Metadata metadata) throws Exception {
+		File dst = new File(Locator.getConfiguration().getArchivePath(), metadata.getData().getName());
+		FileUtils.moveDirectory(metadata.getData(), dst);
+		metadata.setPubDate(new Date());
+		Metafile.save(metadata, new File(dst, META_FILE));
 	}
 }

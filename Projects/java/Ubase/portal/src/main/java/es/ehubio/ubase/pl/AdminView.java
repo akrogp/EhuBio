@@ -34,4 +34,9 @@ public class AdminView implements Serializable {
 		FileUtils.deleteDirectory(metadata.getData());
 		refresh();
 	}
+	
+	public void publish(Metadata metadata) throws Exception {
+		ubase.publish(metadata);
+		refresh();
+	}
 }
