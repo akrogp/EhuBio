@@ -3,8 +3,6 @@ package es.ehubio.ubase.pl;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +28,8 @@ public class FeedView extends BaseView implements Serializable {
 	private int step;
 	private Metadata metadata;
 	private int nConditions;
-	private List<String> samples;
-	private List<Integer> conditions; 
+	private List<InputSample> samples;
+	private List<Integer> numbers; 
 	private File directory;
 	@EJB
 	private Ubase ubase;
@@ -84,15 +82,20 @@ public class FeedView extends BaseView implements Serializable {
 	
 	private void buildConditions() {
 		metadata = new Metadata();
-		samples = getProvider().getSamples(directory);
+		samples = new ArrayList<>();
+		for( String name : getProvider().getSamples(directory) ) {
+			InputSample sample = new InputSample();
+			sample.setName(name);
+			samples.add(sample);
+		}
 		if( samples.isEmpty() ) {
 			setnConditions(0);
 			return;
 		}
 		setnConditions(1);
-		conditions = new ArrayList<>(samples.size());
+		numbers = new ArrayList<>(samples.size());
 		for( int i = 0; i < samples.size(); i++ )
-			conditions.add(i+1);
+			numbers.add(i+1);
 	}
 
 	private void stepMetadata() {
@@ -109,8 +112,11 @@ public class FeedView extends BaseView implements Serializable {
 
 	private boolean uploadFiles() {
 		try {
-			if( directory == null )
-				directory = Files.createTempDirectory(Paths.get("/tmp"), "ubase-").toFile();
+			if( directory == null ) {
+				//directory = Files.createTempDirectory(Paths.get("/tmp"), "ubase-").toFile();
+				directory = new File("/tmp/ubase-"+System.currentTimeMillis());
+				directory.mkdirs();
+			}
 			for( InputFile inputFile : getProviderFiles() ) 
 				FileUtils.copyInputStreamToFile(inputFile.getFile().getInputstream(), new File(directory, inputFile.getName()));
 			return true;
@@ -158,13 +164,24 @@ public class FeedView extends BaseView implements Serializable {
 	
 	public void submit() {
 		try {
+			for( InputSample sample : samples ) {
+				Condition condition = metadata.getConditions().get(sample.getCondition()); 
+				condition.getReplicas().add(sample.getName());
+			}
 			ubase.submit(metadata, getProvider(), directory);
-			showInfo("Submitted!");
+			showInfo("Submitted! You will be notified once the submission is approved. Write down this submission number: " + directory.getName());
 		} catch (Exception e) {
+			e.printStackTrace();
 			showError(e.getMessage());			
 		}
 		finish();
 		step++;
+	}
+	
+	public String cancel() throws IOException {
+		if( directory != null )
+			FileUtils.deleteDirectory(directory);
+		return finish();
 	}
 	
 	public String finish() {
@@ -179,16 +196,24 @@ public class FeedView extends BaseView implements Serializable {
 	public void setnConditions(int nConditions) {
 		this.nConditions = nConditions;
 		List<Condition> conditions = new ArrayList<>(nConditions);
-		for( int i = 0; i < nConditions; i++ )
-			conditions.add(new Condition());
+		for( int i = 0; i < nConditions; i++ ) {
+			Condition condition = new Condition();
+			//condition.setName("Condition "+(i+1));
+			condition.setReplicas(new ArrayList<>());
+			conditions.add(condition);
+		}
 		metadata.setConditions(conditions);
+		int replicas = samples.size() / nConditions;
+		for( int i = 0, r = 0; i < samples.size(); r++)
+			for( int j = 0; j < replicas && i < samples.size(); j++ )
+				samples.get(i++).setCondition(r);
 	}
 	
-	public List<Integer> getConditions() {
-		return conditions;
+	public List<Integer> getNumbers() {
+		return numbers;
 	}
-
-	public void setConditions(List<Integer> conditions) {
-		this.conditions = conditions;
+	
+	public List<InputSample> getSamples() {
+		return samples;
 	}
 }

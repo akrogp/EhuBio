@@ -4,11 +4,15 @@ import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
+@XmlType(propOrder={"title","contactName","contactMail","affiliation","organism","dbVersion","description","conditions"})
 public class Metadata {
+	private String title;
 	private String contactName;
 	private String contactMail;
+	private String affiliation;
 	private String organism;
 	private String dbVersion;
 	private String description;
@@ -50,5 +54,17 @@ public class Metadata {
 	}
 	public void setConditions(List<Condition> conditions) {
 		this.conditions = conditions;
+	}
+	public String getTitle() {
+		return title;
+	}
+	public void setTitle(String title) {
+		this.title = title;
+	}
+	public String getAffiliation() {
+		return affiliation;
+	}
+	public void setAffiliation(String affiliation) {
+		this.affiliation = affiliation;
 	}
 }

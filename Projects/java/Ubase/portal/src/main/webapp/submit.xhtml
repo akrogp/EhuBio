@@ -1,0 +1,103 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+      
+    <h:head>
+    <h:outputStylesheet library="css" name="submit.css"/>
+    </h:head>
+
+	<ui:composition template="WEB-INF/templates/template.xhtml">
+	<ui:define name="content">
+	<p:steps styleClass="custom" activeIndex="#{feedView.step}" rendered="#{feedView.step lt 3}">
+		<p:menuitem value="File upload" />
+	    <p:menuitem value="Metadata" />
+	    <p:menuitem value="Finish submission" />
+	</p:steps>
+	<br/>
+	<p:messages showDetail="#{feedView.step gt 0}"/>
+	
+	<h:form rendered="#{feedView.step==0}" enctype="multipart/form-data">	
+		<p:dataTable value="#{feedView.providerFiles}" var="inputFile">
+			<f:facet name="header">#{feedView.providerName} files</f:facet>
+			<p:column>
+				#{inputFile.name}
+			</p:column>
+			<p:column>
+				<p:fileUpload mode="simple" skinSimple="true" value="#{inputFile.file}" update="@form"
+					sizeLimit="10000000" allowTypes="/(\.|\/)(txt|csv|tsv)$/"/>
+			</p:column>
+		</p:dataTable>
+		<br/>
+		<p:commandButton value="Continue" ajax="false" action="#{feedView.nextStep()}"/>
+		<p:commandButton value="Cancel" ajax="false" action="#{feedView.cancel()}" immediate="true"/>
+	</h:form>
+	
+	<h:form rendered="#{feedView.step==1}">
+		<p:ajax event="keyup" process="@widgetVar(inputID)"/>
+		<p:panelGrid columns="2">
+			<p:outputLabel value="Title" for="title"/>
+			<p:inputText value="#{feedView.metadata.title}" id="title" required="true" placeholder="Experiment title"/>			
+			<p:outputLabel value="Contact person" for="contactName"/>
+			<p:inputText value="#{feedView.metadata.contactName}" id="contactName" required="true" placeholder="Name and surname"/>
+			<p:outputLabel value="Contact e-mail" for="contactMail"/>
+			<p:inputText value="#{feedView.metadata.contactMail}" id="contactMail" required="true" validatorMessage="E-mail address not valid" placeholder="E-mail">
+				<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+			</p:inputText>
+			<p:outputLabel value="Affiliation" for="affiliation"/>
+			<p:inputText value="#{feedView.metadata.affiliation}" id="affiliation" required="true" placeholder="Your enterprise or institution"/>
+			<p:outputLabel value="Organism" for="organism"/>
+			<p:inputText value="#{feedView.metadata.organism}" id="organism" required="true" placeholder="Eg. human"/>
+			<p:outputLabel value="DB version" for="db"/>
+			<p:inputText value="#{feedView.metadata.dbVersion}" id="db"  required="true" placeholder="Eg. Swiss-Prot 2018_08"/>
+			<p:outputLabel value="Description" for="description"/>
+			<p:inputTextarea value="#{feedView.metadata.description}" id="description" style="width:100%"  required="true"/>
+			<h:panelGroup rendered="#{feedView.nConditions gt 0}">
+				<p:outputLabel value="Number of experimental conditions" for="nconds"/><br/>
+				<p:selectOneMenu value="#{feedView.nConditions}" required="true" id="nconds">
+					<p:ajax update="@form"/>
+					<f:selectItems value="#{feedView.numbers}"/>
+				</p:selectOneMenu>
+			</h:panelGroup>
+			<p:dataTable value="#{feedView.metadata.conditions}" rendered="#{feedView.nConditions gt 0}" var="condition" rowIndexVar="row">
+				<p:column headerText="Name" styleClass="column1">
+					<p:inputText value="#{condition.name}" placeholder="Condition #{row+1}" required="true" />
+				</p:column>
+				<p:column headerText="Description">
+					<p:inputTextarea value="#{condition.description}" autoResize="true" rows="2" style="width:100%" required="true"/>
+				</p:column>
+			</p:dataTable>
+			<p:outputLabel value="Assignments" rendered="#{feedView.nConditions gt 0}"/>
+			<p:dataTable rendered="#{feedView.nConditions gt 0}" value="#{feedView.samples}" var="sample">
+				<p:column headerText="Sample" styleClass="column1">
+					<h:outputText value="#{sample.name}"/>
+				</p:column>
+				<p:column headerText="Condition">
+					<p:selectOneMenu value="#{sample.condition}">
+						<c:forEach items="#{feedView.metadata.conditions}" var="cond" varStatus="idx">
+							<f:selectItem itemValue="#{idx.index}" itemLabel="Condition #{idx.index + 1}"/>
+						</c:forEach>
+					</p:selectOneMenu>
+				</p:column>
+			</p:dataTable>
+		</p:panelGrid>
+		<br/>
+		<p:commandButton value="Continue" ajax="false" action="#{feedView.nextStep()}"/>
+		<p:commandButton value="Cancel" ajax="false" action="#{feedView.cancel()}" immediate="true"/>
+	</h:form>
+	
+	<h:form rendered="#{feedView.step==2}">
+		<p:commandButton value="Submit" ajax="false" action="#{feedView.submit()}"/>
+		<p:commandButton value="Cancel" ajax="false" action="#{feedView.cancel()}" immediate="true"/>
+	</h:form>
+	
+	<h:form rendered="#{feedView.step gt 2}">
+		<p:commandButton value="Finish" ajax="false" action="#{feedView.finish()}"/>
+	</h:form>
+	
+	</ui:define>
+	</ui:composition>
+</html>
