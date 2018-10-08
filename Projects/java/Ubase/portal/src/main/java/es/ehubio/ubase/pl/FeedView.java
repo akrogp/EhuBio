@@ -16,6 +16,7 @@ import org.apache.commons.io.FilenameUtils;
 import es.ehubio.bl.Ubase;
 import es.ehubio.dl.input.Condition;
 import es.ehubio.dl.input.Metadata;
+import es.ehubio.ubase.Constants;
 import es.ehubio.ubase.Locator;
 import es.ehubio.ubase.dl.providers.FileType;
 import es.ehubio.ubase.dl.providers.Provider;
@@ -114,7 +115,7 @@ public class FeedView extends BaseView implements Serializable {
 		try {
 			if( directory == null ) {
 				//directory = Files.createTempDirectory(Paths.get("/tmp"), "ubase-").toFile();
-				directory = new File("/tmp/ubase-"+System.currentTimeMillis());
+				directory = new File(Locator.getConfiguration().getSubmissionPath(), Constants.EXP_PREFIX+System.currentTimeMillis());
 				directory.mkdirs();
 			}
 			for( InputFile inputFile : getProviderFiles() ) 

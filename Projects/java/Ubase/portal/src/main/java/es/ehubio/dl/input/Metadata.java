@@ -1,9 +1,11 @@
 package es.ehubio.dl.input;
 
+import java.io.File;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
@@ -17,6 +19,7 @@ public class Metadata {
 	private String dbVersion;
 	private String description;
 	private List<Condition> conditions;
+	private File data;
 	
 	public String getContactName() {
 		return contactName;
@@ -66,5 +69,12 @@ public class Metadata {
 	}
 	public void setAffiliation(String affiliation) {
 		this.affiliation = affiliation;
+	}
+	@XmlTransient
+	public File getData() {
+		return data;
+	}
+	public void setData(File data) {
+		this.data = data;
 	}
 }

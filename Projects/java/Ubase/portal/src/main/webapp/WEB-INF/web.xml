@@ -23,4 +23,17 @@
 		<filter-name>PrimeFaces FileUpload Filter</filter-name>
 		<servlet-name>Faces Servlet</servlet-name>
 	</filter-mapping>
+	
+	<context-param>
+		<param-name>ubase.limit.filesize</param-name>
+		<param-value>10000000</param-value>
+	</context-param>
+	<context-param>
+		<param-name>ubase.path.submission</param-name>
+		<param-value>/tmp</param-value>
+	</context-param>
+	<context-param>
+		<param-name>ubase.path.archive</param-name>
+		<param-value>/home/gorka/Descargas/Temp/Ubase</param-value>
+	</context-param>
 </web-app>

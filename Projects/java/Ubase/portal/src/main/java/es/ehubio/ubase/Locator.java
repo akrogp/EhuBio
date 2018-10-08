@@ -9,5 +9,9 @@ public class Locator {
 		return locator.getProviders();
 	}
 	
-	private static LocatorInterface locator = new ProductionLocator(); 
+	public static synchronized Configuration getConfiguration() {
+		return locator.getConfiguration();
+	}
+	
+	private static LocatorInterface locator = new ProductionLocator();
 }

@@ -28,7 +28,7 @@
 			</p:column>
 			<p:column>
 				<p:fileUpload mode="simple" skinSimple="true" value="#{inputFile.file}" update="@form"
-					sizeLimit="10000000" allowTypes="/(\.|\/)(txt|csv|tsv)$/"/>
+					sizeLimit="#{initParam['ubase.limit.filesize']}" allowTypes="/(\.|\/)(txt|csv|tsv)$/"/>
 			</p:column>
 		</p:dataTable>
 		<br/>

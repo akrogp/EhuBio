@@ -17,5 +17,13 @@ public class ProductionLocator implements LocatorInterface {
 		return providers;
 	}
 
+	@Override
+	public Configuration getConfiguration() {
+		if( config == null )
+			config = new WebConfiguration();
+		return config;
+	}
+	
 	private List<Provider> providers;
+	private Configuration config;
 }
