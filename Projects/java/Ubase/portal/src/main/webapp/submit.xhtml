@@ -53,6 +53,10 @@
 			<p:inputText value="#{feedView.metadata.organism}" id="organism" required="true" placeholder="Eg. human"/>
 			<p:outputLabel value="DB version" for="db"/>
 			<p:inputText value="#{feedView.metadata.dbVersion}" id="db"  required="true" placeholder="Eg. Swiss-Prot 2018_08"/>
+			<p:outputLabel value="Instrument" for="instrument"/>
+			<p:inputText value="#{feedView.metadata.instrument}" id="instrument" placeholder="Eg. QExactive EASY nLC 1200"/>
+			<p:outputLabel for="expDate" value="Experiment date:" />
+        	<p:calendar id="expDate" value="#{feedView.metadata.expDate}" maxdate="calwidget.today()" widgetVar="calwidget" required="true"/>
 			<p:outputLabel value="Description" for="description"/>
 			<p:inputTextarea value="#{feedView.metadata.description}" id="description" style="width:100%"  required="true"/>
 			<h:panelGroup rendered="#{feedView.nConditions gt 0}">

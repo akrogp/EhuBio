@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -27,6 +28,8 @@ public class Ubase implements Serializable {
 	private EntityManager em;
 
 	public void submit(Metadata metadata, Provider provider, File data) throws Exception {
+		metadata.setData(data);
+		metadata.setSubDate(new Date());
 		Metafile.save(metadata, new File(data, META_FILE));
 	}
 	

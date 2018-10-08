@@ -1,6 +1,7 @@
 package es.ehubio.dl.input;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
@@ -9,7 +10,9 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 @XmlRootElement
-@XmlType(propOrder={"title","contactName","contactMail","affiliation","organism","dbVersion","description","conditions"})
+@XmlType(propOrder={
+		"title","contactName","contactMail","affiliation","organism","dbVersion","description","instrument",
+		"expDate", "subDate", "pubDate", "conditions"})
 public class Metadata {
 	private String title;
 	private String contactName;
@@ -18,6 +21,8 @@ public class Metadata {
 	private String organism;
 	private String dbVersion;
 	private String description;
+	private String instrument;
+	private Date expDate, subDate, pubDate;
 	private List<Condition> conditions;
 	private File data;
 	
@@ -69,6 +74,30 @@ public class Metadata {
 	}
 	public void setAffiliation(String affiliation) {
 		this.affiliation = affiliation;
+	}
+	public String getInstrument() {
+		return instrument;
+	}
+	public void setInstrument(String instrument) {
+		this.instrument = instrument;
+	}
+	public Date getExpDate() {
+		return expDate;
+	}
+	public void setExpDate(Date expDate) {
+		this.expDate = expDate;
+	}
+	public Date getSubDate() {
+		return subDate;
+	}
+	public void setSubDate(Date subDate) {
+		this.subDate = subDate;
+	}
+	public Date getPubDate() {
+		return pubDate;
+	}
+	public void setPubDate(Date pubDate) {
+		this.pubDate = pubDate;
 	}
 	@XmlTransient
 	public File getData() {
