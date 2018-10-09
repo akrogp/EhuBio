@@ -2,10 +2,10 @@ package es.ehubio.ubase;
 
 import java.util.List;
 
-import es.ehubio.ubase.dl.providers.Provider;
+import es.ehubio.ubase.dl.providers.Dao;
 
 public class Locator {
-	public static synchronized List<Provider> getProviders() {
+	public static synchronized List<Dao> getProviders() {
 		return locator.getProviders();
 	}
 	

@@ -33,6 +33,7 @@ public class Ubase implements Serializable {
 	private EntityManager em;
 
 	public void submit(Metadata metadata, Provider provider, File data) throws Exception {
+		metadata.setProvider(provider);
 		metadata.setData(data);
 		metadata.setSubDate(new Date());
 		Metafile.save(metadata, new File(data, META_FILE));

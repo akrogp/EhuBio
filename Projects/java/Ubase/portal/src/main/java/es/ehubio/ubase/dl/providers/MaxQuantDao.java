@@ -8,17 +8,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 
-public class MaxQuantProvider implements Provider {
-
-	@Override
-	public String getName() {
-		return "MaxQuant";
-	}
-
-	@Override
-	public String getDescription() {
-		return null;
-	}
+public class MaxQuantDao implements Dao {
 
 	@Override
 	public List<FileType> getInputFiles() {

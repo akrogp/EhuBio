@@ -3,16 +3,16 @@ package es.ehubio.ubase;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.ehubio.ubase.dl.providers.MaxQuantProvider;
-import es.ehubio.ubase.dl.providers.Provider;
+import es.ehubio.ubase.dl.providers.MaxQuantDao;
+import es.ehubio.ubase.dl.providers.Dao;
 
 public class ProductionLocator implements LocatorInterface {
 
 	@Override
-	public List<Provider> getProviders() {
+	public List<Dao> getProviders() {
 		if( providers == null ) {
 			providers = new ArrayList<>();
-			providers.add(new MaxQuantProvider());
+			providers.add(new MaxQuantDao());
 		}
 		return providers;
 	}
@@ -24,6 +24,6 @@ public class ProductionLocator implements LocatorInterface {
 		return config;
 	}
 	
-	private List<Provider> providers;
+	private List<Dao> providers;
 	private Configuration config;
 }

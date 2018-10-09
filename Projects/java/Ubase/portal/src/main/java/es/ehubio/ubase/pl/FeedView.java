@@ -18,7 +18,9 @@ import es.ehubio.ubase.Locator;
 import es.ehubio.ubase.bl.Ubase;
 import es.ehubio.ubase.dl.input.Condition;
 import es.ehubio.ubase.dl.input.Metadata;
+import es.ehubio.ubase.dl.providers.Dao;
 import es.ehubio.ubase.dl.providers.FileType;
+import es.ehubio.ubase.dl.providers.MaxQuantDao;
 import es.ehubio.ubase.dl.providers.Provider;
 
 @Named
@@ -34,7 +36,9 @@ public class FeedView extends BaseView implements Serializable {
 	private File directory;
 	@EJB
 	private Ubase ubase;
-	
+	private final Provider provider = Provider.MAXQUANT;
+	private final Dao dao = new MaxQuantDao();
+		
 	public Metadata getMetadata() {
 		return metadata;
 	}
@@ -84,7 +88,7 @@ public class FeedView extends BaseView implements Serializable {
 	private void buildConditions() {
 		metadata = new Metadata();
 		samples = new ArrayList<>();
-		for( String name : getProvider().getSamples(directory) ) {
+		for( String name : dao.getSamples(directory) ) {
 			InputSample sample = new InputSample();
 			sample.setName(name);
 			samples.add(sample);
@@ -103,7 +107,7 @@ public class FeedView extends BaseView implements Serializable {
 	}
 	
 	private String checkSignatures() {
-		for( FileType inputFile : getProvider().getInputFiles() ) {
+		for( FileType inputFile : dao.getInputFiles() ) {
 			File file = new File(directory, inputFile.getName());
 			if( !inputFile.checkSignature(file) )
 				return inputFile.getName();
@@ -125,19 +129,15 @@ public class FeedView extends BaseView implements Serializable {
 			return false;
 		}
 	}
-	
-	public Provider getProvider() {
-		return Locator.getProviders().get(0);
-	}
 
 	public String getProviderName() {
-		return getProvider().getName();
+		return provider.getName();
 	}
 
 	public List<InputFile> getProviderFiles() {
 		if( files == null ) {
 			files = new ArrayList<>();
-			for( FileType type : getProvider().getInputFiles() ) {
+			for( FileType type : dao.getInputFiles() ) {
 				InputFile file = new InputFile();
 				file.setName(type.getName());
 				files.add(file);
@@ -169,7 +169,7 @@ public class FeedView extends BaseView implements Serializable {
 				Condition condition = metadata.getConditions().get(sample.getCondition()); 
 				condition.getReplicas().add(sample.getName());
 			}
-			ubase.submit(metadata, getProvider(), directory);
+			ubase.submit(metadata, provider, directory);
 			showInfo("Submitted! You will be notified once the submission is approved. Write down this submission number: " + directory.getName());
 		} catch (Exception e) {
 			e.printStackTrace();

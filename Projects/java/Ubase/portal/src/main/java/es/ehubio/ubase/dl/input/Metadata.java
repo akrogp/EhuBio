@@ -4,16 +4,23 @@ import java.io.File;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import es.ehubio.ubase.dl.providers.Provider;
+
 @XmlRootElement
 @XmlType(propOrder={
+		"version", "provider",
 		"title","contactName","contactMail","affiliation","organism","dbVersion","description","instrument",
 		"expDate", "subDate", "pubDate", "conditions"})
 public class Metadata {
+	public static final String CURRENT_VERSION = "1.0";
+	private Provider provider;
+	private String version;
 	private String title;
 	private String contactName;
 	private String contactMail;
@@ -26,6 +33,19 @@ public class Metadata {
 	private List<Condition> conditions;
 	private File data;
 	
+	public Provider getProvider() {
+		return provider;
+	}
+	public void setProvider(Provider provider) {
+		this.provider = provider;
+	}
+	@XmlAttribute
+	public String getVersion() {
+		return version == null ? CURRENT_VERSION : version;
+	}
+	public void setVersion(String version) {
+		this.version = version;
+	}
 	public String getContactName() {
 		return contactName;
 	}
