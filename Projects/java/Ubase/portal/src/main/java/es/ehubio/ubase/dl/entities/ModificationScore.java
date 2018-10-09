@@ -5,30 +5,30 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the PeptideScore database table.
+ * The persistent class for the ModificationScore database table.
  * 
  */
 @Entity
-@NamedQuery(name="PeptideScore.findAll", query="SELECT p FROM PeptideScore p")
-public class PeptideScore implements Serializable {
+@NamedQuery(name="ModificationScore.findAll", query="SELECT m FROM ModificationScore m")
+public class ModificationScore implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long id;
+	private String id;
 	private double value;
-	private PeptideEvidence peptideEvidence;
+	private ModificationEvidence modificationEvidence;
 	private Replica replicaBean;
 	private Score score;
 
-	public PeptideScore() {
+	public ModificationScore() {
 	}
 
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public long getId() {
+	public String getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -42,15 +42,15 @@ public class PeptideScore implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to PeptideEvidence
+	//uni-directional many-to-one association to ModificationEvidence
 	@ManyToOne
-	@JoinColumn(name="peptide")
-	public PeptideEvidence getPeptideEvidence() {
-		return this.peptideEvidence;
+	@JoinColumn(name="modification")
+	public ModificationEvidence getModificationEvidence() {
+		return this.modificationEvidence;
 	}
 
-	public void setPeptideEvidence(PeptideEvidence peptideEvidence) {
-		this.peptideEvidence = peptideEvidence;
+	public void setModificationEvidence(ModificationEvidence modificationEvidence) {
+		this.modificationEvidence = modificationEvidence;
 	}
 
 

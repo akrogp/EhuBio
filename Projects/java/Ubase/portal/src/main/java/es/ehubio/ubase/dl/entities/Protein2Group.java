@@ -5,19 +5,19 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the GroupEvidence database table.
+ * The persistent class for the Protein2Group database table.
  * 
  */
 @Entity
-@NamedQuery(name="GroupEvidence.findAll", query="SELECT g FROM GroupEvidence g")
-public class GroupEvidence implements Serializable {
+@NamedQuery(name="Protein2Group.findAll", query="SELECT p FROM Protein2Group p")
+public class Protein2Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private Boolean leading;
-	private ProteinEvidence proteinEvidenceBean;
+	private Protein proteinBean;
 	private ProteinGroup proteinGroup;
 
-	public GroupEvidence() {
+	public Protein2Group() {
 	}
 
 
@@ -41,21 +41,21 @@ public class GroupEvidence implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ProteinEvidence
+	//uni-directional many-to-one association to Protein
 	@ManyToOne
-	@JoinColumn(name="proteinEvidence")
-	public ProteinEvidence getProteinEvidenceBean() {
-		return this.proteinEvidenceBean;
+	@JoinColumn(name="protein")
+	public Protein getProteinBean() {
+		return this.proteinBean;
 	}
 
-	public void setProteinEvidenceBean(ProteinEvidence proteinEvidenceBean) {
-		this.proteinEvidenceBean = proteinEvidenceBean;
+	public void setProteinBean(Protein proteinBean) {
+		this.proteinBean = proteinBean;
 	}
 
 
 	//uni-directional many-to-one association to ProteinGroup
 	@ManyToOne
-	@JoinColumn(name="group")
+	@JoinColumn(name="pgroup")
 	public ProteinGroup getProteinGroup() {
 		return this.proteinGroup;
 	}

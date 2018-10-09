@@ -13,9 +13,8 @@ import javax.persistence.*;
 public class ModificationEvidence implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private double deltaMassExp;
+	private double deltaMass;
 	private int position;
-	private double probability;
 	private Modification modificationBean;
 	private PeptideEvidence peptideEvidenceBean;
 
@@ -34,12 +33,12 @@ public class ModificationEvidence implements Serializable {
 	}
 
 
-	public double getDeltaMassExp() {
-		return this.deltaMassExp;
+	public double getDeltaMass() {
+		return this.deltaMass;
 	}
 
-	public void setDeltaMassExp(double deltaMassExp) {
-		this.deltaMassExp = deltaMassExp;
+	public void setDeltaMass(double deltaMass) {
+		this.deltaMass = deltaMass;
 	}
 
 
@@ -49,15 +48,6 @@ public class ModificationEvidence implements Serializable {
 
 	public void setPosition(int position) {
 		this.position = position;
-	}
-
-
-	public double getProbability() {
-		return this.probability;
-	}
-
-	public void setProbability(double probability) {
-		this.probability = probability;
 	}
 
 

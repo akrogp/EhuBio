@@ -5,20 +5,20 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the PeptideScore database table.
+ * The persistent class for the GroupScore database table.
  * 
  */
 @Entity
-@NamedQuery(name="PeptideScore.findAll", query="SELECT p FROM PeptideScore p")
-public class PeptideScore implements Serializable {
+@NamedQuery(name="GroupScore.findAll", query="SELECT g FROM GroupScore g")
+public class GroupScore implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private double value;
-	private PeptideEvidence peptideEvidence;
+	private ProteinGroup proteinGroup;
 	private Replica replicaBean;
 	private Score score;
 
-	public PeptideScore() {
+	public GroupScore() {
 	}
 
 
@@ -42,15 +42,15 @@ public class PeptideScore implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to PeptideEvidence
+	//uni-directional many-to-one association to ProteinGroup
 	@ManyToOne
-	@JoinColumn(name="peptide")
-	public PeptideEvidence getPeptideEvidence() {
-		return this.peptideEvidence;
+	@JoinColumn(name="pgroup")
+	public ProteinGroup getProteinGroup() {
+		return this.proteinGroup;
 	}
 
-	public void setPeptideEvidence(PeptideEvidence peptideEvidence) {
-		this.peptideEvidence = peptideEvidence;
+	public void setProteinGroup(ProteinGroup proteinGroup) {
+		this.proteinGroup = proteinGroup;
 	}
 
 

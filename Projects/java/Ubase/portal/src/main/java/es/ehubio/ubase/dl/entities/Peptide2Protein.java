@@ -5,20 +5,20 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the ProteinEvidence database table.
+ * The persistent class for the Peptide2Protein database table.
  * 
  */
 @Entity
-@NamedQuery(name="ProteinEvidence.findAll", query="SELECT p FROM ProteinEvidence p")
-public class ProteinEvidence implements Serializable {
+@NamedQuery(name="Peptide2Protein.findAll", query="SELECT p FROM Peptide2Protein p")
+public class Peptide2Protein implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private int end;
 	private int start;
-	private PeptideEvidence peptideEvidenceBean;
+	private PeptideEvidence peptideEvidence;
 	private Protein proteinBean;
 
-	public ProteinEvidence() {
+	public Peptide2Protein() {
 	}
 
 
@@ -53,13 +53,13 @@ public class ProteinEvidence implements Serializable {
 
 	//uni-directional many-to-one association to PeptideEvidence
 	@ManyToOne
-	@JoinColumn(name="peptideEvidence")
-	public PeptideEvidence getPeptideEvidenceBean() {
-		return this.peptideEvidenceBean;
+	@JoinColumn(name="peptide")
+	public PeptideEvidence getPeptideEvidence() {
+		return this.peptideEvidence;
 	}
 
-	public void setPeptideEvidenceBean(PeptideEvidence peptideEvidenceBean) {
-		this.peptideEvidenceBean = peptideEvidenceBean;
+	public void setPeptideEvidence(PeptideEvidence peptideEvidence) {
+		this.peptideEvidence = peptideEvidence;
 	}
 
 
