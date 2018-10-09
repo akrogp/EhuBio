@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NamedQuery(name="ModificationScore.findAll", query="SELECT m FROM ModificationScore m")
 public class ModificationScore implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private String id;
+	private long id;
 	private double value;
 	private ModificationEvidence modificationEvidence;
 	private Replica replicaBean;
@@ -24,11 +24,11 @@ public class ModificationScore implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public String getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(String id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

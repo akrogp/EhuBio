@@ -18,6 +18,9 @@ import javax.persistence.PersistenceContext;
 import org.apache.commons.io.FileUtils;
 
 import es.ehubio.ubase.Locator;
+import es.ehubio.ubase.dl.entities.ExpCondition;
+import es.ehubio.ubase.dl.entities.Experiment;
+import es.ehubio.ubase.dl.entities.Replica;
 import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.input.Metafile;
 import es.ehubio.ubase.dl.providers.Provider; 
@@ -56,9 +59,40 @@ public class Ubase implements Serializable {
 	}
 
 	public void publish(Metadata metadata) throws Exception {
+		metadata.setPubDate(new Date());		
+		Experiment exp = meta2exp(metadata);
+		em.persist(exp);
+		for( es.ehubio.ubase.dl.input.Condition cond : metadata.getConditions() ) {
+			ExpCondition condition = new ExpCondition();
+			condition.setName(cond.getName());
+			condition.setDescription(cond.getDescription());
+			condition.setExperimentBean(exp);
+			em.persist(condition);
+			for( String repName : cond.getReplicas() ) {
+				Replica replica = new Replica();
+				replica.setName(repName);
+				replica.setExpConditionBean(condition);
+				em.persist(replica);
+			}
+		}
 		File dst = new File(Locator.getConfiguration().getArchivePath(), metadata.getData().getName());
-		FileUtils.moveDirectory(metadata.getData(), dst);
-		metadata.setPubDate(new Date());
+		FileUtils.moveDirectory(metadata.getData(), dst);		
 		Metafile.save(metadata, new File(dst, META_FILE));
+	}
+	
+	private Experiment meta2exp(Metadata metadata) {
+		Experiment exp = new Experiment();
+		exp.setTitle(metadata.getTitle());
+		exp.setContactName(metadata.getContactName());
+		exp.setContactMail(metadata.getContactMail());
+		exp.setAffiliation(metadata.getAffiliation());
+		exp.setDbVersion(metadata.getDbVersion());
+		exp.setDescription(metadata.getDescription());
+		exp.setOrganism(metadata.getOrganism());
+		exp.setInstrument(metadata.getInstrument());
+		exp.setSubDate(metadata.getSubDate());
+		exp.setExpDate(metadata.getExpDate());
+		exp.setPubDate(metadata.getPubDate());
+		return exp;
 	}
 }

@@ -14,7 +14,7 @@ public class Replica implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private String name;
-	private Condition conditionBean;
+	private ExpCondition expConditionBean;
 
 	public Replica() {
 	}
@@ -40,15 +40,15 @@ public class Replica implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Condition
+	//uni-directional many-to-one association to ExpCondition
 	@ManyToOne
-	@JoinColumn(name="condition")
-	public Condition getConditionBean() {
-		return this.conditionBean;
+	@JoinColumn(name="expCondition")
+	public ExpCondition getExpConditionBean() {
+		return this.expConditionBean;
 	}
 
-	public void setConditionBean(Condition conditionBean) {
-		this.conditionBean = conditionBean;
+	public void setExpConditionBean(ExpCondition expConditionBean) {
+		this.expConditionBean = expConditionBean;
 	}
 
 }

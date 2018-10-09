@@ -5,19 +5,19 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the Condition database table.
+ * The persistent class for the ExpCondition database table.
  * 
  */
 @Entity
-@NamedQuery(name="Condition.findAll", query="SELECT c FROM Condition c")
-public class Condition implements Serializable {
+@NamedQuery(name="ExpCondition.findAll", query="SELECT e FROM ExpCondition e")
+public class ExpCondition implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private String description;
 	private String name;
 	private Experiment experimentBean;
 
-	public Condition() {
+	public ExpCondition() {
 	}
 
 
