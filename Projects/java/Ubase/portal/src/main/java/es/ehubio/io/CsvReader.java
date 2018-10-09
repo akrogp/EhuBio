@@ -99,6 +99,11 @@ public class CsvReader implements Closeable {
 		return getField(pos.intValue());
 	}
 	
+	public boolean hasContent(int field) {
+		String content = getField(field);
+		return content != null && !content.isEmpty();
+	}
+	
 	public Integer getIntField( String name ) {
 		String field = getField(name);
 		if( field == null )

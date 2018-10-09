@@ -31,7 +31,7 @@ public class MaxQuantDao implements Dao {
 		if( types == null ) {
 			types = new ArrayList<>();
 			types.add(new CsvFileType(FILE_PEP, null, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
-			types.add(new CsvFileType(FILE_GRP, null, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE));
+			types.add(new CsvFileType(FILE_GRP, null, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE, GRP_GLY));
 			types.add(new CsvFileType(FILE_GLY, null, GLY_PROB, GLY_SIG));
 		}
 		return types;
@@ -97,7 +97,6 @@ public class MaxQuantDao implements Dao {
 	}
 
 	private void savePeptideModifications(EntityManager em, PeptideEvidence pev, String mods) {
-		
 	}
 
 	private boolean savePep2Grp(EntityManager em, Map<String, ProteinGroup> mapGroup, PeptideEvidence pev, CsvReader csv, int i) {
@@ -105,8 +104,10 @@ public class MaxQuantDao implements Dao {
 		boolean hasGroups = false;
 		for( String gid : gids ) {
 			ProteinGroup grp = mapGroup.get(gid);
-			if( grp == null )
+			if( grp == null ) {
+				//LOG.info("Could not find group: " + gid);
 				continue;
+			}
 			hasGroups = true;
 			Peptide2Group p2g = new Peptide2Group();
 			p2g.setPeptideEvidence(pev);
@@ -149,7 +150,7 @@ public class MaxQuantDao implements Dao {
 		Map<String, ProteinGroup> mapGroup = new HashMap<>();
 		CsvReader csv = new CsvReader("\t", true, false);
 		csv.open(new File(dir, FILE_GRP).getAbsolutePath());
-		int iGid = csv.getIndex(GRP_GID);
+		int iGid = csv.getIndex(GRP_GID), iGly = csv.getIndex(GRP_GLY);
 		int iPids = csv.getIndex(GRP_PIDS), iDesc = csv.getIndex(GRP_DESC), iName = csv.getIndex(GRP_NAME);
 		int iQval = csv.getIndex(GRP_QVAL), iScore = csv.getIndex(GRP_SCORE);
 		Score qValue = em.find(Score.class, ScoreType.Q_VALUE.getId());
@@ -160,6 +161,8 @@ public class MaxQuantDao implements Dao {
 			iLfq.put(replica, csv.getIndex(GRP_LFQ + " " + replica));
 		
 		while( csv.readLine() != null ) {
+			if( !csv.hasContent(iGly) )
+				continue;
 			ProteinGroup pg = new ProteinGroup();
 			pg.setAccessions(truncate(csv.getField(iPids)));
 			if( pg.getAccessions().contains(EXCLUDE) )
@@ -228,6 +231,7 @@ public class MaxQuantDao implements Dao {
 	private static final String GRP_QVAL = "Q-value";
 	private static final String GRP_SCORE = "Score";
 	private static final String GRP_LFQ = "LFQ intensity";
+	private static final String GRP_GLY = "GlyGly (K) site IDs";
 	
 	private static final String GLY_PROB = "Localization prob";
 	private static final String GLY_SIG = "GlyGly (K)";
