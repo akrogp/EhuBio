@@ -1,4 +1,4 @@
-package es.ehubio.dl.input;
+package es.ehubio.ubase.dl.input;
 
 import java.io.File;
 

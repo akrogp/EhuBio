@@ -13,11 +13,11 @@ import javax.inject.Named;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 
-import es.ehubio.bl.Ubase;
-import es.ehubio.dl.input.Condition;
-import es.ehubio.dl.input.Metadata;
 import es.ehubio.ubase.Constants;
 import es.ehubio.ubase.Locator;
+import es.ehubio.ubase.bl.Ubase;
+import es.ehubio.ubase.dl.input.Condition;
+import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.providers.FileType;
 import es.ehubio.ubase.dl.providers.Provider;
 

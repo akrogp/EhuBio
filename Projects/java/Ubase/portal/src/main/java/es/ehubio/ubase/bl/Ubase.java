@@ -1,4 +1,4 @@
-package es.ehubio.bl;
+package es.ehubio.ubase.bl;
 
 import static es.ehubio.ubase.Constants.EXP_PREFIX;
 import static es.ehubio.ubase.Constants.META_FILE;
@@ -17,9 +17,9 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.io.FileUtils;
 
-import es.ehubio.dl.input.Metadata;
-import es.ehubio.dl.input.Metafile;
 import es.ehubio.ubase.Locator;
+import es.ehubio.ubase.dl.input.Metadata;
+import es.ehubio.ubase.dl.input.Metafile;
 import es.ehubio.ubase.dl.providers.Provider; 
 
 @LocalBean

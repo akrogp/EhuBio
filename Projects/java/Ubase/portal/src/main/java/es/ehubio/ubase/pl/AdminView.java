@@ -9,8 +9,8 @@ import javax.inject.Named;
 
 import org.apache.commons.io.FileUtils;
 
-import es.ehubio.bl.Ubase;
-import es.ehubio.dl.input.Metadata;
+import es.ehubio.ubase.bl.Ubase;
+import es.ehubio.ubase.dl.input.Metadata;
 
 @Named
 @SessionScoped
