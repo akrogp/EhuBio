@@ -2,7 +2,6 @@ package es.ehubio.ubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -17,7 +16,7 @@ public class ProteinGroup implements Serializable {
 	private String accessions;
 	private String description;
 	private String name;
-	private List<GroupScore> groupScores;
+	private Experiment experimentBean;
 
 	public ProteinGroup() {
 	}
@@ -61,28 +60,15 @@ public class ProteinGroup implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to GroupScore
-	@OneToMany(mappedBy="proteinGroupBean")
-	public List<GroupScore> getGroupScores() {
-		return this.groupScores;
+	//uni-directional many-to-one association to Experiment
+	@ManyToOne
+	@JoinColumn(name="experiment")
+	public Experiment getExperimentBean() {
+		return this.experimentBean;
 	}
 
-	public void setGroupScores(List<GroupScore> groupScores) {
-		this.groupScores = groupScores;
-	}
-
-	public GroupScore addGroupScore(GroupScore groupScore) {
-		getGroupScores().add(groupScore);
-		groupScore.setProteinGroupBean(this);
-
-		return groupScore;
-	}
-
-	public GroupScore removeGroupScore(GroupScore groupScore) {
-		getGroupScores().remove(groupScore);
-		groupScore.setProteinGroupBean(null);
-
-		return groupScore;
+	public void setExperimentBean(Experiment experimentBean) {
+		this.experimentBean = experimentBean;
 	}
 
 }

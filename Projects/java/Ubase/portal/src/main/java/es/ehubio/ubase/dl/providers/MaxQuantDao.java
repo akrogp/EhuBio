@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.persistence.EntityManager;
 
@@ -49,8 +50,17 @@ public class MaxQuantDao implements Dao {
 	@Override
 	public void persist(EntityManager em, Experiment exp, Map<String, Replica> replicas, File data) throws IOException {
 		Map<String, ProteinGroup> mapGroup = saveProteins(em, exp, replicas, data);
+		savePeptides(em, exp, replicas, mapGroup, data);
 	}
 	
+	private void savePeptides(EntityManager em, Experiment exp, Map<String, Replica> replicas,
+			Map<String, ProteinGroup> mapGroup, File dir) throws IOException {
+		CsvReader csv = new CsvReader("\t", true, false);
+		csv.open(new File(dir, FILE_PEP).getAbsolutePath());
+		
+		csv.close();
+	}
+
 	private Map<String, ProteinGroup> saveProteins(EntityManager em, Experiment exp, Map<String, Replica> replicas, File dir) throws IOException {
 		Map<String, ProteinGroup> mapGroup = new HashMap<>();
 		CsvReader csv = new CsvReader("\t", true, false);
@@ -68,8 +78,11 @@ public class MaxQuantDao implements Dao {
 		while( csv.readLine() != null ) {
 			ProteinGroup pg = new ProteinGroup();
 			pg.setAccessions(truncate(csv.getField(iPids)));
+			if( pg.getAccessions().contains(EXCLUDE) )
+				continue;
 			pg.setName(truncate(csv.getField(iName)));
 			pg.setDescription(truncate(csv.getField(iDesc)));
+			pg.setExperimentBean(exp);
 			em.persist(pg);
 			saveGroupScore(em, pg, qValue, csv, iQval);
 			saveGroupScore(em, pg, mqScore, csv, iScore);
@@ -88,7 +101,11 @@ public class MaxQuantDao implements Dao {
 	}
 
 	private String truncate(String field) {
-		return field.length() > MAX_INDEX_STR ? field.substring(0, MAX_INDEX_STR) : field; 
+		if( field.length() > MAX_INDEX_STR ) {
+			LOG.warning("Truncated string: " + field);
+			return field.substring(0, MAX_INDEX_STR);
+		}
+		return field; 
 	}
 
 	private void saveGroupScore(EntityManager em, ProteinGroup pg, Score qValue, CsvReader csv, int iQval) {
@@ -101,10 +118,12 @@ public class MaxQuantDao implements Dao {
 
 	private List<FileType> types;
 	
+	private static final Logger LOG = Logger.getLogger(MaxQuantDao.class.getName());
 	private static final String FILE_PEP = "peptides.txt";
 	private static final String FILE_GRP = "proteinGroups.txt";
 	private static final String FILE_GLY = "GlyGly (K)Sites.txt";
 	private static final int MAX_INDEX_STR = 255;
+	private static final String EXCLUDE = "__";
 	
 	private static final String PEP_SEQ = "Sequence";
 	private static final String PEP_MISSED = "Missed cleavages";

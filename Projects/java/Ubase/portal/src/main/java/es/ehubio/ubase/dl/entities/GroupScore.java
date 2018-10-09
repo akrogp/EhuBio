@@ -42,7 +42,7 @@ public class GroupScore implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to ProteinGroup
+	//uni-directional many-to-one association to ProteinGroup
 	@ManyToOne
 	@JoinColumn(name="proteinGroup")
 	public ProteinGroup getProteinGroupBean() {

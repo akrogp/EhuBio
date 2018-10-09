@@ -13,8 +13,8 @@ import javax.persistence.*;
 public class Peptide2Group implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private ProteinGroup proteinGroupBean;
 	private PeptideEvidence peptideEvidence;
+	private ProteinGroup proteinGroupBean;
 
 	public Peptide2Group() {
 	}
@@ -31,18 +31,6 @@ public class Peptide2Group implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ProteinGroup
-	@ManyToOne
-	@JoinColumn(name="proteinGroup")
-	public ProteinGroup getProteinGroupBean() {
-		return this.proteinGroupBean;
-	}
-
-	public void setProteinGroupBean(ProteinGroup proteinGroupBean) {
-		this.proteinGroupBean = proteinGroupBean;
-	}
-
-
 	//uni-directional many-to-one association to PeptideEvidence
 	@ManyToOne
 	@JoinColumn(name="peptide")
@@ -52,6 +40,18 @@ public class Peptide2Group implements Serializable {
 
 	public void setPeptideEvidence(PeptideEvidence peptideEvidence) {
 		this.peptideEvidence = peptideEvidence;
+	}
+
+
+	//uni-directional many-to-one association to ProteinGroup
+	@ManyToOne
+	@JoinColumn(name="proteinGroup")
+	public ProteinGroup getProteinGroupBean() {
+		return this.proteinGroupBean;
+	}
+
+	public void setProteinGroupBean(ProteinGroup proteinGroupBean) {
+		this.proteinGroupBean = proteinGroupBean;
 	}
 
 }
