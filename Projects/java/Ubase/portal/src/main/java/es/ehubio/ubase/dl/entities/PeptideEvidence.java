@@ -1,7 +1,14 @@
 package es.ehubio.ubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -14,7 +21,7 @@ public class PeptideEvidence implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private Character after;
-	private Character before;
+	private Character prev;
 	private Double mass;
 	private Integer missedCleavages;
 	private Boolean uniqueGroup;
@@ -46,12 +53,12 @@ public class PeptideEvidence implements Serializable {
 	}
 
 
-	public Character getBefore() {
-		return this.before;
+	public Character getPrev() {
+		return this.prev;
 	}
 
-	public void setBefore(Character before) {
-		this.before = before;
+	public void setPrev(Character prev) {
+		this.prev = prev;
 	}
 
 

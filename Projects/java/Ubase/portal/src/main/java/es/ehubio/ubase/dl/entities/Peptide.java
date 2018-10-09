@@ -1,7 +1,13 @@
 package es.ehubio.ubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -9,7 +15,10 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@NamedQuery(name="Peptide.findAll", query="SELECT p FROM Peptide p")
+@NamedQueries({
+	@NamedQuery(name="Peptide.findAll", query="SELECT p FROM Peptide p"),
+	@NamedQuery(name="Peptide.findSeq", query="SELECT p FROM Peptide p WHERE p.sequence = :seq")
+})
 public class Peptide implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
