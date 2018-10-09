@@ -54,7 +54,7 @@ public class MaxQuantDao implements Dao {
 	
 	@Override
 	public void persist(EntityManager em, Experiment exp, Map<String, Replica> replicas, File data) throws IOException {
-		Map<String, ProteinGroup> mapGroup = saveProteins(em, exp, replicas, data);
+		Map<String, ProteinGroup> mapGroup = saveGroups(em, exp, replicas, data);
 		savePeptides(em, exp, replicas, mapGroup, data);
 	}
 	
@@ -88,23 +88,32 @@ public class MaxQuantDao implements Dao {
 			em.persist(pev);
 			savePeptideScore(em, pev, pepScore, csv, iPep);
 			savePeptideScore(em, pev, mqScore, csv, iScore);
-			String[] gids = csv.getField(iGids).split(";");
-			boolean hasGroups = false;
-			for( String gid : gids ) {
-				ProteinGroup grp = mapGroup.get(gid);
-				if( grp == null )
-					continue;
-				hasGroups = true;
-				Peptide2Group p2g = new Peptide2Group();
-				p2g.setPeptideEvidence(pev);
-				p2g.setProteinGroupBean(grp);
-				em.persist(p2g);
-			}
-			if( !hasGroups )
+			if( !savePep2Grp(em, mapGroup, pev, csv, iGids) )
 				em.remove(pev);
+			savePeptideModifications(em, pev, mods);
 		}
 		
 		csv.close();
+	}
+
+	private void savePeptideModifications(EntityManager em, PeptideEvidence pev, String mods) {
+		
+	}
+
+	private boolean savePep2Grp(EntityManager em, Map<String, ProteinGroup> mapGroup, PeptideEvidence pev, CsvReader csv, int i) {
+		String[] gids = csv.getField(i).split(";");
+		boolean hasGroups = false;
+		for( String gid : gids ) {
+			ProteinGroup grp = mapGroup.get(gid);
+			if( grp == null )
+				continue;
+			hasGroups = true;
+			Peptide2Group p2g = new Peptide2Group();
+			p2g.setPeptideEvidence(pev);
+			p2g.setProteinGroupBean(grp);
+			em.persist(p2g);
+		}
+		return hasGroups;
 	}
 
 	private Character getChar(CsvReader csv, int i) {
@@ -136,7 +145,7 @@ public class MaxQuantDao implements Dao {
 		em.persist(pepScore);
 	}
 
-	private Map<String, ProteinGroup> saveProteins(EntityManager em, Experiment exp, Map<String, Replica> replicas, File dir) throws IOException {
+	private Map<String, ProteinGroup> saveGroups(EntityManager em, Experiment exp, Map<String, Replica> replicas, File dir) throws IOException {
 		Map<String, ProteinGroup> mapGroup = new HashMap<>();
 		CsvReader csv = new CsvReader("\t", true, false);
 		csv.open(new File(dir, FILE_GRP).getAbsolutePath());
