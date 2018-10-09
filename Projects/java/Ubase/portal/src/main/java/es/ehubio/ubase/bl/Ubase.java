@@ -8,7 +8,9 @@ import java.io.FilenameFilter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -23,6 +25,7 @@ import es.ehubio.ubase.dl.entities.Experiment;
 import es.ehubio.ubase.dl.entities.Replica;
 import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.input.Metafile;
+import es.ehubio.ubase.dl.providers.Dao;
 import es.ehubio.ubase.dl.providers.Provider; 
 
 @LocalBean
@@ -62,6 +65,7 @@ public class Ubase implements Serializable {
 	public void publish(Metadata metadata) throws Exception {
 		metadata.setPubDate(new Date());		
 		Experiment exp = meta2exp(metadata);
+		Map<String, Replica> replicas = new HashMap<>();
 		em.persist(exp);
 		for( es.ehubio.ubase.dl.input.Condition cond : metadata.getConditions() ) {
 			ExpCondition condition = new ExpCondition();
@@ -74,8 +78,13 @@ public class Ubase implements Serializable {
 				replica.setName(repName);
 				replica.setExpConditionBean(condition);
 				em.persist(replica);
+				replicas.put(repName, replica);
 			}
 		}
+		
+		Dao dao = metadata.getProvider().getDao().newInstance();
+		dao.persist(em, exp, replicas, metadata.getData());
+		
 		File dst = new File(Locator.getConfiguration().getArchivePath(), metadata.getData().getName());
 		FileUtils.moveDirectory(metadata.getData(), dst);		
 		Metafile.save(metadata, new File(dst, META_FILE));

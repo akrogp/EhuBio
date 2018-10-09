@@ -14,7 +14,7 @@ public class GroupScore implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private double value;
-	private ProteinGroup proteinGroup;
+	private ProteinGroup proteinGroupBean;
 	private Replica replicaBean;
 	private Score score;
 
@@ -42,15 +42,15 @@ public class GroupScore implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ProteinGroup
+	//bi-directional many-to-one association to ProteinGroup
 	@ManyToOne
-	@JoinColumn(name="pgroup")
-	public ProteinGroup getProteinGroup() {
-		return this.proteinGroup;
+	@JoinColumn(name="proteinGroup")
+	public ProteinGroup getProteinGroupBean() {
+		return this.proteinGroupBean;
 	}
 
-	public void setProteinGroup(ProteinGroup proteinGroup) {
-		this.proteinGroup = proteinGroup;
+	public void setProteinGroupBean(ProteinGroup proteinGroupBean) {
+		this.proteinGroupBean = proteinGroupBean;
 	}
 
 
