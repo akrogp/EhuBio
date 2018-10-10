@@ -31,7 +31,7 @@ public class SearchView implements Serializable {
 	}
 	
 	public void textSearch() {
-		
+		setPepResults(ubase.textSearch(query));
 	}
 
 	public String getQuery() {

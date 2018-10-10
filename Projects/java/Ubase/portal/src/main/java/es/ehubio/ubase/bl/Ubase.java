@@ -180,10 +180,14 @@ public class Ubase implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	public List<PeptideResult> proteinSearch(String acc) {
-		List<PeptideResult> result = new ArrayList<>();
 		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.proteinGroupBean.accessions LIKE :acc OR p2g.proteinGroupBean.name LIKE :acc")
 				.setParameter("acc", "%"+acc+"%")
 				.getResultList();
+		return group2Result(p2gs);
+	}
+	
+	private List<PeptideResult> group2Result(List<Peptide2Group> p2gs) {
+		List<PeptideResult> result = new ArrayList<>();
 		Set<String> peps = new HashSet<>();
 		for( Peptide2Group p2g : p2gs )
 			peps.add(p2g.getPeptideEvidence().getPeptideBean().getSequence());
@@ -191,9 +195,13 @@ public class Ubase implements Serializable {
 			result.addAll(peptideSearch(pep));
 		return result;
 	}
-	
-	public List<Peptide2Group> textSearch(String text) {
-		return null;
+
+	@SuppressWarnings("unchecked")
+	public List<PeptideResult> textSearch(String txt) {
+		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.proteinGroupBean.name LIKE :txt OR p2g.proteinGroupBean.description LIKE :txt")
+				.setParameter("txt", "%"+txt+"%")
+				.getResultList();
+		return group2Result(p2gs);
 	}
 	
 	private Experiment meta2exp(Metadata metadata) {
