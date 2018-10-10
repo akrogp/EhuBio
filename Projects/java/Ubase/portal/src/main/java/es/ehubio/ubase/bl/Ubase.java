@@ -9,8 +9,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -176,8 +178,18 @@ public class Ubase implements Serializable {
 		}
 	}
 
-	public List<Peptide2Group> proteinSearch(String acc) {
-		return null;
+	@SuppressWarnings("unchecked")
+	public List<PeptideResult> proteinSearch(String acc) {
+		List<PeptideResult> result = new ArrayList<>();
+		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.proteinGroupBean.accessions LIKE :acc OR p2g.proteinGroupBean.name LIKE :acc")
+				.setParameter("acc", "%"+acc+"%")
+				.getResultList();
+		Set<String> peps = new HashSet<>();
+		for( Peptide2Group p2g : p2gs )
+			peps.add(p2g.getPeptideEvidence().getPeptideBean().getSequence());
+		for( String pep : peps )
+			result.addAll(peptideSearch(pep));
+		return result;
 	}
 	
 	public List<Peptide2Group> textSearch(String text) {

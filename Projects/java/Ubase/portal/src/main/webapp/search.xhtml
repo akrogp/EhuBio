@@ -10,21 +10,27 @@
 	<br/>
 	<p:messages/>
 	<h:form>
-		<p:panelGrid columns="2">
-			<p:inputText value="#{searchView.query}" placeholder="Eg. TLSDYNIQKESTLHLVLR" required="true"/>
-			<p:commandButton value="Peptide search" action="#{searchView.peptideSearch()}" ajax="false"/>
-		</p:panelGrid>
-	</h:form><br/>
-	<h:form>
-		<p:panelGrid columns="2">
-			<p:inputText placeholder="Eg. R9PY16" required="true"/>
-			<p:commandButton value="Protein search" ajax="false"/>
-		</p:panelGrid>
-	</h:form><br/>
-	<h:form>
-		<p:panelGrid columns="2">
-			<p:inputText placeholder="Eg. ribosomal protein" required="true"/>
-			<p:commandButton value="Text search" ajax="false"/>
+		<p:panelGrid>
+			<f:facet name="header">
+				<p:row>
+					<p:column colspan="2">Search options</p:column>
+				</p:row>
+			</f:facet>
+			<p:row>
+				<p:column colspan="2"><p:inputText value="#{searchView.query}" required="true" style="width:90%"/></p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:commandButton value="Peptide search" action="#{searchView.peptideSearch()}" ajax="false"/></p:column>
+				<p:column>Eg. TLSDYNIQKESTLHLVLR</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:commandButton value="Protein search" action="#{searchView.proteinSearch()}" ajax="false"/></p:column>
+				<p:column>Eg. R9PY16</p:column>
+			</p:row>
+			<p:row>
+				<p:column><p:commandButton value="Text search" action="#{searchView.textSearch()}" ajax="false"/></p:column>
+				<p:column>Eg. ribosomal protein</p:column>
+			</p:row>
 		</p:panelGrid>
 	</h:form>
 	<br/>
@@ -32,8 +38,7 @@
 		<p:commandButton value="Reset" action="#{searchView.reset()}" ajax="false"/>
 	</h:form>
 	<br/>
-	<p:dataTable value="#{searchView.pepResults}" var="pep" rendered="#{searchView.pepResults != null}"
-		scrollable="true" scrollWidth="100%">
+	<p:dataTable value="#{searchView.pepResults}" var="pep" rendered="#{searchView.pepResults != null}">
 		<f:facet name="header">Search results (#{searchView.pepResults.size()})</f:facet>
 		<p:column headerText="Experiment">
 			#{pep.experiment.accession}

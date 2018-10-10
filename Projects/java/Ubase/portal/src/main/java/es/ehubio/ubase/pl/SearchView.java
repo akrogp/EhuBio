@@ -27,7 +27,7 @@ public class SearchView implements Serializable {
 	}
 	
 	public void proteinSearch() {
-		
+		setPepResults(ubase.proteinSearch(query));
 	}
 	
 	public void textSearch() {
