@@ -7,7 +7,69 @@
 
 	<ui:composition template="WEB-INF/templates/template.xhtml">
 	<ui:define name="content">
-	<p>TO-DO ...</p>
+	<br/>
+	<p:messages/>
+	<h:form>
+		<p:panelGrid columns="2">
+			<p:inputText value="#{searchView.query}" placeholder="Eg. TLSDYNIQKESTLHLVLR" required="true"/>
+			<p:commandButton value="Peptide search" action="#{searchView.peptideSearch()}" ajax="false"/>
+		</p:panelGrid>
+	</h:form><br/>
+	<h:form>
+		<p:panelGrid columns="2">
+			<p:inputText placeholder="Eg. R9PY16" required="true"/>
+			<p:commandButton value="Protein search" ajax="false"/>
+		</p:panelGrid>
+	</h:form><br/>
+	<h:form>
+		<p:panelGrid columns="2">
+			<p:inputText placeholder="Eg. ribosomal protein" required="true"/>
+			<p:commandButton value="Text search" ajax="false"/>
+		</p:panelGrid>
+	</h:form>
+	<br/>
+	<h:form>
+		<p:commandButton value="Reset" action="#{searchView.reset()}" ajax="false"/>
+	</h:form>
+	<br/>
+	<p:dataTable value="#{searchView.pepResults}" var="pep" rendered="#{searchView.pepResults != null}"
+		scrollable="true" scrollWidth="100%">
+		<f:facet name="header">Search results (#{searchView.pepResults.size()})</f:facet>
+		<p:column headerText="Experiment">
+			#{pep.experiment.accession}
+		</p:column>
+		<p:column headerText="Sequence">
+			<h:outputText value="#{searchView.buildHtmlSeq(pep)}" escape="false"/>
+		</p:column>
+		<p:column headerText="Miss. cleav." styleClass="column0">
+			#{pep.missedCleavages}
+		</p:column>
+		<p:column headerText="Peptide scores">
+			<h:dataTable value="#{pep.scores.values()}" var="score">
+				<h:column>#{score.name}</h:column>
+				<h:column>#{score.value}</h:column>
+			</h:dataTable>
+		</p:column>
+		<p:column headerText="Peptide modifications">
+			<h:dataTable value="#{pep.mods}" var="modif">
+				<h:column>#{modif.name}</h:column>
+				<h:column>#{modif.position}</h:column>
+				<h:column>
+					<h:dataTable value="#{modif.scores.values()}" var="score">
+						<h:column>#{score.name}</h:column>
+						<h:column>#{score.value}</h:column>
+					</h:dataTable>
+				</h:column>
+			</h:dataTable>
+		</p:column>
+		<p:column headerText="Protein groups">
+			<h:dataTable value="#{pep.prots}" var="prot">
+				<h:column>#{prot.accession}</h:column>
+				<h:column>#{prot.name}</h:column>
+				<h:column>#{prot.description}</h:column>
+			</h:dataTable>
+		</p:column>
+	</p:dataTable>
 	</ui:define>
 	</ui:composition>
 </html>

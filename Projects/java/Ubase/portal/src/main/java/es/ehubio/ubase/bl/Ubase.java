@@ -22,6 +22,12 @@ import org.apache.commons.io.FileUtils;
 import es.ehubio.ubase.Locator;
 import es.ehubio.ubase.dl.entities.ExpCondition;
 import es.ehubio.ubase.dl.entities.Experiment;
+import es.ehubio.ubase.dl.entities.GroupScore;
+import es.ehubio.ubase.dl.entities.ModificationEvidence;
+import es.ehubio.ubase.dl.entities.ModificationScore;
+import es.ehubio.ubase.dl.entities.Peptide2Group;
+import es.ehubio.ubase.dl.entities.PeptideEvidence;
+import es.ehubio.ubase.dl.entities.PeptideScore;
 import es.ehubio.ubase.dl.entities.Replica;
 import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.input.Metafile;
@@ -90,8 +96,97 @@ public class Ubase implements Serializable {
 		Metafile.save(metadata, new File(dst, META_FILE));
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<PeptideResult> peptideSearch(String pep) {
+		List<PeptideResult> results = new ArrayList<>();
+		List<PeptideEvidence> pevs = em.createQuery("SELECT pev FROM PeptideEvidence pev WHERE pev.peptideBean.sequence = :seq")
+				.setParameter("seq", pep)
+				.getResultList();
+		for( PeptideEvidence pev : pevs ) {
+			PeptideResult result = new PeptideResult(pev);
+			result.setExperiment(pev.getExperimentBean());
+			results.add(result);
+			addPeptideScores(pev, result);
+			addModifications(pev, result);
+			addProteins(pev, result);
+		}
+		return results;
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addProteins(PeptideEvidence pev, PeptideResult result) {
+		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.peptideEvidence = :pev")
+				.setParameter("pev", pev)
+				.getResultList();
+		for( Peptide2Group p2g : p2gs ) {
+			ProteinResult prot = new ProteinResult();
+			prot.setAccession(p2g.getProteinGroupBean().getAccessions());
+			prot.setName(p2g.getProteinGroupBean().getName());
+			prot.setDescription(p2g.getProteinGroupBean().getDescription());
+			result.getProts().add(prot);
+			List<GroupScore> scores = em.createQuery("SELECT s FROM GroupScore s WHERE s.proteinGroupBean = :grp AND replicaBean IS NULL")
+					.setParameter("grp", p2g.getProteinGroupBean())
+					.getResultList();
+			for( GroupScore score : scores ) {
+				ScoreResult s = new ScoreResult();
+				s.setName(score.getScore().getName());
+				s.setDescription(score.getScore().getDescription());
+				s.setValue(score.getValue());
+				prot.getScores().put(s.getName(), s);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addModifications(PeptideEvidence pev, PeptideResult result) {
+		List<ModificationEvidence> mevs = em.createQuery("SELECT mev FROM ModificationEvidence mev WHERE mev.peptideEvidenceBean = :pev")
+				.setParameter("pev", pev)
+				.getResultList();
+		for( ModificationEvidence mev : mevs ) {
+			ModificationResult mod = new ModificationResult();
+			mod.setName(mev.getModificationBean().getName());
+			mod.setDescription(mev.getModificationBean().getDescription());
+			mod.setDeltaMass(mev.getDeltaMass());
+			mod.setPosition(mev.getPosition());
+			result.getMods().add(mod);
+			List<ModificationScore> scores = em.createQuery("SELECT s FROM ModificationScore s WHERE s.modificationEvidence = :mev")
+					.setParameter("mev", mev)
+					.getResultList();
+			for( ModificationScore score : scores ) {
+				ScoreResult s = new ScoreResult();
+				s.setName(score.getScore().getName());
+				s.setDescription(score.getScore().getDescription());
+				s.setValue(score.getValue());
+				mod.getScores().put(s.getName(), s);
+			}
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addPeptideScores(PeptideEvidence pev, PeptideResult result) {
+		List<PeptideScore> scores = em.createQuery("SELECT s FROM PeptideScore s WHERE s.peptideEvidence = :pev")
+				.setParameter("pev", pev)
+				.getResultList();
+		for( PeptideScore score : scores ) {
+			ScoreResult s = new ScoreResult();
+			s.setName(score.getScore().getName());
+			s.setDescription(score.getScore().getDescription());
+			s.setValue(score.getValue());
+			result.getScores().put(s.getName(), s);
+		}
+	}
+
+	public List<Peptide2Group> proteinSearch(String acc) {
+		return null;
+	}
+	
+	public List<Peptide2Group> textSearch(String text) {
+		return null;
+	}
+	
 	private Experiment meta2exp(Metadata metadata) {
 		Experiment exp = new Experiment();
+		exp.setAccession(metadata.getData().getName());
 		exp.setTitle(metadata.getTitle());
 		exp.setContactName(metadata.getContactName());
 		exp.setContactMail(metadata.getContactMail());

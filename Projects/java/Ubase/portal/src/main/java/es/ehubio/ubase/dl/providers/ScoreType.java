@@ -1,5 +1,8 @@
 package es.ehubio.ubase.dl.providers;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public enum ScoreType {
 	INTENSITY(1),
 	LOC_PROB(2),
@@ -17,5 +20,15 @@ public enum ScoreType {
 		return id;
 	}
 	
+	public static synchronized ScoreType fromId(int id) {
+		if( map == null ) {
+			map = new HashMap<>();
+			for( ScoreType type : values() )
+				map.put(type.getId(), type);
+		}
+		return map.get(id);
+	}
+	
 	private final int id;
+	private static Map<Integer, ScoreType> map;
 }

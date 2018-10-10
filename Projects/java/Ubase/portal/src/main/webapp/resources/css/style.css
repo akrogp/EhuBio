@@ -20,8 +20,16 @@ h1 {
 	text-align: center;
 }
 
+.column0 {
+	width:100px;
+}
+
 .column1 {
 	width:250px;
+}
+
+.column2 {
+	width:500px;
 }
 
 /* Page template */

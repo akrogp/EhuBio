@@ -1,8 +1,15 @@
 package es.ehubio.ubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQuery;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 
 /**
@@ -14,6 +21,7 @@ import java.util.Date;
 public class Experiment implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
+	private String accession;
 	private String affiliation;
 	private String contactMail;
 	private String contactName;
@@ -140,6 +148,16 @@ public class Experiment implements Serializable {
 
 	public void setTitle(String title) {
 		this.title = title;
+	}
+
+
+	public String getAccession() {
+		return accession;
+	}
+
+
+	public void setAccession(String accession) {
+		this.accession = accession;
 	}
 
 }

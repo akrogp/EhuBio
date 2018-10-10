@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+.ui-widget, .ui-widget .ui-widget {
+    /*font-size: 90%;*/
+}
+
 .ui-steps.custom {
 	margin-top: 30px;
 	margin-bottom: 50px;
