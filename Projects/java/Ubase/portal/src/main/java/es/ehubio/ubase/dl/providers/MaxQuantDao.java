@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.regex.Pattern;
 
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -16,6 +17,9 @@ import javax.persistence.NoResultException;
 import es.ehubio.io.CsvReader;
 import es.ehubio.ubase.dl.entities.Experiment;
 import es.ehubio.ubase.dl.entities.GroupScore;
+import es.ehubio.ubase.dl.entities.Modification;
+import es.ehubio.ubase.dl.entities.ModificationEvidence;
+import es.ehubio.ubase.dl.entities.ModificationScore;
 import es.ehubio.ubase.dl.entities.Peptide;
 import es.ehubio.ubase.dl.entities.Peptide2Group;
 import es.ehubio.ubase.dl.entities.PeptideEvidence;
@@ -30,9 +34,9 @@ public class MaxQuantDao implements Dao {
 	public List<FileType> getInputFiles() {
 		if( types == null ) {
 			types = new ArrayList<>();
-			types.add(new CsvFileType(FILE_PEP, null, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
+			types.add(new CsvFileType(FILE_PEP, null, PEP_ID, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
 			types.add(new CsvFileType(FILE_GRP, null, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE, GRP_GLY));
-			types.add(new CsvFileType(FILE_GLY, null, GLY_PROB, GLY_SIG));
+			types.add(new CsvFileType(FILE_GLY, null, GLY_PROB, GLY_SCORE, GLY_PIDS, GLY_SEQ, GLY_POS));
 		}
 		return types;
 	}
@@ -53,16 +57,79 @@ public class MaxQuantDao implements Dao {
 	}
 	
 	@Override
-	public void persist(EntityManager em, Experiment exp, Map<String, Replica> replicas, File data) throws IOException {
+	public void persist(EntityManager em, Experiment exp, Map<String, Replica> replicas, File data) throws Exception {
 		Map<String, ProteinGroup> mapGroup = saveGroups(em, exp, replicas, data);
-		savePeptides(em, exp, replicas, mapGroup, data);
+		Map<String, PeptideEvidence> mapPev = savePeptides(em, exp, replicas, mapGroup, data);
+		saveModifications(em, replicas, mapPev, data);
 	}
 	
-	private void savePeptides(EntityManager em, Experiment exp, Map<String, Replica> replicas,
+	private void saveModifications(EntityManager em, Map<String, Replica> replicas, Map<String, PeptideEvidence> mapPev, File dir) throws Exception {
+		CsvReader csv = new CsvReader("\t", true, false);
+		csv.open(new File(dir, FILE_GLY).getAbsolutePath());
+		int iProb = csv.getIndex(GLY_PROB), iScore = csv.getIndex(GLY_SCORE);
+		int iSeq = csv.getIndex(GLY_SEQ), iPos = csv.getIndex(GLY_POS);
+		int iPids = csv.getIndex(GLY_PIDS);
+		Score probScore = em.find(Score.class, ScoreType.LOC_PROB.getId());
+		Score modScore = em.find(Score.class, ScoreType.MQ_LOC_SCORE.getId());
+		Modification glyMod = em.find(Modification.class, ModificationType.GLYGLY.getId());
+		while( csv.readLine() != null ) {
+			String seq = MOD_PATTERN.matcher(csv.getField(iSeq)).replaceAll("");
+			int pos = csv.getIntField(iPos);
+			String[] pids = csv.getField(iPids).split(";");
+			for( String pid : pids ) {
+				PeptideEvidence pev = mapPev.get(pid);
+				if( pev == null )
+					continue;
+				int offset = strOffset(pev.getPeptideBean().getSequence(), seq);
+				ModificationEvidence mev = new ModificationEvidence();
+				mev.setModificationBean(glyMod);
+				mev.setPeptideEvidenceBean(pev);
+				mev.setPosition(pos+offset);
+				em.persist(mev);
+				saveModScore(em, mev, probScore, csv, iProb);
+				saveModScore(em, mev, modScore, csv, iScore);
+			}
+		}
+		csv.close();
+	}
+
+	private int strOffset(String seq1, String seq2) throws Exception {
+		int offset = strSemiOffset(seq1, seq2);
+		if( offset >= 0 )
+			return offset;
+		offset = strSemiOffset(seq2, seq1);
+		if( offset < 0 )
+			throw new Exception(String.format("No overlap found between %s and %s",seq1,seq2));
+		return -offset;
+	}
+
+	private void saveModScore(EntityManager em, ModificationEvidence mev, Score type, CsvReader csv, int i) {
+		ModificationScore score = new ModificationScore();
+		score.setModificationEvidence(mev);
+		score.setScore(type);
+		score.setValue(csv.getDoubleField(i));
+		em.persist(score);
+	}
+
+	private int strSemiOffset(String seq1, String seq2) {
+		if( seq2.length() > seq1.length() )
+			seq2 = seq2.substring(0, seq1.length());
+		int offset;
+		do {
+			offset = seq1.indexOf(seq2);
+			if( offset < 0 )
+				seq2 = seq2.substring(0, seq2.length()-1);
+		} while( offset < 0 && seq2.length() > 1 );
+		return offset;
+	}
+
+	private Map<String, PeptideEvidence> savePeptides(EntityManager em, Experiment exp, Map<String, Replica> replicas,
 			Map<String, ProteinGroup> mapGroup, File dir) throws IOException {
+		Map<String, PeptideEvidence> result = new HashMap<>();
 		CsvReader csv = new CsvReader("\t", true, false);
 		csv.open(new File(dir, FILE_PEP).getAbsolutePath());
-		int iSeq = csv.getIndex(PEP_SEQ), iBefore = csv.getIndex(PEP_BEFORE), iAfter = csv.getIndex(PEP_AFTER);
+		int iId = csv.getIndex(PEP_ID), iSeq = csv.getIndex(PEP_SEQ);
+		int iBefore = csv.getIndex(PEP_BEFORE), iAfter = csv.getIndex(PEP_AFTER);
 		int iMissed = csv.getIndex(PEP_MISSED), iMass = csv.getIndex(PEP_MASS);
 		int iUgrp = csv.getIndex(PEP_UGROUP), iUprot = csv.getIndex(PEP_UPROT);
 		int iPep = csv.getIndex(PEP_PEP), iScore = csv.getIndex(PEP_SCORE);
@@ -90,13 +157,12 @@ public class MaxQuantDao implements Dao {
 			savePeptideScore(em, pev, mqScore, csv, iScore);
 			if( !savePep2Grp(em, mapGroup, pev, csv, iGids) )
 				em.remove(pev);
-			savePeptideModifications(em, pev, mods);
+			else
+				result.put(csv.getField(iId), pev);
 		}
 		
 		csv.close();
-	}
-
-	private void savePeptideModifications(EntityManager em, PeptideEvidence pev, String mods) {
+		return result;
 	}
 
 	private boolean savePep2Grp(EntityManager em, Map<String, ProteinGroup> mapGroup, PeptideEvidence pev, CsvReader csv, int i) {
@@ -204,14 +270,16 @@ public class MaxQuantDao implements Dao {
 	}
 
 	private List<FileType> types;
-	
 	private static final Logger LOG = Logger.getLogger(MaxQuantDao.class.getName());
+	private static final Pattern MOD_PATTERN = Pattern.compile("\\([0-9\\.]*\\)");
+	
 	private static final String FILE_PEP = "peptides.txt";
 	private static final String FILE_GRP = "proteinGroups.txt";
 	private static final String FILE_GLY = "GlyGly (K)Sites.txt";
 	private static final int MAX_INDEX_STR = 255;
 	private static final String EXCLUDE = "__";
 	
+	private static final String PEP_ID = "id";
 	private static final String PEP_SEQ = "Sequence";
 	private static final String PEP_MISSED = "Missed cleavages";
 	private static final String PEP_BEFORE = "Amino acid before";
@@ -234,5 +302,8 @@ public class MaxQuantDao implements Dao {
 	private static final String GRP_GLY = "GlyGly (K) site IDs";
 	
 	private static final String GLY_PROB = "Localization prob";
-	private static final String GLY_SIG = "GlyGly (K)";
+	private static final String GLY_SCORE = "Score for localization";
+	private static final String GLY_SEQ = "GlyGly (K) Probabilities";
+	private static final String GLY_POS = "Position in peptide";
+	private static final String GLY_PIDS = "Peptide IDs";
 }

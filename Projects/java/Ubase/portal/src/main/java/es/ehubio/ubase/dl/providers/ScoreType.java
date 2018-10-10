@@ -6,7 +6,8 @@ public enum ScoreType {
 	MQ_SCORE(3),
 	LFQ_INTENSITY(4),
 	Q_VALUE(6),
-	PEP(7);
+	PEP(7),
+	MQ_LOC_SCORE(8);
 	
 	ScoreType(int id) {
 		this.id = id;
