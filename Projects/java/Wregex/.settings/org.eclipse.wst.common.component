@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-    <wb-module deploy-name="wregex">
+    <wb-module deploy-name="wregex-0.0.1-SNAPSHOT">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
         <wb-resource deploy-path="/" source-path="/WebContent" tag="defaultRootSource"/>
         <wb-resource deploy-path="/WEB-INF/classes" source-path="/src"/>
-        <wb-resource deploy-path="/WEB-INF/classes" source-path="/test"/>
-        <dependent-module archiveName="EhuBio.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EhuBio/EhuBio">
+        <dependent-module archiveName="ehubio-0.0.1-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/EhuBio/EhuBio">
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/wregex/build/classes"/>
-        <property name="context-root" value="/"/>
+        <property name="context-root" value="wregex-0.0.1-SNAPSHOT"/>
     </wb-module>
 </project-modules>

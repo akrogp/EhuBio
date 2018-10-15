@@ -1,120 +1,83 @@
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
-<web-app xmlns="http://java.sun.com/xml/ns/javaee"
-	xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.5"
-	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
-	<display-name>Wregex</display-name>
-	
-	<!-- Wregex default limits -->
-
-	<!-- WatchDogTimer (20 seconds) -->
-	<context-param>
-		<param-name>wregex.watchdogtimer</param-name>
-		<param-value>20000</param-value>
-	</context-param>
-	<!-- Maximum fasta size (30 MB) -->
-	<context-param>
-		<param-name>wregex.fasta</param-name>
-		<param-value>30000000</param-value>
-	</context-param>
-	<!-- Maximum PSSM size (10 kB) -->
-	<context-param>
-		<param-name>wregex.pssm</param-name>
-		<param-value>10000</param-value>
-	</context-param>
-	<!-- Maximum training file size (1 MB) -->
-	<context-param>
-		<param-name>wregex.training</param-name>
-		<param-value>1000000</param-value>
-	</context-param>
-	<!-- Maximum number of fasta entries when searching all motifs (10) -->
-	<context-param>
-		<param-name>wregex.allMotifs</param-name>
-		<param-value>350</param-value>
-	</context-param>
-	<!-- Cache search results -->
-	<context-param>
-		<param-name>wregex.cacheSearch</param-name>
-		<param-value>1</param-value>
-	</context-param>
-
-	<context-param>
-		<param-name>javax.faces.STATE_SAVING_METHOD</param-name>
-		<param-value>server</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.DEFAULT_SUFFIX</param-name>
-		<param-value>.xhtml</param-value>
-	</context-param>
-	<context-param>
-		<param-name>com.sun.faces.expressionFactory</param-name>
-		<param-value>com.sun.el.ExpressionFactoryImpl</param-value>
-		<!--<param-value>org.jboss.el.ExpressionFactoryImpl</param-value> -->
-	</context-param>
-	<!-- Disable use of threading for single-threaded environments such as the 
-		Google AppEngine. -->
-	<!-- <context-param>
-		<param-name>com.sun.faces.enableThreading</param-name>
-		<param-value>false</param-value>
-	</context-param> -->
-	<!-- Change to "Production" when you are ready to deploy -->
-	<context-param>
-		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<!-- <param-value>Development</param-value> -->
-		<param-value>Production</param-value>
-	</context-param>
-	<context-param>
-		<param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
-		<param-value>true</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.UPLOADER</param-name>
-		<param-value>commons</param-value>
-	</context-param>
-	<context-param>
-		<param-name>primefaces.THEME</param-name>
-		<param-value>home</param-value>
-	</context-param>	
-
-	<!-- ***** Specify session timeout of ten (10) minutes. ***** -->
-	<session-config>
-		<session-timeout>10</session-timeout>
-	</session-config>	
-
-	<!-- Welcome page -->
-	<welcome-file-list>
-		<welcome-file>faces/home.xhtml</welcome-file>
-	</welcome-file-list>
-
-	<!-- JSF mapping -->
-	<servlet>
-		<servlet-name>Faces Servlet</servlet-name>
-		<servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
-	<servlet-mapping>
-		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>/faces/*</url-pattern>
-		<url-pattern>*.jsf</url-pattern>
-		<url-pattern>*.xhtml</url-pattern>
-	</servlet-mapping>
-
-	<!-- Primefaces -->
-	<filter>
-		<filter-name>PrimeFaces FileUpload Filter</filter-name>
-		<filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
-		<!--<init-param>
-			<param-name>thresholdSize</param-name>
-			<param-value>2147483647</param-value>
-		</init-param>-->
-	</filter>
-	<filter-mapping>
-		<filter-name>PrimeFaces FileUpload Filter</filter-name>
-		<servlet-name>Faces Servlet</servlet-name>
-	</filter-mapping>
-
-	<error-page>
-		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
-		<location>/faces/expired.xhtml</location>
-	</error-page>
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:web="http://java.sun.com/xml/ns/javaee">
+  <display-name>Wregex</display-name>
+  <context-param>
+    <param-name>wregex.watchdogtimer</param-name>
+    <param-value>20000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>wregex.fasta</param-name>
+    <param-value>30000000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>wregex.pssm</param-name>
+    <param-value>10000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>wregex.training</param-name>
+    <param-value>1000000</param-value>
+  </context-param>
+  <context-param>
+    <param-name>wregex.allMotifs</param-name>
+    <param-value>350</param-value>
+  </context-param>
+  <context-param>
+    <param-name>wregex.cacheSearch</param-name>
+    <param-value>1</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
+    <param-value>server</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.DEFAULT_SUFFIX</param-name>
+    <param-value>.xhtml</param-value>
+  </context-param>
+  <context-param>
+    <param-name>com.sun.faces.expressionFactory</param-name>
+    <param-value>com.sun.el.ExpressionFactoryImpl</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.PROJECT_STAGE</param-name>
+    <param-value>Production</param-value>
+  </context-param>
+  <context-param>
+    <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+    <param-value>true</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.UPLOADER</param-name>
+    <param-value>commons</param-value>
+  </context-param>
+  <context-param>
+    <param-name>primefaces.THEME</param-name>
+    <param-value>home</param-value>
+  </context-param>
+  <session-config>
+    <session-timeout>10</session-timeout>
+  </session-config>
+  <welcome-file-list>
+    <welcome-file>home.xhtml</welcome-file>
+  </welcome-file-list>
+  <filter>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>PrimeFaces FileUpload Filter</filter-name>
+    <servlet-name>Faces Servlet</servlet-name>
+  </filter-mapping>
+  <error-page>
+    <exception-type>javax.faces.application.ViewExpiredException</exception-type>
+    <location>expired.xhtml</location>
+  </error-page>
+  <servlet>
+    <servlet-name>Faces Servlet</servlet-name>
+    <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>Faces Servlet</servlet-name>
+    <url-pattern>*.xhtml</url-pattern>
+  </servlet-mapping>
 </web-app>
