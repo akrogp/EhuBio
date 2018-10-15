@@ -73,6 +73,7 @@ public class DatabasesBean implements Serializable {
 		// Wregex motifs
 		Reader rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(WregexMotifsPath)); 		
 		motifConfiguration = MotifConfiguration.load(rd);
+		filterPrivateMotifs();
 		rd.close();
 		redundantMotifs = new ArrayList<>();
 		for( MotifInformation motifInformation : motifConfiguration.getMotifs() )
@@ -123,6 +124,14 @@ public class DatabasesBean implements Serializable {
 		refreshDbPtm();
 	}
 	
+	private void filterPrivateMotifs() {
+		List<MotifInformation> filter = new ArrayList<>();
+		for( MotifInformation motif : motifConfiguration.getMotifs() )
+			if( Versions.PROD && motif.getWregexVersion() != null && (motif.getWregexVersion() == 0 || Versions.MAJOR < motif.getWregexVersion()) )
+				filter.add(motif);
+		motifConfiguration.getMotifs().removeAll(filter);
+	}
+
 	private List<InputGroup> loadFasta( String path ) throws IOException, InvalidSequenceException {
 		logger.info("Loading DB: " + path);
 		Reader rd;

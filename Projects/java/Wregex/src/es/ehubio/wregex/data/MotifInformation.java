@@ -15,6 +15,7 @@ public final class MotifInformation implements Serializable {
 	private String name;
 	private String summary;
 	private String replaces;
+	private Integer wregexVersion;
 	@XmlElement(name="definition")
 	private List<MotifDefinition> definitions;
 	@XmlElement(name="reference")
@@ -63,5 +64,13 @@ public final class MotifInformation implements Serializable {
 
 	public void setReplaces(String replaces) {
 		this.replaces = replaces;
+	}
+
+	public Integer getWregexVersion() {
+		return wregexVersion;
+	}
+
+	public void setWregexVersion(Integer wregexVersion) {
+		this.wregexVersion = wregexVersion;
 	}
 }

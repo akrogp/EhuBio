@@ -55,6 +55,7 @@
         </reference>
     </motif>
     <motif>
+    	<wregexVersion>0</wregexVersion>
         <name>LxCxE/Rb</name>
         <replaces>LIG_Rb_LxCxE_1</replaces>
         <summary>Interacts with the Retinoblastoma protein</summary>
@@ -102,6 +103,7 @@
 <!--     </motif> -->
 	<motif>
         <name>NLS_MonoCore</name>
+        <wregexVersion>2</wregexVersion>
         <replaces>TRG_NLS_MonoCore_2</replaces>
         <summary>Monopartite variant of the classical basically charged NLS. Strong core version</summary>
         <definition>
@@ -146,6 +148,7 @@
 <!--         </reference> -->
 <!--     </motif> -->
 	<motif>
+		<wregexVersion>0</wregexVersion>
         <name>SUMO_for</name>
         <replaces>MOD_SUMO_for_1</replaces>
         <summary>Motif recognised for modification by SUMO-1</summary>
@@ -195,6 +198,7 @@
         </reference>
     </motif>
     <motif>
+    	<wregexVersion>0</wregexVersion>
         <name>SUMO_rev</name>
         <replaces>MOD_SUMO_rev_2</replaces>
         <summary>Inverted version of the cannonical SUMO motif</summary>
