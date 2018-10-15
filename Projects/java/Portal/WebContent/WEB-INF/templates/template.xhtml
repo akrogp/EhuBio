@@ -4,17 +4,17 @@
 	xmlns:h="http://java.sun.com/jsf/html">
 
 <h:head>
-	<link rel="stylesheet" type="text/css" href="/resources/css/style.css" />
+	<h:outputStylesheet library="css" name="style.css"/>
 	<title>EhuBio: <ui:insert name="title" /></title>
 </h:head>
 <h:body>
 	<div id="container">
 	<div id="titlebar">
-		<a href="http://ehubio.ehu.eus"><img src="/resources/images/logo.png" style="float:left;margin-left:10px;"/></a>
-		<a href="http://www.ehu.es"><img src="/resources/images/ehu.png" style="float:right;margin-right:10px;"/></a>
+		<a href="http://ehubio.ehu.eus"><h:graphicImage name="images/logo.png" style="float:left;margin-left:10px;"/></a>
+		<a href="http://www.ehu.es"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
 	</div>
 	<div id="menubar">
-		<a href="/faces/home.xhtml" style="color:white">Home</a>
+		<h:link value="Home" outcome="home.xhtml" style="color:white"/>
 	</div>
 	<div id="body">
 	<ui:insert name="content" />

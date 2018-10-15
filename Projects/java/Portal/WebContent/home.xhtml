@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-	<ui:composition template="./template.xhtml">
+	<ui:composition template="WEB-INF/templates/template.xhtml">
 		<ui:define name="title">Home</ui:define>
 		<ui:define name="content">
 		<h:form>
@@ -22,7 +22,7 @@
 				<f:facet name="header">EhuBio Bioinformatics Projects</f:facet>
 				<p:column width="100">
 					<f:facet name="header">Name</f:facet>
-					<a href="#{prj.url}" target="_blank">#{prj.name}&nbsp;<img src="/resources/images/link.png" height="15"/></a>
+					<a href="#{prj.url}" target="_blank">#{prj.name}&nbsp;<h:graphicImage name="images/link.png" height="15"/></a>
 				</p:column>
 				<p:column>
 					<f:facet name="header">Description</f:facet>
