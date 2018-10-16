@@ -76,6 +76,11 @@ public class CsvReader implements Closeable {
 		return parseField(fields[i]);
 	}
 	
+	public boolean hasContent(int field) {
+		String content = getField(field);
+		return content != null && !content.isEmpty();
+	}
+	
 	public Integer getIntField( int i ) {
 		String field = getField(i);
 		if( field == null )
