@@ -34,6 +34,6 @@
 	</context-param>
 	<context-param>
 		<param-name>ubase.path.archive</param-name>
-		<param-value>/home/gorka/Descargas/Temp/Ubase</param-value>
+		<param-value>/media/data/Sequences/Ubase</param-value>
 	</context-param>
 </web-app>
