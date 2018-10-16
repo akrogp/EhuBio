@@ -50,7 +50,9 @@
 			<p:outputLabel value="Affiliation" for="affiliation"/>
 			<p:inputText value="#{feedView.metadata.affiliation}" id="affiliation" required="true" placeholder="Your enterprise or institution"/>
 			<p:outputLabel value="Organism" for="organism"/>
-			<p:inputText value="#{feedView.metadata.organism}" id="organism" required="true" placeholder="Eg. human"/>
+			<p:autoComplete id="organism" placeholder="Eg. Homo sapiens" value="#{feedView.metadata.organism}" dropdown="true"
+				completeMethod="#{feedView.completeOrganism}" var="org" itemLabel="#{org.sciName}" itemValue="#{org}"
+				converter="organismConverter" forceSelection="true" minQueryLength="3"/>
 			<p:outputLabel value="DB version" for="db"/>
 			<p:inputText value="#{feedView.metadata.dbVersion}" id="db"  required="true" placeholder="Eg. Swiss-Prot 2018_08"/>
 			<p:outputLabel value="Instrument" for="instrument"/>

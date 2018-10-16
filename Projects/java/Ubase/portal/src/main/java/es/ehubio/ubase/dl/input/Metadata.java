@@ -10,6 +10,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
+import es.ehubio.ubase.dl.entities.Taxon;
 import es.ehubio.ubase.dl.providers.Provider;
 
 @XmlRootElement
@@ -25,7 +26,7 @@ public class Metadata {
 	private String contactName;
 	private String contactMail;
 	private String affiliation;
-	private String organism;
+	private Taxon organism;
 	private String dbVersion;
 	private String description;
 	private String instrument;
@@ -58,10 +59,10 @@ public class Metadata {
 	public void setContactMail(String contactMail) {
 		this.contactMail = contactMail;
 	}
-	public String getOrganism() {
+	public Taxon getOrganism() {
 		return organism;
 	}
-	public void setOrganism(String organism) {
+	public void setOrganism(Taxon organism) {
 		this.organism = organism;
 	}
 	public String getDbVersion() {

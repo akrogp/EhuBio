@@ -16,6 +16,7 @@ import org.apache.commons.io.FilenameUtils;
 import es.ehubio.ubase.Constants;
 import es.ehubio.ubase.Locator;
 import es.ehubio.ubase.bl.Ubase;
+import es.ehubio.ubase.dl.entities.Taxon;
 import es.ehubio.ubase.dl.input.Condition;
 import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.providers.Dao;
@@ -34,6 +35,7 @@ public class FeedView extends BaseView implements Serializable {
 	private List<InputSample> samples;
 	private List<Integer> numbers; 
 	private File directory;
+	private List<Taxon> taxons;
 	@EJB
 	private Ubase ubase;
 	private final Provider provider = Provider.MAXQUANT;
@@ -87,6 +89,7 @@ public class FeedView extends BaseView implements Serializable {
 	
 	private void buildConditions() {
 		metadata = new Metadata();
+		metadata.setOrganism(new Taxon());
 		samples = new ArrayList<>();
 		for( String name : dao.getSamples(directory) ) {
 			InputSample sample = new InputSample();
@@ -216,5 +219,17 @@ public class FeedView extends BaseView implements Serializable {
 	
 	public List<InputSample> getSamples() {
 		return samples;
+	}
+	
+	public List<Taxon> completeOrganism(String query) {
+		return ubase.queryTaxon(query);
+	}
+
+	public List<Taxon> getTaxons() {
+		return taxons;
+	}
+
+	public void setTaxons(List<Taxon> taxons) {
+		this.taxons = taxons;
 	}
 }

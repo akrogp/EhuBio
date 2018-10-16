@@ -1,15 +1,8 @@
 package es.ehubio.ubase.dl.entities;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.Date;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.NamedQuery;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 
 /**
@@ -29,10 +22,10 @@ public class Experiment implements Serializable {
 	private String description;
 	private Date expDate;
 	private String instrument;
-	private String organism;
 	private Date pubDate;
 	private Date subDate;
 	private String title;
+	private Taxon taxon;
 
 	public Experiment() {
 	}
@@ -46,6 +39,15 @@ public class Experiment implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+
+	public String getAccession() {
+		return this.accession;
+	}
+
+	public void setAccession(String accession) {
+		this.accession = accession;
 	}
 
 
@@ -113,15 +115,6 @@ public class Experiment implements Serializable {
 	}
 
 
-	public String getOrganism() {
-		return this.organism;
-	}
-
-	public void setOrganism(String organism) {
-		this.organism = organism;
-	}
-
-
 	@Temporal(TemporalType.TIMESTAMP)
 	public Date getPubDate() {
 		return this.pubDate;
@@ -151,13 +144,15 @@ public class Experiment implements Serializable {
 	}
 
 
-	public String getAccession() {
-		return accession;
+	//uni-directional many-to-one association to Taxon
+	@ManyToOne
+	@JoinColumn(name="organism")
+	public Taxon getTaxon() {
+		return this.taxon;
 	}
 
-
-	public void setAccession(String accession) {
-		this.accession = accession;
+	public void setTaxon(Taxon taxon) {
+		this.taxon = taxon;
 	}
 
 }

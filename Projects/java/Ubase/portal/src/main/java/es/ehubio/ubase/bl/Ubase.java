@@ -31,6 +31,7 @@ import es.ehubio.ubase.dl.entities.Peptide2Group;
 import es.ehubio.ubase.dl.entities.PeptideEvidence;
 import es.ehubio.ubase.dl.entities.PeptideScore;
 import es.ehubio.ubase.dl.entities.Replica;
+import es.ehubio.ubase.dl.entities.Taxon;
 import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.input.Metafile;
 import es.ehubio.ubase.dl.providers.Dao;
@@ -213,11 +214,33 @@ public class Ubase implements Serializable {
 		exp.setAffiliation(metadata.getAffiliation());
 		exp.setDbVersion(metadata.getDbVersion());
 		exp.setDescription(metadata.getDescription());
-		exp.setOrganism(metadata.getOrganism());
+		exp.setTaxon(em.find(Taxon.class, metadata.getOrganism().getId()));
 		exp.setInstrument(metadata.getInstrument());
 		exp.setSubDate(metadata.getSubDate());
 		exp.setExpDate(metadata.getExpDate());
 		exp.setPubDate(metadata.getPubDate());
 		return exp;
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<Taxon> queryTaxon(String query) {
+		if( query != null && !query.isEmpty() )
+			return em.createQuery("SELECT t FROM Taxon t WHERE sciName LIKE :q ORDER BY ISNULL(commonName),sciName")
+				.setParameter("q", "%"+query+"%")
+				.setMaxResults(10)
+				.getResultList();
+		List<Taxon> taxons = new ArrayList<>();
+		int[] ids = {
+			9606,	// Human
+			9544,	// Rhesus macaque
+			10090,	// Mouse
+			10116,	// Rat
+			9031,	// Chicken
+			7955,	// Zebrafish
+			7227,	// Fruit fly
+		};
+		for( int id : ids )
+			taxons.add(em.find(Taxon.class, id));
+		return taxons;
 	}
 }
