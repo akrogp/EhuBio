@@ -24,6 +24,7 @@ import es.ehubio.ubase.dl.input.Metadata;
 import es.ehubio.ubase.dl.providers.Dao;
 import es.ehubio.ubase.dl.providers.FileType;
 import es.ehubio.ubase.dl.providers.MaxQuantDao;
+import es.ehubio.ubase.dl.providers.NameFileType;
 import es.ehubio.ubase.dl.providers.Provider;
 
 @Named
@@ -112,12 +113,18 @@ public class FeedView extends BaseView implements Serializable {
 	}
 	
 	private String checkSignatures() {
-		for( FileType inputFile : dao.getInputFiles() ) {
+		for( FileType inputFile : getFileTypes() ) {
 			File file = new File(directory, inputFile.getName());
 			if( !inputFile.checkSignature(file) )
 				return inputFile.getName();
 		}
 		return null;
+	}
+	
+	private List<FileType> getFileTypes() {
+		List<FileType> types = dao.getInputFiles();
+		types.add(new NameFileType(Constants.FASTA_FILE, null, "fasta", "fa"));
+		return types;
 	}
 
 	private boolean uploadFiles() {
@@ -142,9 +149,10 @@ public class FeedView extends BaseView implements Serializable {
 	public List<InputFile> getProviderFiles() {
 		if( files == null ) {
 			files = new ArrayList<>();
-			for( FileType type : dao.getInputFiles() ) {
+			for( FileType type : getFileTypes() ) {
 				InputFile file = new InputFile();
 				file.setName(type.getName());
+				file.setFixedName(!Constants.FASTA_FILE.equals(type.getName()));
 				files.add(file);
 			}
 		}
@@ -163,6 +171,8 @@ public class FeedView extends BaseView implements Serializable {
 	private boolean checkName(InputFile file) {
 		if( file.getFile() == null )
 			return false;
+		if( !file.isFixedName() )
+			return true;
 		String name1 = FilenameUtils.removeExtension(file.getFile().getFileName());
 		String name2 = FilenameUtils.removeExtension(file.getName());
 		return name1.equalsIgnoreCase(name2);

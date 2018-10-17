@@ -37,6 +37,7 @@ public class MaxQuantDao implements Dao {
 			types.add(new CsvFileType(FILE_PEP, null, PEP_ID, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
 			types.add(new CsvFileType(FILE_GRP, null, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE, GRP_GLY));
 			types.add(new CsvFileType(FILE_GLY, null, GLY_PROB, GLY_SCORE, GLY_PIDS, GLY_SEQ, GLY_POS));
+			types.add(new NameFileType(FILE_PAR, null));
 		}
 		return types;
 	}
@@ -276,6 +277,7 @@ public class MaxQuantDao implements Dao {
 	private static final String FILE_PEP = "peptides.txt";
 	private static final String FILE_GRP = "proteinGroups.txt";
 	private static final String FILE_GLY = "GlyGly (K)Sites.txt";
+	private static final String FILE_PAR = "mqpar.xml";
 	private static final int MAX_INDEX_STR = 255;
 	private static final String EXCLUDE = "__";
 	

@@ -5,6 +5,7 @@ import org.primefaces.model.UploadedFile;
 public class InputFile {
 	private String name;
 	private UploadedFile file;
+	private boolean fixedName;
 
 	public String getName() {
 		return name;
@@ -20,5 +21,13 @@ public class InputFile {
 
 	public void setFile(UploadedFile file) {
 		this.file = file;
+	}
+
+	public boolean isFixedName() {
+		return fixedName;
+	}
+
+	public void setFixedName(boolean fixedName) {
+		this.fixedName = fixedName;
 	}
 }

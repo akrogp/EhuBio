@@ -16,7 +16,8 @@ import es.ehubio.ubase.dl.providers.Provider;
 @XmlRootElement
 @XmlType(propOrder={
 		"version", "provider",
-		"title","contactName","contactMail","affiliation","organism","dbVersion","description","instrument",
+		"contactName","contactMail","affiliation",
+		"title","description","organism","dbVersion","instrument",
 		"expDate", "subDate", "pubDate", "conditions"})
 public class Metadata {
 	public static final String CURRENT_VERSION = "1.0";

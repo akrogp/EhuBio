@@ -18,7 +18,7 @@
 	    <p:menuitem value="Finish submission" />
 	</p:steps>
 	<br/>
-	<p:messages showDetail="#{feedView.step gt 0}"/>
+	<p:messages showDetail="true"/>
 	
 	<h:form rendered="#{feedView.step==0}" enctype="multipart/form-data">	
 		<p:dataTable value="#{feedView.providerFiles}" var="inputFile">
@@ -28,7 +28,7 @@
 			</p:column>
 			<p:column>
 				<p:fileUpload mode="simple" skinSimple="true" value="#{inputFile.file}" update="@form"
-					sizeLimit="#{initParam['ubase.limit.filesize']}" allowTypes="/(\.|\/)(txt|csv|tsv)$/"/>
+					sizeLimit="#{initParam['ubase.limit.filesize']}" allowTypes="/\.(txt|csv|tsv|xml|fasta)$/"/>
 			</p:column>
 		</p:dataTable>
 		<br/>
