@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -35,7 +37,8 @@ public class FeedView extends BaseView implements Serializable {
 	private List<InputSample> samples;
 	private List<Integer> numbers; 
 	private File directory;
-	private List<Taxon> taxons;
+	private Map<String,Taxon> mapTaxons = new HashMap<>();
+	private Taxon taxon;
 	@EJB
 	private Ubase ubase;
 	private final Provider provider = Provider.MAXQUANT;
@@ -89,7 +92,6 @@ public class FeedView extends BaseView implements Serializable {
 	
 	private void buildConditions() {
 		metadata = new Metadata();
-		metadata.setOrganism(new Taxon());
 		samples = new ArrayList<>();
 		for( String name : dao.getSamples(directory) ) {
 			InputSample sample = new InputSample();
@@ -168,6 +170,7 @@ public class FeedView extends BaseView implements Serializable {
 	
 	public void submit() {
 		try {
+			metadata.setOrganism(taxon);
 			for( InputSample sample : samples ) {
 				Condition condition = metadata.getConditions().get(sample.getCondition()); 
 				condition.getReplicas().add(sample.getName());
@@ -221,15 +224,23 @@ public class FeedView extends BaseView implements Serializable {
 		return samples;
 	}
 	
-	public List<Taxon> completeOrganism(String query) {
-		return ubase.queryTaxon(query);
+	public List<String> completeOrganism(String query) {
+		List<Taxon> taxons = ubase.queryTaxon(query);
+		mapTaxons.clear();
+		for( Taxon taxon : taxons )
+			mapTaxons.put(taxon.getSciName(), taxon);
+		return getTaxons();
 	}
 
-	public List<Taxon> getTaxons() {
-		return taxons;
+	public List<String> getTaxons() {
+		return new ArrayList<>(mapTaxons.keySet());
 	}
 
-	public void setTaxons(List<Taxon> taxons) {
-		this.taxons = taxons;
+	public String getOrganism() {
+		return taxon == null ? null : taxon.getSciName();
+	}
+
+	public void setOrganism(String name) {
+		this.taxon = mapTaxons.get(name);
 	}
 }
