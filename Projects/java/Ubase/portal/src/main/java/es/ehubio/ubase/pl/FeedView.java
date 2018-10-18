@@ -2,6 +2,7 @@ package es.ehubio.ubase.pl;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ import javax.inject.Named;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.commons.io.IOUtils;
 
+import es.ehubio.io.Streams;
 import es.ehubio.ubase.Constants;
 import es.ehubio.ubase.Locator;
 import es.ehubio.ubase.bl.Ubase;
@@ -114,7 +117,7 @@ public class FeedView extends BaseView implements Serializable {
 	
 	private String checkSignatures() {
 		for( FileType inputFile : getFileTypes() ) {
-			File file = new File(directory, inputFile.getName());
+			File file = new File(directory, inputFile.getDstName());
 			if( !inputFile.checkSignature(file) )
 				return inputFile.getName();
 		}
@@ -123,7 +126,7 @@ public class FeedView extends BaseView implements Serializable {
 	
 	private List<FileType> getFileTypes() {
 		List<FileType> types = dao.getInputFiles();
-		types.add(new NameFileType(Constants.FASTA_FILE, null, "fasta", "fa"));
+		types.add(new NameFileType(Constants.FASTA_FILE, null, true, "fasta", "fa"));
 		return types;
 	}
 
@@ -134,8 +137,12 @@ public class FeedView extends BaseView implements Serializable {
 				directory = new File(Locator.getConfiguration().getSubmissionPath(), Constants.EXP_PREFIX+System.currentTimeMillis());
 				directory.mkdirs();
 			}
-			for( InputFile inputFile : getProviderFiles() ) 
-				FileUtils.copyInputStreamToFile(inputFile.getFile().getInputstream(), new File(directory, inputFile.getName()));
+			for( InputFile inputFile : getProviderFiles() ) {
+				File dstFile = new File(directory, inputFile.getDstName());
+				OutputStream os = Streams.getBinWriter(dstFile);
+				IOUtils.copy(inputFile.getFile().getInputstream(), os);
+				os.close();
+			}
 			return true;
 		} catch (Exception e) {
 			return false;
@@ -150,8 +157,7 @@ public class FeedView extends BaseView implements Serializable {
 		if( files == null ) {
 			files = new ArrayList<>();
 			for( FileType type : getFileTypes() ) {
-				InputFile file = new InputFile();
-				file.setName(type.getName());
+				InputFile file = new InputFile(type);
 				file.setFixedName(!Constants.FASTA_FILE.equals(type.getName()));
 				files.add(file);
 			}
@@ -212,6 +218,10 @@ public class FeedView extends BaseView implements Serializable {
 
 	public void setnConditions(int nConditions) {
 		this.nConditions = nConditions;
+		if( nConditions == 0 ) {
+			metadata.setConditions(null);
+			return;
+		}
 		List<Condition> conditions = new ArrayList<>(nConditions);
 		for( int i = 0; i < nConditions; i++ ) {
 			Condition condition = new Condition();

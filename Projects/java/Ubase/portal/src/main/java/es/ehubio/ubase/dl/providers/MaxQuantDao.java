@@ -2,7 +2,6 @@ package es.ehubio.ubase.dl.providers;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 
 import es.ehubio.io.CsvReader;
+import es.ehubio.io.Streams;
 import es.ehubio.ubase.dl.entities.Experiment;
 import es.ehubio.ubase.dl.entities.GroupScore;
 import es.ehubio.ubase.dl.entities.Modification;
@@ -34,10 +34,10 @@ public class MaxQuantDao implements Dao {
 	public List<FileType> getInputFiles() {
 		if( types == null ) {
 			types = new ArrayList<>();
-			types.add(new CsvFileType(FILE_PEP, null, PEP_ID, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
-			types.add(new CsvFileType(FILE_GRP, null, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE, GRP_GLY));
-			types.add(new CsvFileType(FILE_GLY, null, GLY_PROB, GLY_SCORE, GLY_PIDS, GLY_SEQ, GLY_POS));
-			types.add(new NameFileType(FILE_PAR, null));
+			types.add(new CsvFileType(FILE_PEP, null, true, PEP_ID, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
+			types.add(new CsvFileType(FILE_GRP, null, true, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE, GRP_GLY));
+			types.add(new CsvFileType(FILE_GLY, null, true, GLY_PROB, GLY_SCORE, GLY_PIDS, GLY_SEQ, GLY_POS));
+			types.add(new NameFileType(FILE_PAR, null, false));
 		}
 		return types;
 	}
@@ -45,8 +45,8 @@ public class MaxQuantDao implements Dao {
 	@Override
 	public List<String> getSamples(File data) {
 		List<String> samples = new ArrayList<>();
-		File file = new File(data, "peptides.txt");
-		try( BufferedReader br = new BufferedReader(new FileReader(file)) ) {
+		File file = new File(data, FILE_PEP+".gz");
+		try( BufferedReader br = new BufferedReader(Streams.getTextReader(file)) ) {
 			String[] fields = br.readLine().split("\\t");
 			for( String field : fields )
 				if( field.startsWith("Experiment ") )
@@ -66,7 +66,7 @@ public class MaxQuantDao implements Dao {
 	
 	private void saveModifications(EntityManager em, Map<String, Replica> replicas, Map<String, PeptideEvidence> mapPev, File dir) throws Exception {
 		CsvReader csv = new CsvReader("\t", true, false);
-		csv.open(new File(dir, FILE_GLY).getAbsolutePath());
+		csv.open(new File(dir, FILE_GLY+".gz").getAbsolutePath());
 		int iProb = csv.getIndex(GLY_PROB), iScore = csv.getIndex(GLY_SCORE);
 		int iSeq = csv.getIndex(GLY_SEQ), iPos = csv.getIndex(GLY_POS);
 		int iPids = csv.getIndex(GLY_PIDS);
@@ -128,7 +128,7 @@ public class MaxQuantDao implements Dao {
 			Map<String, ProteinGroup> mapGroup, File dir) throws IOException {
 		Map<String, PeptideEvidence> result = new HashMap<>();
 		CsvReader csv = new CsvReader("\t", true, false);
-		csv.open(new File(dir, FILE_PEP).getAbsolutePath());
+		csv.open(new File(dir, FILE_PEP+".gz").getAbsolutePath());
 		int iId = csv.getIndex(PEP_ID), iSeq = csv.getIndex(PEP_SEQ);
 		int iBefore = csv.getIndex(PEP_BEFORE), iAfter = csv.getIndex(PEP_AFTER);
 		int iMissed = csv.getIndex(PEP_MISSED), iMass = csv.getIndex(PEP_MASS);
@@ -216,7 +216,7 @@ public class MaxQuantDao implements Dao {
 	private Map<String, ProteinGroup> saveGroups(EntityManager em, Experiment exp, Map<String, Replica> replicas, File dir) throws IOException {
 		Map<String, ProteinGroup> mapGroup = new HashMap<>();
 		CsvReader csv = new CsvReader("\t", true, false);
-		csv.open(new File(dir, FILE_GRP).getAbsolutePath());
+		csv.open(new File(dir, FILE_GRP+".gz").getAbsolutePath());
 		int iGid = csv.getIndex(GRP_GID), iGly = csv.getIndex(GRP_GLY);
 		int iPids = csv.getIndex(GRP_PIDS), iDesc = csv.getIndex(GRP_DESC), iName = csv.getIndex(GRP_NAME);
 		int iQval = csv.getIndex(GRP_QVAL), iScore = csv.getIndex(GRP_SCORE);
