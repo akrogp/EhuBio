@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
 
 
 /**
@@ -14,6 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
  * 
  */
 @XmlRootElement
+@XmlType(propOrder={"id","sciName","commonName"})
 @Entity
 @NamedQuery(name="Taxon.findAll", query="SELECT t FROM Taxon t")
 public class Taxon implements Serializable {
