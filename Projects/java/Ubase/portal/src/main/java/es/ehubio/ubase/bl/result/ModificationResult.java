@@ -1,4 +1,4 @@
-package es.ehubio.ubase.bl;
+package es.ehubio.ubase.bl.result;
 
 public class ModificationResult extends SearchResult {
 	private String name;

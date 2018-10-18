@@ -3,13 +3,27 @@
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
 
 	<ui:composition template="WEB-INF/templates/template.xhtml">
 	<ui:define name="content">
 	<p>Welcome to this very first prototype of Ubase, a web portal for sharing results of ubiquitination experiments.</p>
 	<p>You can search for ubiquitinations in our database by entering a peptide sequence, a protein name or a gene name.
 	You can also apply for a free contributor account and submit your own results to include them in the database.</p>
+	<p:dataTable value="#{homeView.stats.experiments}" var="expStat">
+		<f:facet name="header">Total size: #{homeView.stats.modifications} mods in #{homeView.stats.experiments.size()} experiments</f:facet>
+		<p:column headerText="Experiment">
+			#{expStat.experiment.accession}
+		</p:column>
+		<p:column headerText="Modifications">
+			<h:dataTable value="#{expStat.modStats.values().toArray()}" var="modStat">
+				<h:column>#{modStat.modification.name}</h:column>
+				<h:column>#{modStat.count}</h:column>
+			</h:dataTable>
+		</p:column>
+	</p:dataTable>
+	<div class="tableFooter">Last updated: #{homeView.stats.updated}</div>
 	</ui:define>
 	</ui:composition>
 </html>

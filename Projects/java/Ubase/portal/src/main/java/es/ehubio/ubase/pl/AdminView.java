@@ -9,7 +9,7 @@ import javax.inject.Named;
 
 import org.apache.commons.io.FileUtils;
 
-import es.ehubio.ubase.bl.Ubase;
+import es.ehubio.ubase.bl.Uadmin;
 import es.ehubio.ubase.dl.input.Metadata;
 
 @Named
@@ -17,7 +17,7 @@ import es.ehubio.ubase.dl.input.Metadata;
 public class AdminView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@EJB
-	private Ubase ubase;
+	private Uadmin ubase;
 	private List<Metadata> submissions;
 	
 	public List<Metadata> getSubmissions() throws Exception {

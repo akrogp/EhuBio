@@ -1,4 +1,4 @@
-package es.ehubio.ubase.bl;
+package es.ehubio.ubase.bl.result;
 
 import java.util.HashMap;
 import java.util.Map;

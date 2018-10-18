@@ -9,16 +9,16 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
-import es.ehubio.ubase.bl.ModificationResult;
-import es.ehubio.ubase.bl.PeptideResult;
-import es.ehubio.ubase.bl.Ubase;
+import es.ehubio.ubase.bl.Usearch;
+import es.ehubio.ubase.bl.result.ModificationResult;
+import es.ehubio.ubase.bl.result.PeptideResult;
 
 @Named
 @SessionScoped
 public class SearchView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@EJB
-	private Ubase ubase;
+	private Usearch ubase;
 	private List<PeptideResult> pepResults;
 	private String query;
 	

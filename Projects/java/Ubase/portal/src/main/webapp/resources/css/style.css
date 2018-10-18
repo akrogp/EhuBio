@@ -32,6 +32,12 @@ h1 {
 	width:500px;
 }
 
+.tableFooter {
+	text-align: right;
+	font-style: italic;
+	font-size: small;
+}
+
 /* Page template */
 #content {   
 }

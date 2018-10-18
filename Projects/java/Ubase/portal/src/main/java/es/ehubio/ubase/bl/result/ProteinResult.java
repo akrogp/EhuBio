@@ -1,4 +1,4 @@
-package es.ehubio.ubase.bl;
+package es.ehubio.ubase.bl.result;
 
 public class ProteinResult extends SearchResult {
 	private String accession;

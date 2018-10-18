@@ -20,6 +20,7 @@ import org.apache.commons.io.IOUtils;
 import es.ehubio.io.Streams;
 import es.ehubio.ubase.Constants;
 import es.ehubio.ubase.Locator;
+import es.ehubio.ubase.bl.Uadmin;
 import es.ehubio.ubase.bl.Ubase;
 import es.ehubio.ubase.dl.entities.Taxon;
 import es.ehubio.ubase.dl.input.Condition;
@@ -43,6 +44,8 @@ public class FeedView extends BaseView implements Serializable {
 	private File directory;
 	private Map<String,Taxon> mapTaxons = new HashMap<>();
 	private Taxon taxon;
+	@EJB
+	private Uadmin ubadmin;
 	@EJB
 	private Ubase ubase;
 	private final Provider provider = Provider.MAXQUANT;
@@ -191,7 +194,7 @@ public class FeedView extends BaseView implements Serializable {
 				Condition condition = metadata.getConditions().get(sample.getCondition()); 
 				condition.getReplicas().add(sample.getName());
 			}
-			ubase.submit(metadata, provider, directory);
+			ubadmin.submit(metadata, provider, directory);
 			showInfo("Submitted! You will be notified once the submission is approved. Write down this submission number: " + directory.getName());
 		} catch (Exception e) {
 			e.printStackTrace();
