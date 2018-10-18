@@ -31,10 +31,14 @@ public class Usearch implements Serializable {
 	
 	@SuppressWarnings("unchecked")
 	public List<PeptideResult> peptideSearch(String pep) {
-		List<PeptideResult> results = new ArrayList<>();
 		List<PeptideEvidence> pevs = em.createQuery("SELECT pev FROM PeptideEvidence pev WHERE pev.peptideBean.sequence = :seq")
 				.setParameter("seq", pep)
 				.getResultList();
+		return pev2Result(pevs);
+	}
+	
+	private List<PeptideResult> pev2Result(List<PeptideEvidence> pevs) {
+		List<PeptideResult> results = new ArrayList<>();
 		for( PeptideEvidence pev : pevs ) {
 			PeptideResult result = new PeptideResult(pev);
 			result.setExperiment(pev.getExperimentBean());
@@ -133,5 +137,13 @@ public class Usearch implements Serializable {
 				.setParameter("txt", "%"+txt+"%")
 				.getResultList();
 		return group2Result(p2gs);
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<PeptideResult> expSearch(String expAccession) {
+		List<PeptideEvidence> pevs = em.createQuery("SELECT pev FROM PeptideEvidence pev WHERE pev.experimentBean.accession = :exp")
+				.setParameter("exp", expAccession)
+				.getResultList();
+		return pev2Result(pevs);
 	}
 }

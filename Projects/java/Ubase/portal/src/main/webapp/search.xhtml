@@ -31,6 +31,10 @@
 				<p:column><p:commandButton value="Text search" action="#{searchView.textSearch()}" ajax="false"/></p:column>
 				<p:column>Eg. Ubiquitin</p:column>
 			</p:row>
+			<p:row>
+				<p:column><p:commandButton value="Experiment search" action="#{searchView.expSearch()}" ajax="false"/></p:column>
+				<p:column>Eg. UBEX1539854371828</p:column>
+			</p:row>
 		</p:panelGrid>
 	</h:form>
 	<br/>
@@ -39,7 +43,7 @@
 	</h:form>
 	<br/>
 	<p:dataTable value="#{searchView.pepResults}" var="pep" rendered="#{searchView.pepResults != null}">
-		<f:facet name="header">Search results (#{searchView.pepResults.size()})</f:facet>
+		<f:facet name="header">Search results (#{searchView.pepResults.size()} peptides)</f:facet>
 		<p:column headerText="Experiment">
 			#{pep.experiment.accession}
 		</p:column>
