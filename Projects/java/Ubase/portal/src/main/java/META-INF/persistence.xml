@@ -2,7 +2,21 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="Ubase" transaction-type="JTA">
 		<jta-data-source>java:jboss/datasources/Ubase</jta-data-source>
+		<class>es.ehubio.ubase.dl.entities.ExpCondition</class>
 		<class>es.ehubio.ubase.dl.entities.Experiment</class>
+		<class>es.ehubio.ubase.dl.entities.GroupScore</class>
+		<class>es.ehubio.ubase.dl.entities.Modification</class>
+		<class>es.ehubio.ubase.dl.entities.ModificationEvidence</class>
+		<class>es.ehubio.ubase.dl.entities.ModificationScore</class>
+		<class>es.ehubio.ubase.dl.entities.Peptide</class>
+		<class>es.ehubio.ubase.dl.entities.Peptide2Protein</class>
+		<class>es.ehubio.ubase.dl.entities.PeptideEvidence</class>
+		<class>es.ehubio.ubase.dl.entities.PeptideScore</class>
+		<class>es.ehubio.ubase.dl.entities.Protein</class>
+		<class>es.ehubio.ubase.dl.entities.Protein2Group</class>
+		<class>es.ehubio.ubase.dl.entities.ProteinGroup</class>
+		<class>es.ehubio.ubase.dl.entities.Replica</class>
+		<class>es.ehubio.ubase.dl.entities.Score</class>
 		<class>es.ehubio.ubase.dl.entities.Taxon</class>
       	<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>

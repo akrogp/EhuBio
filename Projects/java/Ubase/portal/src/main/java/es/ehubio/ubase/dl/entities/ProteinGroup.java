@@ -13,10 +13,7 @@ import javax.persistence.*;
 public class ProteinGroup implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private String accessions;
-	private String description;
 	private String name;
-	private Experiment experimentBean;
 
 	public ProteinGroup() {
 	}
@@ -33,42 +30,12 @@ public class ProteinGroup implements Serializable {
 	}
 
 
-	public String getAccessions() {
-		return this.accessions;
-	}
-
-	public void setAccessions(String accessions) {
-		this.accessions = accessions;
-	}
-
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-
 	public String getName() {
 		return this.name;
 	}
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-
-	//uni-directional many-to-one association to Experiment
-	@ManyToOne
-	@JoinColumn(name="experiment")
-	public Experiment getExperimentBean() {
-		return this.experimentBean;
-	}
-
-	public void setExperimentBean(Experiment experimentBean) {
-		this.experimentBean = experimentBean;
 	}
 
 }

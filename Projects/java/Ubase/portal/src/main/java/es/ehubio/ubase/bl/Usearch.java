@@ -2,9 +2,7 @@ package es.ehubio.ubase.bl;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -15,10 +13,9 @@ import es.ehubio.ubase.bl.result.ModificationResult;
 import es.ehubio.ubase.bl.result.PeptideResult;
 import es.ehubio.ubase.bl.result.ProteinResult;
 import es.ehubio.ubase.bl.result.ScoreResult;
-import es.ehubio.ubase.dl.entities.GroupScore;
 import es.ehubio.ubase.dl.entities.ModificationEvidence;
 import es.ehubio.ubase.dl.entities.ModificationScore;
-import es.ehubio.ubase.dl.entities.Peptide2Group;
+import es.ehubio.ubase.dl.entities.Peptide2Protein;
 import es.ehubio.ubase.dl.entities.PeptideEvidence;
 import es.ehubio.ubase.dl.entities.PeptideScore; 
 
@@ -52,25 +49,13 @@ public class Usearch implements Serializable {
 
 	@SuppressWarnings("unchecked")
 	private void addProteins(PeptideEvidence pev, PeptideResult result) {
-		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.peptideEvidence = :pev")
+		List<Peptide2Protein> p2ps = em.createQuery("SELECT p2p FROM Peptide2Protein p2p WHERE p2p.peptideEvidence = :pev")
 				.setParameter("pev", pev)
 				.getResultList();
-		for( Peptide2Group p2g : p2gs ) {
-			ProteinResult prot = new ProteinResult();
-			prot.setAccession(p2g.getProteinGroupBean().getAccessions());
-			prot.setName(p2g.getProteinGroupBean().getName());
-			prot.setDescription(p2g.getProteinGroupBean().getDescription());
+		for( Peptide2Protein p2p : p2ps ) {
+			ProteinResult prot = new ProteinResult(p2p.getProteinBean());
+			prot.setPosition(p2p.getPosition());
 			result.getProts().add(prot);
-			List<GroupScore> scores = em.createQuery("SELECT s FROM GroupScore s WHERE s.proteinGroupBean = :grp AND replicaBean IS NULL")
-					.setParameter("grp", p2g.getProteinGroupBean())
-					.getResultList();
-			for( GroupScore score : scores ) {
-				ScoreResult s = new ScoreResult();
-				s.setName(score.getScore().getName());
-				s.setDescription(score.getScore().getDescription());
-				s.setValue(score.getValue());
-				prot.getScores().put(s.getName(), s);
-			}
 		}
 	}
 
@@ -114,31 +99,14 @@ public class Usearch implements Serializable {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<PeptideResult> proteinSearch(String acc) {
-		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.proteinGroupBean.accessions LIKE :acc OR p2g.proteinGroupBean.name LIKE :acc")
+	public List<PeptideResult> textSearch(String acc) {
+		List<PeptideEvidence> pevs = em
+				.createQuery("SELECT p2p.peptideEvidence FROM Peptide2Protein p2p WHERE p2p.proteinBean.accession LIKE :acc OR p2p.proteinBean.entry LIKE :acc OR p2p.proteinBean.name LIKE :acc OR p2p.proteinBean.gene LIKE :acc")
 				.setParameter("acc", "%"+acc+"%")
 				.getResultList();
-		return group2Result(p2gs);
+		return pev2Result(pevs);
 	}
 	
-	private List<PeptideResult> group2Result(List<Peptide2Group> p2gs) {
-		List<PeptideResult> result = new ArrayList<>();
-		Set<String> peps = new HashSet<>();
-		for( Peptide2Group p2g : p2gs )
-			peps.add(p2g.getPeptideEvidence().getPeptideBean().getSequence());
-		for( String pep : peps )
-			result.addAll(peptideSearch(pep));
-		return result;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<PeptideResult> textSearch(String txt) {
-		List<Peptide2Group> p2gs = em.createQuery("SELECT p2g FROM Peptide2Group p2g WHERE p2g.proteinGroupBean.name LIKE :txt OR p2g.proteinGroupBean.description LIKE :txt")
-				.setParameter("txt", "%"+txt+"%")
-				.getResultList();
-		return group2Result(p2gs);
-	}
-
 	@SuppressWarnings("unchecked")
 	public List<PeptideResult> expSearch(String expAccession) {
 		List<PeptideEvidence> pevs = em.createQuery("SELECT pev FROM PeptideEvidence pev WHERE pev.experimentBean.accession = :exp")

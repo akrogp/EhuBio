@@ -1,25 +1,33 @@
 package es.ehubio.ubase.bl.result;
 
+import es.ehubio.ubase.dl.entities.Protein;
+
 public class ProteinResult extends SearchResult {
-	private String accession;
-	private String name;
-	private String description;
-	public String getAccession() {
-		return accession;
+	private final Protein protein;
+	private int position;
+	
+	public ProteinResult(Protein protein) {
+		this.protein = protein;
 	}
-	public void setAccession(String accession) {
-		this.accession = accession;
+	public String getAccession() {
+		return protein.getAccession();
+	}
+	public String getEntry() {
+		return protein.getEntry();
+	}
+	public String getGene() {
+		return protein.getGene();
 	}
 	public String getName() {
-		return name;
+		return protein.getName();
 	}
-	public void setName(String name) {
-		this.name = name;
+	public String getSequence() {
+		return protein.getSequence();
 	}
-	public String getDescription() {
-		return description;
+	public int getPosition() {
+		return position;
 	}
-	public void setDescription(String description) {
-		this.description = description;
+	public void setPosition(int position) {
+		this.position = position;
 	}
 }

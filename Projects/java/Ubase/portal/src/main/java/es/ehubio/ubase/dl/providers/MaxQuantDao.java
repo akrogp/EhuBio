@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -21,21 +24,27 @@ import es.ehubio.ubase.dl.entities.Modification;
 import es.ehubio.ubase.dl.entities.ModificationEvidence;
 import es.ehubio.ubase.dl.entities.ModificationScore;
 import es.ehubio.ubase.dl.entities.Peptide;
-import es.ehubio.ubase.dl.entities.Peptide2Group;
+import es.ehubio.ubase.dl.entities.Peptide2Protein;
 import es.ehubio.ubase.dl.entities.PeptideEvidence;
 import es.ehubio.ubase.dl.entities.PeptideScore;
+import es.ehubio.ubase.dl.entities.Protein;
+import es.ehubio.ubase.dl.entities.Protein2Group;
 import es.ehubio.ubase.dl.entities.ProteinGroup;
 import es.ehubio.ubase.dl.entities.Replica;
 import es.ehubio.ubase.dl.entities.Score;
 
 public class MaxQuantDao implements Dao {
+	private static class Peptide2Group {
+		PeptideEvidence pev;
+		String[] gids;
+	}
 
 	@Override
 	public List<FileType> getInputFiles() {
 		if( types == null ) {
 			types = new ArrayList<>();
 			types.add(new CsvFileType(FILE_PEP, null, true, PEP_ID, PEP_SEQ, PEP_BEFORE, PEP_AFTER, PEP_MISSED, PEP_MASS, PEP_UGROUP, PEP_UPROT, PEP_PEP, PEP_SCORE, PEP_GIDS, PEP_GLY));
-			types.add(new CsvFileType(FILE_GRP, null, true, GRP_GID, GRP_PIDS, GRP_DESC, GRP_NAME, GRP_QVAL, GRP_SCORE, GRP_GLY));
+			types.add(new CsvFileType(FILE_GRP, null, true, GRP_GID, GRP_PIDS, GRP_QVAL, GRP_SCORE, GRP_GLY));
 			types.add(new CsvFileType(FILE_GLY, null, true, GLY_PROB, GLY_SCORE, GLY_PIDS, GLY_SEQ, GLY_POS));
 			types.add(new NameFileType(FILE_PAR, null, false));
 		}
@@ -58,12 +67,42 @@ public class MaxQuantDao implements Dao {
 	}
 	
 	@Override
-	public void persist(EntityManager em, Experiment exp, Map<String, Replica> replicas, File data) throws Exception {
-		Map<String, ProteinGroup> mapGroup = saveGroups(em, exp, replicas, data);
-		Map<String, PeptideEvidence> mapPev = savePeptides(em, exp, replicas, mapGroup, data);
+	public void persist(EntityManager em, Experiment exp, Map<String, Replica> replicas, Map<String, Protein> proteins, File data) throws Exception {
+		Map<String, PeptideEvidence> mapPev = new HashMap<>();
+		List<Peptide2Group> p2gs = new ArrayList<>();
+		savePeptides(em, exp, replicas, data, mapPev, p2gs);
 		saveModifications(em, replicas, mapPev, data);
+		Set<String> groupSet = new HashSet<>();
+		for( Peptide2Group p2g : p2gs )
+			groupSet.addAll(Arrays.asList(p2g.gids));
+		saveGroups(em, exp, replicas, proteins, groupSet, data);
+		savePep2Prot(em, exp, p2gs);
 	}
 	
+	@SuppressWarnings("unchecked")
+	private void savePep2Prot(EntityManager em, Experiment exp, List<Peptide2Group> p2gs) {
+		for( Peptide2Group p2g : p2gs ) {
+			String seq = p2g.pev.getPeptideBean().getSequence();
+			for( String gid :  p2g.gids ) {
+				List<Protein> proteins = em
+					.createQuery("SELECT p2g.proteinBean FROM Protein2Group p2g WHERE p2g.proteinGroup.name = :gid AND p2g.proteinBean.experimentBean = :exp")
+					.setParameter("gid", gid)
+					.setParameter("exp", exp)
+					.getResultList();
+				for( Protein protein : proteins ) {
+					int pos = protein.getSequence().indexOf(seq);
+					if( pos < 0 )
+						continue;
+					Peptide2Protein p2p = new Peptide2Protein();
+					p2p.setPeptideEvidence(p2g.pev);
+					p2p.setProteinBean(protein);
+					p2p.setPosition(pos+1);
+					em.persist(p2p);
+				}
+			}
+		}
+	}
+
 	private void saveModifications(EntityManager em, Map<String, Replica> replicas, Map<String, PeptideEvidence> mapPev, File dir) throws Exception {
 		CsvReader csv = new CsvReader("\t", true, false);
 		csv.open(new File(dir, FILE_GLY+".gz").getAbsolutePath());
@@ -124,9 +163,8 @@ public class MaxQuantDao implements Dao {
 		return offset;
 	}
 
-	private Map<String, PeptideEvidence> savePeptides(EntityManager em, Experiment exp, Map<String, Replica> replicas,
-			Map<String, ProteinGroup> mapGroup, File dir) throws IOException {
-		Map<String, PeptideEvidence> result = new HashMap<>();
+	private void savePeptides(EntityManager em, Experiment exp, Map<String, Replica> replicas, File dir,
+			Map<String, PeptideEvidence> mapPev, List<Peptide2Group> p2gs) throws IOException {
 		CsvReader csv = new CsvReader("\t", true, false);
 		csv.open(new File(dir, FILE_PEP+".gz").getAbsolutePath());
 		int iId = csv.getIndex(PEP_ID), iSeq = csv.getIndex(PEP_SEQ);
@@ -147,6 +185,10 @@ public class MaxQuantDao implements Dao {
 			String mods = csv.getField(iGly);
 			if( mods == null || mods.isEmpty() )
 				continue;
+			if( !csv.hasContent(iGids) ) {
+				LOG.warning("Ignoring peptide not mapped to a protein group");
+				continue;
+			}
 			pev.setPeptideBean(findPeptide(em, csv.getField(iSeq).toUpperCase()));
 			pev.setMissedCleavages(csv.getIntField(iMissed));
 			pev.setMass(csv.getDoubleField(iMass));
@@ -156,39 +198,22 @@ public class MaxQuantDao implements Dao {
 			em.persist(pev);
 			savePeptideScore(em, pev, pepScore, csv, iPep);
 			savePeptideScore(em, pev, mqScore, csv, iScore);
-			if( !savePep2Grp(em, mapGroup, pev, csv, iGids) )
-				em.remove(pev);
-			else
-				result.put(csv.getField(iId), pev);
+			mapPev.put(csv.getField(iId), pev);
+			Peptide2Group p2g = new Peptide2Group();
+			p2g.pev = pev;
+			p2g.gids = csv.getField(iGids).split(";");
+			p2gs.add(p2g);
 		}
 		
 		csv.close();
-		return result;
-	}
-
-	private boolean savePep2Grp(EntityManager em, Map<String, ProteinGroup> mapGroup, PeptideEvidence pev, CsvReader csv, int i) {
-		String[] gids = csv.getField(i).split(";");
-		boolean hasGroups = false;
-		for( String gid : gids ) {
-			ProteinGroup grp = mapGroup.get(gid);
-			if( grp == null ) {
-				//LOG.info("Could not find group: " + gid);
-				continue;
-			}
-			hasGroups = true;
-			Peptide2Group p2g = new Peptide2Group();
-			p2g.setPeptideEvidence(pev);
-			p2g.setProteinGroupBean(grp);
-			em.persist(p2g);
-		}
-		return hasGroups;
 	}
 
 	private Character getChar(CsvReader csv, int i) {
 		String str = csv.getField(i);
 		if( str.length() != 1 )
 			return null;
-		return str.toUpperCase().charAt(0);
+		char ch = str.toUpperCase().charAt(0);
+		return ch == '-' ? null : ch;
 	}
 
 	private Peptide findPeptide(EntityManager em, String seq) {
@@ -213,12 +238,11 @@ public class MaxQuantDao implements Dao {
 		em.persist(pepScore);
 	}
 
-	private Map<String, ProteinGroup> saveGroups(EntityManager em, Experiment exp, Map<String, Replica> replicas, File dir) throws IOException {
-		Map<String, ProteinGroup> mapGroup = new HashMap<>();
+	private void saveGroups(EntityManager em, Experiment exp, Map<String, Replica> replicas, Map<String, Protein> proteins, Set<String> groupSet, File dir) throws IOException {
 		CsvReader csv = new CsvReader("\t", true, false);
 		csv.open(new File(dir, FILE_GRP+".gz").getAbsolutePath());
 		int iGid = csv.getIndex(GRP_GID), iGly = csv.getIndex(GRP_GLY);
-		int iPids = csv.getIndex(GRP_PIDS), iDesc = csv.getIndex(GRP_DESC), iName = csv.getIndex(GRP_NAME);
+		int iPids = csv.getIndex(GRP_PIDS);
 		int iQval = csv.getIndex(GRP_QVAL), iScore = csv.getIndex(GRP_SCORE);
 		Score qValue = em.find(Score.class, ScoreType.Q_VALUE.getId());
 		Score mqScore = em.find(Score.class, ScoreType.MQ_SCORE.getId());
@@ -228,16 +252,25 @@ public class MaxQuantDao implements Dao {
 			iLfq.put(replica, csv.getIndex(GRP_LFQ + " " + replica));
 		
 		while( csv.readLine() != null ) {
-			if( !csv.hasContent(iGly) )
+			if( !groupSet.contains(csv.getField(iGid)) || !csv.hasContent(iGly) || csv.getField(iPids).contains(EXCLUDE) )
 				continue;
 			ProteinGroup pg = new ProteinGroup();
-			pg.setAccessions(truncate(csv.getField(iPids)));
-			if( pg.getAccessions().contains(EXCLUDE) )
-				continue;
-			pg.setName(truncate(csv.getField(iName)));
-			pg.setDescription(truncate(csv.getField(iDesc)));
-			pg.setExperimentBean(exp);
+			pg.setName(csv.getField(iGid));
+			//pg.setName(truncate(csv.getField(iName)));
 			em.persist(pg);
+			String[] pids = csv.getField(iPids).split(";");
+			for( String pid : pids ) {
+				Protein protein = proteins.get(pid);
+				if( protein == null ) {
+					LOG.severe(pid + " not found");
+				} else {
+					em.persist(protein);
+					Protein2Group p2g = new Protein2Group();
+					p2g.setProteinBean(protein);
+					p2g.setProteinGroup(pg);
+					em.persist(p2g);
+				}
+			}
 			saveGroupScore(em, pg, qValue, csv, iQval);
 			saveGroupScore(em, pg, mqScore, csv, iScore);
 			for( Map.Entry<String, Replica> entry : replicas.entrySet() ) {
@@ -248,19 +281,17 @@ public class MaxQuantDao implements Dao {
 				score.setValue(csv.getDoubleField(iLfq.get(entry.getKey())));
 				em.persist(score);
 			}
-			mapGroup.put(csv.getField(iGid), pg);
 		}
 		csv.close();
-		return mapGroup;
 	}
 
-	private String truncate(String field) {
+	/*private String truncate(String field) {
 		if( field.length() > MAX_INDEX_STR ) {
 			LOG.warning("Truncated string: " + field);
 			return field.substring(0, MAX_INDEX_STR);
 		}
 		return field; 
-	}
+	}*/
 
 	private void saveGroupScore(EntityManager em, ProteinGroup pg, Score qValue, CsvReader csv, int i) {
 		GroupScore score = new GroupScore();
@@ -278,7 +309,7 @@ public class MaxQuantDao implements Dao {
 	private static final String FILE_GRP = "proteinGroups.txt";
 	private static final String FILE_GLY = "GlyGly (K)Sites.txt";
 	private static final String FILE_PAR = "mqpar.xml";
-	private static final int MAX_INDEX_STR = 255;
+	//private static final int MAX_INDEX_STR = 255;
 	private static final String EXCLUDE = "__";
 	
 	private static final String PEP_ID = "id";
@@ -296,8 +327,8 @@ public class MaxQuantDao implements Dao {
 	
 	private static final String GRP_GID = "id";
 	private static final String GRP_PIDS = "Protein IDs";
-	private static final String GRP_DESC = "Protein names";
-	private static final String GRP_NAME = "Gene names";
+	//private static final String GRP_DESC = "Protein names";
+	//private static final String GRP_NAME = "Gene names";
 	private static final String GRP_QVAL = "Q-value";
 	private static final String GRP_SCORE = "Score";
 	private static final String GRP_LFQ = "LFQ intensity";

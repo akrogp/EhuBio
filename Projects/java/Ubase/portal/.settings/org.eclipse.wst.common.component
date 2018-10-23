@@ -7,7 +7,7 @@
             <dependency-type>uses</dependency-type>
         </dependent-module>
         <property name="java-output-path" value="/Ubase/target/classes"/>
-        <property name="context-root" value="portal"/>
         <property name="component.inclusion.patterns"/>
+        <property name="context-root" value="portal"/>
     </wb-module>
 </project-modules>

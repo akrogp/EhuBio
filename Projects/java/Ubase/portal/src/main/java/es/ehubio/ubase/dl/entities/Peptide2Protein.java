@@ -5,18 +5,19 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the Peptide2Group database table.
+ * The persistent class for the Peptide2Protein database table.
  * 
  */
 @Entity
-@NamedQuery(name="Peptide2Group.findAll", query="SELECT p FROM Peptide2Group p")
-public class Peptide2Group implements Serializable {
+@NamedQuery(name="Peptide2Protein.findAll", query="SELECT p FROM Peptide2Protein p")
+public class Peptide2Protein implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
+	private int position;
 	private PeptideEvidence peptideEvidence;
-	private ProteinGroup proteinGroupBean;
+	private Protein proteinBean;
 
-	public Peptide2Group() {
+	public Peptide2Protein() {
 	}
 
 
@@ -28,6 +29,15 @@ public class Peptide2Group implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+
+	public int getPosition() {
+		return this.position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 
@@ -43,15 +53,15 @@ public class Peptide2Group implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ProteinGroup
+	//uni-directional many-to-one association to Protein
 	@ManyToOne
-	@JoinColumn(name="proteinGroup")
-	public ProteinGroup getProteinGroupBean() {
-		return this.proteinGroupBean;
+	@JoinColumn(name="protein")
+	public Protein getProteinBean() {
+		return this.proteinBean;
 	}
 
-	public void setProteinGroupBean(ProteinGroup proteinGroupBean) {
-		this.proteinGroupBean = proteinGroupBean;
+	public void setProteinBean(Protein proteinBean) {
+		this.proteinBean = proteinBean;
 	}
 
 }

@@ -24,10 +24,6 @@
 				<p:column>Eg. TITLEVEPSDTIKHVK</p:column>
 			</p:row>
 			<p:row>
-				<p:column><p:commandButton value="Protein search" action="#{searchView.proteinSearch()}" ajax="false"/></p:column>
-				<p:column>Eg. R9PY16</p:column>
-			</p:row>
-			<p:row>
 				<p:column><p:commandButton value="Text search" action="#{searchView.textSearch()}" ajax="false"/></p:column>
 				<p:column>Eg. Ubiquitin</p:column>
 			</p:row>
@@ -71,11 +67,11 @@
 				</h:column>
 			</h:dataTable>
 		</p:column>
-		<p:column headerText="Protein groups">
+		<p:column headerText="Proteins">
 			<h:dataTable value="#{pep.prots}" var="prot">
 				<h:column>#{prot.accession}</h:column>
 				<h:column>#{prot.name}</h:column>
-				<h:column>#{prot.description}</h:column>
+				<h:column>#{prot.gene}</h:column>
 			</h:dataTable>
 		</p:column>
 	</p:dataTable>

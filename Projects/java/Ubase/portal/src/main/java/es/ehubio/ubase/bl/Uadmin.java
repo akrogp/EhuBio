@@ -5,6 +5,7 @@ import static es.ehubio.ubase.Constants.META_FILE;
 
 import java.io.File;
 import java.io.FilenameFilter;
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -19,9 +20,14 @@ import javax.persistence.PersistenceContext;
 
 import org.apache.commons.io.FileUtils;
 
+import es.ehubio.db.fasta.Fasta;
+import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
+import es.ehubio.db.fasta.Fasta.SequenceType;
+import es.ehubio.ubase.Constants;
 import es.ehubio.ubase.Locator;
 import es.ehubio.ubase.dl.entities.ExpCondition;
 import es.ehubio.ubase.dl.entities.Experiment;
+import es.ehubio.ubase.dl.entities.Protein;
 import es.ehubio.ubase.dl.entities.Replica;
 import es.ehubio.ubase.dl.entities.Taxon;
 import es.ehubio.ubase.dl.input.Metadata;
@@ -66,8 +72,36 @@ public class Uadmin implements Serializable {
 	public void publish(Metadata metadata) throws Exception {
 		metadata.setPubDate(new Date());		
 		Experiment exp = meta2exp(metadata);
-		Map<String, Replica> replicas = new HashMap<>();
 		em.persist(exp);
+		Map<String, Replica> replicas = persistReplicas(exp, metadata);
+		Map<String, Protein> proteins = loadProteins(exp, metadata);
+		
+		Dao dao = metadata.getProvider().getDao().newInstance();
+		dao.persist(em, exp, replicas, proteins, metadata.getData());
+		
+		File dst = new File(Locator.getConfiguration().getArchivePath(), metadata.getData().getName());
+		FileUtils.moveDirectory(metadata.getData(), dst);		
+		Metafile.save(metadata, new File(dst, META_FILE));
+	}
+	
+	private Map<String, Protein> loadProteins(Experiment exp, Metadata metadata) throws IOException, InvalidSequenceException {
+		List<Fasta> fastas = Fasta.readEntries(new File(metadata.getData(), Constants.FASTA_FILE+".gz").getAbsolutePath(), SequenceType.PROTEIN);
+		Map<String, Protein> result = new HashMap<>();
+		for( Fasta fasta : fastas ) {
+			Protein protein = new Protein();
+			protein.setAccession(fasta.getAccession());
+			protein.setEntry(fasta.getEntry());
+			protein.setName(fasta.getProteinName());
+			protein.setGene(fasta.getGeneName());
+			protein.setSequence(fasta.getSequence().toUpperCase());
+			protein.setExperimentBean(exp);
+			result.put(protein.getAccession(), protein);
+		}
+		return result;
+	}
+
+	private Map<String, Replica> persistReplicas(Experiment exp, Metadata metadata) {
+		Map<String, Replica> replicas = new HashMap<>();
 		for( es.ehubio.ubase.dl.input.Condition cond : metadata.getConditions() ) {
 			ExpCondition condition = new ExpCondition();
 			condition.setName(cond.getName());
@@ -82,15 +116,9 @@ public class Uadmin implements Serializable {
 				replicas.put(repName, replica);
 			}
 		}
-		
-		Dao dao = metadata.getProvider().getDao().newInstance();
-		dao.persist(em, exp, replicas, metadata.getData());
-		
-		File dst = new File(Locator.getConfiguration().getArchivePath(), metadata.getData().getName());
-		FileUtils.moveDirectory(metadata.getData(), dst);		
-		Metafile.save(metadata, new File(dst, META_FILE));
+		return replicas;
 	}
-	
+
 	private Experiment meta2exp(Metadata metadata) {
 		Experiment exp = new Experiment();
 		exp.setAccession(metadata.getData().getName());
