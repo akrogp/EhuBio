@@ -1,6 +1,8 @@
 package es.ehubio.ubase.pl;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -9,9 +11,11 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import es.ehubio.io.CsvUtils;
 import es.ehubio.ubase.bl.Usearch;
 import es.ehubio.ubase.bl.result.ModificationResult;
 import es.ehubio.ubase.bl.result.PeptideResult;
+import es.ehubio.ubase.bl.result.ProteinResult;
 
 @Named
 @SessionScoped
@@ -23,15 +27,30 @@ public class SearchView implements Serializable {
 	private String query;
 	
 	public void peptideSearch() {
-		setPepResults(ubase.peptideSearch(query));
+		peptideSearch(query.trim());
+	}
+	
+	public void peptideSearch(String seq) {
+		query = seq;
+		setPepResults(ubase.peptideSearch(seq));
 	}
 	
 	public void textSearch() {
-		setPepResults(ubase.textSearch(query));
+		textSearch(query.trim());
+	}
+	
+	public void textSearch(String text) {
+		query = text;
+		setPepResults(ubase.textSearch(text));
 	}
 	
 	public void expSearch() {
-		setPepResults(ubase.expSearch(query));
+		expSearch(query.trim());
+	}
+	
+	public void expSearch(String acc) {
+		query = acc;
+		setPepResults(ubase.expSearch(acc));
 	}
 
 	public String getQuery() {
@@ -52,7 +71,8 @@ public class SearchView implements Serializable {
 		for( ModificationResult mod : pep.getMods() )
 			positions.add(mod.getPosition());
 		StringBuilder sb = new StringBuilder();
-		sb.append(pep.getPrev());
+		if( pep.getPrev() != null )
+			sb.append(pep.getPrev());
 		sb.append('-');
 		for( int i = 0; i < pep.getSequence().length(); i++ ) {
 			boolean isMod = positions.contains(i+1);
@@ -63,8 +83,17 @@ public class SearchView implements Serializable {
 				sb.append("</b>");
 		}
 		sb.append('-');
-		sb.append(pep.getAfter());
+		if( pep.getAfter() != null )
+			sb.append(pep.getAfter());
 		return sb.toString();
+	}
+	
+	public String buildProtPositions(PeptideResult pep, ProteinResult prot) {
+		List<Integer> positions = new ArrayList<>();
+		for( ModificationResult mod : pep.getMods() )
+			positions.add(mod.getPosition()+prot.getPosition()-1);
+		Collections.sort(positions);
+		return CsvUtils.getCsv(", ", positions.toArray());
 	}
 
 	public List<PeptideResult> getPepResults() {

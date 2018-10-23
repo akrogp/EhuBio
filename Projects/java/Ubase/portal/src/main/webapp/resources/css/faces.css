@@ -28,3 +28,7 @@
 .ui-datatable table {
     table-layout: auto
 }
+
+.ui-commandlink {
+	text-decoration: underline;
+}

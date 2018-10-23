@@ -90,8 +90,11 @@ public class Uadmin implements Serializable {
 		for( Fasta fasta : fastas ) {
 			Protein protein = new Protein();
 			protein.setAccession(fasta.getAccession());
-			protein.setEntry(fasta.getEntry());
-			protein.setName(fasta.getProteinName());
+			protein.setEntry(fasta.getProteinName());
+			if( fasta.getDescription() == null || fasta.getDescription().isEmpty() )
+				protein.setName(protein.getEntry());
+			else
+				protein.setName(fasta.getDescription());
 			protein.setGene(fasta.getGeneName());
 			protein.setSequence(fasta.getSequence().toUpperCase());
 			protein.setExperimentBean(exp);

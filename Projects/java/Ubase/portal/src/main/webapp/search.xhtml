@@ -38,16 +38,16 @@
 		<p:commandButton value="Reset" action="#{searchView.reset()}" ajax="false"/>
 	</h:form>
 	<br/>
-	<p:dataTable value="#{searchView.pepResults}" var="pep" rendered="#{searchView.pepResults != null}">
+	<h:form rendered="#{searchView.pepResults != null}">
+	<p:dataTable value="#{searchView.pepResults}" var="pep">
 		<f:facet name="header">Search results (#{searchView.pepResults.size()} peptides)</f:facet>
 		<p:column headerText="Experiment">
-			#{pep.experiment.accession}
+			<p:commandLink value="#{pep.experiment.accession}" action="#{searchView.expSearch(pep.experiment.accession)}" ajax="false"/><br/>
+			<i>#{pep.experiment.taxon.sciName}</i>
 		</p:column>
 		<p:column headerText="Sequence">
-			<h:outputText value="#{searchView.buildHtmlSeq(pep)}" escape="false"/>
-		</p:column>
-		<p:column headerText="Miss. cleav." styleClass="column0">
-			#{pep.missedCleavages}
+			<h:outputText value="#{searchView.buildHtmlSeq(pep)}" escape="false"/><br/>
+			(#{pep.missedCleavages} missed cleavages) 
 		</p:column>
 		<p:column headerText="Peptide scores">
 			<h:dataTable value="#{pep.scores.values()}" var="score">
@@ -67,14 +67,28 @@
 				</h:column>
 			</h:dataTable>
 		</p:column>
-		<p:column headerText="Proteins">
+		<p:column headerText="Protein group">
 			<h:dataTable value="#{pep.prots}" var="prot">
-				<h:column>#{prot.accession}</h:column>
-				<h:column>#{prot.name}</h:column>
-				<h:column>#{prot.gene}</h:column>
+				<h:column>
+					<f:facet name="header">Acc.</f:facet>
+					<p:commandLink value="#{prot.accession}" action="#{searchView.textSearch(prot.accession)}" ajax="false"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Mods.</f:facet>
+					#{searchView.buildProtPositions(pep, prot)}
+				</h:column>
+				<h:column>
+					<f:facet name="header">Gene</f:facet>
+					<p:commandLink value="#{prot.gene}" action="#{searchView.textSearch(prot.gene)}" ajax="false"/>
+				</h:column>
+				<h:column>
+					<f:facet name="header">Description</f:facet>
+					#{prot.name}
+				</h:column>				
 			</h:dataTable>
 		</p:column>
 	</p:dataTable>
+	</h:form>
 	</ui:define>
 	</ui:composition>
 </html>
