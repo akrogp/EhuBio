@@ -1,0 +1,8 @@
+ 
+Te mando lo que te comente, un excel con datos de MS que tienen los valores de LFQ en log2 y aquellos que estan imputados en morado (color verde indica up-regulados y rojo down-regulados). En una de las hojas las imputaciones se han hecho sample based y en la otra matrix based. Yo creo que seguramente vamos a empezar a usar matrix-based, pero esto todavia tenemos que confirmarlo.
+
+Tambien te mando un workflow de lo que hago para el analisis (powerpoint).
+
+En esta dirección puedes ver los valores que utilizamos para la imputación en Perseus (width: 0.3 y Down shift 1.8)
+
+http://www.coxdocs.org/doku.php?id=perseus:user:use_cases:interactions
