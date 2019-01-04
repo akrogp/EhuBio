@@ -33,8 +33,8 @@ This proccess can be performed using two different modes:
 ## Two-sample t-test (p-value)
 Options:
 
-* Perseus
+* Perseus uses a two-sample t-test with a permutation-based FDR
 * t* or moderated t-statistic (package limma of bioconductor)
 * TREAT (package limma of bioconductor)
-
-See [this paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4016238/)
+* [This paper](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4016238/) presents tTREAT2.
+* [Prostar](http://www.prostar-proteomics.org/) uses bioconductor and it is for quantitative proteomics.
