@@ -6,11 +6,15 @@
       xmlns:p="http://primefaces.org/ui"> 
 
 <h:head></h:head> 
-<body> 
-	<h:form>
-	    <p:mindmap value="#{treeView.root}" style="width: 1200px;height: 900px;border: 1px solid black;">
-	        <p:ajax event="select" listener="#{treeView.onNodeSelect}" />
-	    </p:mindmap> 
-	</h:form>
-</body> 
+<h:body>
+	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
+		<ui:define name="content">
+			<h:form>
+			    <p:mindmap value="#{treeView.root}" style="width: 1200px;height: 900px;border: 1px solid black;">
+			        <p:ajax event="select" listener="#{treeView.onNodeSelect}" />
+			    </p:mindmap> 
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body> 
 </html>
