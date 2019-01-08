@@ -1,14 +1,10 @@
 package es.ehubio.dubase.pl;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
-import org.primefaces.component.mindmap.Mindmap;
 import org.primefaces.event.SelectEvent;
 import org.primefaces.model.mindmap.DefaultMindmapNode;
 import org.primefaces.model.mindmap.MindmapNode;
@@ -16,6 +12,7 @@ import org.primefaces.model.mindmap.MindmapNode;
 import es.ehubio.dubase.bl.ClassBean;
 import es.ehubio.dubase.bl.Database;
 import es.ehubio.dubase.bl.EnzymeBean;
+import es.ehubio.dubase.bl.EvidenceBean;
 import es.ehubio.dubase.bl.SuperfamilyBean;
 import es.ehubio.dubase.bl.TreeBean;
 
@@ -32,8 +29,6 @@ public class TreeView {
 	
 	@PostConstruct
 	public void populate() {
-		Set<String> proteored = new HashSet<>();
-		proteored.add("USP1"); proteored.add("USP7"); proteored.add("USP9X"); proteored.add("USP11"); proteored.add("USP42");
 		TreeBean tree = db.getTree();
 		for(ClassBean clazz : tree.getClassess()) {
 			MindmapNode classNode = new DefaultMindmapNode(clazz.getEntity().getName(), null, "6E9EBF", true);
@@ -44,9 +39,16 @@ public class TreeView {
 				for( EnzymeBean enzyme : family.getEnzymes() ) {
 					MindmapNode enzymeNode = new DefaultMindmapNode(
 							enzyme.getEntity().getGene(), enzyme.getEntity().getDescription(),
-							proteored.contains(enzyme.getEntity().getGene()) ? "FCE24F" : "3399FF",
-							false);
+							enzyme.getSubstrates().isEmpty() ? "3399FF" : "FCE24F",
+							!enzyme.getSubstrates().isEmpty());
 					familyNode.addNode(enzymeNode);
+					for( EvidenceBean substrate : enzyme.getSubstrates() ) {
+						MindmapNode substrateNode = new DefaultMindmapNode(
+								substrate.getGene(), substrate.getGene(),
+								substrate.getFoldChange() > 0 ? "00FF00" : "FF0000",
+								false);
+						enzymeNode.addNode(substrateNode);
+					}
 				}
 			}
 		}
@@ -57,6 +59,6 @@ public class TreeView {
 	}
 	
 	public void onNodeSelect(SelectEvent event) {
-        MindmapNode node = (MindmapNode) event.getObject();
+        //MindmapNode node = (MindmapNode) event.getObject();
 	}
 }

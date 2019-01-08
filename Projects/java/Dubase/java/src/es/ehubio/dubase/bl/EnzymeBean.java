@@ -7,7 +7,7 @@ import es.ehubio.dubase.dl.Enzyme;
 
 public class EnzymeBean {
 	private final Enzyme entity;
-	private final List<SubstrateBean> substrates = new ArrayList<>();
+	private final List<EvidenceBean> substrates = new ArrayList<>();
 	
 	public EnzymeBean(Enzyme enzyme) {
 		this.entity = enzyme;
@@ -17,7 +17,7 @@ public class EnzymeBean {
 		return entity;
 	}
 	
-	public List<SubstrateBean> getSubstrates() {
+	public List<EvidenceBean> getSubstrates() {
 		return substrates;
 	}
 }
