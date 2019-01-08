@@ -1,5 +1,8 @@
 package es.ehubio.dubase.pl;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -23,21 +26,26 @@ public class TreeView {
 	private Database db;
 	
 	public TreeView() {
-		root = new DefaultMindmapNode("DUBs", "Deubiquitinating enzymes", "CC0000", false);
+		root = new DefaultMindmapNode("DUBs", "Deubiquitinating enzymes", "FFCC00", false);
 	}
 	
 	@PostConstruct
 	public void populate() {
+		Set<String> proteored = new HashSet<>();
+		proteored.add("USP1"); proteored.add("USP7"); proteored.add("USP9X"); proteored.add("USP11"); proteored.add("USP42");
 		TreeBean tree = db.getTree();
 		for(ClassBean clazz : tree.getClassess()) {
-			MindmapNode classNode = new DefaultMindmapNode(clazz.getEntity().getName(), null, "00CC00", false);
+			MindmapNode classNode = new DefaultMindmapNode(clazz.getEntity().getName(), null, "6E9EBF", true);
 			root.addNode(classNode);
 			for( SuperfamilyBean family : clazz.getSuperfamilies() ) {
-				MindmapNode familyNode = new DefaultMindmapNode(family.getEntity().getShortname(), family.getEntity().getName(), "0000CC", false);
+				MindmapNode familyNode = new DefaultMindmapNode(family.getEntity().getShortname(), family.getEntity().getName(), "82C542", true);
 				classNode.addNode(familyNode);
 				for( EnzymeBean enzyme : family.getEnzymes() ) {
-					MindmapNode enzymeNode = new DefaultMindmapNode(enzyme.getEntity().getGene(), enzyme.getEntity().getDescription(), "FFCC00", false);
-					classNode.addNode(enzymeNode);
+					MindmapNode enzymeNode = new DefaultMindmapNode(
+							enzyme.getEntity().getGene(), enzyme.getEntity().getDescription(),
+							proteored.contains(enzyme.getEntity().getGene()) ? "FCE24F" : "3399FF",
+							false);
+					familyNode.addNode(enzymeNode);
 				}
 			}
 		}
