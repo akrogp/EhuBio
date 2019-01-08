@@ -9,8 +9,11 @@
 <h:body>
 	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
 		<ui:define name="content">
-			<h3>Welcome to DUBase</h3>
-			<p>Prototype under construction ...</p>
+			<h:form>
+			    <p:mindmap value="#{treeView.root}" style="width: 1200px;height: 900px;border: 1px solid black;">
+			        <p:ajax event="select" listener="#{treeView.onNodeSelect}" />
+			    </p:mindmap> 
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </h:body> 

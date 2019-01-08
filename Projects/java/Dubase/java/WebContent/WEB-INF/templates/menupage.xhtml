@@ -7,9 +7,15 @@
 
 <h:head></h:head> 
 <h:body>
-<p:tabMenu activeIndex="#{menuView.tab}">
-    <p:menuitem value="Chart" outcome="index" icon="pi pi-star">
-        <f:param name="i" value="0" />
+<p:tabMenu activeIndex="#{param.i}">
+	<p:menuitem value="Home" outcome="index">
+		<f:param name="i" value="0" />
+	</p:menuitem>
+	<p:menuitem value="Search" outcome="search">
+		<f:param name="i" value="1" />
+	</p:menuitem>
+    <p:menuitem value="DUBs Chart" outcome="chart">
+    	<f:param name="i" value="2" />
     </p:menuitem>
 </p:tabMenu>
 <ui:insert name="content"/>
