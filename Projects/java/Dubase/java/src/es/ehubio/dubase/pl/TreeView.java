@@ -3,6 +3,7 @@ package es.ehubio.dubase.pl;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.event.SelectEvent;
@@ -22,6 +23,8 @@ public class TreeView {
 	private MindmapNode root;
 	@EJB
 	private Database db;
+	@Inject
+	private FeedView feed;
 	
 	public TreeView() {
 		root = new DefaultMindmapNode("DUBs", "Deubiquitinating enzymes", "FFCC00", false);
@@ -59,6 +62,8 @@ public class TreeView {
 	}
 	
 	public void onNodeSelect(SelectEvent event) {
-        //MindmapNode node = (MindmapNode) event.getObject();
+        MindmapNode node = (MindmapNode) event.getObject();
+        if( node.getLabel().equals("FEED") )
+        	feed.saveExamples();
 	}
 }
