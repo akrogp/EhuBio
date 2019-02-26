@@ -12,6 +12,7 @@ class EvidenceFile {
 		List<EvidenceBean> evs = new ArrayList<>();
 		try( CsvReader csv = new CsvReader("\t", true, false) ) {
 			csv.open(evidencesPath);
+			
 			while( csv.readLine() != null ) {
 				boolean pass = csv.getField(3) != null && csv.getField(3).equals("YES");
 				if(  !pass )

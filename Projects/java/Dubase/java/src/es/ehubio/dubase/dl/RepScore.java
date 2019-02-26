@@ -1,7 +1,14 @@
 package es.ehubio.dubase.dl;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -14,6 +21,7 @@ public class RepScore implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private boolean imputed;
+	private Double value;
 	private Replicate replicateBean;
 	private ScoreType scoreType;
 
@@ -38,6 +46,14 @@ public class RepScore implements Serializable {
 
 	public void setImputed(boolean imputed) {
 		this.imputed = imputed;
+	}
+	
+	public Double getValue() {
+		return value;
+	}
+	
+	public void setValue(Double value) {
+		this.value = value;
 	}
 
 
