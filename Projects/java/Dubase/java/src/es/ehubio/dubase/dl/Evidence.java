@@ -12,11 +12,8 @@ import javax.persistence.*;
 @NamedQuery(name="Evidence.findAll", query="SELECT e FROM Evidence e")
 public class Evidence implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private int id;
-	private double foldChange;
-	private double pValue;
+	private long id;
 	private Experiment experimentBean;
-	private Substrate substrateBean;
 
 	public Evidence() {
 	}
@@ -24,30 +21,12 @@ public class Evidence implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public int getId() {
+	public long getId() {
 		return this.id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
-	}
-
-
-	public double getFoldChange() {
-		return this.foldChange;
-	}
-
-	public void setFoldChange(double foldChange) {
-		this.foldChange = foldChange;
-	}
-
-
-	public double getPValue() {
-		return this.pValue;
-	}
-
-	public void setPValue(double pValue) {
-		this.pValue = pValue;
 	}
 
 
@@ -60,18 +39,6 @@ public class Evidence implements Serializable {
 
 	public void setExperimentBean(Experiment experimentBean) {
 		this.experimentBean = experimentBean;
-	}
-
-
-	//uni-directional many-to-one association to Substrate
-	@ManyToOne
-	@JoinColumn(name="substrate")
-	public Substrate getSubstrateBean() {
-		return this.substrateBean;
-	}
-
-	public void setSubstrateBean(Substrate substrateBean) {
-		this.substrateBean = substrateBean;
 	}
 
 }

@@ -50,7 +50,7 @@ public class Superfamily implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Class
+	//uni-directional many-to-one association to Clazz
 	@ManyToOne
 	@JoinColumn(name="class")
 	public Clazz getClazz() {
