@@ -3,3 +3,4 @@ Servers
 bin
 .metadata
 *.bak
+*.~lock*
