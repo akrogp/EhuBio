@@ -7,24 +7,26 @@ import java.util.List;
 import es.ehubio.io.CsvReader;
 
 class EvidenceFile {
-
+	
 	public static List<EvidenceBean> loadEvidences(String evidencesPath) throws IOException {
+		return loadUgoEvidences(evidencesPath);
+	}
+
+	private static List<EvidenceBean> loadUgoEvidences(String evidencesPath) throws IOException {
 		List<EvidenceBean> evs = new ArrayList<>();
 		try( CsvReader csv = new CsvReader("\t", true, false) ) {
 			csv.open(evidencesPath);
 			
 			while( csv.readLine() != null ) {
-				boolean pass = csv.getField(3) != null && csv.getField(3).equals("YES");
-				if(  !pass )
-					continue;
 				EvidenceBean ev = new EvidenceBean();
-				ev.setGene(csv.getField(0));
-				ev.setFoldChange(csv.getDoubleField(1));
-				ev.setPValue(csv.getDoubleField(2));
+				for( String gene : csv.getField(IDX_GENE).split(";") ) {
+					
+				}
 				evs.add(ev);
 			}
 		}
 		return evs;
 	}
 	
+	private static final int IDX_GENE = 1;
 }
