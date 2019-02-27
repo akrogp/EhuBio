@@ -3,6 +3,8 @@ package es.ehubio.dubase.bl;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -11,12 +13,17 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import es.ehubio.dubase.Constants;
+import es.ehubio.dubase.dl.Ambiguity;
 import es.ehubio.dubase.dl.Author;
 import es.ehubio.dubase.dl.Clazz;
 import es.ehubio.dubase.dl.Enzyme;
+import es.ehubio.dubase.dl.EvScore;
 import es.ehubio.dubase.dl.Evidence;
 import es.ehubio.dubase.dl.Experiment;
 import es.ehubio.dubase.dl.Method;
+import es.ehubio.dubase.dl.RepScore;
+import es.ehubio.dubase.dl.Replicate;
+import es.ehubio.dubase.dl.ScoreType;
 import es.ehubio.dubase.dl.Substrate;
 import es.ehubio.dubase.dl.Superfamily;
 
@@ -102,8 +109,20 @@ public class Database {
 
 	private void saveEvidences(Experiment experiment, String evidencesPath) throws IOException {
 		for( EvidenceBean evBean : EvidenceFile.loadEvidences(evidencesPath) ) {
-			for( String gene : evBean.getGene().split(";") ) {
-				Evidence ev = new Evidence();
+			Evidence ev = new Evidence();
+			ev.setExperimentBean(experiment);
+			em.persist(ev);
+			
+			saveScores(ev, evBean.getMapScores());
+			for( ReplicateBean repBean : evBean.getReplicates() ) {
+				Replicate rep = new Replicate();
+				saveScores(rep, repBean.getMapScores());
+				rep.setEvidenceBean(ev);
+				em.persist(rep);
+			}
+			
+			for( int i = 0; i < evBean.getGenes().size(); i++ ) {
+				String gene = evBean.getGenes().get(i);
 				Substrate subs;
 				try {
 					subs = em.createQuery("SELECT s FROM Substrate s WHERE s.gene = :gene", Substrate.class)
@@ -112,14 +131,38 @@ public class Database {
 				} catch (NoResultException e) {
 					subs = new Substrate();
 					subs.setGene(gene);
+					if( evBean.getGenes().size() == evBean.getDescriptions().size() )
+						subs.setDescription(evBean.getDescriptions().get(i));
 					em.persist(subs);
 				}
-				ev.setExperimentBean(experiment);
-				ev.setSubstrateBean(subs);
-				ev.setFoldChange(evBean.getFoldChange());
-				ev.setPValue(evBean.getPValue());
-				em.persist(ev);
+				Ambiguity ambiguity = new Ambiguity();
+				ambiguity.setEvidenceBean(ev);
+				ambiguity.setSubstrateBean(subs);
+				em.persist(ambiguity);
 			}
+		}
+	}
+
+	private void saveScores(Evidence ev, Map<Integer, Double> mapScores) {
+		for( Entry<Integer, Double> entry : mapScores.entrySet() ) {
+			ScoreType type = em.find(ScoreType.class, entry.getKey());
+			EvScore score = new EvScore();
+			score.setEvidenceBean(ev);
+			score.setScoreType(type);
+			score.setValue(entry.getValue());
+			em.persist(score);
+		}	
+	}
+	
+	private void saveScores(Replicate rep, Map<Integer, RepScoreBean> mapScores) {
+		for( Entry<Integer, RepScoreBean> entry : mapScores.entrySet() ) {
+			ScoreType type = em.find(ScoreType.class, entry.getKey());
+			RepScore score = new RepScore();
+			score.setReplicateBean(rep);
+			score.setScoreType(type);
+			score.setValue(entry.getValue().getValue());
+			score.setImputed(entry.getValue().isImputed());
+			em.persist(score);
 		}
 	}
 }
