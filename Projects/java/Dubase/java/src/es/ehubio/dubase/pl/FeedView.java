@@ -25,7 +25,7 @@ public class FeedView implements Serializable {
 	}
 	
 	public void saveExamples() {
-		String[] genes = {"USP1", "USP7", "USP9X"};
+		String[] genes = {"USP9X"};
 		for( String gene : genes )
 			try {
 				saveTest(gene);

@@ -15,6 +15,7 @@ class EvidenceFile {
 	}
 
 	private static List<EvidenceBean> loadUgoEvidences(String evidencesPath) throws IOException {
+		final double log2 = Math.log(2);
 		List<EvidenceBean> evs = new ArrayList<>();
 		try( CsvReader csv = new CsvReader("\t", true, false) ) {
 			csv.open(evidencesPath);
@@ -39,8 +40,8 @@ class EvidenceFile {
 				truncate(ev.getDescriptions(), count);
 				ev.putScore(Score.MOL_WEIGHT, csv.getDoubleField(IDX_MOL_WEIGHT));
 				ev.putScore(Score.SEQ_COVERAGE, csv.getDoubleField(IDX_SEQ_COVER));
-				ev.putScore(Score.FOLD_CHANGE, csv.getDoubleField(IDX_FOLD_CHANGE));
-				ev.putScore(Score.P_VALUE, csv.getDoubleField(IDX_P_VALUE));
+				ev.putScore(Score.FOLD_CHANGE, Math.log(csv.getDoubleField(IDX_FOLD_CHANGE))/log2);
+				ev.putScore(Score.P_VALUE, -Math.log10(csv.getDoubleField(IDX_P_VALUE)));
 				for( int i = 0; i < NUM_REPS; i++ ) {
 					ReplicateBean rep = new ReplicateBean();
 					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_LFQ1+i*2), csv.getIntField(IDX_LFQ1+i*2+1) == 1);
@@ -54,7 +55,7 @@ class EvidenceFile {
 	
 	private static void truncate(List<String> genes, int count) {
 		Iterator<String> it = genes.iterator();
-		while( count-- > 0 )
+		while( count-- > 0 && it.hasNext() )
 			it.next();
 		while( it.hasNext() ) {
 			it.next();

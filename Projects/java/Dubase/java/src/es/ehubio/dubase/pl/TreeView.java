@@ -14,8 +14,10 @@ import es.ehubio.dubase.bl.ClassBean;
 import es.ehubio.dubase.bl.Database;
 import es.ehubio.dubase.bl.EnzymeBean;
 import es.ehubio.dubase.bl.EvidenceBean;
+import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.SuperfamilyBean;
 import es.ehubio.dubase.bl.TreeBean;
+import es.ehubio.io.CsvUtils;
 
 @Named
 @RequestScoped
@@ -32,6 +34,7 @@ public class TreeView {
 	
 	@PostConstruct
 	public void populate() {
+		//feed.saveExamples();
 		TreeBean tree = db.getTree();
 		for(ClassBean clazz : tree.getClassess()) {
 			MindmapNode classNode = new DefaultMindmapNode(clazz.getEntity().getName(), null, "6E9EBF", true);
@@ -46,9 +49,9 @@ public class TreeView {
 							!enzyme.getSubstrates().isEmpty());
 					familyNode.addNode(enzymeNode);
 					for( EvidenceBean substrate : enzyme.getSubstrates() ) {
+						String name = CsvUtils.getCsv(';', substrate.getGenes().toArray());
 						MindmapNode substrateNode = new DefaultMindmapNode(
-								substrate.getGene(), substrate.getGene(),
-								substrate.getFoldChange() > 0 ? "00FF00" : "FF0000",
+								name, name, substrate.getMapScores().get(Score.FOLD_CHANGE.ordinal()) > 0 ? "00FF00" : "FF0000",
 								false);
 						enzymeNode.addNode(substrateNode);
 					}
@@ -56,7 +59,7 @@ public class TreeView {
 			}
 		}
 	}
-	
+
 	public MindmapNode getRoot() {
 		return root;
 	}

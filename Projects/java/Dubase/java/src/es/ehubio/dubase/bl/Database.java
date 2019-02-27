@@ -1,6 +1,7 @@
 package es.ehubio.dubase.bl;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -73,12 +74,26 @@ public class Database {
 	}
 	
 	private List<EvidenceBean> getSubstrateByEnzyme(int enzymeId) {
-		return em
-			.createQuery("SELECT new es.ehubio.dubase.bl.EvidenceBean(e.substrateBean.gene, e.foldChange, e.PValue) FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId AND ABS(e.foldChange) >= :foldChange AND e.PValue >= :pValue", EvidenceBean.class)
+		List<EvidenceBean> results = new ArrayList<>();
+		List<Evidence> evidences = em
+			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId", Evidence.class)
 			.setParameter("enzymeId", enzymeId)
-			.setParameter("foldChange", Constants.FOLD_CHANGE)
-			.setParameter("pValue", Constants.P_VALUE)
 			.getResultList();
+		for( Evidence ev : evidences ) {
+			EvidenceBean result = new EvidenceBean();
+			result.getGenes().addAll(em
+				.createQuery("SELECT a.substrateBean.gene FROM Ambiguity a WHERE a.evidenceBean = :ev", String.class)
+				.setParameter("ev", ev)
+				.getResultList());
+			List<EvScore> scores = em
+				.createQuery("SELECT s FROM EvScore s WHERE s.evidenceBean = :ev", EvScore.class)
+				.setParameter("ev", ev)
+				.getResultList();
+			for( EvScore score : scores )
+				result.putScore(Score.values()[score.getScoreType().getId()], score.getValue());
+			results.add(result);
+		}
+		return results;
 	}
 	
 	public void saveExperiment(ExperimentBean experimentBean) throws IOException {
@@ -108,7 +123,7 @@ public class Database {
 	}
 
 	private void saveEvidences(Experiment experiment, String evidencesPath) throws IOException {
-		for( EvidenceBean evBean : EvidenceFile.loadEvidences(evidencesPath) ) {
+		for( EvidenceBean evBean : filter(EvidenceFile.loadEvidences(evidencesPath)) ) {
 			Evidence ev = new Evidence();
 			ev.setExperimentBean(experiment);
 			em.persist(ev);
@@ -116,9 +131,9 @@ public class Database {
 			saveScores(ev, evBean.getMapScores());
 			for( ReplicateBean repBean : evBean.getReplicates() ) {
 				Replicate rep = new Replicate();
-				saveScores(rep, repBean.getMapScores());
 				rep.setEvidenceBean(ev);
 				em.persist(rep);
+				saveScores(rep, repBean.getMapScores());
 			}
 			
 			for( int i = 0; i < evBean.getGenes().size(); i++ ) {
@@ -141,6 +156,14 @@ public class Database {
 				em.persist(ambiguity);
 			}
 		}
+	}
+
+	private List<EvidenceBean> filter(List<EvidenceBean> evidences) {
+		evidences.removeIf(subs ->
+			Math.abs(subs.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Constants.LOG2_FOLD_CHANGE ||
+			subs.getMapScores().get(Score.P_VALUE.ordinal()) < Constants.LOG10_P_VALUE
+		);
+		return evidences;
 	}
 
 	private void saveScores(Evidence ev, Map<Integer, Double> mapScores) {
