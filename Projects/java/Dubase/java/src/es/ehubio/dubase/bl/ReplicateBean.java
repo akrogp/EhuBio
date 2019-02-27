@@ -1,14 +1,22 @@
 package es.ehubio.dubase.bl;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ReplicateBean {
-	private List<RepScoreBean> scores;
+	private Map<Integer, RepScoreBean> scores;
 
-	public List<RepScoreBean> getScores() {
+	public Map<Integer, RepScoreBean> getMapScores() {
 		if( scores == null )
-			scores = new ArrayList<>();
+			scores = new HashMap<>();
 		return scores;
+	}
+	
+	public void putScore(Score score, Double value, boolean imputed) {
+		RepScoreBean bean = new RepScoreBean();
+		bean.setScore(score.ordinal());
+		bean.setValue(value);
+		bean.setImputed(imputed);
+		getMapScores().put(bean.getScore(), bean);
 	}
 }
