@@ -173,11 +173,27 @@ public class Database {
 	}
 
 	private List<EvidenceBean> filter(List<EvidenceBean> evidences) {
-		evidences.removeIf(subs ->
-			Math.abs(subs.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Thresholds.LOG2_FOLD_CHANGE ||
-			subs.getMapScores().get(Score.P_VALUE.ordinal()) < Thresholds.LOG10_P_VALUE
-		);
+		evidences.removeIf(ev -> {
+			if( Math.abs(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Thresholds.LOG2_FOLD_CHANGE )
+				return true;
+			if( ev.getMapScores().get(Score.P_VALUE.ordinal()) < Thresholds.LOG10_P_VALUE )
+				return true;
+			int samplesImputed = countImputed(ev.getSamples());
+			int controlsImputed = countImputed(ev.getControls());
+			if( samplesImputed != 0 && controlsImputed != 0 )
+				if( samplesImputed > Thresholds.MAX_IMPUTATIONS || controlsImputed > Thresholds.MAX_IMPUTATIONS )
+					return true;
+			return false;
+		});
 		return evidences;
+	}
+
+	private int countImputed(List<ReplicateBean> reps) {
+		int count = 0;
+		for( ReplicateBean rep : reps )
+			if( rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal()).isImputed() )
+				count++;
+		return count;
 	}
 
 	private void saveScores(Evidence ev, Map<Integer, Double> mapScores) {
