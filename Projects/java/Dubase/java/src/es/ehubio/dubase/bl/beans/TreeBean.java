@@ -1,4 +1,4 @@
-package es.ehubio.dubase.bl;
+package es.ehubio.dubase.bl.beans;
 
 import java.util.ArrayList;
 import java.util.List;

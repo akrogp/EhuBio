@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
+import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.bl.beans.ReplicateBean;
 import es.ehubio.io.CsvReader;
 
 class EvidenceFile {
@@ -44,8 +46,13 @@ class EvidenceFile {
 				ev.putScore(Score.P_VALUE, -Math.log10(csv.getDoubleField(IDX_P_VALUE)));
 				for( int i = 0; i < NUM_REPS; i++ ) {
 					ReplicateBean rep = new ReplicateBean();
-					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_LFQ1+i*2), csv.getIntField(IDX_LFQ1+i*2+1) == 1);
-					ev.getReplicates().add(rep);
+					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_SAMPLE+i*2), csv.getIntField(IDX_SAMPLE+i*2+1) == 1);
+					ev.getSamples().add(rep);
+				}
+				for( int i = 0; i < NUM_REPS; i++ ) {
+					ReplicateBean rep = new ReplicateBean();
+					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_CONTROL+i*2), csv.getIntField(IDX_CONTROL+i*2+1) == 1);
+					ev.getControls().add(rep);
 				}
 				evs.add(ev);
 			}
@@ -72,6 +79,7 @@ class EvidenceFile {
 	private static final int IDX_SEQ_COVER = 11;
 	private static final int IDX_FOLD_CHANGE = 12;
 	private static final int IDX_P_VALUE = 13;
-	private static final int IDX_LFQ1 = 14;
+	private static final int IDX_SAMPLE = 14;
+	private static final int IDX_CONTROL = 20;
 	private static final int NUM_REPS = 3;
 }

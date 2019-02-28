@@ -10,7 +10,7 @@ import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Database;
-import es.ehubio.dubase.bl.ExperimentBean;
+import es.ehubio.dubase.bl.beans.ExperimentBean;
 
 @Named
 @SessionScoped

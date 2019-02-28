@@ -12,13 +12,13 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.mindmap.DefaultMindmapNode;
 import org.primefaces.model.mindmap.MindmapNode;
 
-import es.ehubio.dubase.bl.ClassBean;
 import es.ehubio.dubase.bl.Database;
-import es.ehubio.dubase.bl.EnzymeBean;
-import es.ehubio.dubase.bl.EvidenceBean;
 import es.ehubio.dubase.bl.Score;
-import es.ehubio.dubase.bl.SuperfamilyBean;
-import es.ehubio.dubase.bl.TreeBean;
+import es.ehubio.dubase.bl.beans.ClassBean;
+import es.ehubio.dubase.bl.beans.EnzymeBean;
+import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.bl.beans.SuperfamilyBean;
+import es.ehubio.dubase.bl.beans.TreeBean;
 import es.ehubio.io.CsvUtils;
 
 @Named

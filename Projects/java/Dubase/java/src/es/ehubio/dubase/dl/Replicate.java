@@ -1,7 +1,14 @@
 package es.ehubio.dubase.dl;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -13,6 +20,7 @@ import javax.persistence.*;
 public class Replicate implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
+	private boolean control;
 	private Evidence evidenceBean;
 
 	public Replicate() {
@@ -39,6 +47,16 @@ public class Replicate implements Serializable {
 
 	public void setEvidenceBean(Evidence evidenceBean) {
 		this.evidenceBean = evidenceBean;
+	}
+
+
+	public boolean isControl() {
+		return control;
+	}
+
+
+	public void setControl(boolean control) {
+		this.control = control;
 	}
 
 }

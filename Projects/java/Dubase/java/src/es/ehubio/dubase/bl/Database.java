@@ -14,6 +14,14 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
 import es.ehubio.dubase.Thresholds;
+import es.ehubio.dubase.bl.beans.ClassBean;
+import es.ehubio.dubase.bl.beans.EnzymeBean;
+import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.bl.beans.ExperimentBean;
+import es.ehubio.dubase.bl.beans.RepScoreBean;
+import es.ehubio.dubase.bl.beans.ReplicateBean;
+import es.ehubio.dubase.bl.beans.SuperfamilyBean;
+import es.ehubio.dubase.bl.beans.TreeBean;
 import es.ehubio.dubase.dl.Ambiguity;
 import es.ehubio.dubase.dl.Author;
 import es.ehubio.dubase.dl.Clazz;
@@ -129,12 +137,8 @@ public class Database {
 			em.persist(ev);
 			
 			saveScores(ev, evBean.getMapScores());
-			for( ReplicateBean repBean : evBean.getReplicates() ) {
-				Replicate rep = new Replicate();
-				rep.setEvidenceBean(ev);
-				em.persist(rep);
-				saveScores(rep, repBean.getMapScores());
-			}
+			saveReplicates(ev, evBean.getSamples(), false);
+			saveReplicates(ev, evBean.getControls(), true);
 			
 			for( int i = 0; i < evBean.getGenes().size(); i++ ) {
 				String gene = evBean.getGenes().get(i);
@@ -155,6 +159,16 @@ public class Database {
 				ambiguity.setSubstrateBean(subs);
 				em.persist(ambiguity);
 			}
+		}
+	}
+
+	private void saveReplicates(Evidence ev, List<ReplicateBean> replicates, boolean control) {
+		for( ReplicateBean repBean : replicates ) {
+			Replicate rep = new Replicate();
+			rep.setControl(control);
+			rep.setEvidenceBean(ev);
+			em.persist(rep);
+			saveScores(rep, repBean.getMapScores());
 		}
 	}
 

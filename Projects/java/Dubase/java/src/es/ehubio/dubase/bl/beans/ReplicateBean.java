@@ -1,7 +1,9 @@
-package es.ehubio.dubase.bl;
+package es.ehubio.dubase.bl.beans;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import es.ehubio.dubase.bl.Score;
 
 public class ReplicateBean {
 	private Map<Integer, RepScoreBean> scores;
