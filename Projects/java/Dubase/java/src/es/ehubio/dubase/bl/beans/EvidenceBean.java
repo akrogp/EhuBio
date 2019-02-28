@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
+import es.ehubio.Util;
 import es.ehubio.dubase.bl.Score;
 
 public class EvidenceBean {
+	private String enzyme;
 	private List<String> genes;
 	private List<String> descriptions;
 	private Map<Integer, Double> mapScores;
@@ -44,5 +47,32 @@ public class EvidenceBean {
 	
 	public void putScore(Score score, Double value) {
 		getMapScores().put(score.ordinal(), value);
+	}
+
+	public String getEnzyme() {
+		return enzyme;
+	}
+
+	public void setEnzyme(String enzyme) {
+		this.enzyme = enzyme;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if( !(obj instanceof EvidenceBean) )
+			return super.equals(obj);
+		EvidenceBean other = (EvidenceBean)obj;
+		for( int i = 0; i < genes.size(); i++ )
+			if( !getGenes().get(i).equals(other.getGenes().get(i)) )
+				return false;
+		return Util.compare(getEnzyme(), other.getEnzyme());
+	}
+	
+	@Override
+	public int hashCode() {
+		int hash1 = Objects.hash(getGenes().toArray());
+		if( getEnzyme() == null )
+			return hash1;
+		return Objects.hash(getEnzyme(), hash1);
 	}
 }

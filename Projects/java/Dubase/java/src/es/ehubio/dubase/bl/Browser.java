@@ -1,6 +1,5 @@
 package es.ehubio.dubase.bl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -15,7 +14,6 @@ import es.ehubio.dubase.bl.beans.SuperfamilyBean;
 import es.ehubio.dubase.bl.beans.TreeBean;
 import es.ehubio.dubase.dl.Clazz;
 import es.ehubio.dubase.dl.Enzyme;
-import es.ehubio.dubase.dl.EvScore;
 import es.ehubio.dubase.dl.Evidence;
 import es.ehubio.dubase.dl.Superfamily;
 
@@ -65,25 +63,11 @@ public class Browser {
 	}
 	
 	private List<EvidenceBean> getSubstrateByEnzyme(int enzymeId) {
-		List<EvidenceBean> results = new ArrayList<>();
 		List<Evidence> evidences = em
 			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId", Evidence.class)
 			.setParameter("enzymeId", enzymeId)
 			.getResultList();
-		for( Evidence ev : evidences ) {
-			EvidenceBean result = new EvidenceBean();
-			result.getGenes().addAll(em
-				.createQuery("SELECT a.substrateBean.gene FROM Ambiguity a WHERE a.evidenceBean = :ev", String.class)
-				.setParameter("ev", ev)
-				.getResultList());
-			List<EvScore> scores = em
-				.createQuery("SELECT s FROM EvScore s WHERE s.evidenceBean = :ev", EvScore.class)
-				.setParameter("ev", ev)
-				.getResultList();
-			for( EvScore score : scores )
-				result.putScore(Score.values()[score.getScoreType().getId()], score.getValue());
-			results.add(result);
-		}
+		List<EvidenceBean> results = DbUtils.fillEvidences(em, evidences);
 		return results;
 	}
 }

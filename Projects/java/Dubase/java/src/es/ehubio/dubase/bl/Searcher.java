@@ -9,7 +9,8 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import es.ehubio.dubase.bl.beans.SearchBean;
+import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.dl.Evidence;
 
 @LocalBean
 @Stateless
@@ -17,18 +18,28 @@ public class Searcher {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public Set<SearchBean> search(String gene) {
-		Set<SearchBean> set = new LinkedHashSet<>();
+	public Set<EvidenceBean> search(String gene) {
+		Set<EvidenceBean> set = new LinkedHashSet<>();
 		set.addAll(searchEnzyme(gene));
 		set.addAll(searchSubstrate(gene));
 		return set;
 	}
 
-	public List<SearchBean> searchSubstrate(String gene) {
-		return null;
+	public List<EvidenceBean> searchSubstrate(String gene) {
+		List<Evidence> evidences = em
+			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene", Evidence.class)
+			.setParameter("gene", gene)
+			.getResultList();
+		List<EvidenceBean> evBeans = DbUtils.fillEvidences(em, evidences);
+		return evBeans;
 	}
 	
-	public List<SearchBean> searchEnzyme(String gene) {
-		return null;
+	public List<EvidenceBean> searchEnzyme(String gene) {
+		List<Evidence> evidences = em
+			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene", Evidence.class)
+			.setParameter("gene", gene)
+			.getResultList();
+		List<EvidenceBean> evBeans = DbUtils.fillEvidences(em, evidences);
+		return evBeans;
 	}
 }
