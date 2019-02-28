@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-import es.ehubio.dubase.Constants;
+import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.dl.Ambiguity;
 import es.ehubio.dubase.dl.Author;
 import es.ehubio.dubase.dl.Clazz;
@@ -160,8 +160,8 @@ public class Database {
 
 	private List<EvidenceBean> filter(List<EvidenceBean> evidences) {
 		evidences.removeIf(subs ->
-			Math.abs(subs.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Constants.LOG2_FOLD_CHANGE ||
-			subs.getMapScores().get(Score.P_VALUE.ordinal()) < Constants.LOG10_P_VALUE
+			Math.abs(subs.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Thresholds.LOG2_FOLD_CHANGE ||
+			subs.getMapScores().get(Score.P_VALUE.ordinal()) < Thresholds.LOG10_P_VALUE
 		);
 		return evidences;
 	}

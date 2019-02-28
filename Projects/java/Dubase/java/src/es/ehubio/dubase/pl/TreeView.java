@@ -1,8 +1,10 @@
 package es.ehubio.dubase.pl;
 
+import java.io.Serializable;
+
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -20,8 +22,9 @@ import es.ehubio.dubase.bl.TreeBean;
 import es.ehubio.io.CsvUtils;
 
 @Named
-@RequestScoped
-public class TreeView {
+@SessionScoped
+public class TreeView implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private MindmapNode root;
 	@EJB
 	private Database db;
