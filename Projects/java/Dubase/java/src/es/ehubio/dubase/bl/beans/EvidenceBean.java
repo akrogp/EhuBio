@@ -8,9 +8,10 @@ import java.util.Objects;
 
 import es.ehubio.Util;
 import es.ehubio.dubase.bl.Score;
+import es.ehubio.dubase.dl.Experiment;
 
 public class EvidenceBean {
-	private String enzyme;
+	private Experiment experiment;
 	private List<String> genes;
 	private List<String> descriptions;
 	private Map<Integer, Double> mapScores;
@@ -49,12 +50,18 @@ public class EvidenceBean {
 		getMapScores().put(score.ordinal(), value);
 	}
 
-	public String getEnzyme() {
-		return enzyme;
+	public Experiment getExperiment() {
+		return experiment;
 	}
-
-	public void setEnzyme(String enzyme) {
-		this.enzyme = enzyme;
+	
+	public void setExperiment(Experiment experiment) {
+		this.experiment = experiment;
+	}
+	
+	private String getEnzyme() {
+		if( experiment == null )
+			return null;
+		return experiment.getEnzymeBean().getGene();
 	}
 	
 	@Override

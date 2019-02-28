@@ -15,7 +15,7 @@ public class DbUtils {
 		List<EvidenceBean> results = new ArrayList<>();
 		for( Evidence ev : evidences ) {
 			EvidenceBean result = new EvidenceBean();
-			result.setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
+			result.setExperiment(ev.getExperimentBean());
 			result.getGenes().addAll(em
 				.createQuery("SELECT a.substrateBean.gene FROM Ambiguity a WHERE a.evidenceBean = :ev", String.class)
 				.setParameter("ev", ev)

@@ -40,21 +40,21 @@ public class TreeView implements Serializable {
 		//feed.saveExamples();
 		TreeBean tree = db.getTree();
 		for(ClassBean clazz : tree.getClassess()) {
-			MindmapNode classNode = new DefaultMindmapNode(clazz.getEntity().getName(), null, "6E9EBF", true);
+			MindmapNode classNode = new DefaultMindmapNode(clazz.getEntity().getName(), null, Colors.CLASS, true);
 			root.addNode(classNode);
 			for( SuperfamilyBean family : clazz.getSuperfamilies() ) {
-				MindmapNode familyNode = new DefaultMindmapNode(family.getEntity().getShortname(), family.getEntity().getName(), "82C542", true);
+				MindmapNode familyNode = new DefaultMindmapNode(family.getEntity().getShortname(), family.getEntity().getName(), Colors.FAMILY, true);
 				classNode.addNode(familyNode);
 				for( EnzymeBean enzyme : family.getEnzymes() ) {
 					MindmapNode enzymeNode = new DefaultMindmapNode(
 							enzyme.getEntity().getGene(), enzyme.getEntity().getDescription(),
-							enzyme.getSubstrates().isEmpty() ? "3399FF" : "FCE24F",
+							enzyme.getSubstrates().isEmpty() ? Colors.EMPTY : Colors.NOT_EMPTY,
 							!enzyme.getSubstrates().isEmpty());
 					familyNode.addNode(enzymeNode);
 					for( EvidenceBean substrate : enzyme.getSubstrates() ) {
 						String name = CsvUtils.getCsv(';', substrate.getGenes().toArray());
 						MindmapNode substrateNode = new DefaultMindmapNode(
-								name, name, substrate.getMapScores().get(Score.FOLD_CHANGE.ordinal()) > 0 ? "00FF00" : "FF0000",
+								name, name, substrate.getMapScores().get(Score.FOLD_CHANGE.ordinal()) > 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
 								false);
 						enzymeNode.addNode(substrateNode);
 					}
