@@ -12,7 +12,7 @@ import org.primefaces.event.SelectEvent;
 import org.primefaces.model.mindmap.DefaultMindmapNode;
 import org.primefaces.model.mindmap.MindmapNode;
 
-import es.ehubio.dubase.bl.Database;
+import es.ehubio.dubase.bl.Browser;
 import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.beans.ClassBean;
 import es.ehubio.dubase.bl.beans.EnzymeBean;
@@ -27,7 +27,7 @@ public class TreeView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private MindmapNode root;
 	@EJB
-	private Database db;
+	private Browser db;
 	@Inject
 	private FeedView feed;
 	

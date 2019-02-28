@@ -9,7 +9,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
-import es.ehubio.dubase.bl.Database;
+import es.ehubio.dubase.bl.Importer;
 import es.ehubio.dubase.bl.beans.ExperimentBean;
 
 @Named
@@ -17,7 +17,7 @@ import es.ehubio.dubase.bl.beans.ExperimentBean;
 public class FeedView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@EJB
-	private Database db;
+	private Importer db;
 	private static final Logger LOG = Logger.getLogger(FeedView.class.getName());
 
 	public void saveExperiment(ExperimentBean exp) throws IOException {
