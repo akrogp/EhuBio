@@ -8,25 +8,29 @@
 <h:head></h:head> 
 <h:body>
 	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
+		<ui:define name="title">Search genes</ui:define>
 		<ui:define name="content">
-			<h3>Search genes</h3>
 			<h:form>
 				<p:inputText id="query" value="#{searchView.query}" placeholder="Gene name" required="true" requiredMessage="You must enter a gene name"/>
 				<p:commandButton value="Search" ajax="false" action="#{searchView.search()}"/>
 				<p:message for="query"/>
 				<br/>
 			</h:form>
-			<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}">
-				<p:column headerText="Experiment">#{result.experiment}</p:column>
-				<p:column headerText="DUB">#{result.enzyme}</p:column>
-				<p:column headerText="Substrate"><h:outputText value="#{result.genes}" escape="false"/></p:column>
-				<p:column headerText="Fold change (log2)"><h:outputText value="#{result.foldChange}" escape="false"/></p:column>
-				<p:column headerText="p-value">#{result.pValue}</p:column>
-				<p:column headerText="Peptide count (all)">#{result.totalPepts}</p:column>
-				<p:column headerText="Peptide count (unique)">#{result.uniqPepts}</p:column>
-				<p:column headerText="Mol. weight (kDa)">#{result.weight}</p:column>
-				<p:column headerText="More fields"><p:commandButton value="..."/></p:column>
-			</p:dataTable>
+			<h:form>
+				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}" rowIndexVar="i">
+					<p:column headerText="Experiment">#{result.experiment}</p:column>
+					<p:column headerText="DUB">#{result.enzyme}</p:column>
+					<p:column headerText="Substrate"><h:outputText value="#{result.genes}" escape="false"/></p:column>
+					<p:column headerText="Fold change (log2)"><h:outputText value="#{result.foldChange}" escape="false"/></p:column>
+					<p:column headerText="p-value">#{result.pValue}</p:column>
+					<p:column headerText="Peptide count (all)">#{result.totalPepts}</p:column>
+					<p:column headerText="Peptide count (unique)">#{result.uniqPepts}</p:column>
+					<p:column headerText="Mol. weight (kDa)">#{result.weight}</p:column>
+					<p:column headerText="More fields">
+						<p:commandButton value="..." ajax="false" action="#{searchView.onDetails(i)}"/>
+					</p:column>
+				</p:dataTable>
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </h:body> 

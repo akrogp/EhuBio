@@ -5,7 +5,10 @@
       xmlns:h="http://java.sun.com/jsf/html"
       xmlns:p="http://primefaces.org/ui">
 
-<h:head></h:head> 
+<h:head>
+	<h:outputStylesheet library="css" name="faces.css"/>
+	<title><ui:insert name="title">DUBase</ui:insert></title>
+</h:head> 
 <h:body>
 <p:tabMenu activeIndex="#{param.i}">
 	<p:menuitem value="Home" outcome="index">
@@ -18,6 +21,7 @@
     	<f:param name="i" value="2" />
     </p:menuitem>
 </p:tabMenu>
+<h3><ui:insert name="title"/></h3>
 <ui:insert name="content"/>
 </h:body> 
 </html>

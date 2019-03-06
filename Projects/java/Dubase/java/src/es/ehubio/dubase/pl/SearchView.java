@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Score;
@@ -23,6 +24,8 @@ public class SearchView implements Serializable {
 	private String query;
 	private List<EvidenceBean> rawResults;
 	private List<SearchBean> results;
+	@Inject
+	private DetailsView detailsView;
 	
 	public void search() {
 		String gene = query.trim().toUpperCase();
@@ -85,5 +88,10 @@ public class SearchView implements Serializable {
 	
 	public List<SearchBean> getResults() {
 		return results;
+	}
+	
+	public String onDetails(int i) {
+		detailsView.setResult(rawResults.get(i), results.get(i));
+		return "details";
 	}
 }

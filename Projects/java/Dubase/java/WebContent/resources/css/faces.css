@@ -1,0 +1,5 @@
+@charset "UTF-8";
+
+.ui-widget, .ui-widget .ui-widget {
+    /*font-size: 90%;*/
+}
