@@ -1,8 +1,8 @@
 # Vista detallada
 
-* [ ] Valores de la vista normal
-* [ ] LFQ de cada caso
-* [ ] Sequence coverage
+* [x] Valores de la vista normal
+* [x] LFQ de cada caso
+* [x] Sequence coverage
 
 # Filtrado
 

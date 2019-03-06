@@ -1,7 +1,34 @@
 package es.ehubio.dubase.pl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DetailsBean {
-	private final SearchBean searchBean;
+	public static class Sample {
+		private String name;
+		private String lfq;
+		private List<String> lfqs;
+		public String getName() {
+			return name;
+		}
+		public void setName(String name) {
+			this.name = name;
+		}
+		public String getLfq() {
+			return lfq;
+		}
+		public void setLfq(String lfq) {
+			this.lfq = lfq;
+		}
+		public List<String> getLfqs() {
+			if( lfqs == null )
+				lfqs = new ArrayList<>();
+			return lfqs;
+		}
+		public void setLfqs(List<String> lfqs) {
+			this.lfqs = lfqs;
+		}
+	}	
 	
 	public DetailsBean(SearchBean searchBean) {
 		this.searchBean = searchBean;
@@ -39,5 +66,27 @@ public class DetailsBean {
 		return searchBean.getWeight();
 	}
 	
+	public List<Sample> getSamples() {
+		return samples;
+	}
 	
+	public List<Integer> getReplicates() {
+		int size = samples.get(0).getLfqs().size();
+		List<Integer> result = new ArrayList<>(size);
+		for( int i = 0; i < size; i++ )
+			result.add(i);
+		return result;
+	}
+	
+	public String getCoverage() {
+		return coverage;
+	}
+
+	public void setCoverage(String coverage) {
+		this.coverage = coverage;
+	}
+
+	private final SearchBean searchBean;
+	private final List<Sample> samples = new ArrayList<>();
+	private String coverage;
 }
