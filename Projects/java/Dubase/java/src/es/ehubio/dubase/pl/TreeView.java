@@ -1,10 +1,12 @@
 package es.ehubio.dubase.pl;
 
+import java.io.IOException;
 import java.io.Serializable;
 
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -30,6 +32,8 @@ public class TreeView implements Serializable {
 	private Browser db;
 	@Inject
 	private FeedView feed;
+	@Inject
+	private SearchView search;
 	
 	public TreeView() {
 		root = new DefaultMindmapNode("DUBs", "Deubiquitinating enzymes", "FFCC00", false);
@@ -55,7 +59,7 @@ public class TreeView implements Serializable {
 						String name = CsvUtils.getCsv(';', substrate.getGenes().toArray());
 						MindmapNode substrateNode = new DefaultMindmapNode(
 								name, name, substrate.getMapScores().get(Score.FOLD_CHANGE.ordinal()) > 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
-								false);
+								true);
 						enzymeNode.addNode(substrateNode);
 					}
 				}
@@ -71,5 +75,13 @@ public class TreeView implements Serializable {
         MindmapNode node = (MindmapNode) event.getObject();
         if( node.getLabel().equals("FEED") )
         	feed.saveExamples();
+		else if( node.getFill().equals(Colors.UP_REGULATED) || node.getFill().equals(Colors.DOWN_REGULATED) )
+			try {
+				search.setQuery(node.getLabel());
+				search.search();
+				FacesContext.getCurrentInstance().getExternalContext().redirect("search.xhtml");
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 	}
 }
