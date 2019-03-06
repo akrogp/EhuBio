@@ -61,6 +61,14 @@ public class TreeView implements Serializable {
 								name, name, substrate.getMapScores().get(Score.FOLD_CHANGE.ordinal()) > 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
 								true);
 						enzymeNode.addNode(substrateNode);
+						if( substrate.getGenes().size() > 1 ) {
+							for( String gene : substrate.getGenes() ) {
+								MindmapNode geneNode = new DefaultMindmapNode(
+										gene, gene, substrate.getMapScores().get(Score.FOLD_CHANGE.ordinal()) > 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
+										true);
+								substrateNode.addNode(geneNode);
+							}
+						}
 					}
 				}
 			}
@@ -73,6 +81,8 @@ public class TreeView implements Serializable {
 	
 	public void onNodeSelect(SelectEvent event) {
         MindmapNode node = (MindmapNode) event.getObject();
+        if( !node.getChildren().isEmpty() )
+        	return;
         if( node.getLabel().equals("FEED") )
         	feed.saveExamples();
 		else if( node.getFill().equals(Colors.UP_REGULATED) || node.getFill().equals(Colors.DOWN_REGULATED) )

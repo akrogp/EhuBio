@@ -39,6 +39,7 @@
 				<h:outputText value="#{detailsView.detailsBean.coverage} %"/>
 				
 				<h:outputText value="LFQ (log2)" />
+				<h:panelGroup>
 				<p:dataTable value="#{detailsView.detailsBean.samples}" var="sample" style="width:500px;">
 					<p:column>
 						#{sample.name}
@@ -51,6 +52,11 @@
 						#{sample.lfq}
 					</p:column>
 				</p:dataTable>
+				<ul>
+					<li>Measured values are shown in <b>bold</b></li>
+					<li>Imputed values are shown in <i>italics</i></li>
+				</ul>				
+				</h:panelGroup>
 			</p:panelGrid>
 		</ui:define>
 	</ui:composition>

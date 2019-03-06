@@ -11,6 +11,17 @@
 		<ui:define name="title">Welcome to DUBase</ui:define>
 		<ui:define name="content">
 			<p>Prototype under construction ...</p>
+			<h:form>
+				<p:panelGrid columns="2">
+					<f:facet name="header">Avialble options</f:facet>
+					
+					<p:commandButton value="Search" action="search" ajax="false"/>
+					<h:outputText value="Search for DUBs or theirs substrates by gene name" />
+					
+					<p:commandButton value="Browse" action="chart" ajax="false"/>
+					<h:outputText value="Browse DUBs and theirs substrates graphically" />
+				</p:panelGrid>
+			</h:form>
 		</ui:define>
 	</ui:composition>
 </h:body> 
