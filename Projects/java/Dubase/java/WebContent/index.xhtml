@@ -10,10 +10,8 @@
 	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
 		<ui:define name="title">Welcome to DUBase</ui:define>
 		<ui:define name="content">
-			<p>Prototype under construction ...</p>
 			<h:form>
 				<p:panelGrid columns="2">
-					<f:facet name="header">Available options</f:facet>
 					
 					<p:commandButton value="Search" action="search" ajax="false"/>
 					<h:outputText value="Search for DUBs or their substrates by gene name" />

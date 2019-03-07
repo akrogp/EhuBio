@@ -2,26 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html"
-      xmlns:p="http://primefaces.org/ui">
+      xmlns:h="http://java.sun.com/jsf/html"> 
 
 <h:head>
-	<h:outputStylesheet library="css" name="faces.css"/>
+	<h:outputStylesheet name="css/menubar.css" />
 	<title><ui:insert name="title">DUBase</ui:insert></title>
 </h:head> 
 <h:body>
-<p:tabMenu activeIndex="#{param.i}">
-	<p:menuitem value="Home" outcome="index">
-		<f:param name="i" value="0" />
-	</p:menuitem>
-	<p:menuitem value="Search" outcome="search">
-		<f:param name="i" value="1" />
-	</p:menuitem>
-    <p:menuitem value="DUBs Chart" outcome="chart">
-    	<f:param name="i" value="2" />
-    </p:menuitem>
-</p:tabMenu>
-<h3><ui:insert name="title"/></h3>
-<ui:insert name="content"/>
+	<div id="container"> 
+		<div id="titlebar">
+			<a href="http://ehubio.ehu.eus/dubase" target="_blank"><h:graphicImage name="images/logo.png" style="float:left;margin-left:10px;"/></a>
+			<a href="http://www.ehu.eus" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
+		</div>
+		<div id="menubar">
+			<h:link value="Home" outcome="index" class="menuitem"/> &nbsp; | &nbsp;
+			<h:link value="Search" outcome="search" class="menuitem"/> &nbsp; | &nbsp;
+			<h:link value="Browse" outcome="chart" class="menuitem"/> &nbsp; | &nbsp;
+			<h:link value="About" outcome="index" class="menuitem"/>
+		</div>
+		<h3><ui:insert name="title"/></h3>
+		<div id="body">
+		<ui:insert name="content"/>
+		</div>
+	</div>
 </h:body> 
 </html>

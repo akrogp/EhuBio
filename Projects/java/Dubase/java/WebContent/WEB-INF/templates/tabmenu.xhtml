@@ -1,0 +1,27 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head>
+	<h:outputStylesheet library="css" name="faces.css"/>
+	<title><ui:insert name="title">DUBase</ui:insert></title>
+</h:head> 
+<h:body>
+<p:tabMenu activeIndex="#{param.i}">
+	<p:menuitem value="Home" outcome="index">
+		<f:param name="i" value="0" />
+	</p:menuitem>
+	<p:menuitem value="Search" outcome="search">
+		<f:param name="i" value="1" />
+	</p:menuitem>
+    <p:menuitem value="DUBs Chart" outcome="chart">
+    	<f:param name="i" value="2" />
+    </p:menuitem>
+</p:tabMenu>
+<h3><ui:insert name="title"/></h3>
+<ui:insert name="content"/>
+</h:body> 
+</html>

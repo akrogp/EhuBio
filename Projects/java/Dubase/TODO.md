@@ -1,7 +1,8 @@
 # General
 
-* [ ] Meter logo
+* [x] Meter logo
 * [ ] Meter resto de DUBs
+* [x] Mejorar menú
 
 # Vistas
 
@@ -23,7 +24,7 @@
 
 ## Gráfica
 
-* [ ] Nueva representación (tamaño según fold-change?)
+* [ ] Nueva representación (tamaño según fold-change?) -> https://observablehq.com/@d3/zoomable-sunburst
 
 # Preferencias
 
