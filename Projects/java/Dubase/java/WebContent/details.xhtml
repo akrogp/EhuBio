@@ -20,7 +20,11 @@
 				<h:outputText value="Substrate" />
 				<h:outputText value="#{detailsView.detailsBean.genes}" escape="false"/>
 				
-				<h:outputText value="Fold change (log2)" />
+				<h:panelGroup id="fold">
+					Fold change (log2)
+					<sup>&#128712;</sup>
+					<p:tooltip for="fold" value="siDUB versus control" position="top"/>
+				</h:panelGroup>				
 				<h:outputText value="#{detailsView.detailsBean.foldChange}" escape="false"/>
 				
 				<h:outputText value="p-value" />
@@ -48,7 +52,7 @@
 						<f:facet name="header">#{rep+1}</f:facet>
 						<h:outputText value="#{sample.lfqs.get(rep)}" escape="false"/>
 					</p:columns>
-					<p:column headerText="Total">
+					<p:column headerText="Average">
 						#{sample.lfq}
 					</p:column>
 				</p:dataTable>

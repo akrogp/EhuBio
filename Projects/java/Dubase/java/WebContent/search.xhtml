@@ -21,7 +21,16 @@
 					<p:column headerText="Experiment">#{result.experiment}</p:column>
 					<p:column headerText="DUB">#{result.enzyme}</p:column>
 					<p:column headerText="Substrate"><h:outputText value="#{result.genes}" escape="false"/></p:column>
-					<p:column headerText="Fold change (log2)"><h:outputText value="#{result.foldChange}" escape="false"/></p:column>
+					<p:column>
+						<f:facet name="header">
+							<h:panelGroup id="fold">
+								Fold change <br/>(log2)
+								<sup>&#128712;</sup>
+							</h:panelGroup>
+							<p:tooltip for="fold" value="siDUB versus control" position="top"/>
+						</f:facet>						
+						<h:outputText value="#{result.foldChange}" escape="false"/>						
+					</p:column>
 					<p:column headerText="p-value">#{result.pValue}</p:column>
 					<p:column headerText="Peptide count (all)">#{result.totalPepts}</p:column>
 					<p:column headerText="Peptide count (unique)">#{result.uniqPepts}</p:column>
