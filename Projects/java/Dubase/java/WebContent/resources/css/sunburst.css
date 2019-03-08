@@ -23,3 +23,7 @@
 	dominant-baseline: middle;
 	text-anchor: middle;
 }
+
+.slice .leaf-text {
+	font-size: 0.8em;
+}
