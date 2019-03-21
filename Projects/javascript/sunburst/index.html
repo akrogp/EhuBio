@@ -16,39 +16,56 @@
         <h1>... custom sunburst from scratch</h1>
         <svg></svg>
         <script>
-            var width = window.innerWidth;
-            var height = window.innerHeight;
-            var radius = Math.min(width, height) / 2;
-            var color = d3.scaleOrdinal(d3.schemeCategory20);
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            const radius = Math.min(width, height) / 2;
+            const color = d3.scaleOrdinal(d3.schemeCategory20);
 
-            var g = d3.select('svg')
+            const g = d3.select('svg')
                 .attr('width', width)
                 .attr('height', height)
                 .append('g')
                 .attr('transform', 'translate(' + width / 2 + ',' + height / 2 + ')');
             
-            var partition = d3.partition()
+            const partition = d3.partition()
                 .size([2 * Math.PI, radius]);
+
+            const computeTextRotation = d => {
+                const angle = (d.x0 + d.x1) / Math.PI * 90;
+                return (angle < 180) ? angle - 90 : angle + 90;
+            }
+
+            const computeTextShift = d => {
+                return -(d.y1-d.y0)/2;
+            }
 
             d3.json("flare.json", (error, data) => {
                 if (error) throw error;
 
-                var root = d3.hierarchy(data)
+                const root = d3.hierarchy(data)
                     .sum(d => d.size);
 
                 partition(root);
-                var arc = d3.arc()
+                const arc = d3.arc()
                     .startAngle(d => d.x0)
                     .endAngle(d => d.x1)
                     .innerRadius(d => d.y0)
                     .outerRadius(d => d.y1);
                 
-                g.selectAll('path')
+                g.selectAll('g')
                     .data(root.descendants())
-                    .enter().append('path')
+                    .enter().append('g').attr("class", "node")
+                    .append('path')
                     .attr("d", arc)
                     .style('stroke', '#fff')
-                    .style("fill", d => color((d.children ? d : d.parent).data.name));
+                    .style("fill", d => color((d.children ? d : d.parent).data.name));                
+
+                g.selectAll(".node")
+                    .append("text")
+                    .attr("transform", d => "translate(" + arc.centroid(d) + ")rotate(" + computeTextRotation(d) + ")")
+                    .attr("dx", computeTextShift)
+                    .attr("dy", ".5em")
+                    .text(d => d.parent ? d.data.name : "");
             });            
         </script>
     </body>
