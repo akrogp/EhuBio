@@ -42,9 +42,6 @@ const middleArcLine = d => {
 };
 
 const textFits = d => {
-	if( !d.data.children )
-		return false;
-	
 	const CHAR_SPACE = 6;
 
 	const deltaAngle = x(d.x1) - x(d.x0);
@@ -53,6 +50,16 @@ const textFits = d => {
 
 	return d.data.name.length * CHAR_SPACE < 0.5*perimeter;
 };
+
+const showPath = d => d.depth < 3;
+
+const showRotated = d => !showPath(d);
+
+const logData = d => {
+	if( d.data.name === "ARAF" )
+	//if( d.data.name === "USP" )
+		console.log(d);
+}
 
 const svg = d3.select('body').append('svg')
 	.style('width', '100vw')
@@ -93,7 +100,7 @@ d3.json('rest/browse/flare.json', (error, root) => {
 
 	const text = newSlice.append('text')
 		.attr('class', 'parent-text')
-		.attr('display', d => textFits(d) ? null : 'none');
+		.attr('display', d => showPath(d) ? null : 'none');
 
 	// Add white contour
 	text.append('textPath')
@@ -112,7 +119,7 @@ d3.json('rest/browse/flare.json', (error, root) => {
 	
 	const label = newSlice.append('text')
 		.attr('class', 'leaf-text')
-		.attr('display', d => d.data.children ? 'none' : null)
+		.attr('display', d => showRotated(d) ? null : 'none')
 		.attr("transform", d => labelTransform(d))
 		.text(d => d.data.name);
 });
@@ -144,7 +151,7 @@ function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1 }) {
 		.attrTween('d', d => () => middleArcLine(d));
 
 	transition.selectAll('text.parent-text')
-		.attrTween('display', d => () => textFits(d) ? null : 'none');
+		.attrTween('display', d => () => showPath(d) ? null : 'none');
 
 	transition.selectAll('text.leaf-text')
 		.attrTween('transform', d => () => labelTransform(d));
