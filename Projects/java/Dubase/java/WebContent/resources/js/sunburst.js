@@ -1,18 +1,15 @@
 // https://gist.github.com/vasturiano/12da9071095fbd4df434e60d52d2d58d
 
-const width = window.innerWidth,
-height = window.innerHeight,
-maxRadius = (Math.min(width, height) / 2) - 5;
-var depth;
+const width = window.innerWidth;
+const height = window.innerHeight;
+const maxRadius = (Math.min(width, height) / 2) - 5;
+var depth = 0;
 
 const formatNumber = d3.format(',d');
 
 const x = d3.scaleLinear()
 	.range([0, 2 * Math.PI])
 	.clamp(true);
-
-/*const y = d3.scaleSqrt()
-	.range([maxRadius*.1, maxRadius]);*/
 
 const y = d3.scaleLinear()
 	.range([0, maxRadius]);
@@ -41,7 +38,13 @@ const middleArcLine = d => {
 	return path.toString();
 };
 
-const textFits = d => {
+const labelTransform = d => {
+    const angle = (x(d.x0) + x(d.x1)) / 2 / Math.PI * 180;
+    const shift = (y(d.y0) + y(d.y1)) / 2;
+    return `rotate(${angle - 90}) translate(${shift},0) rotate(${angle < 180 ? 0 : 180})`;
+}
+
+const pathFits = d => {
 	const CHAR_SPACE = 6;
 
 	const deltaAngle = x(d.x1) - x(d.x0);
@@ -49,11 +52,15 @@ const textFits = d => {
 	const perimeter = r * deltaAngle;
 
 	return d.data.name.length * CHAR_SPACE < 0.5*perimeter;
-};
+}
 
-const showPath = d => d.depth < 3;
+const rotatedFits = d => {
+	return true;
+}
 
-const showRotated = d => !showPath(d);
+const showPath = d => (d.depth < 3 || d.depth === depth) && pathFits(d);
+
+const showRotated = d => !showPath(d) && d.depth > depth && rotatedFits(d);
 
 const logData = d => {
 	if( d.data.name === "ARAF" )
@@ -120,15 +127,9 @@ d3.json('rest/browse/flare.json', (error, root) => {
 	const label = newSlice.append('text')
 		.attr('class', 'leaf-text')
 		.attr('display', d => showRotated(d) ? null : 'none')
-		.attr("transform", d => labelTransform(d))
+		.attr("transform", labelTransform)
 		.text(d => d.data.name);
 });
-
-function labelTransform(d) {
-    const x = (d.x0 + d.x1) / 2 * 360;
-    const y = (d.y0 + d.y1) / 2 * maxRadius;
-    return `rotate(${x - 90}) translate(${y},0) rotate(${x < 180 ? 0 : 180})`;
-  }
 
 function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1 }) {
 	// Travel back if current node is clicked
@@ -154,6 +155,7 @@ function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1 }) {
 		.attrTween('display', d => () => showPath(d) ? null : 'none');
 
 	transition.selectAll('text.leaf-text')
+		.attrTween('display', d => () => showRotated(d) ? null : 'none')
 		.attrTween('transform', d => () => labelTransform(d));
 	
 	moveStackToFront(d);
