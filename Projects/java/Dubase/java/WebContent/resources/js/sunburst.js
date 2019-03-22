@@ -134,11 +134,11 @@ d3.json('rest/browse/flare.json', (error, root) => {
 		.attr('xlink:href', (_, i) => `#hiddenArc${i}` )
 		.text(d => d.data.name);
 	
-	const labelStroke = newSlice.append('text')
+	/*const labelStroke = newSlice.append('text')
 		.attr('class', 'leaf-text stroke')		
 		.attr('display', d => showRotated(d) ? null : 'none')
 		.attr("transform", labelTransform)
-		.text(d => d.data.name);
+		.text(d => d.data.name);*/
 	
 	const label = newSlice.append('text')
 		.attr('class', 'leaf-text')
@@ -148,7 +148,12 @@ d3.json('rest/browse/flare.json', (error, root) => {
 	
 });
 
-function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1 }) {
+function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1, depth: 0 }) {
+	if( d.data && !d.children ) {
+		window.location.href = `search.xhtml?gene=${d.data.name}`;
+		return;
+	}
+	
 	// Travel back if current node is clicked
 	if( depth && d.depth === depth && d.parent )
 		d = d.parent;

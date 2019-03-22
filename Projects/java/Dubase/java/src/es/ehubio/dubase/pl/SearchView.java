@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -79,6 +80,11 @@ public class SearchView implements Serializable {
 	}
 
 	public String getQuery() {
+		String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("gene"); 
+		if( param != null ) {
+			setQuery(param);
+			search();
+		}
 		return query;
 	}
 
