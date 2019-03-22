@@ -38,6 +38,13 @@ const middleArcLine = d => {
 	return path.toString();
 };
 
+const calcColor = d => {
+	if( !d.data.gradient )
+		return color((d.children ? d : d.parent).data.name);
+	const rgb = Math.round(Math.abs(d.data.gradient) * 255);
+	return d.data.gradient < 0 ? `rgb(${rgb},0,0)` : `rgb(0,${rgb},0)`;
+}
+
 const labelTransform = d => {
     const angle = (x(d.x0) + x(d.x1)) / 2 / Math.PI * 180;
     const shift = (y(d.y0) + y(d.y1)) / 2;
@@ -45,17 +52,23 @@ const labelTransform = d => {
 }
 
 const pathFits = d => {
-	const CHAR_SPACE = 6;
+	const CHAR_SPACE = 12;
 
 	const deltaAngle = x(d.x1) - x(d.x0);
 	const r = Math.max(0, (y(d.y0) + y(d.y1)) / 2);
 	const perimeter = r * deltaAngle;
 
-	return d.data.name.length * CHAR_SPACE < 0.5*perimeter;
+	return d.data.name.length * CHAR_SPACE < perimeter;
 }
 
 const rotatedFits = d => {
-	return true;
+	const CHAR_SPACE = 9;
+	
+	const deltaAngle = x(d.x1) - x(d.x0);
+	const height = Math.max(0, y(d.y0)) * deltaAngle;
+	const width = Math.max(0, y(d.y1)-y(d.y0));
+	
+	return height > CHAR_SPACE && width > d.data.name.length * CHAR_SPACE;
 }
 
 const showPath = d => (d.depth < 3 || d.depth === depth) && pathFits(d);
@@ -97,7 +110,7 @@ d3.json('rest/browse/flare.json', (error, root) => {
 
 	newSlice.append('path')
 		.attr('class', 'main-arc')
-		.style('fill', d => color((d.children ? d : d.parent).data.name))
+		.style('fill', calcColor)
 		.attr('d', arc);
 
 	newSlice.append('path')
@@ -111,17 +124,20 @@ d3.json('rest/browse/flare.json', (error, root) => {
 
 	// Add white contour
 	text.append('textPath')
+		.attr('class', 'stroke')
 		.attr('startOffset','50%')
 		.attr('xlink:href', (_, i) => `#hiddenArc${i}` )
-		.text(d => d.data.name)
-		.style('fill', 'none')
-		.style('stroke', '#fff')
-		.style('stroke-width', 5)
-		.style('stroke-linejoin', 'round');
+		.text(d => d.data.name);
 
 	text.append('textPath')
 		.attr('startOffset','50%')
 		.attr('xlink:href', (_, i) => `#hiddenArc${i}` )
+		.text(d => d.data.name);
+	
+	const labelStroke = newSlice.append('text')
+		.attr('class', 'leaf-text stroke')		
+		.attr('display', d => showRotated(d) ? null : 'none')
+		.attr("transform", labelTransform)
 		.text(d => d.data.name);
 	
 	const label = newSlice.append('text')
@@ -129,6 +145,7 @@ d3.json('rest/browse/flare.json', (error, root) => {
 		.attr('display', d => showRotated(d) ? null : 'none')
 		.attr("transform", labelTransform)
 		.text(d => d.data.name);
+	
 });
 
 function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1 }) {

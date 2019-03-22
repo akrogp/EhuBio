@@ -1,5 +1,7 @@
 package es.ehubio.dubase.bl;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.LocalBean;
@@ -31,6 +33,7 @@ public class Browser {
 	private Flare flare;
 	private TreeBean tree;
 	private static final double DEFAULT_SIZE = 1;
+	private static final double MAX_SCORE = 4;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -61,9 +64,17 @@ public class Browser {
 					for( EvidenceBean evBean : enzymeBean.getSubstrates() ) {
 						Flare subs = new Flare(evBean.getGenes().get(0));
 						subs.setDesc(evBean.getDescriptions() == null || evBean.getDescriptions().isEmpty() ? null : evBean.getDescriptions().get(0));
-						subs.setSize(1);//Math.round(evBean.getMapScores().get(Score.FOLD_CHANGE.ordinal())));
+						subs.setSize(DEFAULT_SIZE);//Math.round(evBean.getMapScores().get(Score.FOLD_CHANGE.ordinal())));
+						subs.setGradient(calcGradient(evBean));
 						enzyme.addChild(subs);
 					}
+					if( enzyme.getChildren() != null)
+						Collections.sort(enzyme.getChildren(), new Comparator<Flare>() {
+							@Override
+							public int compare(Flare o1, Flare o2) {
+								return o1.getGradient().compareTo(o2.getGradient());
+							}
+						});
 				}
 			}
 		}
@@ -71,6 +82,13 @@ public class Browser {
 		return flare;
 	}
 	
+	private Double calcGradient(EvidenceBean evBean) {
+		double score = evBean.getMapScores().get(Score.FOLD_CHANGE.ordinal());
+		double sign = Math.signum(score);
+		score = Math.min(MAX_SCORE, Math.abs(score));
+		return sign * score / MAX_SCORE;
+	}
+
 	public TreeBean getTree() {
 		if( tree != null )
 			return tree;

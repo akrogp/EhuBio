@@ -24,6 +24,15 @@
 	text-anchor: middle;
 }
 
+.slice .stroke {
+  	fill: none;
+  	stroke: white;
+  	stroke-width: 5px;
+  	stroke-linejoin: round;
+}
+
 .slice .leaf-text {
-	font-size: 0.8em;
+	font-size: 0.75em;
+	/*fill: white;
+	mix-blend-mode: difference;*/
 }

@@ -10,6 +10,7 @@ public class Flare {
 	private String name;
 	private String desc;
 	private Double size;
+	private Double gradient;
 	private List<Flare> children;
 	
 	public Flare() {
@@ -51,5 +52,13 @@ public class Flare {
 		if( children == null )
 			children = new ArrayList<>();
 		children.add(child);
+	}
+
+	public Double getGradient() {
+		return gradient;
+	}
+
+	public void setGradient(Double gradient) {
+		this.gradient = gradient;
 	}
 }
