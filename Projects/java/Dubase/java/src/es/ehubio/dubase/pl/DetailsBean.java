@@ -45,6 +45,10 @@ public class DetailsBean {
 	public String getGenes() {
 		return searchBean.getGenes();
 	}
+	
+	public String getDescriptions() {
+		return searchBean.getDescriptions();
+	}
 
 	public String getFoldChange() {
 		return searchBean.getFoldChange();
@@ -64,6 +68,10 @@ public class DetailsBean {
 
 	public String getWeight() {
 		return searchBean.getWeight();
+	}
+	
+	public String getGlygly() {
+		return searchBean.getGlygly();
 	}
 	
 	public List<Sample> getSamples() {

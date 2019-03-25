@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
@@ -54,6 +56,11 @@ class EvidenceFile {
 					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_CONTROL+i*2), csv.getIntField(IDX_CONTROL+i*2+1) == 1);
 					ev.getControls().add(rep);
 				}
+				if( csv.getFields().length > IDX_MODS )
+					ev.getModPositions().addAll(
+						Stream.of(csv.getField(IDX_MODS).split(";"))
+						.map(Integer::parseInt)
+						.collect(Collectors.toList()));
 				evs.add(ev);
 			}
 		}
@@ -81,5 +88,6 @@ class EvidenceFile {
 	private static final int IDX_P_VALUE = 13;
 	private static final int IDX_SAMPLE = 14;
 	private static final int IDX_CONTROL = 20;
+	private static final int IDX_MODS = 26;
 	private static final int NUM_REPS = 3;
 }

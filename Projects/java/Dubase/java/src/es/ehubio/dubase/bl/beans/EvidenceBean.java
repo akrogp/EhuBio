@@ -15,6 +15,7 @@ public class EvidenceBean {
 	private List<String> genes;
 	private List<String> descriptions;
 	private Map<Integer, Double> mapScores;
+	private List<Integer> modPositions;
 	private List<ReplicateBean> samples, controls;
 	
 	public List<String> getGenes() {
@@ -34,6 +35,13 @@ public class EvidenceBean {
 			mapScores = new HashMap<>();
 		return mapScores;
 	}
+	
+	public List<Integer> getModPositions() {
+		if( modPositions == null )
+			modPositions = new ArrayList<>();
+		return modPositions;
+	}
+	
 	public List<ReplicateBean> getSamples() {
 		if( samples == null )
 			samples = new ArrayList<>();

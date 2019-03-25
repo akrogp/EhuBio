@@ -4,11 +4,13 @@ public class SearchBean {
 	private String experiment;
 	private String enzyme;
 	private String genes;
+	private String descriptions;
 	private String foldChange;
 	private String pValue;
 	private String totalPepts;
 	private String uniqPepts;
 	private String weight;
+	private String glygly;
 	
 	public String getExperiment() {
 		return experiment;
@@ -27,6 +29,12 @@ public class SearchBean {
 	}
 	public void setGenes(String genes) {
 		this.genes = genes;
+	}
+	public String getDescriptions() {
+		return descriptions;
+	}
+	public void setDescriptions(String descriptions) {
+		this.descriptions = descriptions;
 	}
 	public String getFoldChange() {
 		return foldChange;
@@ -57,5 +65,11 @@ public class SearchBean {
 	}
 	public void setWeight(String weight) {
 		this.weight = weight;
+	}
+	public String getGlygly() {
+		return glygly;
+	}
+	public void setGlygly(String glygly) {
+		this.glygly = glygly;
 	}
 }

@@ -59,6 +59,7 @@ public class SearchView implements Serializable {
 		result.setExperiment(String.format("EXP%05d", ev.getExperiment().getId()));
 		result.setEnzyme(ev.getExperiment().getEnzymeBean().getGene());
 		result.setGenes(CsvUtils.getCsv("<br/>", ev.getGenes().toArray()));
+		result.setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
 		
 		double foldChange = ev.getMapScores().get(Score.FOLD_CHANGE.ordinal());
 		result.setFoldChange(String.format(
@@ -75,6 +76,8 @@ public class SearchView implements Serializable {
 		
 		double weight = ev.getMapScores().get(Score.MOL_WEIGHT.ordinal());
 		result.setWeight(String.format("%.3f", weight));
+		
+		result.setGlygly(ev.getModPositions().isEmpty() ? "" : CsvUtils.getCsv(';', ev.getModPositions().toArray()));
 		
 		return result;
 	}
@@ -96,7 +99,7 @@ public class SearchView implements Serializable {
 		return results;
 	}
 	
-	public String onDetails(int i) {
+	public String onDetails(int i) {		
 		detailsView.setResult(rawResults.get(i), results.get(i));
 		return "details";
 	}

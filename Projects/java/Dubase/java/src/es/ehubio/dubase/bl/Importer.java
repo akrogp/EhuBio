@@ -24,6 +24,8 @@ import es.ehubio.dubase.dl.EvScore;
 import es.ehubio.dubase.dl.Evidence;
 import es.ehubio.dubase.dl.Experiment;
 import es.ehubio.dubase.dl.Method;
+import es.ehubio.dubase.dl.ModType;
+import es.ehubio.dubase.dl.Modification;
 import es.ehubio.dubase.dl.RepScore;
 import es.ehubio.dubase.dl.Replicate;
 import es.ehubio.dubase.dl.ScoreType;
@@ -34,6 +36,7 @@ import es.ehubio.dubase.dl.Substrate;
 public class Importer {
 	@PersistenceContext
 	private EntityManager em;
+	private static final int GLYGLY = 1;
 	
 	public void saveExperiment(ExperimentBean experimentBean) throws IOException {
 		Author author = new Author();
@@ -62,6 +65,7 @@ public class Importer {
 	}
 
 	private void saveEvidences(Experiment experiment, String evidencesPath) throws IOException {
+		ModType modType = em.find(ModType.class, GLYGLY);
 		for( EvidenceBean evBean : filter(EvidenceFile.loadEvidences(evidencesPath)) ) {
 			Evidence ev = new Evidence();
 			ev.setExperimentBean(experiment);
@@ -70,6 +74,7 @@ public class Importer {
 			saveScores(ev, evBean.getMapScores());
 			saveReplicates(ev, evBean.getSamples(), false);
 			saveReplicates(ev, evBean.getControls(), true);
+			saveModifications(ev, modType, evBean.getModPositions());
 			
 			for( int i = 0; i < evBean.getGenes().size(); i++ ) {
 				String gene = evBean.getGenes().get(i);
@@ -90,6 +95,16 @@ public class Importer {
 				ambiguity.setSubstrateBean(subs);
 				em.persist(ambiguity);
 			}
+		}
+	}
+
+	private void saveModifications(Evidence ev, ModType modType, List<Integer> positions) {
+		for( Integer pos : positions ) {
+			Modification mod = new Modification();
+			mod.setEvidenceBean(ev);
+			mod.setModType(modType);
+			mod.setPosition(pos);
+			em.persist(mod);
 		}
 	}
 

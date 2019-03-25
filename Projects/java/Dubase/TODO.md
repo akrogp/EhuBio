@@ -24,7 +24,7 @@
 
 ## Gráfica
 
-* [ ] Nueva representación (tamaño según fold-change?) -> https://observablehq.com/@d3/zoomable-sunburst
+* [x] Nueva representación (tamaño según fold-change?) -> https://observablehq.com/@d3/zoomable-sunburst
 
 # Preferencias
 

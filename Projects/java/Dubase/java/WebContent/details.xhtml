@@ -20,6 +20,9 @@
 				<h:outputText value="Substrate" />
 				<h:outputText value="#{detailsView.detailsBean.genes}" escape="false"/>
 				
+				<h:outputText value="Description" />
+				<h:outputText value="#{detailsView.detailsBean.descriptions}" escape="false"/>
+				
 				<h:panelGroup id="fold">
 					Fold change (log2)
 					<sup>&#128712;</sup>
@@ -41,6 +44,9 @@
 				
 				<h:outputText value="Sequence coverage" />
 				<h:outputText value="#{detailsView.detailsBean.coverage} %"/>
+				
+				<h:outputText value="GlyGly (K) site positions" />
+				<h:outputText value="#{detailsView.detailsBean.glygly}"/>
 				
 				<h:outputText value="LFQ (log2)" />
 				<h:panelGroup>

@@ -2,6 +2,7 @@ package es.ehubio.dubase.bl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.EntityManager;
 
@@ -10,8 +11,10 @@ import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
 import es.ehubio.dubase.dl.EvScore;
 import es.ehubio.dubase.dl.Evidence;
+import es.ehubio.dubase.dl.Modification;
 import es.ehubio.dubase.dl.RepScore;
 import es.ehubio.dubase.dl.Replicate;
+import es.ehubio.dubase.dl.Substrate;
 
 public class DbUtils {
 
@@ -20,16 +23,25 @@ public class DbUtils {
 		for( Evidence ev : evidences ) {
 			EvidenceBean result = new EvidenceBean();
 			result.setExperiment(ev.getExperimentBean());
-			result.getGenes().addAll(em
-				.createQuery("SELECT a.substrateBean.gene FROM Ambiguity a WHERE a.evidenceBean = :ev", String.class)
-				.setParameter("ev", ev)
-				.getResultList());
+			List<Substrate> genes = em
+					.createQuery("SELECT a.substrateBean FROM Ambiguity a WHERE a.evidenceBean = :ev", Substrate.class)
+					.setParameter("ev", ev)
+					.getResultList();
+			result.getGenes().addAll(
+					genes.stream().map(s -> s.getGene()).collect(Collectors.toList()));
+			result.getDescriptions().addAll(
+					genes.stream().map(s -> s.getDescription()).collect(Collectors.toList()));
 			List<EvScore> scores = em
 				.createQuery("SELECT s FROM EvScore s WHERE s.evidenceBean = :ev", EvScore.class)
 				.setParameter("ev", ev)
 				.getResultList();
 			for( EvScore score : scores )
 				result.putScore(Score.values()[score.getScoreType().getId()], score.getValue());
+			List<Modification> mods = em
+					.createQuery("SELECT m FROM Modification m WHERE m.evidenceBean = :ev", Modification.class)
+					.setParameter("ev", ev)
+					.getResultList();
+			result.getModPositions().addAll(mods.stream().map(mod -> mod.getPosition()).collect(Collectors.toList()));
 			result.getSamples().addAll(fillSamples(em, ev, false));
 			result.getControls().addAll(fillSamples(em, ev, true));
 			results.add(result);
