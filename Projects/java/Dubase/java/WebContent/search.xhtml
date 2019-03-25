@@ -13,7 +13,7 @@
 			<h:form>
 				<p:inputText id="query" value="#{searchView.query}" placeholder="Gene name" required="true" requiredMessage="You must enter a gene name"/>
 				<p:commandButton value="Search" ajax="false" action="#{searchView.search()}"/>
-				<p:commandButton value="Feed examples" ajax="false" action="#{feedView.saveExamples()}" rendered="true"/>
+				<p:commandButton value="Feed examples" ajax="false" action="#{feedView.saveExamples()}" rendered="false"/>
 				<p:message for="query"/>
 				<br/>
 			</h:form>
