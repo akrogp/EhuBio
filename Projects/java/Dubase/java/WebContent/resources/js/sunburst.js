@@ -41,8 +41,9 @@ const middleArcLine = d => {
 const calcColor = d => {
 	if( !d.data.gradient )
 		return color((d.children ? d : d.parent).data.name);
-	const rgb = Math.round(Math.abs(d.data.gradient) * 255);
-	return d.data.gradient < 0 ? `rgb(${rgb},0,0)` : `rgb(0,${rgb},0)`;
+	const offset = 100;
+	const rgb = Math.round(Math.abs(d.data.gradient) * (255-offset));
+	return d.data.gradient < 0 ? `rgb(${rgb+offset},0,0)` : `rgb(0,${rgb+offset},0)`;
 }
 
 const labelTransform = d => {
