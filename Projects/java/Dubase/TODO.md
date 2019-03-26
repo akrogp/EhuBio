@@ -20,11 +20,17 @@
 * [x] Valores de la vista normal
 * [x] LFQ de cada caso
 * [x] Sequence coverage
-* [ ] Resto de campos del xls
+* [x] Resto de campos del xls
 
 ## Gráfica
 
 * [x] Nueva representación (tamaño según fold-change?) -> https://observablehq.com/@d3/zoomable-sunburst
+
+## Análisis
+
+* [ ] GO -> https://biit.cs.ut.ee/gprofiler/gost
+* [ ] Venn
+* [ ] Vulcano
 
 # Preferencias
 
