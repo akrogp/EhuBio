@@ -11,13 +11,14 @@
 <h:body>
 	<div id="container"> 
 		<div id="titlebar">
-			<a href="http://ehubio.ehu.eus/dubase" target="_blank"><h:graphicImage name="images/logo.png" style="float:left;margin-left:10px;"/></a>
+			<a href="http://ehubio.ehu.eus/dubase" target="_blank"><h:graphicImage name="images/logo.svg" style="height:75px;float:left;margin-left:10px;"/></a>
 			<a href="http://www.ehu.eus" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
 		</div>
 		<div id="menubar">
 			<h:link value="Home" outcome="index" class="menuitem"/> &nbsp; | &nbsp;
-			<h:link value="Search" outcome="search" class="menuitem"/> &nbsp; | &nbsp;
-			<h:link value="Browse" outcome="browse" class="menuitem"/> &nbsp; | &nbsp;
+			<ui:repeat value="#{homeView.ops}" var="op">
+				<h:link value="#{op.name}" outcome="#{op.action}" class="menuitem"/> &nbsp; | &nbsp;
+			</ui:repeat>			
 			<h:link value="About" outcome="index" class="menuitem"/>
 		</div>
 		<h3><ui:insert name="title"/></h3>

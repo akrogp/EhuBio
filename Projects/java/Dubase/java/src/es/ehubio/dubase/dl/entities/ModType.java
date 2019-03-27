@@ -1,22 +1,21 @@
-package es.ehubio.dubase.dl;
+package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
 
 
 /**
- * The persistent class for the Class database table.
+ * The persistent class for the ModType database table.
  * 
  */
 @Entity
-@Table(name="Class")
-@NamedQuery(name="Clazz.findAll", query="SELECT c FROM Clazz c")
-public class Clazz implements Serializable {
+@NamedQuery(name="ModType.findAll", query="SELECT m FROM ModType m")
+public class ModType implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
 
-	public Clazz() {
+	public ModType() {
 	}
 
 

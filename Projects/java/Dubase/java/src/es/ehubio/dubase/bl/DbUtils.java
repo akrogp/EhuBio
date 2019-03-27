@@ -9,12 +9,12 @@ import javax.persistence.EntityManager;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
-import es.ehubio.dubase.dl.EvScore;
-import es.ehubio.dubase.dl.Evidence;
-import es.ehubio.dubase.dl.Modification;
-import es.ehubio.dubase.dl.RepScore;
-import es.ehubio.dubase.dl.Replicate;
-import es.ehubio.dubase.dl.Substrate;
+import es.ehubio.dubase.dl.entities.EvScore;
+import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Modification;
+import es.ehubio.dubase.dl.entities.RepScore;
+import es.ehubio.dubase.dl.entities.Replicate;
+import es.ehubio.dubase.dl.entities.Substrate;
 
 public class DbUtils {
 

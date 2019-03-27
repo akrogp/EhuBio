@@ -1,4 +1,4 @@
-package es.ehubio.dubase.dl;
+package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 
@@ -12,19 +12,19 @@ import javax.persistence.NamedQuery;
 
 
 /**
- * The persistent class for the EvScore database table.
+ * The persistent class for the Modification database table.
  * 
  */
 @Entity
-@NamedQuery(name="EvScore.findAll", query="SELECT e FROM EvScore e")
-public class EvScore implements Serializable {
+@NamedQuery(name="Modification.findAll", query="SELECT m FROM Modification m")
+public class Modification implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private Double value;
 	private Evidence evidenceBean;
-	private ScoreType scoreType;
+	private ModType modType;
+	private int position;
 
-	public EvScore() {
+	public Modification() {
 	}
 
 
@@ -36,15 +36,6 @@ public class EvScore implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
-	}
-
-
-	public Double getValue() {
-		return this.value;
-	}
-
-	public void setValue(Double value) {
-		this.value = value;
 	}
 
 
@@ -60,15 +51,24 @@ public class EvScore implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ScoreType
+	//uni-directional many-to-one association to ModType
 	@ManyToOne
-	@JoinColumn(name="score")
-	public ScoreType getScoreType() {
-		return this.scoreType;
+	@JoinColumn(name="type")
+	public ModType getModType() {
+		return this.modType;
 	}
 
-	public void setScoreType(ScoreType scoreType) {
-		this.scoreType = scoreType;
+	public void setModType(ModType modType) {
+		this.modType = modType;
+	}
+	
+	
+	public int getPosition() {
+		return position;
+	}
+	
+	public void setPosition(int position) {
+		this.position = position;
 	}
 
 }

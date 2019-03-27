@@ -17,19 +17,19 @@ import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.ExperimentBean;
 import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
-import es.ehubio.dubase.dl.Ambiguity;
-import es.ehubio.dubase.dl.Author;
-import es.ehubio.dubase.dl.Enzyme;
-import es.ehubio.dubase.dl.EvScore;
-import es.ehubio.dubase.dl.Evidence;
-import es.ehubio.dubase.dl.Experiment;
-import es.ehubio.dubase.dl.Method;
-import es.ehubio.dubase.dl.ModType;
-import es.ehubio.dubase.dl.Modification;
-import es.ehubio.dubase.dl.RepScore;
-import es.ehubio.dubase.dl.Replicate;
-import es.ehubio.dubase.dl.ScoreType;
-import es.ehubio.dubase.dl.Substrate;
+import es.ehubio.dubase.dl.entities.Ambiguity;
+import es.ehubio.dubase.dl.entities.Author;
+import es.ehubio.dubase.dl.entities.Enzyme;
+import es.ehubio.dubase.dl.entities.EvScore;
+import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Experiment;
+import es.ehubio.dubase.dl.entities.Method;
+import es.ehubio.dubase.dl.entities.ModType;
+import es.ehubio.dubase.dl.entities.Modification;
+import es.ehubio.dubase.dl.entities.RepScore;
+import es.ehubio.dubase.dl.entities.Replicate;
+import es.ehubio.dubase.dl.entities.ScoreType;
+import es.ehubio.dubase.dl.entities.Substrate;
 
 @LocalBean
 @Stateless

@@ -10,7 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import es.ehubio.dubase.bl.beans.EvidenceBean;
-import es.ehubio.dubase.dl.Evidence;
+import es.ehubio.dubase.dl.entities.Evidence;
 
 @LocalBean
 @Stateless

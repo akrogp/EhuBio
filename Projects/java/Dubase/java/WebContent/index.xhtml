@@ -11,13 +11,16 @@
 		<ui:define name="title">Welcome to DUBase</ui:define>
 		<ui:define name="content">
 			<h:form>
-				<p:panelGrid columns="2">
-					
-					<p:commandButton value="Search" action="search" ajax="false"/>
-					<h:outputText value="Search for DUBs or their substrates by gene name" />
-					
-					<p:commandButton value="Browse" action="browse" ajax="false"/>
-					<h:outputText value="Browse DUBs and their substrates graphically" />
+				<p:panelGrid>
+					<f:facet name="header">
+						<p:row><p:column colspan="2">Operations</p:column></p:row>
+					</f:facet>
+					<ui:repeat value="#{homeView.ops}" var="op">
+						<p:row>
+							<p:column><p:commandButton value="#{op.name}" action="#{op.getAction()}" ajax="false"/></p:column>
+							<p:column><h:outputText value="#{op.desc}" /></p:column>
+						</p:row>
+					</ui:repeat>
 				</p:panelGrid>
 			</h:form>
 		</ui:define>

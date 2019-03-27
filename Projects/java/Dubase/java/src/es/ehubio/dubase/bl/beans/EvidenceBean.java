@@ -8,7 +8,7 @@ import java.util.Objects;
 
 import es.ehubio.Util;
 import es.ehubio.dubase.bl.Score;
-import es.ehubio.dubase.dl.Experiment;
+import es.ehubio.dubase.dl.entities.Experiment;
 
 public class EvidenceBean {
 	private Experiment experiment;

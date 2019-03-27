@@ -1,22 +1,22 @@
-package es.ehubio.dubase.dl;
+package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
 
 
 /**
- * The persistent class for the ScoreType database table.
+ * The persistent class for the Class database table.
  * 
  */
 @Entity
-@NamedQuery(name="ScoreType.findAll", query="SELECT s FROM ScoreType s")
-public class ScoreType implements Serializable {
+@Table(name="Class")
+@NamedQuery(name="Clazz.findAll", query="SELECT c FROM Clazz c")
+public class Clazz implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private String description;
 	private String name;
 
-	public ScoreType() {
+	public Clazz() {
 	}
 
 
@@ -28,15 +28,6 @@ public class ScoreType implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-
-	public String getDescription() {
-		return this.description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
 	}
 
 

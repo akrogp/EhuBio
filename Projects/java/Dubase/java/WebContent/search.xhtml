@@ -17,7 +17,7 @@
 				<p:message for="query"/>
 				<br/>
 				<h:panelGroup rendered="#{searchView.results != null and !searchView.results.isEmpty()}">
-					<p:commandButton ajax="false" value="Download #{searchView.results.size()} results"/>
+					<p:commandButton ajax="false" value="Download #{searchView.results.size()} results" action="#{searchView.download()}"/>
 					<br/><br/>
 				</h:panelGroup>
 			</h:form>

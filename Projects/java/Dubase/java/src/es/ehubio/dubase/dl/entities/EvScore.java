@@ -1,4 +1,4 @@
-package es.ehubio.dubase.dl;
+package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 
@@ -12,18 +12,19 @@ import javax.persistence.NamedQuery;
 
 
 /**
- * The persistent class for the Replicate database table.
+ * The persistent class for the EvScore database table.
  * 
  */
 @Entity
-@NamedQuery(name="Replicate.findAll", query="SELECT r FROM Replicate r")
-public class Replicate implements Serializable {
+@NamedQuery(name="EvScore.findAll", query="SELECT e FROM EvScore e")
+public class EvScore implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private boolean control;
+	private Double value;
 	private Evidence evidenceBean;
+	private ScoreType scoreType;
 
-	public Replicate() {
+	public EvScore() {
 	}
 
 
@@ -35,6 +36,15 @@ public class Replicate implements Serializable {
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+
+	public Double getValue() {
+		return this.value;
+	}
+
+	public void setValue(Double value) {
+		this.value = value;
 	}
 
 
@@ -50,13 +60,15 @@ public class Replicate implements Serializable {
 	}
 
 
-	public boolean isControl() {
-		return control;
+	//uni-directional many-to-one association to ScoreType
+	@ManyToOne
+	@JoinColumn(name="score")
+	public ScoreType getScoreType() {
+		return this.scoreType;
 	}
 
-
-	public void setControl(boolean control) {
-		this.control = control;
+	public void setScoreType(ScoreType scoreType) {
+		this.scoreType = scoreType;
 	}
 
 }

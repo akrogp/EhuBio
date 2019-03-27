@@ -3,7 +3,7 @@ package es.ehubio.dubase.bl.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.ehubio.dubase.dl.Enzyme;
+import es.ehubio.dubase.dl.entities.Enzyme;
 
 public class EnzymeBean {
 	private final Enzyme entity;

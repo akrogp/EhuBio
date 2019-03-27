@@ -19,10 +19,10 @@ import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.Flare;
 import es.ehubio.dubase.bl.beans.SuperfamilyBean;
 import es.ehubio.dubase.bl.beans.TreeBean;
-import es.ehubio.dubase.dl.Clazz;
-import es.ehubio.dubase.dl.Enzyme;
-import es.ehubio.dubase.dl.Evidence;
-import es.ehubio.dubase.dl.Superfamily;
+import es.ehubio.dubase.dl.entities.Clazz;
+import es.ehubio.dubase.dl.entities.Enzyme;
+import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Superfamily;
 
 @LocalBean
 @Singleton

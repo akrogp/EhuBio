@@ -3,7 +3,7 @@ package es.ehubio.dubase.bl.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.ehubio.dubase.dl.Superfamily;
+import es.ehubio.dubase.dl.entities.Superfamily;
 
 public class SuperfamilyBean {
 	private final Superfamily entity;

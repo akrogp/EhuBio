@@ -1,4 +1,4 @@
-package es.ehubio.dubase.dl;
+package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 
@@ -12,19 +12,18 @@ import javax.persistence.NamedQuery;
 
 
 /**
- * The persistent class for the Modification database table.
+ * The persistent class for the Replicate database table.
  * 
  */
 @Entity
-@NamedQuery(name="Modification.findAll", query="SELECT m FROM Modification m")
-public class Modification implements Serializable {
+@NamedQuery(name="Replicate.findAll", query="SELECT r FROM Replicate r")
+public class Replicate implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
+	private boolean control;
 	private Evidence evidenceBean;
-	private ModType modType;
-	private int position;
 
-	public Modification() {
+	public Replicate() {
 	}
 
 
@@ -51,24 +50,13 @@ public class Modification implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ModType
-	@ManyToOne
-	@JoinColumn(name="type")
-	public ModType getModType() {
-		return this.modType;
+	public boolean isControl() {
+		return control;
 	}
 
-	public void setModType(ModType modType) {
-		this.modType = modType;
-	}
-	
-	
-	public int getPosition() {
-		return position;
-	}
-	
-	public void setPosition(int position) {
-		this.position = position;
+
+	public void setControl(boolean control) {
+		this.control = control;
 	}
 
 }

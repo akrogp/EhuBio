@@ -3,7 +3,7 @@ package es.ehubio.dubase.bl.beans;
 import java.util.ArrayList;
 import java.util.List;
 
-import es.ehubio.dubase.dl.Clazz;
+import es.ehubio.dubase.dl.entities.Clazz;
 
 public class ClassBean {
 	private final Clazz entity;

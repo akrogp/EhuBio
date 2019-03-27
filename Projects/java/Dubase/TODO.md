@@ -12,7 +12,7 @@
 
 ## Búsqueda
 
-* [ ] Descargar csv
+* [x] Descargar csv
 * [x] Info de cómo calculadas las cosas
 
 ## Detalles

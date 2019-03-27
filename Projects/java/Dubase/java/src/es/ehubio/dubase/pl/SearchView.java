@@ -1,12 +1,16 @@
 package es.ehubio.dubase.pl;
 
+import java.io.PrintWriter;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,6 +18,7 @@ import javax.inject.Named;
 import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.io.CsvUtils;
 
 @Named
@@ -22,14 +27,15 @@ public class SearchView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	@EJB
 	private Searcher db;
-	private String query;
+	private String query, gene;
 	private List<EvidenceBean> rawResults;
 	private List<SearchBean> results;
 	@Inject
 	private DetailsView detailsView;
+	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	public void search() {
-		String gene = query.trim().toUpperCase();
+		gene = query.trim().toUpperCase();
 		if( gene.isEmpty() )
 			return;
 		rawResults = new ArrayList<>(db.search(gene));
@@ -43,6 +49,23 @@ public class SearchView implements Serializable {
 		});
 		parseResults();
 		return;
+	}
+	
+	public void download() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    ExternalContext ec = fc.getExternalContext();
+	    ec.responseReset();
+	    ec.setResponseContentType("text/csv");
+	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\"DUBase-"+gene+"-"+SDF.format(new Date())+".csv\"");
+		try (
+			PrintWriter pw = new PrintWriter(ec.getResponseOutputStream());
+		){
+			CsvExporter.export(rawResults, pw);
+		} catch( Exception e ) {
+			e.printStackTrace();
+		} finally {
+			fc.responseComplete();
+		}
 	}
 
 	private void parseResults() {
