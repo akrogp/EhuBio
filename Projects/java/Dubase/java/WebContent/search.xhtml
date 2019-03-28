@@ -15,11 +15,14 @@
 				<p:commandButton value="Search" ajax="false" action="#{searchView.search()}"/>
 				<p:commandButton value="Feed examples" ajax="false" action="#{feedView.saveExamples()}" rendered="false"/>
 				<p:message for="query"/>
-				<br/>
-				<h:panelGroup rendered="#{searchView.results != null and !searchView.results.isEmpty()}">
-					<p:commandButton ajax="false" value="Download #{searchView.results.size()} results" action="#{searchView.download()}"/>
-					<br/><br/>
-				</h:panelGroup>
+			</h:form><br/>
+			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" style="display: inline">
+				<p:commandButton ajax="false" value="Download #{searchView.results.size()} results" action="#{searchView.download()}"/>
+				&nbsp;
+			</h:form>
+			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" target="_blank" style="display: inline">
+				<p:commandButton value="g:Profiler" ajax="false" action="#{searchView.gprofiler()}"/>
+				<br/><br/>
 			</h:form>
 			<h:form>
 				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}" rowIndexVar="i">

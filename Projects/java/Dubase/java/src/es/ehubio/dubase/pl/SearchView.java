@@ -20,6 +20,7 @@ import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.io.CsvUtils;
+import es.ehubio.io.UrlBuilder;
 
 @Named
 @SessionScoped
@@ -65,6 +66,21 @@ public class SearchView implements Serializable {
 			e.printStackTrace();
 		} finally {
 			fc.responseComplete();
+		}
+	}
+	
+	public void gprofiler() {
+		List<String> genes = new ArrayList<>();
+		for( EvidenceBean ev : rawResults )
+			genes.addAll(ev.getGenes());
+		try {
+			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+			ec.redirect( new UrlBuilder("https", "biit.cs.ut.ee", "gprofiler/gost")
+				.param("organism", "hsapiens")
+				.param("query", CsvUtils.getCsv('\n', genes.toArray()))
+				.build());
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
