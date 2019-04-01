@@ -12,7 +12,6 @@ import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
 import es.ehubio.dubase.pl.beans.DetailsBean;
 import es.ehubio.dubase.pl.beans.SearchBean;
-import es.ehubio.dubase.pl.beans.DetailsBean.Sample;
 
 @Named
 @RequestScoped
