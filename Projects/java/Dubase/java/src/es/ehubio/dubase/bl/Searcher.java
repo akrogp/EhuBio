@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Evidence;
 
 @LocalBean
@@ -41,5 +42,11 @@ public class Searcher {
 			.getResultList();
 		List<EvidenceBean> evBeans = DbUtils.fillEvidences(em, evidences);
 		return evBeans;
+	}
+	
+	public List<Enzyme> searchEnzymesWithData() {
+		return em
+			.createQuery("SELECT DISTINCT e.experimentBean.enzymeBean FROM Evidence e", Enzyme.class)
+			.getResultList();
 	}
 }

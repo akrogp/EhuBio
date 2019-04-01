@@ -1,4 +1,4 @@
-package es.ehubio.dubase.pl;
+package es.ehubio.dubase.pl.views;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +10,9 @@ import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
+import es.ehubio.dubase.pl.beans.DetailsBean;
+import es.ehubio.dubase.pl.beans.SearchBean;
+import es.ehubio.dubase.pl.beans.DetailsBean.Sample;
 
 @Named
 @RequestScoped

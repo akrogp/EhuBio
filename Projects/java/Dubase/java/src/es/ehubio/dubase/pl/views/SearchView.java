@@ -1,4 +1,4 @@
-package es.ehubio.dubase.pl;
+package es.ehubio.dubase.pl.views;
 
 import java.io.PrintWriter;
 import java.io.Serializable;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -19,8 +20,9 @@ import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.dl.CsvExporter;
+import es.ehubio.dubase.pl.Colors;
+import es.ehubio.dubase.pl.beans.SearchBean;
 import es.ehubio.io.CsvUtils;
-import es.ehubio.io.UrlBuilder;
 
 @Named
 @SessionScoped
@@ -29,6 +31,7 @@ public class SearchView implements Serializable {
 	@EJB
 	private Searcher db;
 	private String query, gene;
+	private List<String> genes;
 	private List<EvidenceBean> rawResults;
 	private List<SearchBean> results;
 	@Inject
@@ -70,18 +73,7 @@ public class SearchView implements Serializable {
 	}
 	
 	public void gprofiler() {
-		List<String> genes = new ArrayList<>();
-		for( EvidenceBean ev : rawResults )
-			genes.addAll(ev.getGenes());
-		try {
-			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
-			ec.redirect( new UrlBuilder("https", "biit.cs.ut.ee", "gprofiler/gost")
-				.param("organism", "hsapiens")
-				.param("query", CsvUtils.getCsv('\n', genes.toArray()))
-				.build());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		ProfilerView.redirect(rawResults);
 	}
 
 	private void parseResults() {
@@ -141,5 +133,11 @@ public class SearchView implements Serializable {
 	public String onDetails(int i) {		
 		detailsView.setResult(rawResults.get(i), results.get(i));
 		return "details";
+	}
+	
+	public List<String> getGenes() {
+		if( genes == null )
+			genes = db.searchEnzymesWithData().stream().map(e -> e.getGene()).collect(Collectors.toList()); 
+		return genes;
 	}
 }

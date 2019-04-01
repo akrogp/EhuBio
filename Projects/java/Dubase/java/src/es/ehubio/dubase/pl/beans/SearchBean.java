@@ -1,4 +1,4 @@
-package es.ehubio.dubase.pl;
+package es.ehubio.dubase.pl.beans;
 
 public class SearchBean {
 	private String experiment;

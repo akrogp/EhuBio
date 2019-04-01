@@ -1,4 +1,4 @@
-package es.ehubio.dubase.pl;
+package es.ehubio.dubase.pl.views;
 
 import java.io.IOException;
 import java.io.Serializable;
@@ -21,6 +21,7 @@ import es.ehubio.dubase.bl.beans.EnzymeBean;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.SuperfamilyBean;
 import es.ehubio.dubase.bl.beans.TreeBean;
+import es.ehubio.dubase.pl.Colors;
 import es.ehubio.io.CsvUtils;
 
 @Named

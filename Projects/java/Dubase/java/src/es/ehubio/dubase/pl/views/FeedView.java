@@ -1,4 +1,4 @@
-package es.ehubio.dubase.pl;
+package es.ehubio.dubase.pl.views;
 
 import java.io.IOException;
 import java.io.Serializable;

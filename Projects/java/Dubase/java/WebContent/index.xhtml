@@ -17,8 +17,15 @@
 					</f:facet>
 					<ui:repeat value="#{homeView.ops}" var="op">
 						<p:row>
-							<p:column><p:commandButton value="#{op.name}" action="#{op.getAction()}" ajax="false"/></p:column>
-							<p:column><h:outputText value="#{op.desc}" /></p:column>
+							<p:column>
+								<h:commandLink action="#{op.getAction()}">
+									<h:graphicImage name="images/#{op.preview}"/>
+								</h:commandLink>
+							</p:column>
+							<p:column>
+								<p><h:outputText value="#{op.desc}"/></p>
+								<p:commandButton value="#{op.name}" action="#{op.getAction()}" ajax="false"/>
+							</p:column>
 						</p:row>
 					</ui:repeat>
 				</p:panelGrid>
