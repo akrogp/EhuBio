@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
@@ -31,6 +32,15 @@ public class DbUtils {
 			results.add(result);
 		}
 		return results;
+	}
+	
+	public static List<EvidenceBean> filter(List<EvidenceBean> evidences, Thresholds thresholds) {		
+		evidences = evidences.stream()
+			.filter(ev ->
+				Math.abs(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal())) >= thresholds.getLog2FoldChange() &&
+				ev.getMapScores().get(Score.P_VALUE.ordinal()) >= thresholds.getLog10PValue())
+			.collect(Collectors.toList());
+		return evidences;
 	}
 
 	private static List<ReplicateBean> buildSamples(Evidence ev, boolean ctrl) {		

@@ -5,19 +5,28 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Stateless;
+import javax.ejb.Stateful;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Evidence;
 
 @LocalBean
-@Stateless
+@Stateful
 public class Searcher {
 	@PersistenceContext
 	private EntityManager em;
+	private Thresholds thresholds = new Thresholds();
+	
+	public Thresholds getThresholds() {
+		return thresholds;
+	}
+	public void setThresholds(Thresholds thresholds) {
+		this.thresholds = thresholds;
+	}
 	
 	public Set<EvidenceBean> search(String gene) {
 		Set<EvidenceBean> set = new LinkedHashSet<>();
@@ -32,7 +41,7 @@ public class Searcher {
 			.setParameter("gene", gene)
 			.getResultList();
 		List<EvidenceBean> evBeans = DbUtils.buildEvidences(evidences);
-		return evBeans;
+		return DbUtils.filter(evBeans, thresholds);
 	}
 	
 	public List<EvidenceBean> searchEnzyme(String gene) {
@@ -41,7 +50,7 @@ public class Searcher {
 			.setParameter("gene", gene)
 			.getResultList();
 		List<EvidenceBean> evBeans = DbUtils.buildEvidences(evidences);
-		return evBeans;
+		return DbUtils.filter(evBeans, thresholds);
 	}
 	
 	public List<Enzyme> searchEnzymesWithData() {
