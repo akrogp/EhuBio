@@ -16,38 +16,24 @@
 		<script>
 			var yLabel = '-log<tspan baseline-shift="sub">10</tspan>(p-value)',
 			    xLabel = 'log<tspan baseline-shift="sub">2</tspan>(Fold change)',
-			    file = "data.diff";
+			    url = "rest/analyze/#{volcanoView.gene}.json";
 			
 			var volcanoPlot = volcanoPlot()
 			    .xAxisLabel(xLabel)
 			    .yAxisLabel(yLabel)
-			    .foldChangeThreshold(2.0)
+			    .foldChangeThreshold(1.0)
 			    .sampleID("gene")
+			    .descID("desc")
 			    .xColumn("log2(fold_change)")
-			    .yColumn("q_value");
+			    .yColumn("p_value");
 			
-			d3.tsv(file, parser, function(error, data){
+			d3.json(url, function(error, data){
 			    if (error) console.log(error);
 			
 			    d3.select('#chart')
 			        .data([data])
 			        .call(volcanoPlot);
 			});
-			
-			// row parser to convert key values into numbers if possible
-			function parser(d) {
-			    for (var key in d) {
-			        if (d.hasOwnProperty(key)) {
-			            d[key] = numberParser(d[key]);
-			        }
-			    }
-			    return d;
-			}
-			
-			// function to turn string into number if possible
-			function numberParser(value){
-			    return (+value) ? +value : value;
-			}
 		</script>
 	</ui:define>
 </ui:composition>

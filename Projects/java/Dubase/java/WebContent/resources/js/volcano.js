@@ -13,6 +13,7 @@ function volcanoPlot() {
         xTicks, // number of ticks on the axis
         yTicks,
         sampleID = "Gene",
+        descID = "Desc",
         significanceThreshold = 0.05, // significance threshold to colour by
         foldChangeThreshold = 1.0, // fold change level to colour by
         colorRange, // colour range to use in the plot
@@ -145,6 +146,7 @@ function volcanoPlot() {
                     .style('font-size', '11px')
                     .html(
                         '<strong>' + sampleID + '</strong>: ' + d[sampleID] + '<br/>' +
+                        '<strong>' + descID + '</strong>: ' + d[descID] + '<br/>' +
                         '<strong>' + xColumn + '</strong>: ' + d3.format('.2f')(d[xColumn]) + '<br/>' +
                         '<strong>' + yColumn + '</strong>: ' + d[yColumn]
                     );
@@ -288,6 +290,12 @@ function volcanoPlot() {
     chart.sampleID = function(value) {
         if (!arguments.length) return sampleID;
         sampleID = value;
+        return chart;
+    };
+    
+    chart.descID = function(value) {
+        if (!arguments.length) return descID;
+        descID = value;
         return chart;
     };
 
