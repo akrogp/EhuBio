@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html">
+
+<ui:composition template="/WEB-INF/templates/menupage.xhtml">
+	<ui:define name="title">Volcano plot</ui:define>
+	<ui:define name="content">
+		<script src="https://d3js.org/d3.v4.min.js"></script>
+		<h:outputScript name="volcano.js" library="js" target="head" />
+		<h:outputStylesheet name="volcano.css" library="css" />
+
+		<button id="resetBtn">Reset</button>
+		<div id="chart"></div>
+		<script>
+			var yLabel = '-log<tspan baseline-shift="sub">10</tspan>(p-value)',
+			    xLabel = 'log<tspan baseline-shift="sub">2</tspan>(Fold change)',
+			    file = "data.diff";
+			
+			var volcanoPlot = volcanoPlot()
+			    .xAxisLabel(xLabel)
+			    .yAxisLabel(yLabel)
+			    .foldChangeThreshold(2.0)
+			    .sampleID("gene")
+			    .xColumn("log2(fold_change)")
+			    .yColumn("q_value");
+			
+			d3.tsv(file, parser, function(error, data){
+			    if (error) console.log(error);
+			
+			    d3.select('#chart')
+			        .data([data])
+			        .call(volcanoPlot);
+			});
+			
+			// row parser to convert key values into numbers if possible
+			function parser(d) {
+			    for (var key in d) {
+			        if (d.hasOwnProperty(key)) {
+			            d[key] = numberParser(d[key]);
+			        }
+			    }
+			    return d;
+			}
+			
+			// function to turn string into number if possible
+			function numberParser(value){
+			    return (+value) ? +value : value;
+			}
+		</script>
+	</ui:define>
+</ui:composition>
+</html>

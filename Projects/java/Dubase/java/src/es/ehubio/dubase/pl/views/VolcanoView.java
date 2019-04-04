@@ -19,7 +19,7 @@ public class VolcanoView implements Serializable {
 		this.gene = gene;
 	}
 	
-	public void plot() {
-		
+	public String plot() {
+		return "volcano";
 	}
 }
