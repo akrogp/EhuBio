@@ -1,8 +1,17 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -14,7 +23,7 @@ import java.util.List;
 public class Replicate implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private Boolean control;
+	private boolean control;
 	private List<RepScore> repScores;
 	private Evidence evidenceBean;
 
@@ -33,17 +42,17 @@ public class Replicate implements Serializable {
 	}
 
 
-	public Boolean getControl() {
+	public boolean isControl() {
 		return this.control;
 	}
 
-	public void setControl(Boolean control) {
+	public void setControl(boolean control) {
 		this.control = control;
 	}
 
 
 	//bi-directional many-to-one association to RepScore
-	@OneToMany(mappedBy="replicateBean")
+	@OneToMany(mappedBy="replicateBean", fetch=FetchType.EAGER)
 	public List<RepScore> getRepScores() {
 		return this.repScores;
 	}

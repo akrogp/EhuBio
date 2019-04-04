@@ -1,8 +1,20 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 
 /**
@@ -36,7 +48,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to Ambiguity
-	@OneToMany(mappedBy="evidenceBean")
+	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	public List<Ambiguity> getAmbiguities() {
 		return this.ambiguities;
 	}
@@ -61,7 +74,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to EvScore
-	@OneToMany(mappedBy="evidenceBean")
+	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	public List<EvScore> getEvScores() {
 		return this.evScores;
 	}
@@ -98,7 +112,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to Replicate
-	@OneToMany(mappedBy="evidenceBean")
+	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	public List<Replicate> getReplicates() {
 		return this.replicates;
 	}
@@ -123,7 +138,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to Modification
-	@OneToMany(mappedBy="evidenceBean")
+	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@Fetch(value = FetchMode.SUBSELECT)
 	public List<Modification> getModifications() {
 		return this.modifications;
 	}

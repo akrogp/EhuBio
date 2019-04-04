@@ -135,7 +135,7 @@ public class Browser {
 			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId", Evidence.class)
 			.setParameter("enzymeId", enzymeId)
 			.getResultList();
-		List<EvidenceBean> results = DbUtils.fillEvidences(em, evidences);
+		List<EvidenceBean> results = DbUtils.buildEvidences(evidences);
 		return results;
 	}
 }

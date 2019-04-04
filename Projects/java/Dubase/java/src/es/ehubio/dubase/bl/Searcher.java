@@ -31,7 +31,7 @@ public class Searcher {
 			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene", Evidence.class)
 			.setParameter("gene", gene)
 			.getResultList();
-		List<EvidenceBean> evBeans = DbUtils.fillEvidences(em, evidences);
+		List<EvidenceBean> evBeans = DbUtils.buildEvidences(evidences);
 		return evBeans;
 	}
 	
@@ -40,7 +40,7 @@ public class Searcher {
 			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene", Evidence.class)
 			.setParameter("gene", gene)
 			.getResultList();
-		List<EvidenceBean> evBeans = DbUtils.fillEvidences(em, evidences);
+		List<EvidenceBean> evBeans = DbUtils.buildEvidences(evidences);
 		return evBeans;
 	}
 	
