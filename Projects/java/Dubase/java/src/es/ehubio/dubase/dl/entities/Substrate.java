@@ -2,6 +2,7 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -15,6 +16,7 @@ public class Substrate implements Serializable {
 	private int id;
 	private String description;
 	private String gene;
+	private List<Ambiguity> ambiguities;
 
 	public Substrate() {
 	}
@@ -46,6 +48,31 @@ public class Substrate implements Serializable {
 
 	public void setGene(String gene) {
 		this.gene = gene;
+	}
+
+
+	//bi-directional many-to-one association to Ambiguity
+	@OneToMany(mappedBy="substrateBean")
+	public List<Ambiguity> getAmbiguities() {
+		return this.ambiguities;
+	}
+
+	public void setAmbiguities(List<Ambiguity> ambiguities) {
+		this.ambiguities = ambiguities;
+	}
+
+	public Ambiguity addAmbiguity(Ambiguity ambiguity) {
+		getAmbiguities().add(ambiguity);
+		ambiguity.setSubstrateBean(this);
+
+		return ambiguity;
+	}
+
+	public Ambiguity removeAmbiguity(Ambiguity ambiguity) {
+		getAmbiguities().remove(ambiguity);
+		ambiguity.setSubstrateBean(null);
+
+		return ambiguity;
 	}
 
 }

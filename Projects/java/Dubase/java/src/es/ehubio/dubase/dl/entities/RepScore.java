@@ -1,14 +1,7 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 
 
 /**
@@ -21,7 +14,7 @@ public class RepScore implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private boolean imputed;
-	private Double value;
+	private double value;
 	private Replicate replicateBean;
 	private ScoreType scoreType;
 
@@ -47,17 +40,18 @@ public class RepScore implements Serializable {
 	public void setImputed(boolean imputed) {
 		this.imputed = imputed;
 	}
-	
-	public Double getValue() {
-		return value;
+
+
+	public double getValue() {
+		return this.value;
 	}
-	
-	public void setValue(Double value) {
+
+	public void setValue(double value) {
 		this.value = value;
 	}
 
 
-	//uni-directional many-to-one association to Replicate
+	//bi-directional many-to-one association to Replicate
 	@ManyToOne
 	@JoinColumn(name="replicate")
 	public Replicate getReplicateBean() {
@@ -69,7 +63,7 @@ public class RepScore implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ScoreType
+	//bi-directional many-to-one association to ScoreType
 	@ManyToOne
 	@JoinColumn(name="score")
 	public ScoreType getScoreType() {

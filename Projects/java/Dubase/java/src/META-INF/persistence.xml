@@ -2,19 +2,6 @@
 <persistence version="2.1" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
 	<persistence-unit name="Dubase" transaction-type="JTA">
 		<jta-data-source>java:jboss/datasources/Dubase</jta-data-source>
-		<class>es.ehubio.dubase.dl.entities.Ambiguity</class>
-		<class>es.ehubio.dubase.dl.entities.Author</class>
-		<class>es.ehubio.dubase.dl.entities.Clazz</class>
-		<class>es.ehubio.dubase.dl.entities.Enzyme</class>
-		<class>es.ehubio.dubase.dl.entities.EvScore</class>
-		<class>es.ehubio.dubase.dl.entities.Evidence</class>
-		<class>es.ehubio.dubase.dl.entities.Experiment</class>
-		<class>es.ehubio.dubase.dl.entities.Method</class>
-		<class>es.ehubio.dubase.dl.entities.RepScore</class>
-		<class>es.ehubio.dubase.dl.entities.Replicate</class>
-		<class>es.ehubio.dubase.dl.entities.ScoreType</class>
-		<class>es.ehubio.dubase.dl.entities.Substrate</class>
-		<class>es.ehubio.dubase.dl.entities.Superfamily</class>
       	<properties>
 			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect"/>
 			<property name="hibernate.hbm2ddl.auto" value="validate"/>

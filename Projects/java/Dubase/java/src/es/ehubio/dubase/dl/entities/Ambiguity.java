@@ -31,7 +31,7 @@ public class Ambiguity implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Evidence
+	//bi-directional many-to-one association to Evidence
 	@ManyToOne
 	@JoinColumn(name="evidence")
 	public Evidence getEvidenceBean() {
@@ -43,7 +43,7 @@ public class Ambiguity implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Substrate
+	//bi-directional many-to-one association to Substrate
 	@ManyToOne
 	@JoinColumn(name="substrate")
 	public Substrate getSubstrateBean() {

@@ -2,6 +2,7 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -15,6 +16,7 @@ public class Clazz implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
+	private List<Superfamily> superfamilies;
 
 	public Clazz() {
 	}
@@ -37,6 +39,31 @@ public class Clazz implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+	//bi-directional many-to-one association to Superfamily
+	@OneToMany(mappedBy="clazz")
+	public List<Superfamily> getSuperfamilies() {
+		return this.superfamilies;
+	}
+
+	public void setSuperfamilies(List<Superfamily> superfamilies) {
+		this.superfamilies = superfamilies;
+	}
+
+	public Superfamily addSuperfamily(Superfamily superfamily) {
+		getSuperfamilies().add(superfamily);
+		superfamily.setClazz(this);
+
+		return superfamily;
+	}
+
+	public Superfamily removeSuperfamily(Superfamily superfamily) {
+		getSuperfamilies().remove(superfamily);
+		superfamily.setClazz(null);
+
+		return superfamily;
 	}
 
 }

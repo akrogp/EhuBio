@@ -1,14 +1,7 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
+import javax.persistence.*;
 
 
 /**
@@ -20,9 +13,9 @@ import javax.persistence.NamedQuery;
 public class Modification implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
+	private int position;
 	private Evidence evidenceBean;
 	private ModType modType;
-	private int position;
 
 	public Modification() {
 	}
@@ -39,7 +32,16 @@ public class Modification implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Evidence
+	public int getPosition() {
+		return this.position;
+	}
+
+	public void setPosition(int position) {
+		this.position = position;
+	}
+
+
+	//bi-directional many-to-one association to Evidence
 	@ManyToOne
 	@JoinColumn(name="evidence")
 	public Evidence getEvidenceBean() {
@@ -51,7 +53,7 @@ public class Modification implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to ModType
+	//bi-directional many-to-one association to ModType
 	@ManyToOne
 	@JoinColumn(name="type")
 	public ModType getModType() {
@@ -60,15 +62,6 @@ public class Modification implements Serializable {
 
 	public void setModType(ModType modType) {
 		this.modType = modType;
-	}
-	
-	
-	public int getPosition() {
-		return position;
-	}
-	
-	public void setPosition(int position) {
-		this.position = position;
 	}
 
 }

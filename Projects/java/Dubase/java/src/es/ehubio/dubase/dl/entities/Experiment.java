@@ -3,6 +3,7 @@ package es.ehubio.dubase.dl.entities;
 import java.io.Serializable;
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -16,6 +17,7 @@ public class Experiment implements Serializable {
 	private int id;
 	private Date expDate;
 	private Date pubDate;
+	private List<Evidence> evidences;
 	private Author authorBean;
 	private Enzyme enzymeBean;
 	private Method methodBean;
@@ -55,7 +57,32 @@ public class Experiment implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Author
+	//bi-directional many-to-one association to Evidence
+	@OneToMany(mappedBy="experimentBean")
+	public List<Evidence> getEvidences() {
+		return this.evidences;
+	}
+
+	public void setEvidences(List<Evidence> evidences) {
+		this.evidences = evidences;
+	}
+
+	public Evidence addEvidence(Evidence evidence) {
+		getEvidences().add(evidence);
+		evidence.setExperimentBean(this);
+
+		return evidence;
+	}
+
+	public Evidence removeEvidence(Evidence evidence) {
+		getEvidences().remove(evidence);
+		evidence.setExperimentBean(null);
+
+		return evidence;
+	}
+
+
+	//bi-directional many-to-one association to Author
 	@ManyToOne
 	@JoinColumn(name="author")
 	public Author getAuthorBean() {
@@ -67,7 +94,7 @@ public class Experiment implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Enzyme
+	//bi-directional many-to-one association to Enzyme
 	@ManyToOne
 	@JoinColumn(name="enzyme")
 	public Enzyme getEnzymeBean() {
@@ -79,7 +106,7 @@ public class Experiment implements Serializable {
 	}
 
 
-	//uni-directional many-to-one association to Method
+	//bi-directional many-to-one association to Method
 	@ManyToOne
 	@JoinColumn(name="method")
 	public Method getMethodBean() {

@@ -2,6 +2,7 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -14,6 +15,7 @@ public class Method implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String openDescription;
+	private List<Experiment> experiments;
 
 	public Method() {
 	}
@@ -37,6 +39,31 @@ public class Method implements Serializable {
 
 	public void setOpenDescription(String openDescription) {
 		this.openDescription = openDescription;
+	}
+
+
+	//bi-directional many-to-one association to Experiment
+	@OneToMany(mappedBy="methodBean")
+	public List<Experiment> getExperiments() {
+		return this.experiments;
+	}
+
+	public void setExperiments(List<Experiment> experiments) {
+		this.experiments = experiments;
+	}
+
+	public Experiment addExperiment(Experiment experiment) {
+		getExperiments().add(experiment);
+		experiment.setMethodBean(this);
+
+		return experiment;
+	}
+
+	public Experiment removeExperiment(Experiment experiment) {
+		getExperiments().remove(experiment);
+		experiment.setMethodBean(null);
+
+		return experiment;
 	}
 
 }

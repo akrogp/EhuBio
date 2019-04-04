@@ -2,6 +2,7 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -16,6 +17,7 @@ public class Author implements Serializable {
 	private String affiliation;
 	private String mail;
 	private String name;
+	private List<Experiment> experiments;
 
 	public Author() {
 	}
@@ -56,6 +58,31 @@ public class Author implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+	//bi-directional many-to-one association to Experiment
+	@OneToMany(mappedBy="authorBean")
+	public List<Experiment> getExperiments() {
+		return this.experiments;
+	}
+
+	public void setExperiments(List<Experiment> experiments) {
+		this.experiments = experiments;
+	}
+
+	public Experiment addExperiment(Experiment experiment) {
+		getExperiments().add(experiment);
+		experiment.setAuthorBean(this);
+
+		return experiment;
+	}
+
+	public Experiment removeExperiment(Experiment experiment) {
+		getExperiments().remove(experiment);
+		experiment.setAuthorBean(null);
+
+		return experiment;
 	}
 
 }
