@@ -45,8 +45,8 @@
 		    <groupId>org.hibernate</groupId>
 		    <artifactId>hibernate-annotations</artifactId>
 		    <version>3.5.6-Final</version>
-		    <scope>compile</scope>
-		</dependency>				
+		    <scope>provided</scope>
+		</dependency>	
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>

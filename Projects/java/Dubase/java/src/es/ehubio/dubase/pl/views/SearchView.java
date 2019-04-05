@@ -36,13 +36,15 @@ public class SearchView implements Serializable {
 	private List<SearchBean> results;
 	@Inject
 	private DetailsView detailsView;
+	@Inject
+	private PrefView prefs;
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	public void search() {
 		gene = query.trim().toUpperCase();
 		if( gene.isEmpty() )
 			return;
-		rawResults = new ArrayList<>(db.search(gene));
+		rawResults = new ArrayList<>(db.search(gene, prefs.getThresholds()));
 		rawResults.sort(new Comparator<EvidenceBean>() {
 			@Override
 			public int compare(EvidenceBean o1, EvidenceBean o2) {

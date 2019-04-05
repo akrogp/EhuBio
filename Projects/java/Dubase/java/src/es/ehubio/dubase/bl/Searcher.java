@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -15,27 +15,19 @@ import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Evidence;
 
 @LocalBean
-@Stateful
+@Stateless
 public class Searcher {
 	@PersistenceContext
 	private EntityManager em;
-	private Thresholds thresholds = new Thresholds();
 	
-	public Thresholds getThresholds() {
-		return thresholds;
-	}
-	public void setThresholds(Thresholds thresholds) {
-		this.thresholds = thresholds;
-	}
-	
-	public Set<EvidenceBean> search(String gene) {
+	public Set<EvidenceBean> search(String gene, Thresholds thresholds) {
 		Set<EvidenceBean> set = new LinkedHashSet<>();
-		set.addAll(searchEnzyme(gene));
-		set.addAll(searchSubstrate(gene));
+		set.addAll(searchEnzyme(gene, thresholds));
+		set.addAll(searchSubstrate(gene, thresholds));
 		return set;
 	}
 
-	public List<EvidenceBean> searchSubstrate(String gene) {
+	public List<EvidenceBean> searchSubstrate(String gene, Thresholds thresholds) {
 		List<Evidence> evidences = em
 			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene", Evidence.class)
 			.setParameter("gene", gene)
@@ -44,7 +36,7 @@ public class Searcher {
 		return DbUtils.filter(evBeans, thresholds);
 	}
 	
-	public List<EvidenceBean> searchEnzyme(String gene) {
+	public List<EvidenceBean> searchEnzyme(String gene, Thresholds thresholds) {
 		List<Evidence> evidences = em
 			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene", Evidence.class)
 			.setParameter("gene", gene)

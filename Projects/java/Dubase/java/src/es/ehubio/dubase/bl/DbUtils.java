@@ -34,11 +34,12 @@ public class DbUtils {
 		return results;
 	}
 	
-	public static List<EvidenceBean> filter(List<EvidenceBean> evidences, Thresholds thresholds) {		
+	public static List<EvidenceBean> filter(List<EvidenceBean> evidences, Thresholds thresholds) {
+		final Thresholds th = thresholds == null ? new Thresholds() : thresholds;
 		evidences = evidences.stream()
 			.filter(ev ->
-				Math.abs(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal())) >= thresholds.getLog2FoldChange() &&
-				ev.getMapScores().get(Score.P_VALUE.ordinal()) >= thresholds.getLog10PValue())
+				Math.abs(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal())) >= th.getLog2FoldChange() &&
+				ev.getMapScores().get(Score.P_VALUE.ordinal()) >= th.getLog10PValue())
 			.collect(Collectors.toList());
 		return evidences;
 	}

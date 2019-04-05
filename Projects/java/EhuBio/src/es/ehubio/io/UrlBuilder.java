@@ -12,6 +12,10 @@ public class UrlBuilder {
 	private final StringBuilder url;
 	private Map<String, String> query;
 	
+	public UrlBuilder(String url) {
+		this.url = new StringBuilder(url);
+	}
+	
 	public UrlBuilder(String protocol, String host, int port, String path) throws MalformedURLException {
 		if( !path.startsWith("/") )
 			path = "/" + path;
@@ -31,10 +35,14 @@ public class UrlBuilder {
 		return this;
 	}
 	
-	public UrlBuilder param(String name, String value) {
+	public UrlBuilder pathf(String format, Object... args) {
+		return path(String.format(format, args));
+	}
+	
+	public UrlBuilder param(String name, Object value) {
 		if( query == null )
 			query = new HashMap<>();
-		query.put(name,  value);
+		query.put(name,  value.toString());
 		return this;
 	}
 	

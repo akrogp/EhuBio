@@ -13,6 +13,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.Scatter;
 import es.ehubio.io.CsvUtils;
@@ -27,8 +28,13 @@ public class Analyzer {
 	@Path("{gene}.json")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Scatter> getScatter(@PathParam("gene") String gene, @QueryParam("xth") Double xth, @QueryParam("yth") Double yth) {		
-		List<EvidenceBean> evidences = db.searchEnzyme(gene);
+	public List<Scatter> getScatter(@PathParam("gene") String gene, @QueryParam("xth") Double xth, @QueryParam("yth") Double yth) {
+		Thresholds th = new Thresholds();
+		if( xth != null )
+			th.setLog2FoldChange(xth);
+		if( yth != null )
+			th.setLog10PValue(yth);
+		List<EvidenceBean> evidences = db.searchEnzyme(gene, th);
 		List<Scatter> result = new ArrayList<>();
 		for( EvidenceBean ev : evidences ) {
 			Scatter scatter = new Scatter();

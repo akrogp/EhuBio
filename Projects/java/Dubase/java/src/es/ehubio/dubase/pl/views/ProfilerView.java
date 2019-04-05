@@ -8,6 +8,7 @@ import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Searcher;
@@ -22,6 +23,8 @@ public class ProfilerView implements Serializable {
 	private String gene;
 	@EJB
 	private Searcher db;
+	@Inject
+	private PrefView prefs;
 	
 	public String getGene() {
 		return gene;
@@ -32,7 +35,7 @@ public class ProfilerView implements Serializable {
 	}
 	
 	public void gprofiler() {
-		redirect(db.searchEnzyme(getGene()));
+		redirect(db.searchEnzyme(getGene(), prefs.getThresholds()));
 	}
 	
 	public static void redirect(List<EvidenceBean> evidences) {
