@@ -3,6 +3,7 @@ package es.ehubio.dubase.bl;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Singleton;
@@ -63,13 +64,14 @@ public class Browser {
 					if( enzymeBean.getSubstrates().isEmpty() )
 						enzyme.setSize(DEFAULT_SIZE);
 					sf.addChild(enzyme);
-					for( EvidenceBean evBean : enzymeBean.getSubstrates() ) {
-						Flare subs = new Flare(evBean.getGenes().get(0));
-						subs.setDesc(evBean.getDescriptions() == null || evBean.getDescriptions().isEmpty() ? null : evBean.getDescriptions().get(0));
-						subs.setSize(DEFAULT_SIZE);//Math.round(evBean.getMapScores().get(Score.FOLD_CHANGE.ordinal())));
-						subs.setGradient(calcGradient(evBean));
-						enzyme.addChild(subs);
-					}
+					for( EvidenceBean evBean : enzymeBean.getSubstrates() ) 
+						for( int i = 0; i < evBean.getGenes().size(); i++ ){
+							Flare subs = new Flare(evBean.getGenes().get(i));
+							subs.setDesc(evBean.getDescriptions() == null || evBean.getDescriptions().size() != evBean.getGenes().size() ? null : evBean.getDescriptions().get(i));
+							subs.setSize(DEFAULT_SIZE);//Math.round(evBean.getMapScores().get(Score.FOLD_CHANGE.ordinal())));
+							subs.setGradient(calcGradient(evBean));
+							enzyme.addChild(subs);
+						}
 					if( enzyme.getChildren() != null)
 						Collections.sort(enzyme.getChildren(), new Comparator<Flare>() {
 							@Override
@@ -93,13 +95,18 @@ public class Browser {
 
 	public TreeBean getTree(Thresholds th) {
 		TreeBean tree = new TreeBean();
+		List<EvidenceBean> substrates = getSubstrates(th);
 		for( Clazz clazz : getClasses() ) {
 			ClassBean classBean = new ClassBean(clazz);
 			for( Superfamily family : getSuperfamiliesByClass(clazz.getId()) ) {
 				SuperfamilyBean superfamilyBean = new SuperfamilyBean(family);
 				for( Enzyme enzyme : getEnzymesBySuperfamily(family.getId()) ) {
 					EnzymeBean enzymeBean = new EnzymeBean(enzyme);
-					enzymeBean.getSubstrates().addAll(getSubstrateByEnzyme(enzyme.getId(), th));
+					enzymeBean.getSubstrates().addAll(
+						substrates.stream()
+							.filter(evBean -> evBean.getExperiment().getEnzymeBean().getGene().equals(enzyme.getGene()))
+							.collect(Collectors.toList())
+					);
 					superfamilyBean.getEnzymes().add(enzymeBean);
 				}
 				classBean.getSuperfamilies().add(superfamilyBean);
@@ -130,16 +137,14 @@ public class Browser {
 			.getResultList();
 	}
 	
-	private List<EvidenceBean> getSubstrateByEnzyme(int enzymeId, Thresholds th) {
+	private List<EvidenceBean> getSubstrates(Thresholds th) {
 		List<Evidence> evidences = em
-			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND ABS(s.value) > :s1) > 0 AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value > :s2) > 0", Evidence.class)
-			.setParameter("enzymeId", enzymeId)
+			.createQuery("SELECT e FROM Evidence e WHERE (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND ABS(s.value) > :s1) > 0 AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value > :s2) > 0", Evidence.class)
 			.setParameter("t1", Score.FOLD_CHANGE.ordinal())
 			.setParameter("s1", th.getLog2FoldChange())
 			.setParameter("t2", Score.P_VALUE.ordinal())
 			.setParameter("s2", th.getLog10PValue())
 			.getResultList();
-		List<EvidenceBean> results = DbUtils.buildEvidences(evidences);
-		return DbUtils.filter(results, th);
+		return DbUtils.buildEvidences(evidences);
 	}
 }

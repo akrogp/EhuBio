@@ -27,22 +27,28 @@ public class Searcher {
 		return set;
 	}
 
-	public List<EvidenceBean> searchSubstrate(String gene, Thresholds thresholds) {
+	public List<EvidenceBean> searchSubstrate(String gene, Thresholds th) {
 		List<Evidence> evidences = em
-			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene", Evidence.class)
+			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND ABS(s.value) > :s1) > 0 AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value > :s2) > 0", Evidence.class)
 			.setParameter("gene", gene)
+			.setParameter("t1", Score.FOLD_CHANGE.ordinal())
+			.setParameter("s1", th.getLog2FoldChange())
+			.setParameter("t2", Score.P_VALUE.ordinal())
+			.setParameter("s2", th.getLog10PValue())
 			.getResultList();
-		List<EvidenceBean> evBeans = DbUtils.buildEvidences(evidences);
-		return DbUtils.filter(evBeans, thresholds);
+		return DbUtils.buildEvidences(evidences);
 	}
 	
-	public List<EvidenceBean> searchEnzyme(String gene, Thresholds thresholds) {
+	public List<EvidenceBean> searchEnzyme(String gene, Thresholds th) {
 		List<Evidence> evidences = em
-			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene", Evidence.class)
+			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND ABS(s.value) > :s1) > 0 AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value > :s2) > 0", Evidence.class)
 			.setParameter("gene", gene)
+			.setParameter("t1", Score.FOLD_CHANGE.ordinal())
+			.setParameter("s1", th.getLog2FoldChange())
+			.setParameter("t2", Score.P_VALUE.ordinal())
+			.setParameter("s2", th.getLog10PValue())
 			.getResultList();
-		List<EvidenceBean> evBeans = DbUtils.buildEvidences(evidences);
-		return DbUtils.filter(evBeans, thresholds);
+		return DbUtils.buildEvidences(evidences);
 	}
 	
 	public List<Enzyme> searchEnzymesWithData() {
