@@ -16,7 +16,7 @@
 		<script>
 			var yLabel = '-log<tspan baseline-shift="sub">10</tspan>(p-value)',
 			    xLabel = 'log<tspan baseline-shift="sub">2</tspan>(Fold change)',
-			    url = '#{volcanoView.dataUrl}';
+			    url = '<h:outputText value="#{volcanoView.dataUrl}" escape="false"/>';
 			
 			var volcanoPlot = volcanoPlot()
 			    .xAxisLabel(xLabel)

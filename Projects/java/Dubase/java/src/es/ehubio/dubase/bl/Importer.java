@@ -120,10 +120,10 @@ public class Importer {
 
 	private List<EvidenceBean> filter(List<EvidenceBean> evidences) {
 		evidences.removeIf(ev -> {
-			if( Math.abs(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Thresholds.LOG2_FOLD_CHANGE )
+			/*if( Math.abs(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal())) < Thresholds.LOG2_FOLD_CHANGE )
 				return true;
 			if( ev.getMapScores().get(Score.P_VALUE.ordinal()) < Thresholds.LOG10_P_VALUE )
-				return true;
+				return true;*/
 			int samplesImputed = countImputed(ev.getSamples());
 			int controlsImputed = countImputed(ev.getControls());
 			if( samplesImputed != 0 && controlsImputed != 0 )

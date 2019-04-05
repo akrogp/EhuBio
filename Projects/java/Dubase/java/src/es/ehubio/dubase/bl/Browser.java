@@ -11,8 +11,10 @@ import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.beans.ClassBean;
 import es.ehubio.dubase.bl.beans.EnzymeBean;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
@@ -30,20 +32,20 @@ import es.ehubio.dubase.dl.entities.Superfamily;
 public class Browser {
 	@PersistenceContext
 	private EntityManager em;
-	private Flare flare;
-	private TreeBean tree;
 	private static final double DEFAULT_SIZE = 1;
 	private static final double MAX_SCORE = 4;
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	@Path("flare.json")
-	public Flare getFlare() {
-		if( flare != null )
-			return flare;
-		getTree();
-		
-		flare = new Flare("DUBs");
+	public Flare getFlare(@QueryParam("xth") Double xth, @QueryParam("yth") Double yth) {
+		Thresholds th = new Thresholds();
+		if( xth != null )
+			th.setLog2FoldChange(xth);
+		if( yth != null )
+			th.setLog10PValue(yth);
+		TreeBean tree = getTree(th);		
+		Flare flare = new Flare("DUBs");
 		for( ClassBean classBean : tree.getClassess() ) {
 			Flare clazz = new Flare(classBean.getEntity().getName());
 			if( classBean.getSuperfamilies().isEmpty() )
@@ -89,17 +91,15 @@ public class Browser {
 		return sign * score / MAX_SCORE;
 	}
 
-	public TreeBean getTree() {
-		if( tree != null )
-			return tree;
-		tree = new TreeBean();
+	public TreeBean getTree(Thresholds th) {
+		TreeBean tree = new TreeBean();
 		for( Clazz clazz : getClasses() ) {
 			ClassBean classBean = new ClassBean(clazz);
 			for( Superfamily family : getSuperfamiliesByClass(clazz.getId()) ) {
 				SuperfamilyBean superfamilyBean = new SuperfamilyBean(family);
 				for( Enzyme enzyme : getEnzymesBySuperfamily(family.getId()) ) {
 					EnzymeBean enzymeBean = new EnzymeBean(enzyme);
-					enzymeBean.getSubstrates().addAll(getSubstrateByEnzyme(enzyme.getId()));
+					enzymeBean.getSubstrates().addAll(getSubstrateByEnzyme(enzyme.getId(), th));
 					superfamilyBean.getEnzymes().add(enzymeBean);
 				}
 				classBean.getSuperfamilies().add(superfamilyBean);
@@ -130,12 +130,16 @@ public class Browser {
 			.getResultList();
 	}
 	
-	private List<EvidenceBean> getSubstrateByEnzyme(int enzymeId) {
+	private List<EvidenceBean> getSubstrateByEnzyme(int enzymeId, Thresholds th) {
 		List<Evidence> evidences = em
-			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId", Evidence.class)
+			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.id = :enzymeId AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND ABS(s.value) > :s1) > 0 AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value > :s2) > 0", Evidence.class)
 			.setParameter("enzymeId", enzymeId)
+			.setParameter("t1", Score.FOLD_CHANGE.ordinal())
+			.setParameter("s1", th.getLog2FoldChange())
+			.setParameter("t2", Score.P_VALUE.ordinal())
+			.setParameter("s2", th.getLog10PValue())
 			.getResultList();
 		List<EvidenceBean> results = DbUtils.buildEvidences(evidences);
-		return results;
+		return DbUtils.filter(results, th);
 	}
 }

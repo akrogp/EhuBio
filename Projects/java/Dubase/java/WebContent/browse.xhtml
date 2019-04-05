@@ -7,8 +7,12 @@
 <ui:composition template="/WEB-INF/templates/menupage.xhtml">
 <ui:define name="content">
 	<script src="https://d3js.org/d3.v4.min.js"></script>
-	<h:outputScript name="sunburst.js" library="js" target="body" />
-	<h:outputStylesheet name="sunburst.css" library="css"/>		
+	<h:outputScript name="sunburst.js" library="js" target="head" />
+	<h:outputStylesheet name="sunburst.css" library="css"/>
+	
+	<script>
+		sunBurst('<h:outputText value="#{browseView.dataUrl}" escape="false"/>');
+	</script>		
 </ui:define>
 </ui:composition>
 </html>
