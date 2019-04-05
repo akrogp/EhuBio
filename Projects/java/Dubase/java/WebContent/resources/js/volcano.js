@@ -188,10 +188,17 @@ function volcanoPlot() {
             }
 
             function circleClass(d) {
-                if (d[yColumn] <= significanceThreshold && Math.abs(d[xColumn]) >= foldChangeThreshold) return 'dot sigfold';
-                else if (d[yColumn] <= significanceThreshold) return 'dot sig';
-                else if (Math.abs(d[xColumn]) >= foldChangeThreshold) return 'dot fold';
-                else return 'dot';
+            	var cls = 'dot';
+            	if (d[yColumn] <= significanceThreshold)
+            		if (d[xColumn] >= foldChangeThreshold)
+            			cls = 'dot up';
+            		else if (d[xColumn] <= -foldChangeThreshold)
+            			cls = 'dot down';
+            		else
+            			cls = 'dot semi';
+            	else if (Math.abs(d[xColumn]) >= foldChangeThreshold)
+            		cls = 'dot semi';
+            	return cls;
             }
 
             function reset() {

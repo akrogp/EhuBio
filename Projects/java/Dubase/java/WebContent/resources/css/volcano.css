@@ -32,16 +32,16 @@
     opacity: 0.4;
 }
 
-.dot.sig {
-    fill: red;
+.dot.up {
+	fill: green;
 }
 
-.dot.fold {
-    fill: blue;
+.dot.down {
+	fill: red;
 }
 
-.dot.sigfold {
-    fill: green;
+.dot.semi {
+	fill: #666;
 }
 
 .dot.sel {

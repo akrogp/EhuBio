@@ -1,7 +1,7 @@
 # General
 
 * [x] Meter logo
-* [ ] Meter resto de DUBs
+* [x] Meter resto de DUBs
 * [x] Mejorar menú
 
 # Vistas
@@ -28,7 +28,7 @@
 
 ## Análisis
 
-* [ ] GO -> https://biit.cs.ut.ee/gprofiler/gost
+* [x] GO -> https://biit.cs.ut.ee/gprofiler/gost
 * [ ] Venn
 * [ ] Vulcano
 
@@ -36,9 +36,9 @@
 
 ## Filtrado
 
-* [ ] Cargar todos los datos
-* [ ] Mejorar eficiencia de búsqueda
-* [ ] Poder seleccionar umbrales
+* [x] Cargar todos los datos
+* [x] Mejorar eficiencia de búsqueda
+* [x] Poder seleccionar umbrales
 * [ ] Poder seleccionar imputaciones
 
 ## Unidades
