@@ -41,6 +41,10 @@ public class SearchView implements Serializable {
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	public void search() {
+		rawResults = null;
+		results = null;
+		if( query == null )
+			return;
 		gene = query.trim().toUpperCase();
 		if( gene.isEmpty() )
 			return;

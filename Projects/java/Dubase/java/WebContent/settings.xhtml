@@ -1,0 +1,29 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+<h:head></h:head> 
+<h:body>
+	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
+		<ui:define name="title">Settings</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:panelGrid columns="2">
+					<f:facet name="header">
+						<p:row><p:column colspan="2">Thresholds</p:column></p:row>
+					</f:facet>
+					<p:outputLabel for="fold" value="Fold change (log2)" />
+					<p:inputNumber id="fold" value="#{prefView.thresholds.log2FoldChange}" minValue="0.0" maxValue="10"/>
+					<p:outputLabel for="pvalue" value="p-value" />
+					<p:inputNumber id="pvalue" value="#{prefView.thresholds.pValue}" minValue="0.000" maxValue="1"/>					
+				</p:panelGrid>
+				<br/><p:commandButton value="Reset" ajax="false" action="#{prefView.reset()}"/>
+				&nbsp;<p:commandButton value="Save" ajax="false" action="#{prefView.save()}"/>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body> 
+</html>
