@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
@@ -99,20 +100,20 @@ public class SearchView implements Serializable {
 		result.setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
 		
 		double foldChange = ev.getMapScores().get(Score.FOLD_CHANGE.ordinal());
-		result.setFoldChange(String.format(
+		result.setFoldChange(String.format(Locale.ENGLISH,
 			"<font color='%s'>%.2f</font>",
 			foldChange >= 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
 			foldChange));
 		
 		double pValue = ev.getMapScores().get(Score.P_VALUE.ordinal());
 		pValue = Math.pow(10, -pValue);
-		result.setpValue(String.format("%4.1e", pValue));
+		result.setpValue(String.format(Locale.ENGLISH, "%4.1e", pValue));
 		
 		result.setTotalPepts(ev.getMapScores().get(Score.TOTAL_PEPTS.ordinal()).intValue()+"");
 		result.setUniqPepts(ev.getMapScores().get(Score.UNIQ_PEPTS.ordinal()).intValue()+"");
 		
 		double weight = ev.getMapScores().get(Score.MOL_WEIGHT.ordinal());
-		result.setWeight(String.format("%.3f", weight));
+		result.setWeight(String.format(Locale.ENGLISH, "%.3f", weight));
 		
 		result.setGlygly(ev.getModPositions().isEmpty() ? "" : CsvUtils.getCsv(';', ev.getModPositions().toArray()));
 		
