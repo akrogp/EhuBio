@@ -30,7 +30,7 @@
 
 * [x] GO -> https://biit.cs.ut.ee/gprofiler/gost
 * [ ] Venn
-* [ ] Vulcano
+* [x] Vulcano
 
 # Preferencias
 

@@ -148,7 +148,7 @@ function volcanoPlot() {
                         '<strong>' + sampleID + '</strong>: ' + d[sampleID] + '<br/>' +
                         '<strong>' + descID + '</strong>: ' + d[descID] + '<br/>' +
                         '<strong>' + xColumn + '</strong>: ' + d3.format('.2f')(d[xColumn]) + '<br/>' +
-                        '<strong>' + yColumn + '</strong>: ' + d[yColumn]
+                        '<strong>' + yColumn + '</strong>: ' + d[yColumn].toExponential(2)
                     );
             }
 
