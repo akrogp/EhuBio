@@ -54,7 +54,7 @@ public class CsvExporter {
 	
 	private static void printImputations(PrintWriter pw, List<ReplicateBean> reps) {
 		for( ReplicateBean rep : reps ) {
-			pw.print(rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal()).isImputed() ? 1 : 0);
+			pw.print(rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal()).isImputed());
 			pw.print(SEP1);
 		}
 	}
