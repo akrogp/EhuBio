@@ -26,10 +26,10 @@
 			</h:form>
 			<h:form>
 				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}" rowIndexVar="i">
-					<p:column headerText="Experiment">#{result.experiment}</p:column>
-					<p:column headerText="DUB">#{result.enzyme}</p:column>
-					<p:column headerText="Substrate"><h:outputText value="#{result.genes}" escape="false"/></p:column>
-					<p:column>
+					<p:column headerText="Experiment" sortBy="#{result.experiment}">#{result.experiment}</p:column>
+					<p:column headerText="DUB" sortBy="#{result.enzyme}">#{result.enzyme}</p:column>
+					<p:column headerText="Substrate" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
+					<p:column sortBy="#{result.foldChange}">
 						<f:facet name="header">
 							<h:panelGroup id="fold">
 								Fold change <br/>(log2)
@@ -37,12 +37,12 @@
 							</h:panelGroup>
 							<p:tooltip for="fold" value="siDUB versus control" position="top"/>
 						</f:facet>						
-						<h:outputText value="#{result.foldChange}" escape="false"/>						
+						<h:outputText value="#{result.foldChangeFmt}" escape="false"/>						
 					</p:column>
-					<p:column headerText="p-value">#{result.pValue}</p:column>
-					<p:column headerText="Peptide count (all)">#{result.totalPepts}</p:column>
-					<p:column headerText="Peptide count (unique)">#{result.uniqPepts}</p:column>
-					<p:column headerText="Mol. weight (kDa)">#{result.weight}</p:column>
+					<p:column headerText="p-value" sortBy="#{result.pValue}">#{result.pValueFmt}</p:column>
+					<p:column headerText="Peptide count (all)" sortBy="#{result.totalPepts}">#{result.totalPepts}</p:column>
+					<p:column headerText="Peptide count (unique)" sortBy="#{result.uniqPepts}">#{result.uniqPepts}</p:column>
+					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}">#{result.weightFmt}</p:column>
 					<p:column headerText="More fields">
 						<p:commandButton value="..." ajax="false" action="#{searchView.onDetails(i)}"/>
 					</p:column>

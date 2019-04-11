@@ -28,10 +28,10 @@
 					<sup>&#128712;</sup>
 					<p:tooltip for="fold" value="siDUB versus control" position="top"/>
 				</h:panelGroup>				
-				<h:outputText value="#{detailsView.detailsBean.foldChange}" escape="false"/>
+				<h:outputText value="#{detailsView.detailsBean.foldChangeFmt}" escape="false"/>
 				
 				<h:outputText value="p-value" />
-				<h:outputText value="#{detailsView.detailsBean.pValue}"/>
+				<h:outputText value="#{detailsView.detailsBean.pValueFmt}"/>
 				
 				<h:outputText value="Peptide count (all)" />
 				<h:outputText value="#{detailsView.detailsBean.totalPepts}"/>
@@ -40,7 +40,7 @@
 				<h:outputText value="#{detailsView.detailsBean.uniqPepts}"/>
 				
 				<h:outputText value="Molecular weight" />
-				<h:outputText value="#{detailsView.detailsBean.weight} kDa"/>
+				<h:outputText value="#{detailsView.detailsBean.weightFmt} kDa"/>
 				
 				<h:outputText value="Sequence coverage" />
 				<h:outputText value="#{detailsView.detailsBean.coverage} %"/>

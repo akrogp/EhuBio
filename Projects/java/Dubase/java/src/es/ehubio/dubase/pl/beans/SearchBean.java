@@ -1,15 +1,22 @@
 package es.ehubio.dubase.pl.beans;
 
+import java.util.Locale;
+
+import es.ehubio.dubase.pl.Colors;
+
 public class SearchBean {
 	private String experiment;
 	private String enzyme;
 	private String genes;
 	private String descriptions;
-	private String foldChange;
-	private String pValue;
-	private String totalPepts;
-	private String uniqPepts;
-	private String weight;
+	private String foldChangeFmt;
+	private double foldChange;
+	private String pValueFmt;
+	private double pValue;
+	private int totalPepts;
+	private int uniqPepts;
+	private String weightFmt;
+	private double weight;
 	private String glygly;
 	
 	public String getExperiment() {
@@ -36,40 +43,55 @@ public class SearchBean {
 	public void setDescriptions(String descriptions) {
 		this.descriptions = descriptions;
 	}
-	public String getFoldChange() {
-		return foldChange;
+	public String getFoldChangeFmt() {
+		return foldChangeFmt;
 	}
-	public void setFoldChange(String foldChange) {
-		this.foldChange = foldChange;
+	public String getpValueFmt() {
+		return pValueFmt;
 	}
-	public String getpValue() {
-		return pValue;
-	}
-	public void setpValue(String pValue) {
-		this.pValue = pValue;
-	}
-	public String getTotalPepts() {
+	public int getTotalPepts() {
 		return totalPepts;
 	}
-	public void setTotalPepts(String totalPepts) {
+	public void setTotalPepts(int totalPepts) {
 		this.totalPepts = totalPepts;
 	}
-	public String getUniqPepts() {
+	public int getUniqPepts() {
 		return uniqPepts;
 	}
-	public void setUniqPepts(String uniqPepts) {
+	public void setUniqPepts(int uniqPepts) {
 		this.uniqPepts = uniqPepts;
 	}
-	public String getWeight() {
-		return weight;
-	}
-	public void setWeight(String weight) {
-		this.weight = weight;
+	public String getWeightFmt() {
+		return weightFmt;
 	}
 	public String getGlygly() {
 		return glygly;
 	}
 	public void setGlygly(String glygly) {
 		this.glygly = glygly;
+	}
+	public double getFoldChange() {
+		return foldChange;
+	}
+	public void setFoldChange(double foldChange) {
+		this.foldChange = foldChange;
+		foldChangeFmt = String.format(Locale.ENGLISH,
+			"<font color='%s'>%.2f</font>",
+			foldChange >= 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
+			foldChange);
+	}
+	public double getpValue() {
+		return pValue;
+	}
+	public void setpValue(double pValue) {
+		this.pValue = pValue;
+		pValueFmt = String.format(Locale.ENGLISH, "%4.1e", pValue);
+	}
+	public double getWeight() {
+		return weight;
+	}
+	public void setWeight(double weight) {
+		this.weight = weight;
+		weightFmt = String.format(Locale.ENGLISH, "%.3f", weight);
 	}
 }

@@ -50,24 +50,24 @@ public class DetailsBean {
 		return searchBean.getDescriptions();
 	}
 
-	public String getFoldChange() {
-		return searchBean.getFoldChange();
+	public String getFoldChangeFmt() {
+		return searchBean.getFoldChangeFmt();
 	}
 
-	public String getpValue() {
-		return searchBean.getpValue();
+	public String getpValueFmt() {
+		return searchBean.getpValueFmt();
 	}
 
-	public String getTotalPepts() {
+	public int getTotalPepts() {
 		return searchBean.getTotalPepts();
 	}
 
-	public String getUniqPepts() {
+	public int getUniqPepts() {
 		return searchBean.getUniqPepts();
 	}
 
-	public String getWeight() {
-		return searchBean.getWeight();
+	public String getWeightFmt() {
+		return searchBean.getWeightFmt();
 	}
 	
 	public String getGlygly() {
