@@ -10,7 +10,7 @@ public class Flare {
 	private String name;
 	private String desc;
 	private Double size;
-	private Double gradient;
+	private Boolean db;
 	private List<Flare> children;
 	
 	public Flare() {
@@ -54,11 +54,11 @@ public class Flare {
 		children.add(child);
 	}
 
-	public Double getGradient() {
-		return gradient;
+	public Boolean getDb() {
+		return db;
 	}
 
-	public void setGradient(Double gradient) {
-		this.gradient = gradient;
+	public void setDb(Boolean db) {
+		this.db = db;
 	}
 }

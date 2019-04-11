@@ -40,11 +40,10 @@ function sunBurst(url) {
 	};
 	
 	const calcColor = d => {
-		if( !d.data.gradient )
+		if( d.data.db )
+			return 'yellow';
+		else
 			return color((d.children ? d : d.parent).data.name);
-		const offset = 100;
-		const rgb = Math.round(Math.abs(d.data.gradient) * (255-offset));
-		return d.data.gradient < 0 ? `rgb(${rgb+offset},0,0)` : `rgb(0,${rgb+offset},0)`;
 	}
 	
 	const labelTransform = d => {
@@ -151,10 +150,12 @@ function sunBurst(url) {
 	});
 	
 	function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1, depth: 0 }) {
-		if( d.data && !d.children ) {
-			window.location.href = `search.xhtml?gene=${d.data.name}`;
-			return;
-		}
+		if( d.data )
+			if( !d.children ) {
+				if( d.data.db )
+					window.location.href = `search.xhtml?gene=${d.data.name}`;
+				return;
+			}
 		
 		// Travel back if current node is clicked
 		if( depth && d.depth === depth && d.parent )
