@@ -4,7 +4,6 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,14 +47,6 @@ public class SearchView implements Serializable {
 		if( gene.isEmpty() )
 			return;
 		rawResults = new ArrayList<>(db.search(gene, prefs.getThresholds()));
-		rawResults.sort(new Comparator<EvidenceBean>() {
-			@Override
-			public int compare(EvidenceBean o1, EvidenceBean o2) {
-				double s1 = Math.abs(o1.getMapScores().get(Score.FOLD_CHANGE.ordinal()));
-				double s2 = Math.abs(o2.getMapScores().get(Score.FOLD_CHANGE.ordinal()));
-				return (int)Math.signum(s2-s1);
-			}
-		});
 		parseResults();
 		return;
 	}

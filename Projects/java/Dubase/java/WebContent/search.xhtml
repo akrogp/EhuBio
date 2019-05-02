@@ -25,7 +25,7 @@
 				<br/><br/>
 			</h:form>
 			<h:form>
-				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}" rowIndexVar="i">
+				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}" rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending">
 					<p:column headerText="Experiment" sortBy="#{result.experiment}">#{result.experiment}</p:column>
 					<p:column headerText="DUB" sortBy="#{result.enzyme}">#{result.enzyme}</p:column>
 					<p:column headerText="Substrate" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
