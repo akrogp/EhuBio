@@ -188,7 +188,7 @@ function volcanoPlot() {
             }
 
             function circleClass(d) {
-            	var cls = 'dot';
+            	var cls = 'dot none';
             	if (d[yColumn] <= significanceThreshold)
             		if (d[xColumn] >= foldChangeThreshold)
             			cls = 'dot up';

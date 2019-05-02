@@ -27,21 +27,26 @@
 
 .dot {
     /*pointer-events: all;*/
-    fill: #666;
     stroke: none;
-    opacity: 0.4;
+    opacity: 0.6;
+}
+
+.dot.none {
+	fill: none;
+	stroke: #666;
 }
 
 .dot.up {
-	fill: green;
+	fill: darkgreen;
 }
 
 .dot.down {
-	fill: red;
+	fill: darkred;
 }
 
 .dot.semi {
-	fill: #666;
+	fill: none;
+	stroke: #666;
 }
 
 .dot.sel {

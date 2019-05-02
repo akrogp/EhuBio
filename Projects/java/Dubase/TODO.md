@@ -53,7 +53,7 @@
 
 * [x] GO -> https://biit.cs.ut.ee/gprofiler/gost
 * [ ] Seleccionar una USP y buscar contra el resto resultados cruzados (tabla)
-* [ ] Vulcano: grises sólo el borde y el resto (rojos y verdes) con menos transparencia.
+* [x] Vulcano: grises sólo el borde y el resto (rojos y verdes) con menos transparencia.
 * [x] Vulcano: el signo del eje y hay que revisarlo.
 * [ ] Vulcano: controles de calidad en azul. Me los pasa Juanma y aparte está el DUB que se haya usado para la búsqueda.
 * [ ] STRING (pendiente de que Juanma vea si los resultados que salen merecen)
