@@ -35,7 +35,13 @@
 								Fold change <br/>(log2)
 								<h:graphicImage name="images/info.svg" />
 							</h:panelGroup>
-							<p:tooltip for="fold" value="siDUB versus control" position="top"/>
+							<p:tooltip for="fold" position="top" escape="false">
+								siDUB versus control
+								<ul>
+									<li>green: up-ubiquitinated</li>
+									<li>red: down-ubiquitinated</li>
+								</ul>
+							</p:tooltip>
 						</f:facet>						
 						<h:outputText value="#{result.foldChangeFmt}" escape="false"/>						
 					</p:column>

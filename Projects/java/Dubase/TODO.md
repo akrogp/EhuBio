@@ -28,7 +28,7 @@
 * [ ] En search separar búsqueda DUB/substrato/todo en tres botones.
 * [x] ¿Se podría poner una opción para ordenar las tablas en función de las columnas? Es decir ordenar la columna por el nombre del gen, el fold change, etc. Yo creo que ahora aparecen ordenas en función del fold change, verdad? Con respecto a esto, el software tiene por igual el valor 3.32 y -3.32 (negativo), en lugar de situar al final los negativos....
 * [x] La "i" de info añadida en el título de Fold Change, a veces no sale...
-* [ ] Estaria bien añadir una leyenda, que explicara los colores verde y rojo de la columna Fold Change (green: up-ubiquitinated, red: down)
+* [x] Estaria bien añadir una leyenda, que explicara los colores verde y rojo de la columna Fold Change (green: up-ubiquitinated, red: down)
 * [x] Ordenar -> quitar el orden por valor absoluto.
 * [x] En la opción de G:Profiler, te manda tanto las proteinas up-ubiquitinadas y las down. Se podría elegir que proteinas quiere enviar a G:profiler???
 * [x] Cuando te descargas los datos aparecen las columans de de 1 y 0, para indicar que valor se ha imputado y cual no. Pero no viene indicado que significa "1" y "0".
