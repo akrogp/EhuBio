@@ -1,7 +1,7 @@
 package es.ehubio.dubase.pl;
 
 public class Colors {
-	public static final String UP_REGULATED = "00FF00";
+	public static final String UP_REGULATED = "008000";
 	public static final String DOWN_REGULATED = "FF0000";
 	public static final String CLASS = "6E9EBF";
 	public static final String FAMILY = "82C542";
