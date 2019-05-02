@@ -54,7 +54,7 @@
 * [x] GO -> https://biit.cs.ut.ee/gprofiler/gost
 * [ ] Seleccionar una USP y buscar contra el resto resultados cruzados (tabla)
 * [ ] Vulcano: grises sólo el borde y el resto (rojos y verdes) con menos transparencia. El signo del eje y hay que revisarlo.
-* [ ] Vulcano -> controles de calidad en azul. Me los pasa Juanma y aparte está el DUB que se haya usado para la búsqueda.
+* [ ] Vulcano: controles de calidad en azul. Me los pasa Juanma y aparte está el DUB que se haya usado para la búsqueda.
 * [ ] STRING (pendiente de que Juanma vea si los resultados que salen merecen)
 
 # Preferencias
@@ -66,7 +66,7 @@
 * [x] Poder seleccionar umbrales
 * [ ] Poder seleccionar imputaciones
 * [ ] Por defecto solo verdes pero poder incluir rojas o sólo rojas
-* [ ] Cambiar nombre de settings a thresholds y ponerlo como pestaña entre home y search
+* [x] Cambiar nombre de settings a thresholds y ponerlo como pestaña entre home y search
 
 ## Unidades
 

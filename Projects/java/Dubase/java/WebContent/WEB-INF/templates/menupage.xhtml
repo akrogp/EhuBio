@@ -17,16 +17,11 @@
 		</div>
 		<div id="menubar">
 			<h:link value="Home" outcome="index" class="menuitem"/> &nbsp; | &nbsp;
+			<h:link value="Thresholds" outcome="settings" class="menuitem"/> &nbsp; | &nbsp;
 			<ui:repeat value="#{homeView.ops}" var="op">
 				<h:link value="#{op.name}" outcome="#{op.action}" class="menuitem"/> &nbsp; | &nbsp;
 			</ui:repeat>			
 			<h:link value="About" outcome="about" class="menuitem"/>
-			<div style="float:right;">
-				<h:link outcome="settings" class="menuitem">
-					Settings ...&nbsp;
-					<h:graphicImage name="images/settings.svg" style="vertical-align:middle;"/>
-				</h:link>
-			</div>
 		</div>
 		<h3><ui:insert name="title"/></h3>
 		<div id="body">
