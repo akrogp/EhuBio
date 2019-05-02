@@ -10,7 +10,7 @@
 ## Inicio
 
 * [ ] Contenido: explicar mejor el fold change, etc.
-* [ ] Captura del vulcano en lugar de la de g:profiler
+* [x] Captura del vulcano en lugar de la de g:profiler
 
 ## About
 
