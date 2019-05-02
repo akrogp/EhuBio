@@ -13,6 +13,8 @@ public final class Thresholds {
 	// Instance
 	private double foldChange = FOLD_CHANGE, log2FoldChange = LOG2_FOLD_CHANGE;
 	private double pValue = P_VALUE, log10PValue = LOG10_P_VALUE;
+	private boolean up = true;
+	private boolean down = false;
 	
 	public double getFoldChange() {
 		return foldChange;
@@ -44,5 +46,17 @@ public final class Thresholds {
 	public void setLog10PValue(double log10pValue) {
 		log10PValue = log10pValue;
 		this.pValue = Math.pow(10, -log10pValue);
+	}
+	public boolean isUp() {
+		return up;
+	}
+	public void setUp(boolean up) {
+		this.up = up;
+	}
+	public boolean isDown() {
+		return down;
+	}
+	public void setDown(boolean down) {
+		this.down = down;
 	}
 }

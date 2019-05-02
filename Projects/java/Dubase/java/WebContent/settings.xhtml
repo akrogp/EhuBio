@@ -8,17 +8,27 @@
 <h:head></h:head> 
 <h:body>
 	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
-		<ui:define name="title">Settings</ui:define>
+		<ui:define name="title">Thresholds</ui:define>
 		<ui:define name="content">
 			<h:form>
-				<p:panelGrid columns="2">
+				<p:panelGrid columns="1">
 					<f:facet name="header">
-						<p:row><p:column colspan="2">Thresholds</p:column></p:row>
+						<p:row><p:column colspan="2">Preferences</p:column></p:row>
 					</f:facet>
-					<p:outputLabel for="fold" value="Fold change (log2)" />
-					<p:inputNumber id="fold" value="#{prefView.thresholds.log2FoldChange}" minValue="0.0" maxValue="10"/>
-					<p:outputLabel for="pvalue" value="p-value" />
-					<p:inputNumber id="pvalue" value="#{prefView.thresholds.pValue}" minValue="0.000" maxValue="1"/>					
+					<p:panelGrid columns="1" styleClass="ui-noborder">
+						<h:outputText id="fold_label" value="Fold change (log2) = #{prefView.thresholds.log2FoldChange}" />
+						<h:inputHidden id="fold_value" value="#{prefView.thresholds.log2FoldChange}" />
+        				<p:slider for="fold_value" display="fold_label" style="width:200px" displayTemplate="Fold change (log2) = {value}" minValue="0.2" maxValue="10" step="0.1"/>												
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="ui-noborder">
+						<h:outputText id="p_label" value="p-value = #{prefView.thresholds.pValue}" />
+						<h:inputHidden id="p_value" value="#{prefView.thresholds.pValue}" />
+        				<p:slider for="p_value" display="p_label" style="width:200px" displayTemplate="p-value = {value}" minValue="0.01" maxValue="0.3" step="0.01"/>
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="ui-noborder">
+						<p:selectBooleanCheckbox value="#{prefView.thresholds.up}" itemLabel="Upregulated"/>
+						<p:selectBooleanCheckbox value="#{prefView.thresholds.down}" itemLabel="Downregulated"/>
+					</p:panelGrid>					
 				</p:panelGrid>
 				<br/><p:commandButton value="Reset" ajax="false" action="#{prefView.reset()}"/>
 				&nbsp;<p:commandButton value="Save" ajax="false" action="#{prefView.save()}"/>
