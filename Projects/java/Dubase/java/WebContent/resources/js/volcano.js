@@ -171,7 +171,7 @@ function volcanoPlot() {
             function yTickFormat(n) {
                 return d3.format(".2r")(getBaseLog(10, n));
                 function getBaseLog(x, y) {
-                    return Math.log(y) / Math.log(x);
+                    return - Math.log(y) / Math.log(x);
                 }
             }
 
