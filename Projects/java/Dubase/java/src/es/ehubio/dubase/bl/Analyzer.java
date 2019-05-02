@@ -30,6 +30,7 @@ public class Analyzer {
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<Scatter> getScatter(@PathParam("gene") String gene, @QueryParam("xth") Double xth, @QueryParam("yth") Double yth) {
 		Thresholds th = new Thresholds();
+		th.setDown(true); // for vulcano
 		if( xth != null )
 			th.setLog2FoldChange(xth);
 		if( yth != null )
