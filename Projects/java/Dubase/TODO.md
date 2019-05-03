@@ -21,7 +21,7 @@
 * [x] Descargar csv
 * [x] Info de cómo calculadas las cosas
 * [x] Verde más oscuro
-* [ ] Mostrar botón de vulcano sólo en el caso de búsqueda por DUB -> a ser posible en un popup o en una ventana nueva
+* [x] Mostrar botón de vulcano sólo en el caso de búsqueda por DUB -> a ser posible en un popup o en una ventana nueva
 * [ ] Tabla compacta solo con unique peptides y en extendida también los all 
 * [ ] Dentro de las tablas que aparecen en "SEARCH" ¿Habría opción de que cuando le das a la opción "More Fields", en lugar de que te lleve a una nueva ventana esa única proteina, pudieras elegir que more fields quieres y que se añadieran para todas las proteinas de la lista, como columnas adicionales?? -> Mantener detalles de cada una, y botón general para tabla extendida.
 * [ ] Meter id de MaxQuant (Juanma) -> en search columna ID con exp+id mxq y al clickar en cada una te muestra diferentes cosas.

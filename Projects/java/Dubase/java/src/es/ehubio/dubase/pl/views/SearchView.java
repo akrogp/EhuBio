@@ -39,6 +39,8 @@ public class SearchView implements Serializable {
 	private DetailsView detailsView;
 	@Inject
 	private PrefView prefs;
+	@Inject
+	private VolcanoView volcanoView;
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	public void search() {
@@ -79,6 +81,11 @@ public class SearchView implements Serializable {
 	
 	public void gprofiler() {
 		ProfilerView.redirect(rawResults);
+	}
+	
+	public String volcano() {
+		volcanoView.setGene(gene);
+		return volcanoView.plot();
 	}
 
 	private void parseResults() {

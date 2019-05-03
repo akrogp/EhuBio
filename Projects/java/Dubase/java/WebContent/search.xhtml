@@ -26,7 +26,11 @@
 				<p:commandButton ajax="false" value="Download #{searchView.results.size()} results" action="#{searchView.download()}"/>
 				&nbsp;
 			</h:form>
-			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" target="_blank" style="display: inline">
+			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" target="volcano" style="display: inline">
+				<p:commandButton value="Volcano" ajax="false" action="#{searchView.volcano()}" disabled="#{!searchView.dub}"/>
+				&nbsp;
+			</h:form>
+			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" target="gprofiler" style="display: inline">
 				<p:commandButton value="g:Profiler" ajax="false" action="#{searchView.gprofiler()}"/>
 				<br/><br/>
 			</h:form>
