@@ -31,7 +31,7 @@ public class SearchView implements Serializable {
 	@EJB
 	private Searcher db;
 	private String query, gene;
-	private boolean dub = true, substrate = true;
+	private boolean dub, substrate;
 	private List<String> genes;
 	private List<EvidenceBean> rawResults;
 	private List<SearchBean> results;
@@ -42,6 +42,10 @@ public class SearchView implements Serializable {
 	@Inject
 	private VolcanoView volcanoView;
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
+	
+	public SearchView() {
+		reset();
+	}
 	
 	public void search() {
 		clear();
@@ -60,6 +64,14 @@ public class SearchView implements Serializable {
 	public void clear() {
 		rawResults = null;
 		results = null;
+	}
+	
+	public void reset() {
+		clear();
+		dub = true;
+		substrate = true;
+		query = null;
+		gene = null;
 	}
 	
 	public void download() {

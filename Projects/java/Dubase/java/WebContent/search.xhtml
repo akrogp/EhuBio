@@ -18,7 +18,8 @@
 				<p:selectBooleanCheckbox value="#{searchView.substrate}" itemLabel="Substrate">
 					<f:ajax listener="#{searchView.clear()}" render="@all"/>
 				</p:selectBooleanCheckbox>
-				<p:commandButton value="Search" ajax="false" action="#{searchView.search()}" disabled="#{searchView.invalid}"/>
+				<p:commandButton value="Reset" ajax="false" action="#{searchView.reset()}"/>
+				&nbsp;<p:commandButton value="Search!" ajax="false" action="#{searchView.search()}" disabled="#{searchView.invalid}"/>
 				<p:commandButton value="Feed examples" ajax="false" action="#{feedView.saveExamples()}" rendered="false"/>
 				<p:message for="query"/>
 			</h:form><br/>

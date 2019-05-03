@@ -52,7 +52,7 @@
 					<p:column><h:graphicImage name="images/volcano-preview.png"/></p:column>
 					<p:column>
 						<p>Volcano plot with all the potential substrates available in DUBase for a given DUB</p>
-						<h:form>
+						<h:form target="volcano">
 							<p:selectOneMenu value="#{volcanoView.gene}">
 								<p:ajax update="@form"/>
 								<f:selectItem itemLabel="--" itemValue=""/>
