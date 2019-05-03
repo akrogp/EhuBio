@@ -153,7 +153,7 @@ function sunBurst(url) {
 		if( d.data )
 			if( !d.children ) {
 				if( d.data.db )
-					window.location.href = `search.xhtml?gene=${d.data.name}`;
+					window.location.href = `search.xhtml?dub=${d.data.name}`;
 				return;
 			}
 		

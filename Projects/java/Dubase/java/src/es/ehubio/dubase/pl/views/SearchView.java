@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -15,6 +16,7 @@ import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
@@ -29,6 +31,7 @@ public class SearchView implements Serializable {
 	@EJB
 	private Searcher db;
 	private String query, gene;
+	private boolean dub = true, substrate = true;
 	private List<String> genes;
 	private List<EvidenceBean> rawResults;
 	private List<SearchBean> results;
@@ -39,16 +42,22 @@ public class SearchView implements Serializable {
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	public void search() {
-		rawResults = null;
-		results = null;
+		clear();
 		if( query == null )
 			return;
 		gene = query.trim().toUpperCase();
 		if( gene.isEmpty() )
 			return;
-		rawResults = new ArrayList<>(db.search(gene, prefs.getThresholds()));
+		Thresholds th = prefs.getThresholds();
+		Collection<EvidenceBean> tmpResults = !substrate ? db.searchEnzyme(gene, th) : (!dub ? db.searchSubstrate(gene, th) : db.search(gene, th));
+		rawResults = new ArrayList<>(tmpResults);
 		parseResults();
 		return;
+	}
+	
+	public void clear() {
+		rawResults = null;
+		results = null;
 	}
 	
 	public void download() {
@@ -99,8 +108,10 @@ public class SearchView implements Serializable {
 	}
 
 	public String getQuery() {
-		String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("gene"); 
+		String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("dub"); 
 		if( param != null ) {
+			setDub(true);
+			setSubstrate(false);
 			setQuery(param);
 			search();
 		}
@@ -124,5 +135,25 @@ public class SearchView implements Serializable {
 		if( genes == null )
 			genes = db.searchEnzymesWithData().stream().map(e -> e.getGene()).collect(Collectors.toList()); 
 		return genes;
+	}
+
+	public boolean isDub() {
+		return dub;
+	}
+
+	public void setDub(boolean dub) {
+		this.dub = dub;
+	}
+
+	public boolean isSubstrate() {
+		return substrate;
+	}
+
+	public void setSubstrate(boolean substrate) {
+		this.substrate = substrate;
+	}
+	
+	public boolean isInvalid() {
+		return !dub && !substrate;
 	}
 }

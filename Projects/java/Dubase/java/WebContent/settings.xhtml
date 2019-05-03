@@ -26,12 +26,16 @@
         				<p:slider for="p_value" display="p_label" style="width:200px" displayTemplate="p-value = {value}" minValue="0.01" maxValue="0.3" step="0.01"/>
 					</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="ui-noborder">
-						<p:selectBooleanCheckbox value="#{prefView.thresholds.up}" itemLabel="Upregulated"/>
-						<p:selectBooleanCheckbox value="#{prefView.thresholds.down}" itemLabel="Downregulated"/>
+						<p:selectBooleanCheckbox value="#{prefView.thresholds.up}" itemLabel="Upregulated">
+							<p:ajax event="change" update="@form" />
+						</p:selectBooleanCheckbox>
+						<p:selectBooleanCheckbox value="#{prefView.thresholds.down}" itemLabel="Downregulated">
+							<p:ajax event="change" update="@form" />
+						</p:selectBooleanCheckbox>
 					</p:panelGrid>					
 				</p:panelGrid>
 				<br/><p:commandButton value="Reset" ajax="false" action="#{prefView.reset()}"/>
-				&nbsp;<p:commandButton value="Save" ajax="false" action="#{prefView.save()}"/>
+				&nbsp;<p:commandButton value="Save" ajax="false" action="#{prefView.save()}" disabled="#{prefView.invalid}"/>
 			</h:form>
 		</ui:define>
 	</ui:composition>

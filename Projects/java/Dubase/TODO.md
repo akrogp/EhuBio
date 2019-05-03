@@ -25,7 +25,7 @@
 * [ ] Tabla compacta solo con unique peptides y en extendida también los all 
 * [ ] Dentro de las tablas que aparecen en "SEARCH" ¿Habría opción de que cuando le das a la opción "More Fields", en lugar de que te lleve a una nueva ventana esa única proteina, pudieras elegir que more fields quieres y que se añadieran para todas las proteinas de la lista, como columnas adicionales?? -> Mantener detalles de cada una, y botón general para tabla extendida.
 * [ ] Meter id de MaxQuant (Juanma) -> en search columna ID con exp+id mxq y al clickar en cada una te muestra diferentes cosas.
-* [ ] En search separar búsqueda DUB/substrato/todo en tres botones.
+* [x] En search separar búsqueda DUB/substrato/todo en tres botones.
 * [x] ¿Se podría poner una opción para ordenar las tablas en función de las columnas? Es decir ordenar la columna por el nombre del gen, el fold change, etc. Yo creo que ahora aparecen ordenas en función del fold change, verdad? Con respecto a esto, el software tiene por igual el valor 3.32 y -3.32 (negativo), en lugar de situar al final los negativos....
 * [x] La "i" de info añadida en el título de Fold Change, a veces no sale...
 * [x] Estaria bien añadir una leyenda, que explicara los colores verde y rojo de la columna Fold Change (green: up-ubiquitinated, red: down)

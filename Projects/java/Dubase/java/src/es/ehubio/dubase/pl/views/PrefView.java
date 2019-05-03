@@ -28,4 +28,8 @@ public class PrefView implements Serializable {
 	public void save() {
 		searchView.search();
 	}
+	
+	public boolean isInvalid() {
+		return !thresholds.isUp() && !thresholds.isDown();
+	}
 }
