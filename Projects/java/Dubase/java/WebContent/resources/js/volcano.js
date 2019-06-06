@@ -14,6 +14,7 @@ function volcanoPlot() {
         yTicks,
         sampleID = "Gene",
         descID = "Desc",
+        controls = [],
         significanceThreshold = 0.05, // significance threshold to colour by
         foldChangeThreshold = 1.0, // fold change level to colour by
         colorRange, // colour range to use in the plot
@@ -189,14 +190,16 @@ function volcanoPlot() {
 
             function circleClass(d) {
             	var cls = 'dot none';
-            	if (d[yColumn] <= significanceThreshold)
+            	if( controls.indexOf(d.gene) >= 0 )
+            		cls = 'dot control';
+            	else if (d[yColumn] <= significanceThreshold) {
             		if (d[xColumn] >= foldChangeThreshold)
             			cls = 'dot up';
             		else if (d[xColumn] <= -foldChangeThreshold)
             			cls = 'dot down';
             		else
             			cls = 'dot semi';
-            	else if (Math.abs(d[xColumn]) >= foldChangeThreshold)
+            	} else if (Math.abs(d[xColumn]) >= foldChangeThreshold)
             		cls = 'dot semi';
             	return cls;
             }
@@ -303,6 +306,12 @@ function volcanoPlot() {
     chart.descID = function(value) {
         if (!arguments.length) return descID;
         descID = value;
+        return chart;
+    };
+    
+    chart.controls = function(value) {
+    	if (!arguments.length) return controls;
+        controls = value;
         return chart;
     };
 

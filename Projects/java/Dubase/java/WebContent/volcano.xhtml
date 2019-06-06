@@ -27,7 +27,13 @@
 			    .sampleID("gene")
 			    .descID("desc")
 			    .xColumn("log2(fold_change)")
-			    .yColumn("p_value");
+			    .yColumn("p_value")
+			    .controls([
+				    "PCCA", "PC", "ACACA", "MCCC1", "HLCS", "ACACB",
+				    "AVD", "Avidin",
+				    "RPS27A", "UBA52", "UBB", "UBC", "B00003",
+				    '<h:outputText value="#{volcanoView.gene}"/>'
+			    ]);
 			
 			d3.json(url, function(error, data){
 			    if (error) console.log(error);

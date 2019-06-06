@@ -53,6 +53,10 @@
 	fill: orange;
 }
 
+.dot.control {
+	fill: blue;
+}
+
 .zoom {
     cursor: move;
     fill: none;
