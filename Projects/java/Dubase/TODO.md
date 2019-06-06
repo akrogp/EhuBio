@@ -46,7 +46,7 @@
 ## Gráfica
 
 * [x] Nueva representación (tamaño según fold-change?) -> https://observablehq.com/@d3/zoomable-sunburst
-* [ ] Juanma me pasa familias actualizadas
+* [x] Juanma me pasa familias actualizadas
 * [x] En la opción Browse, en el diagrama, sería posible quitar la última capa?? Es decir los nombres de los sustratos. O que solo aparezcan cuando haces click en la respectiva DUB??
 
 ## Análisis
@@ -55,7 +55,7 @@
 * [ ] Seleccionar una USP y buscar contra el resto resultados cruzados (tabla)
 * [x] Vulcano: grises sólo el borde y el resto (rojos y verdes) con menos transparencia.
 * [x] Vulcano: el signo del eje y hay que revisarlo.
-* [ ] Vulcano: controles de calidad en azul. Me los pasa Juanma y aparte está el DUB que se haya usado para la búsqueda.
+* [x] Vulcano: controles de calidad en azul. Me los pasa Juanma y aparte está el DUB que se haya usado para la búsqueda.
 * [ ] STRING (pendiente de que Juanma vea si los resultados que salen merecen)
 
 # Preferencias
