@@ -2,7 +2,6 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -14,8 +13,11 @@ import java.util.List;
 public class Method implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private String openDescription;
-	private List<Experiment> experiments;
+	private String column;
+	private String description;
+	private double foldThreshold;
+	private String instrument;
+	private double pvalueThreshold;
 
 	public Method() {
 	}
@@ -32,38 +34,49 @@ public class Method implements Serializable {
 	}
 
 
+	public String getColumn() {
+		return this.column;
+	}
+
+	public void setColumn(String column) {
+		this.column = column;
+	}
+
+
 	@Lob
-	public String getOpenDescription() {
-		return this.openDescription;
+	public String getDescription() {
+		return this.description;
 	}
 
-	public void setOpenDescription(String openDescription) {
-		this.openDescription = openDescription;
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 
-	//bi-directional many-to-one association to Experiment
-	@OneToMany(mappedBy="methodBean")
-	public List<Experiment> getExperiments() {
-		return this.experiments;
+	public double getFoldThreshold() {
+		return this.foldThreshold;
 	}
 
-	public void setExperiments(List<Experiment> experiments) {
-		this.experiments = experiments;
+	public void setFoldThreshold(double foldThreshold) {
+		this.foldThreshold = foldThreshold;
 	}
 
-	public Experiment addExperiment(Experiment experiment) {
-		getExperiments().add(experiment);
-		experiment.setMethodBean(this);
 
-		return experiment;
+	public String getInstrument() {
+		return this.instrument;
 	}
 
-	public Experiment removeExperiment(Experiment experiment) {
-		getExperiments().remove(experiment);
-		experiment.setMethodBean(null);
+	public void setInstrument(String instrument) {
+		this.instrument = instrument;
+	}
 
-		return experiment;
+
+	public double getPvalueThreshold() {
+		return this.pvalueThreshold;
+	}
+
+	public void setPvalueThreshold(double pvalueThreshold) {
+		this.pvalueThreshold = pvalueThreshold;
 	}
 
 }

@@ -14,7 +14,7 @@ public class Ambiguity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private Evidence evidenceBean;
-	private Substrate substrateBean;
+	private Protein proteinBean;
 
 	public Ambiguity() {
 	}
@@ -43,15 +43,15 @@ public class Ambiguity implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Substrate
+	//uni-directional many-to-one association to Protein
 	@ManyToOne
-	@JoinColumn(name="substrate")
-	public Substrate getSubstrateBean() {
-		return this.substrateBean;
+	@JoinColumn(name="protein")
+	public Protein getProteinBean() {
+		return this.proteinBean;
 	}
 
-	public void setSubstrateBean(Substrate substrateBean) {
-		this.substrateBean = substrateBean;
+	public void setProteinBean(Protein proteinBean) {
+		this.proteinBean = proteinBean;
 	}
 
 }

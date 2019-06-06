@@ -53,7 +53,7 @@ public class Modification implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to ModType
+	//uni-directional many-to-one association to ModType
 	@ManyToOne
 	@JoinColumn(name="type")
 	public ModType getModType() {

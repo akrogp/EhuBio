@@ -53,7 +53,7 @@ public class EvScore implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to ScoreType
+	//uni-directional many-to-one association to ScoreType
 	@ManyToOne
 	@JoinColumn(name="score")
 	public ScoreType getScoreType() {

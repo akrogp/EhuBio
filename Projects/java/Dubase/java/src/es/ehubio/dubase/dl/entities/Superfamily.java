@@ -2,7 +2,6 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -16,7 +15,6 @@ public class Superfamily implements Serializable {
 	private int id;
 	private String name;
 	private String shortname;
-	private List<Enzyme> enzymes;
 	private Clazz clazz;
 
 	public Superfamily() {
@@ -52,32 +50,7 @@ public class Superfamily implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Enzyme
-	@OneToMany(mappedBy="superfamilyBean")
-	public List<Enzyme> getEnzymes() {
-		return this.enzymes;
-	}
-
-	public void setEnzymes(List<Enzyme> enzymes) {
-		this.enzymes = enzymes;
-	}
-
-	public Enzyme addEnzyme(Enzyme enzyme) {
-		getEnzymes().add(enzyme);
-		enzyme.setSuperfamilyBean(this);
-
-		return enzyme;
-	}
-
-	public Enzyme removeEnzyme(Enzyme enzyme) {
-		getEnzymes().remove(enzyme);
-		enzyme.setSuperfamilyBean(null);
-
-		return enzyme;
-	}
-
-
-	//bi-directional many-to-one association to Clazz
+	//uni-directional many-to-one association to Clazz
 	@ManyToOne
 	@JoinColumn(name="class")
 	public Clazz getClazz() {

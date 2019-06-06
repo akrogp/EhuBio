@@ -5,18 +5,20 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the ScoreType database table.
+ * The persistent class for the Protein database table.
  * 
  */
 @Entity
-@NamedQuery(name="ScoreType.findAll", query="SELECT s FROM ScoreType s")
-public class ScoreType implements Serializable {
+@NamedQuery(name="Protein.findAll", query="SELECT p FROM Protein p")
+public class Protein implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
+	private String accession;
 	private String description;
 	private String name;
+	private Gene geneBean;
 
-	public ScoreType() {
+	public Protein() {
 	}
 
 
@@ -28,6 +30,15 @@ public class ScoreType implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+
+	public String getAccession() {
+		return this.accession;
+	}
+
+	public void setAccession(String accession) {
+		this.accession = accession;
 	}
 
 
@@ -46,6 +57,18 @@ public class ScoreType implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+	//uni-directional many-to-one association to Gene
+	@ManyToOne
+	@JoinColumn(name="gene")
+	public Gene getGeneBean() {
+		return this.geneBean;
+	}
+
+	public void setGeneBean(Gene geneBean) {
+		this.geneBean = geneBean;
 	}
 
 }

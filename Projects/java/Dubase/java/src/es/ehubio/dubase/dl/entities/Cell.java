@@ -5,18 +5,18 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the Class database table.
+ * The persistent class for the Cell database table.
  * 
  */
 @Entity
-@Table(name="Class")
-@NamedQuery(name="Clazz.findAll", query="SELECT c FROM Clazz c")
-public class Clazz implements Serializable {
+@NamedQuery(name="Cell.findAll", query="SELECT c FROM Cell c")
+public class Cell implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
+	private Taxon taxonBean;
 
-	public Clazz() {
+	public Cell() {
 	}
 
 
@@ -37,6 +37,18 @@ public class Clazz implements Serializable {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+
+	//uni-directional many-to-one association to Taxon
+	@ManyToOne
+	@JoinColumn(name="taxon")
+	public Taxon getTaxonBean() {
+		return this.taxonBean;
+	}
+
+	public void setTaxonBean(Taxon taxonBean) {
+		this.taxonBean = taxonBean;
 	}
 
 }

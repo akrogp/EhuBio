@@ -1,20 +1,8 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
+import javax.persistence.*;
 import java.util.List;
-
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 
 /**
@@ -29,8 +17,8 @@ public class Evidence implements Serializable {
 	private List<Ambiguity> ambiguities;
 	private List<EvScore> evScores;
 	private Experiment experimentBean;
-	private List<Replicate> replicates;
 	private List<Modification> modifications;
+	private List<RepScore> repScores;
 
 	public Evidence() {
 	}
@@ -49,7 +37,6 @@ public class Evidence implements Serializable {
 
 	//bi-directional many-to-one association to Ambiguity
 	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
 	public List<Ambiguity> getAmbiguities() {
 		return this.ambiguities;
 	}
@@ -75,7 +62,6 @@ public class Evidence implements Serializable {
 
 	//bi-directional many-to-one association to EvScore
 	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
 	public List<EvScore> getEvScores() {
 		return this.evScores;
 	}
@@ -99,7 +85,7 @@ public class Evidence implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Experiment
+	//uni-directional many-to-one association to Experiment
 	@ManyToOne
 	@JoinColumn(name="experiment")
 	public Experiment getExperimentBean() {
@@ -111,35 +97,8 @@ public class Evidence implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Replicate
-	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
-	public List<Replicate> getReplicates() {
-		return this.replicates;
-	}
-
-	public void setReplicates(List<Replicate> replicates) {
-		this.replicates = replicates;
-	}
-
-	public Replicate addReplicate(Replicate replicate) {
-		getReplicates().add(replicate);
-		replicate.setEvidenceBean(this);
-
-		return replicate;
-	}
-
-	public Replicate removeReplicate(Replicate replicate) {
-		getReplicates().remove(replicate);
-		replicate.setEvidenceBean(null);
-
-		return replicate;
-	}
-
-
 	//bi-directional many-to-one association to Modification
 	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
-	@Fetch(value = FetchMode.SUBSELECT)
 	public List<Modification> getModifications() {
 		return this.modifications;
 	}
@@ -160,6 +119,31 @@ public class Evidence implements Serializable {
 		modification.setEvidenceBean(null);
 
 		return modification;
+	}
+
+
+	//bi-directional many-to-one association to RepScore
+	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	public List<RepScore> getRepScores() {
+		return this.repScores;
+	}
+
+	public void setRepScores(List<RepScore> repScores) {
+		this.repScores = repScores;
+	}
+
+	public RepScore addRepScore(RepScore repScore) {
+		getRepScores().add(repScore);
+		repScore.setEvidenceBean(this);
+
+		return repScore;
+	}
+
+	public RepScore removeRepScore(RepScore repScore) {
+		getRepScores().remove(repScore);
+		repScore.setEvidenceBean(null);
+
+		return repScore;
 	}
 
 }

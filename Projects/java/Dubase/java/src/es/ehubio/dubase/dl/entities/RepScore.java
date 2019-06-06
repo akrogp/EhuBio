@@ -15,6 +15,7 @@ public class RepScore implements Serializable {
 	private long id;
 	private boolean imputed;
 	private double value;
+	private Evidence evidenceBean;
 	private Replicate replicateBean;
 	private ScoreType scoreType;
 
@@ -51,7 +52,19 @@ public class RepScore implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Replicate
+	//bi-directional many-to-one association to Evidence
+	@ManyToOne
+	@JoinColumn(name="evidence")
+	public Evidence getEvidenceBean() {
+		return this.evidenceBean;
+	}
+
+	public void setEvidenceBean(Evidence evidenceBean) {
+		this.evidenceBean = evidenceBean;
+	}
+
+
+	//uni-directional many-to-one association to Replicate
 	@ManyToOne
 	@JoinColumn(name="replicate")
 	public Replicate getReplicateBean() {
@@ -63,7 +76,7 @@ public class RepScore implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to ScoreType
+	//uni-directional many-to-one association to ScoreType
 	@ManyToOne
 	@JoinColumn(name="score")
 	public ScoreType getScoreType() {

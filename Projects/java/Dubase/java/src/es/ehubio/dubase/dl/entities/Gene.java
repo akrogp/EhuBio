@@ -5,18 +5,18 @@ import javax.persistence.*;
 
 
 /**
- * The persistent class for the Class database table.
+ * The persistent class for the Gene database table.
  * 
  */
 @Entity
-@Table(name="Class")
-@NamedQuery(name="Clazz.findAll", query="SELECT c FROM Clazz c")
-public class Clazz implements Serializable {
+@NamedQuery(name="Gene.findAll", query="SELECT g FROM Gene g")
+public class Gene implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
+	private String description;
 	private String name;
 
-	public Clazz() {
+	public Gene() {
 	}
 
 
@@ -28,6 +28,15 @@ public class Clazz implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+
+	public String getDescription() {
+		return this.description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
 
 
