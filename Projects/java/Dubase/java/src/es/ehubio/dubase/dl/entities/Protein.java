@@ -1,7 +1,15 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -9,7 +17,10 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@NamedQuery(name="Protein.findAll", query="SELECT p FROM Protein p")
+@NamedQueries({
+@NamedQuery(name="Protein.findAll", query="SELECT p FROM Protein p"),
+@NamedQuery(name="Protein.findByAcc", query="SELECT p FROM Protein p WHERE p.accession = :acc")
+})
 public class Protein implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;

@@ -1,1 +1,4 @@
 *.xlsx
+*.txt
+*.fasta
+*.xml

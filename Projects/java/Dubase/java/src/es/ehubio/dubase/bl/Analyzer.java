@@ -2,6 +2,7 @@ package es.ehubio.dubase.bl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.ejb.LocalBean;
@@ -14,8 +15,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import es.ehubio.dubase.Thresholds;
-import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.Scatter;
+import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
 @LocalBean
@@ -35,14 +37,22 @@ public class Analyzer {
 			th.setLog2FoldChange(xth);
 		if( yth != null )
 			th.setLog10PValue(yth);
-		List<EvidenceBean> evidences = db.searchEnzyme(gene, th);
+		List<Evidence> evidences = db.searchEnzyme(gene, th);
 		List<Scatter> result = new ArrayList<>();
-		for( EvidenceBean ev : evidences ) {
+		for( Evidence ev : evidences ) {
 			Scatter scatter = new Scatter();
-			scatter.setGene(CsvUtils.getCsv(';', ev.getGenes().toArray()));
-			scatter.setDesc(CsvUtils.getCsv(';', ev.getDescriptions().toArray()));
-			scatter.setFoldChange(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal()));
-			scatter.setpValue(ev.getMapScores().get(Score.P_VALUE.ordinal()));
+			scatter.setGene(CsvUtils.getCsv(';',ev.getAmbiguities().stream()
+				.map(amb->amb.getProteinBean().getGeneBean().getName())
+				.collect(Collectors.toList()).toArray()));
+			scatter.setDesc(CsvUtils.getCsv(';', ev.getAmbiguities().stream()
+				.map(amb->amb.getProteinBean().getDescription())
+				.collect(Collectors.toList()).toArray()));
+			scatter.setFoldChange(ev.getEvScores().stream()
+				.filter(score->score.getScoreType().getId() == ScoreType.FOLD_CHANGE.ordinal())
+				.findFirst().get().getValue());
+			scatter.setpValue(ev.getEvScores().stream()
+				.filter(score->score.getScoreType().getId() == ScoreType.P_VALUE.ordinal())
+				.findFirst().get().getValue());
 			scatter.setpValue(Math.pow(10, -scatter.getpValue()));
 			result.add(scatter);
 		}

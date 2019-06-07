@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import es.ehubio.Util;
-import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.dl.entities.Experiment;
+import es.ehubio.dubase.dl.input.ScoreType;
 
 public class EvidenceBean {
 	private Experiment experiment;
@@ -54,7 +54,7 @@ public class EvidenceBean {
 		return controls;
 	}
 	
-	public void putScore(Score score, Double value) {
+	public void putScore(ScoreType score, Double value) {
 		getMapScores().put(score.ordinal(), value);
 	}
 

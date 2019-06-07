@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvReader;
 
 class EvidenceFile {
@@ -30,9 +31,9 @@ class EvidenceFile {
 						csv.getField(IDX_GENE).split(";")));
 				ev.getDescriptions().addAll(Arrays.asList(
 						csv.getField(IDX_DESC).split(";")));
-				ev.putScore(Score.TOTAL_PEPTS, csv.getIntField(IDX_TOTAL_PEPTS).doubleValue());
+				ev.putScore(ScoreType.TOTAL_PEPTS, csv.getIntField(IDX_TOTAL_PEPTS).doubleValue());
 				String uniqPepts = csv.getField(IDX_UNIQ_PEPTS);
-				ev.putScore(Score.UNIQ_PEPTS, Double.parseDouble(uniqPepts));
+				ev.putScore(ScoreType.UNIQ_PEPTS, Double.parseDouble(uniqPepts));
 				String[] uniqCounts = csv.getField(IDX_UNIQ_COUNTS).split(";");
 				int count = 0;
 				for( String tmp : uniqCounts )
@@ -42,18 +43,18 @@ class EvidenceFile {
 						break;
 				truncate(ev.getGenes(), count);
 				truncate(ev.getDescriptions(), count);
-				ev.putScore(Score.MOL_WEIGHT, csv.getDoubleField(IDX_MOL_WEIGHT));
-				ev.putScore(Score.SEQ_COVERAGE, csv.getDoubleField(IDX_SEQ_COVER));
-				ev.putScore(Score.FOLD_CHANGE, Math.log(csv.getDoubleField(IDX_FOLD_CHANGE))/log2);
-				ev.putScore(Score.P_VALUE, -Math.log10(csv.getDoubleField(IDX_P_VALUE)));
+				ev.putScore(ScoreType.MOL_WEIGHT, csv.getDoubleField(IDX_MOL_WEIGHT));
+				ev.putScore(ScoreType.SEQ_COVERAGE, csv.getDoubleField(IDX_SEQ_COVER));
+				ev.putScore(ScoreType.FOLD_CHANGE, Math.log(csv.getDoubleField(IDX_FOLD_CHANGE))/log2);
+				ev.putScore(ScoreType.P_VALUE, -Math.log10(csv.getDoubleField(IDX_P_VALUE)));
 				for( int i = 0; i < NUM_REPS; i++ ) {
 					ReplicateBean rep = new ReplicateBean();
-					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_SAMPLE+i*2), csv.getIntField(IDX_SAMPLE+i*2+1) == 1);
+					rep.putScore(ScoreType.LFQ_INTENSITY, csv.getDoubleField(IDX_SAMPLE+i*2), csv.getIntField(IDX_SAMPLE+i*2+1) == 1);
 					ev.getSamples().add(rep);
 				}
 				for( int i = 0; i < NUM_REPS; i++ ) {
 					ReplicateBean rep = new ReplicateBean();
-					rep.putScore(Score.LFQ_INTENSITY, csv.getDoubleField(IDX_CONTROL+i*2), csv.getIntField(IDX_CONTROL+i*2+1) == 1);
+					rep.putScore(ScoreType.LFQ_INTENSITY, csv.getDoubleField(IDX_CONTROL+i*2), csv.getIntField(IDX_CONTROL+i*2+1) == 1);
 					ev.getControls().add(rep);
 				}
 				if( csv.getFields().length > IDX_MODS )

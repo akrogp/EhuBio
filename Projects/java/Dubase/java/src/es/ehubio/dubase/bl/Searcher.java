@@ -10,9 +10,9 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import es.ehubio.dubase.Thresholds;
-import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.input.ScoreType;
 
 @LocalBean
 @Stateless
@@ -20,37 +20,35 @@ public class Searcher {
 	@PersistenceContext
 	private EntityManager em;
 	
-	public Set<EvidenceBean> search(String gene, Thresholds thresholds) {
-		Set<EvidenceBean> set = new LinkedHashSet<>();
+	public Set<Evidence> search(String gene, Thresholds thresholds) {
+		Set<Evidence> set = new LinkedHashSet<>();
 		set.addAll(searchEnzyme(gene, thresholds));
 		set.addAll(searchSubstrate(gene, thresholds));
 		return set;
 	}
 
-	public List<EvidenceBean> searchSubstrate(String gene, Thresholds th) {
-		List<Evidence> evidences = em
+	public List<Evidence> searchSubstrate(String gene, Thresholds th) {
+		return em
 			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0 AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0", Evidence.class)
 			.setParameter("gene", gene)
-			.setParameter("t1", Score.FOLD_CHANGE.ordinal())
+			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())
 			.setParameter("s11", th.isUp() ? th.getLog2FoldChange() : 1000)
 			.setParameter("s12", th.isDown() ? -th.getLog2FoldChange() : -1000)
-			.setParameter("t2", Score.P_VALUE.ordinal())
+			.setParameter("t2", ScoreType.P_VALUE.ordinal())
 			.setParameter("s2", th.getLog10PValue())
 			.getResultList();
-		return DbUtils.buildEvidences(evidences);
 	}
 	
-	public List<EvidenceBean> searchEnzyme(String gene, Thresholds th) {
-		List<Evidence> evidences = em
+	public List<Evidence> searchEnzyme(String gene, Thresholds th) {
+		return em
 			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0 AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0", Evidence.class)
 			.setParameter("gene", gene)
-			.setParameter("t1", Score.FOLD_CHANGE.ordinal())
+			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())
 			.setParameter("s11", th.isUp() ? th.getLog2FoldChange() : 1000)
 			.setParameter("s12", th.isDown() ? -th.getLog2FoldChange() : -1000)
-			.setParameter("t2", Score.P_VALUE.ordinal())
+			.setParameter("t2", ScoreType.P_VALUE.ordinal())
 			.setParameter("s2", th.getLog10PValue())
 			.getResultList();
-		return DbUtils.buildEvidences(evidences);
 	}
 	
 	public List<Enzyme> searchEnzymesWithData() {

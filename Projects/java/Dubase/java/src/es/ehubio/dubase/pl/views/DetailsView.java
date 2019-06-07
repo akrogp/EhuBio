@@ -6,10 +6,10 @@ import java.util.List;
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 
-import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.RepScoreBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.beans.DetailsBean;
 import es.ehubio.dubase.pl.beans.SearchBean;
 
@@ -33,20 +33,20 @@ public class DetailsView {
 		control.getLfqs().addAll(getLfqs(evBean.getControls()));
 		detailsBean.getSamples().add(control);
 		
-		detailsBean.setCoverage(String.format("%.1f", evBean.getMapScores().get(Score.SEQ_COVERAGE.ordinal())));
+		detailsBean.setCoverage(String.format("%.1f", evBean.getMapScores().get(ScoreType.SEQ_COVERAGE.ordinal())));
 	}
 	
 	private double meanLfq(List<ReplicateBean> reps) {
 		double lfq = 0;
 		for( ReplicateBean rep : reps )
-			lfq += rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal()).getValue();
+			lfq += rep.getMapScores().get(ScoreType.LFQ_INTENSITY.ordinal()).getValue();
 		return lfq/reps.size();
 	}
 
 	private List<String> getLfqs(List<ReplicateBean> reps) {
 		List<String> lfqs = new ArrayList<>();
 		for( ReplicateBean rep : reps )
-			lfqs.add(parseLfq(rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal())));
+			lfqs.add(parseLfq(rep.getMapScores().get(ScoreType.LFQ_INTENSITY.ordinal())));
 		return lfqs;
 	}
 

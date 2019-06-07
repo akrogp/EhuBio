@@ -3,7 +3,7 @@ package es.ehubio.dubase.bl.beans;
 import java.util.HashMap;
 import java.util.Map;
 
-import es.ehubio.dubase.bl.Score;
+import es.ehubio.dubase.dl.input.ScoreType;
 
 public class ReplicateBean {
 	private Map<Integer, RepScoreBean> scores;
@@ -14,7 +14,7 @@ public class ReplicateBean {
 		return scores;
 	}
 	
-	public void putScore(Score score, Double value, boolean imputed) {
+	public void putScore(ScoreType score, Double value, boolean imputed) {
 		RepScoreBean bean = new RepScoreBean();
 		bean.setScore(score.ordinal());
 		bean.setValue(value);

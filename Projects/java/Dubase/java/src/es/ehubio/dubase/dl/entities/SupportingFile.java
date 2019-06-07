@@ -1,13 +1,24 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
  * The persistent class for the SupportingFile database table.
  * 
  */
+@XmlRootElement
 @Entity
 @NamedQuery(name="SupportingFile.findAll", query="SELECT s FROM SupportingFile s")
 public class SupportingFile implements Serializable {
@@ -23,6 +34,7 @@ public class SupportingFile implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@XmlTransient
 	public int getId() {
 		return this.id;
 	}
@@ -44,6 +56,7 @@ public class SupportingFile implements Serializable {
 	//bi-directional many-to-one association to Experiment
 	@ManyToOne
 	@JoinColumn(name="experiment")
+	@XmlTransient
 	public Experiment getExperimentBean() {
 		return this.experimentBean;
 	}
@@ -56,6 +69,7 @@ public class SupportingFile implements Serializable {
 	//uni-directional many-to-one association to FileType
 	@ManyToOne
 	@JoinColumn(name="type")
+	@XmlElement(name="type")
 	public FileType getFileType() {
 		return this.fileType;
 	}

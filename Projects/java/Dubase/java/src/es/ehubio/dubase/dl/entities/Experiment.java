@@ -1,15 +1,32 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
  * The persistent class for the Experiment database table.
  * 
  */
+@XmlRootElement
 @Entity
 @NamedQuery(name="Experiment.findAll", query="SELECT e FROM Experiment e")
 public class Experiment implements Serializable {
@@ -32,6 +49,7 @@ public class Experiment implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@XmlAttribute
 	public int getId() {
 		return this.id;
 	}
@@ -83,6 +101,7 @@ public class Experiment implements Serializable {
 	//uni-directional many-to-one association to Author
 	@ManyToOne
 	@JoinColumn(name="author")
+	@XmlElement(name="author")
 	public Author getAuthorBean() {
 		return this.authorBean;
 	}
@@ -95,6 +114,7 @@ public class Experiment implements Serializable {
 	//uni-directional many-to-one association to Enzyme
 	@ManyToOne
 	@JoinColumn(name="enzyme")
+	@XmlElement(name="enzyme")
 	public Enzyme getEnzymeBean() {
 		return this.enzymeBean;
 	}
@@ -107,6 +127,7 @@ public class Experiment implements Serializable {
 	//uni-directional many-to-one association to Method
 	@ManyToOne
 	@JoinColumn(name="method")
+	@XmlElement(name="method")
 	public Method getMethodBean() {
 		return this.methodBean;
 	}
@@ -118,6 +139,8 @@ public class Experiment implements Serializable {
 
 	//bi-directional many-to-one association to Condition
 	@OneToMany(mappedBy="experimentBean", fetch=FetchType.EAGER)
+	@XmlElementWrapper(name="conditions")
+	@XmlElement(name="condition")
 	public List<Condition> getConditions() {
 		return this.conditions;
 	}
@@ -144,6 +167,7 @@ public class Experiment implements Serializable {
 	//uni-directional many-to-one association to Cell
 	@ManyToOne
 	@JoinColumn(name="cell")
+	@XmlElement(name="cell")
 	public Cell getCellBean() {
 		return this.cellBean;
 	}
@@ -155,6 +179,8 @@ public class Experiment implements Serializable {
 
 	//bi-directional many-to-one association to SupportingFile
 	@OneToMany(mappedBy="experimentBean", fetch=FetchType.EAGER)
+	@XmlElementWrapper(name="files")
+	@XmlElement(name="file")
 	public List<SupportingFile> getSupportingFiles() {
 		return this.supportingFiles;
 	}

@@ -17,10 +17,10 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.Thresholds;
-import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.dl.CsvExporter;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.beans.SearchBean;
 import es.ehubio.io.CsvUtils;
 
@@ -115,12 +115,12 @@ public class SearchView implements Serializable {
 		result.setEnzyme(ev.getExperiment().getEnzymeBean().getGene());
 		result.setGenes(CsvUtils.getCsv("<br/>", ev.getGenes().toArray()));
 		result.setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
-		result.setFoldChange(ev.getMapScores().get(Score.FOLD_CHANGE.ordinal()));		
-		double pValue = ev.getMapScores().get(Score.P_VALUE.ordinal());
+		result.setFoldChange(ev.getMapScores().get(ScoreType.FOLD_CHANGE.ordinal()));		
+		double pValue = ev.getMapScores().get(ScoreType.P_VALUE.ordinal());
 		result.setpValue(Math.pow(10, -pValue));
-		result.setTotalPepts(ev.getMapScores().get(Score.TOTAL_PEPTS.ordinal()).intValue());
-		result.setUniqPepts(ev.getMapScores().get(Score.UNIQ_PEPTS.ordinal()).intValue());
-		result.setWeight(ev.getMapScores().get(Score.MOL_WEIGHT.ordinal()));
+		result.setTotalPepts(ev.getMapScores().get(ScoreType.TOTAL_PEPTS.ordinal()).intValue());
+		result.setUniqPepts(ev.getMapScores().get(ScoreType.UNIQ_PEPTS.ordinal()).intValue());
+		result.setWeight(ev.getMapScores().get(ScoreType.MOL_WEIGHT.ordinal()));
 		result.setGlygly(ev.getModPositions().isEmpty() ? "" : CsvUtils.getCsv(';', ev.getModPositions().toArray()));
 		
 		return result;

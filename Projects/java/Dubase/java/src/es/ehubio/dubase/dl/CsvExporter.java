@@ -3,9 +3,9 @@ package es.ehubio.dubase.dl;
 import java.io.PrintWriter;
 import java.util.List;
 
-import es.ehubio.dubase.bl.Score;
 import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.bl.beans.ReplicateBean;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
 public class CsvExporter {
@@ -28,12 +28,12 @@ public class CsvExporter {
 				ev.getExperiment().getEnzymeBean().getGene(),
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getDescriptions().toArray()),
-				ev.getMapScores().get(Score.FOLD_CHANGE.ordinal()),
-				ev.getMapScores().get(Score.P_VALUE.ordinal()),
-				ev.getMapScores().get(Score.TOTAL_PEPTS.ordinal()).intValue(),
-				ev.getMapScores().get(Score.UNIQ_PEPTS.ordinal()).intValue(),
-				ev.getMapScores().get(Score.MOL_WEIGHT.ordinal()),
-				ev.getMapScores().get(Score.SEQ_COVERAGE.ordinal()),
+				ev.getMapScores().get(ScoreType.FOLD_CHANGE.ordinal()),
+				ev.getMapScores().get(ScoreType.P_VALUE.ordinal()),
+				ev.getMapScores().get(ScoreType.TOTAL_PEPTS.ordinal()).intValue(),
+				ev.getMapScores().get(ScoreType.UNIQ_PEPTS.ordinal()).intValue(),
+				ev.getMapScores().get(ScoreType.MOL_WEIGHT.ordinal()),
+				ev.getMapScores().get(ScoreType.SEQ_COVERAGE.ordinal()),
 				CsvUtils.getCsv(SEP2, ev.getModPositions().toArray())
 			));
 			pw.print(SEP1);
@@ -47,14 +47,14 @@ public class CsvExporter {
 
 	private static void printLfqs(PrintWriter pw, List<ReplicateBean> reps) {
 		for( ReplicateBean rep : reps ) {
-			pw.print(rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal()).getValue());
+			pw.print(rep.getMapScores().get(ScoreType.LFQ_INTENSITY.ordinal()).getValue());
 			pw.print(SEP1);
 		}
 	}
 	
 	private static void printImputations(PrintWriter pw, List<ReplicateBean> reps) {
 		for( ReplicateBean rep : reps ) {
-			pw.print(rep.getMapScores().get(Score.LFQ_INTENSITY.ordinal()).isImputed());
+			pw.print(rep.getMapScores().get(ScoreType.LFQ_INTENSITY.ordinal()).isImputed());
 			pw.print(SEP1);
 		}
 	}
