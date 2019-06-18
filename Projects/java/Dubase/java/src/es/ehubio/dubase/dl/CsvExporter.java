@@ -9,8 +9,8 @@ import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
 public class CsvExporter {
-	private static final char SEP1 = ',';
-	private static final char SEP2 = ';';
+	private static final String SEP1 = ",";
+	private static final String SEP2 = ";";
 	
 	public static void export(List<Evidence> results, PrintWriter pw) {
 		pw.println(CsvUtils.getCsv(SEP1,
@@ -29,14 +29,13 @@ public class CsvExporter {
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getDescriptions().toArray()),
 				ev.getScore(ScoreType.FOLD_CHANGE),
-				ev.getScore(ScoreType.P_VALUE),
+				Math.pow(10,-ev.getScore(ScoreType.P_VALUE)),
 				ev.getScore(ScoreType.TOTAL_PEPTS).intValue(),
 				ev.getScore(ScoreType.UNIQ_PEPTS).intValue(),
 				ev.getScore(ScoreType.MOL_WEIGHT),
 				ev.getScore(ScoreType.SEQ_COVERAGE),
-				CsvUtils.getCsv(SEP2, ev.getModifications().stream().map(m->m.getPosition()).collect(Collectors.toList()).toArray())
+				ev.getModifications().stream().map(m->String.valueOf(m.getPosition())).collect(Collectors.joining(SEP2))
 			));
-			pw.print(SEP1);
 			printLfqs(pw, ev, false);
 			printLfqs(pw, ev, true);
 			printImputations(pw, ev, false);
@@ -49,13 +48,13 @@ public class CsvExporter {
 		pw.print(ev.getRepScores().stream()
 			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
 			.map(s->String.valueOf(s.getValue()))
-			.collect(Collectors.joining(SEP1+"")));
+			.collect(Collectors.joining(SEP1,SEP1,"")));
 	}
 	
 	private static void printImputations(PrintWriter pw, Evidence ev, boolean control) {
 		pw.print(ev.getRepScores().stream()
 			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
 			.map(s->String.valueOf(s.getImputed()))
-			.collect(Collectors.joining(SEP1+"")));
+			.collect(Collectors.joining(SEP1,SEP1,"")));
 	}
 }
