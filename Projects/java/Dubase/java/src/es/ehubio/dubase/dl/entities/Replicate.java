@@ -1,7 +1,14 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -12,7 +19,7 @@ import javax.persistence.*;
 @NamedQuery(name="Replicate.findAll", query="SELECT r FROM Replicate r")
 public class Replicate implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private long id;
+	private int id;
 	private String name;
 	private Condition conditionBean;
 
@@ -22,11 +29,11 @@ public class Replicate implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	public long getId() {
+	public int getId() {
 		return this.id;
 	}
 
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 

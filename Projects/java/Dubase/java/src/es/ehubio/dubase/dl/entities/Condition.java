@@ -1,8 +1,18 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 
 
 /**
@@ -45,7 +55,7 @@ public class Condition implements Serializable {
 	}
 
 
-	@Lob
+	@Column(length = 65535, columnDefinition="TEXT")
 	public String getDescription() {
 		return this.description;
 	}

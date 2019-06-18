@@ -4,13 +4,12 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -20,6 +19,9 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 /**
@@ -59,7 +61,7 @@ public class Experiment implements Serializable {
 	}
 
 
-	@Lob
+	@Column(length = 65535, columnDefinition="TEXT")
 	public String getDescription() {
 		return this.description;
 	}
@@ -138,7 +140,8 @@ public class Experiment implements Serializable {
 
 
 	//bi-directional many-to-one association to Condition
-	@OneToMany(mappedBy="experimentBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="experimentBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@XmlElementWrapper(name="conditions")
 	@XmlElement(name="condition")
 	public List<Condition> getConditions() {
@@ -178,7 +181,8 @@ public class Experiment implements Serializable {
 
 
 	//bi-directional many-to-one association to SupportingFile
-	@OneToMany(mappedBy="experimentBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="experimentBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	@XmlElementWrapper(name="files")
 	@XmlElement(name="file")
 	public List<SupportingFile> getSupportingFiles() {

@@ -18,8 +18,8 @@ import javax.inject.Named;
 
 import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.Searcher;
-import es.ehubio.dubase.bl.beans.EvidenceBean;
 import es.ehubio.dubase.dl.CsvExporter;
+import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.beans.SearchBean;
 import es.ehubio.io.CsvUtils;
@@ -33,7 +33,7 @@ public class SearchView implements Serializable {
 	private String query, gene;
 	private boolean dub, substrate;
 	private List<String> genes;
-	private List<EvidenceBean> rawResults;
+	private List<Evidence> rawResults;
 	private List<SearchBean> results;
 	@Inject
 	private DetailsView detailsView;
@@ -55,7 +55,7 @@ public class SearchView implements Serializable {
 		if( gene.isEmpty() )
 			return;
 		Thresholds th = prefs.getThresholds();
-		Collection<EvidenceBean> tmpResults = !substrate ? db.searchEnzyme(gene, th) : (!dub ? db.searchSubstrate(gene, th) : db.search(gene, th));
+		Collection<Evidence> tmpResults = !substrate ? db.searchEnzyme(gene, th) : (!dub ? db.searchSubstrate(gene, th) : db.search(gene, th));
 		rawResults = new ArrayList<>(tmpResults);
 		parseResults();
 		return;
@@ -102,26 +102,29 @@ public class SearchView implements Serializable {
 
 	private void parseResults() {
 		results = new ArrayList<>(rawResults.size());
-		for( EvidenceBean ev : rawResults ) {
+		for( Evidence ev : rawResults ) {
 			SearchBean result = parseResult(ev);
 			results.add(result);
 		}
 	}
 
-	private SearchBean parseResult(EvidenceBean ev) {
+	private SearchBean parseResult(Evidence ev) {
 		SearchBean result = new SearchBean();
 		
-		result.setExperiment(String.format("EXP%05d", ev.getExperiment().getId()));
-		result.setEnzyme(ev.getExperiment().getEnzymeBean().getGene());
+		result.setExperiment(String.format("EXP%05d", ev.getExperimentBean().getId()));
+		result.setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
 		result.setGenes(CsvUtils.getCsv("<br/>", ev.getGenes().toArray()));
 		result.setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
-		result.setFoldChange(ev.getMapScores().get(ScoreType.FOLD_CHANGE.ordinal()));		
-		double pValue = ev.getMapScores().get(ScoreType.P_VALUE.ordinal());
+		result.setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
+		double pValue = ev.getScore(ScoreType.P_VALUE);
 		result.setpValue(Math.pow(10, -pValue));
-		result.setTotalPepts(ev.getMapScores().get(ScoreType.TOTAL_PEPTS.ordinal()).intValue());
-		result.setUniqPepts(ev.getMapScores().get(ScoreType.UNIQ_PEPTS.ordinal()).intValue());
-		result.setWeight(ev.getMapScores().get(ScoreType.MOL_WEIGHT.ordinal()));
-		result.setGlygly(ev.getModPositions().isEmpty() ? "" : CsvUtils.getCsv(';', ev.getModPositions().toArray()));
+		result.setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
+		result.setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
+		result.setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
+		result.setGlygly(ev.getModifications().stream()
+			.map(m->String.valueOf(m.getPosition()))
+			.collect(Collectors.joining(";"))
+		);
 		
 		return result;
 	}

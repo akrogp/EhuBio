@@ -2,9 +2,9 @@ package es.ehubio.dubase.dl;
 
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.stream.Collectors;
 
-import es.ehubio.dubase.bl.beans.EvidenceBean;
-import es.ehubio.dubase.bl.beans.ReplicateBean;
+import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
@@ -12,7 +12,7 @@ public class CsvExporter {
 	private static final char SEP1 = ',';
 	private static final char SEP2 = ';';
 	
-	public static void export(List<EvidenceBean> results, PrintWriter pw) {
+	public static void export(List<Evidence> results, PrintWriter pw) {
 		pw.println(CsvUtils.getCsv(SEP1,
 			"Experiment", "DUB", "Substrate", "Description",
 			"Fold change (log2)", "p-value", "Peptide count (all)", "Peptide count (unique)",
@@ -22,40 +22,40 @@ public class CsvExporter {
 			"Imputed sample_1", "Imputed sample_2", "Imputed sample_3",
 			"Imputed control_1", "Imputed control_2", "Imputed control_3"
 		));
-		for( EvidenceBean ev : results ) {
+		for( Evidence ev : results ) {
 			pw.print(CsvUtils.getCsv(SEP1,
-				String.format("EXP%05d", ev.getExperiment().getId()),
-				ev.getExperiment().getEnzymeBean().getGene(),
+				String.format("EXP%05d", ev.getExperimentBean().getId()),
+				ev.getExperimentBean().getEnzymeBean().getGene(),
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getDescriptions().toArray()),
-				ev.getMapScores().get(ScoreType.FOLD_CHANGE.ordinal()),
-				ev.getMapScores().get(ScoreType.P_VALUE.ordinal()),
-				ev.getMapScores().get(ScoreType.TOTAL_PEPTS.ordinal()).intValue(),
-				ev.getMapScores().get(ScoreType.UNIQ_PEPTS.ordinal()).intValue(),
-				ev.getMapScores().get(ScoreType.MOL_WEIGHT.ordinal()),
-				ev.getMapScores().get(ScoreType.SEQ_COVERAGE.ordinal()),
-				CsvUtils.getCsv(SEP2, ev.getModPositions().toArray())
+				ev.getScore(ScoreType.FOLD_CHANGE),
+				ev.getScore(ScoreType.P_VALUE),
+				ev.getScore(ScoreType.TOTAL_PEPTS).intValue(),
+				ev.getScore(ScoreType.UNIQ_PEPTS).intValue(),
+				ev.getScore(ScoreType.MOL_WEIGHT),
+				ev.getScore(ScoreType.SEQ_COVERAGE),
+				CsvUtils.getCsv(SEP2, ev.getModifications().stream().map(m->m.getPosition()).collect(Collectors.toList()).toArray())
 			));
 			pw.print(SEP1);
-			printLfqs(pw, ev.getSamples());
-			printLfqs(pw, ev.getControls());
-			printImputations(pw, ev.getSamples());
-			printImputations(pw, ev.getControls());
+			printLfqs(pw, ev, false);
+			printLfqs(pw, ev, true);
+			printImputations(pw, ev, false);
+			printImputations(pw, ev, true);
 			pw.println();
 		}
 	}	
 
-	private static void printLfqs(PrintWriter pw, List<ReplicateBean> reps) {
-		for( ReplicateBean rep : reps ) {
-			pw.print(rep.getMapScores().get(ScoreType.LFQ_INTENSITY.ordinal()).getValue());
-			pw.print(SEP1);
-		}
+	private static void printLfqs(PrintWriter pw, Evidence ev, boolean control) {
+		pw.print(ev.getRepScores().stream()
+			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
+			.map(s->String.valueOf(s.getValue()))
+			.collect(Collectors.joining(SEP1+"")));
 	}
 	
-	private static void printImputations(PrintWriter pw, List<ReplicateBean> reps) {
-		for( ReplicateBean rep : reps ) {
-			pw.print(rep.getMapScores().get(ScoreType.LFQ_INTENSITY.ordinal()).isImputed());
-			pw.print(SEP1);
-		}
+	private static void printImputations(PrintWriter pw, Evidence ev, boolean control) {
+		pw.print(ev.getRepScores().stream()
+			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
+			.map(s->String.valueOf(s.getImputed()))
+			.collect(Collectors.joining(SEP1+"")));
 	}
 }

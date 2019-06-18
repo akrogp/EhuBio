@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Searcher;
-import es.ehubio.dubase.bl.beans.EvidenceBean;
+import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.io.CsvUtils;
 import es.ehubio.io.UrlBuilder;
 
@@ -38,9 +38,9 @@ public class ProfilerView implements Serializable {
 		redirect(db.searchEnzyme(getGene(), prefs.getThresholds()));
 	}
 	
-	public static void redirect(List<EvidenceBean> evidences) {
+	public static void redirect(List<Evidence> evidences) {
 		List<String> genes = new ArrayList<>();
-		for( EvidenceBean ev : evidences )
+		for( Evidence ev : evidences )
 			genes.addAll(ev.getGenes());
 		try {
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();

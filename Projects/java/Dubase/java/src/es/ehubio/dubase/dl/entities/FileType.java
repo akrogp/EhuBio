@@ -2,11 +2,11 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.NamedQuery;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -42,7 +42,7 @@ public class FileType implements Serializable {
 	}
 
 
-	@Lob
+	@Column(length = 65535, columnDefinition="TEXT")
 	@XmlTransient
 	public String getDescription() {
 		return this.description;

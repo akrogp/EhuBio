@@ -1,8 +1,23 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import es.ehubio.dubase.dl.input.ScoreType;
 
 
 /**
@@ -36,7 +51,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to Ambiguity
-	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="evidenceBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<Ambiguity> getAmbiguities() {
 		return this.ambiguities;
 	}
@@ -61,7 +77,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to EvScore
-	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="evidenceBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<EvScore> getEvScores() {
 		return this.evScores;
 	}
@@ -98,7 +115,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to Modification
-	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="evidenceBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<Modification> getModifications() {
 		return this.modifications;
 	}
@@ -123,7 +141,8 @@ public class Evidence implements Serializable {
 
 
 	//bi-directional many-to-one association to RepScore
-	@OneToMany(mappedBy="evidenceBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="evidenceBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
 	public List<RepScore> getRepScores() {
 		return this.repScores;
 	}
@@ -146,4 +165,19 @@ public class Evidence implements Serializable {
 		return repScore;
 	}
 
+	@Transient
+	public List<String> getGenes() {
+		return getAmbiguities().stream().map(a->a.getProteinBean().getGeneBean().getName()).collect(Collectors.toList());
+	}
+	
+	@Transient
+	public List<String> getDescriptions() {
+		return getAmbiguities().stream().map(a->a.getProteinBean().getDescription()).collect(Collectors.toList());
+	}
+	
+	public Double getScore(ScoreType type) {
+		return getEvScores().stream()
+				.filter(score->score.getScoreType().getId() == type.ordinal())
+				.findFirst().get().getValue();
+	}
 }
