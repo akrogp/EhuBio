@@ -29,7 +29,7 @@ public class Searcher {
 
 	public List<Evidence> searchSubstrate(String gene, Thresholds th) {
 		return em
-			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.substrateBean.gene = :gene AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0 AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0", Evidence.class)
+			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.proteinBean.geneBean.name = :gene AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0 AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0", Evidence.class)
 			.setParameter("gene", gene)
 			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())
 			.setParameter("s11", th.isUp() ? th.getLog2FoldChange() : 1000)
