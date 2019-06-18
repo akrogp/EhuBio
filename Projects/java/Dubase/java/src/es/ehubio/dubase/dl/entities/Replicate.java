@@ -9,6 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
+import javax.xml.bind.annotation.XmlValue;
 
 
 /**
@@ -17,6 +20,7 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQuery(name="Replicate.findAll", query="SELECT r FROM Replicate r")
+@XmlRootElement
 public class Replicate implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -29,6 +33,7 @@ public class Replicate implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@XmlTransient	
 	public int getId() {
 		return this.id;
 	}
@@ -38,6 +43,7 @@ public class Replicate implements Serializable {
 	}
 
 
+	@XmlValue
 	public String getName() {
 		return this.name;
 	}
@@ -49,7 +55,8 @@ public class Replicate implements Serializable {
 
 	//bi-directional many-to-one association to Condition
 	@ManyToOne
-	@JoinColumn(name="condition")
+	@JoinColumn(name="expCondition")
+	@XmlTransient
 	public Condition getConditionBean() {
 		return this.conditionBean;
 	}

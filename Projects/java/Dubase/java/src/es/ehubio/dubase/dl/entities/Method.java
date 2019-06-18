@@ -19,7 +19,7 @@ import javax.persistence.NamedQuery;
 public class Method implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
-	private String column;
+	private String columnType;
 	private String description;
 	private double foldThreshold;
 	private String instrument;
@@ -40,12 +40,12 @@ public class Method implements Serializable {
 	}
 
 
-	public String getColumn() {
-		return this.column;
+	public String getColumnType() {
+		return this.columnType;
 	}
 
-	public void setColumn(String column) {
-		this.column = column;
+	public void setColumnType(String column) {
+		this.columnType = column;
 	}
 
 

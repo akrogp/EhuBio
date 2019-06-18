@@ -1,6 +1,7 @@
 package es.ehubio.dubase.bl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -51,6 +52,7 @@ public class Importer {
 		em.persist(exp.getMethodBean());
 		setEnzyme(exp);
 		setCell(exp);
+		exp.setPubDate(new Date());
 		em.persist(exp);
 		
 		saveFiles(exp);
@@ -61,16 +63,20 @@ public class Importer {
 	}
 
 	private void saveConditions(Experiment exp) {
-		for( Condition cond : exp.getConditions() ) {			
+		for( Condition cond : exp.getConditions() ) {
+			cond.setExperimentBean(exp);
 			em.persist(cond);
-			for( Replicate rep : cond.getReplicates() )				
+			for( Replicate rep : cond.getReplicates() ) {
+				rep.setConditionBean(cond);
 				em.persist(rep);
+			}
 		}
 	}
 
 	private void saveFiles(Experiment exp) {
 		for( SupportingFile file : exp.getSupportingFiles() ) {
 			file.setFileType(em.find(FileType.class, file.getFileType().getId()));
+			file.setExperimentBean(exp);
 			em.persist(file);
 		}
 	}

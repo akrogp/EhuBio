@@ -13,12 +13,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
  * The persistent class for the Condition database table.
  * 
  */
+@XmlRootElement
+@Table(name="ExpCondition")
 @Entity
 @NamedQuery(name="Condition.findAll", query="SELECT c FROM Condition c")
 public class Condition implements Serializable {
@@ -37,6 +44,7 @@ public class Condition implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@XmlTransient
 	public int getId() {
 		return this.id;
 	}
@@ -86,6 +94,7 @@ public class Condition implements Serializable {
 	//bi-directional many-to-one association to Experiment
 	@ManyToOne
 	@JoinColumn(name="experiment")
+	@XmlTransient
 	public Experiment getExperimentBean() {
 		return this.experimentBean;
 	}
@@ -97,6 +106,8 @@ public class Condition implements Serializable {
 
 	//bi-directional many-to-one association to Replicate
 	@OneToMany(mappedBy="conditionBean", fetch=FetchType.EAGER)
+	@XmlElementWrapper(name="replicates")
+	@XmlElement(name="replicate")
 	public List<Replicate> getReplicates() {
 		return this.replicates;
 	}

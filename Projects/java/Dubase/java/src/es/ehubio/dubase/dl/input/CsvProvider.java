@@ -85,17 +85,23 @@ public class CsvProvider implements Provider {
 	}
 	
 	private RepScore newRepScore(Replicate rep, ScoreType type, Number value, boolean imputed) {
+		es.ehubio.dubase.dl.entities.ScoreType dbType = new es.ehubio.dubase.dl.entities.ScoreType();
+		dbType.setId(type.ordinal());
+		
 		RepScore score = new RepScore();
 		score.setReplicateBean(rep);
-		score.setId(type.ordinal());
+		score.setScoreType(dbType);
 		score.setValue(value == null ? null : value.doubleValue());
 		score.setImputed(imputed);
 		return score;
 	}
 
 	private EvScore newEvScore(ScoreType type, Number value) {
+		es.ehubio.dubase.dl.entities.ScoreType dbType = new es.ehubio.dubase.dl.entities.ScoreType();
+		dbType.setId(type.ordinal());
+		
 		EvScore score = new EvScore();
-		score.setId(type.ordinal());
+		score.setScoreType(dbType);
 		score.setValue(value == null ? null : value.doubleValue());
 		return score;
 	}
