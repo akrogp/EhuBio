@@ -17,8 +17,8 @@ import es.ehubio.dubase.pl.beans.SearchBean;
 public class DetailsView {
 	private DetailsBean detailsBean;
 
-	public void setResult(Evidence evBean, SearchBean searchBean) {
-		detailsBean = new DetailsBean(searchBean);
+	public void setResult(Evidence evBean) {
+		detailsBean = new DetailsBean(new SearchBean(evBean));
 		
 		DetailsBean.Sample sample = new DetailsBean.Sample();
 		sample.setName("Sample");

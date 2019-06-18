@@ -1,10 +1,15 @@
 package es.ehubio.dubase.pl.beans;
 
 import java.util.Locale;
+import java.util.stream.Collectors;
 
+import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.Colors;
+import es.ehubio.io.CsvUtils;
 
 public class SearchBean {
+	private final Evidence entity;
 	private String experiment;
 	private String enzyme;
 	private String genes;
@@ -18,6 +23,24 @@ public class SearchBean {
 	private String weightFmt;
 	private double weight;
 	private String glygly;
+	
+	public SearchBean(Evidence ev) {
+		entity = ev;		
+		setExperiment(String.format("EXP%05d", ev.getExperimentBean().getId()));
+		setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
+		setGenes(CsvUtils.getCsv("<br/>", ev.getGenes().toArray()));
+		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
+		setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
+		double pValue = ev.getScore(ScoreType.P_VALUE);
+		setpValue(Math.pow(10, -pValue));
+		setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
+		setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
+		setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
+		setGlygly(ev.getModifications().stream()
+			.map(m->String.valueOf(m.getPosition()))
+			.collect(Collectors.joining(";"))
+		);
+	}
 	
 	public String getExperiment() {
 		return experiment;
@@ -93,5 +116,9 @@ public class SearchBean {
 	public void setWeight(double weight) {
 		this.weight = weight;
 		weightFmt = String.format(Locale.ENGLISH, "%.3f", weight);
+	}
+
+	public Evidence getEntity() {
+		return entity;
 	}
 }

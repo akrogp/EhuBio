@@ -20,9 +20,7 @@ import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
-import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.beans.SearchBean;
-import es.ehubio.io.CsvUtils;
 
 @Named
 @SessionScoped
@@ -102,31 +100,8 @@ public class SearchView implements Serializable {
 
 	private void parseResults() {
 		results = new ArrayList<>(rawResults.size());
-		for( Evidence ev : rawResults ) {
-			SearchBean result = parseResult(ev);
-			results.add(result);
-		}
-	}
-
-	private SearchBean parseResult(Evidence ev) {
-		SearchBean result = new SearchBean();
-		
-		result.setExperiment(String.format("EXP%05d", ev.getExperimentBean().getId()));
-		result.setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
-		result.setGenes(CsvUtils.getCsv("<br/>", ev.getGenes().toArray()));
-		result.setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
-		result.setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
-		double pValue = ev.getScore(ScoreType.P_VALUE);
-		result.setpValue(Math.pow(10, -pValue));
-		result.setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
-		result.setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
-		result.setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
-		result.setGlygly(ev.getModifications().stream()
-			.map(m->String.valueOf(m.getPosition()))
-			.collect(Collectors.joining(";"))
-		);
-		
-		return result;
+		for( Evidence ev : rawResults )
+			results.add(new SearchBean(ev));
 	}
 
 	public String getQuery() {
@@ -149,7 +124,7 @@ public class SearchView implements Serializable {
 	}
 	
 	public String onDetails(int i) {		
-		detailsView.setResult(rawResults.get(i), results.get(i));
+		detailsView.setResult(rawResults.get(i));
 		return "details";
 	}
 	
