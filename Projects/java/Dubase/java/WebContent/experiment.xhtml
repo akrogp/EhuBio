@@ -11,6 +11,88 @@
 		<ui:define name="title">Experiment #{experimentView.entity.fmtId}</ui:define>
 		<ui:define name="content">
 			<p:panelGrid columns="2">
+				<h:outputText value="Title" />
+				<h:outputText value="#{experimentView.entity.title}" />
+				
+				<h:outputText value="Enzyme" />
+				<h:outputText value="#{experimentView.entity.enzymeBean.gene} (#{experimentView.entity.enzymeBean.superfamilyBean.name})" />
+				
+				<h:outputText value="Description" />
+				<h:outputText value="#{experimentView.entity.description}"/>
+				
+				<h:outputText value="Experiment date" />
+				<h:outputText value="#{experimentView.entity.expDate}" />
+				
+				<h:outputText value="Publication date" />
+				<h:outputText value="#{experimentView.entity.pubDate}" />
+				
+				<h:outputText value="Corresponding author" />
+				<h:panelGroup>
+					#{experimentView.entity.authorBean.name} <a href="mailto:#{experimentView.entity.authorBean.mail}">&lt;#{experimentView.entity.authorBean.mail}&gt;</a>
+					&ndash; #{experimentView.entity.authorBean.affiliation}
+				</h:panelGroup>
+				
+				<h:outputText value="Cell" />
+				<h:outputText value="#{experimentView.entity.cellBean.name}" />
+				
+				<h:outputText value="Organism" />
+				<h:panelGroup>
+					#{experimentView.entity.cellBean.taxonBean.commonName} (<i>#{experimentView.entity.cellBean.taxonBean.sciName}</i>)
+				</h:panelGroup>
+				
+				<h:outputText value="Method" />
+				<p:panelGrid columns="2">
+					<h:outputText value="Description" />
+					<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
+					
+					<h:outputText value="Column type" />
+					<h:outputText value="#{experimentView.entity.methodBean.columnType}" />
+					
+					<h:outputText value="Instrument" />
+					<h:outputText value="#{experimentView.entity.methodBean.instrument}" />
+					
+					<h:outputText value="Fold threshold" />
+					<h:outputText value="#{experimentView.entity.methodBean.foldThreshold}" />
+					
+					<h:outputText value="p-value threshold" />
+					<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
+				</p:panelGrid>
+				
+				<h:outputText value="Experimental conditions" />
+				<p:panelGrid>
+					<ui:repeat var="cond" value="#{experimentView.entity.conditions}">
+						<p:row>
+							<p:column>#{cond.name}</p:column>
+							<p:column>
+								<p:panelGrid columns="2">
+									<h:outputText value="Description" />
+									<h:outputText value="#{cond.description}" />
+									
+									<h:outputText value="Control" />
+									<h:outputText value="#{cond.control}" />
+									
+									<h:outputText value="Replicate type" />
+									<h:outputText value="#{cond.replicateType}" />
+									
+									<h:outputText value="Replicates" />
+									<h:panelGroup>
+										<ui:repeat var="rep" value="#{cond.replicates}">#{rep.name}<br/></ui:repeat>
+									</h:panelGroup>
+								</p:panelGrid>
+							</p:column>
+						</p:row>
+					</ui:repeat>
+				</p:panelGrid>
+				
+				<h:outputText value="Supporting files" />
+				<p:panelGrid>
+					<ui:repeat var="file" value="#{experimentView.entity.supportingFiles}">
+						<p:row>
+							<p:column>#{file.name}</p:column>
+							<p:column>#{file.fileType.description}</p:column>
+						</p:row>
+					</ui:repeat>
+				</p:panelGrid>
 			</p:panelGrid>
 		</ui:define>
 	</ui:composition>

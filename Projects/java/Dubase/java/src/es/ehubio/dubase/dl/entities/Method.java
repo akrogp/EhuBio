@@ -8,6 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.NamedQuery;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 
 
 /**
@@ -16,6 +18,7 @@ import javax.persistence.NamedQuery;
  */
 @Entity
 @NamedQuery(name="Method.findAll", query="SELECT m FROM Method m")
+@XmlRootElement
 public class Method implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -40,6 +43,7 @@ public class Method implements Serializable {
 	}
 
 
+	@XmlElement(name="column")
 	public String getColumnType() {
 		return this.columnType;
 	}
