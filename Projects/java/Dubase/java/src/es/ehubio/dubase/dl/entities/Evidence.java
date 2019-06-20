@@ -167,12 +167,12 @@ public class Evidence implements Serializable {
 
 	@Transient
 	public List<String> getGenes() {
-		return getAmbiguities().stream().map(a->a.getProteinBean().getGeneBean().getName()).collect(Collectors.toList());
+		return getAmbiguities().stream().map(a->a.getProteinBean().getGeneBean().getName()).distinct().collect(Collectors.toList());
 	}
 	
 	@Transient
 	public List<String> getDescriptions() {
-		return getAmbiguities().stream().map(a->a.getProteinBean().getDescription()).collect(Collectors.toList());
+		return getAmbiguities().stream().map(a->a.getProteinBean().getDescription()).distinct().collect(Collectors.toList());
 	}
 	
 	public Double getScore(ScoreType type) {
