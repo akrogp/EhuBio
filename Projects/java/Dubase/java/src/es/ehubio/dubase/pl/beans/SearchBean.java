@@ -13,6 +13,7 @@ public class SearchBean {
 	private String experiment;
 	private String enzyme;
 	private String genes;
+	private String proteins;
 	private String descriptions;
 	private String foldChangeFmt;
 	private double foldChange;
@@ -28,7 +29,13 @@ public class SearchBean {
 		entity = ev;		
 		setExperiment(String.format("EXP%05d", ev.getExperimentBean().getId()));
 		setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
-		setGenes(CsvUtils.getCsv("<br/>", ev.getGenes().toArray()));
+		setGenes(ev.getAmbiguities().stream()
+				.map(a->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",a.getProteinBean().getAccession(),a.getProteinBean().getGeneBean().getName()))
+				.distinct()
+				.collect(Collectors.joining("<br/>")));
+		setProteins(ev.getProteins().stream()
+				.map(p->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",p,p))
+				.collect(Collectors.joining("<br/>")));
 		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
 		setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
 		double pValue = ev.getScore(ScoreType.P_VALUE);
@@ -120,5 +127,13 @@ public class SearchBean {
 
 	public Evidence getEntity() {
 		return entity;
+	}
+
+	public String getProteins() {
+		return proteins;
+	}
+
+	public void setProteins(String proteins) {
+		this.proteins = proteins;
 	}
 }

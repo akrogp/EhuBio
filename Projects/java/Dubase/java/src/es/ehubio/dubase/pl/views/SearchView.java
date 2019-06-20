@@ -123,8 +123,8 @@ public class SearchView implements Serializable {
 		return results;
 	}
 	
-	public String onDetails(int i) {		
-		detailsView.setResult(rawResults.get(i));
+	public String onDetails(SearchBean res) {		
+		detailsView.setResult(res.getEntity());
 		return "details";
 	}
 	

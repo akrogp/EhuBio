@@ -61,7 +61,7 @@
 					<p:column headerText="Peptide count (unique)" sortBy="#{result.uniqPepts}">#{result.uniqPepts}</p:column>
 					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}">#{result.weightFmt}</p:column>
 					<p:column headerText="More fields">
-						<p:commandButton value="..." ajax="false" action="#{searchView.onDetails(i)}"/>
+						<p:commandButton value="..." ajax="false" action="#{searchView.onDetails(result)}"/>
 					</p:column>
 					<p:columns var=""></p:columns>
 				</p:dataTable>

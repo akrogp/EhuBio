@@ -14,7 +14,7 @@ public class CsvExporter {
 	
 	public static void export(List<Evidence> results, PrintWriter pw) {
 		pw.println(CsvUtils.getCsv(SEP1,
-			"Experiment", "DUB", "Substrate", "Description",
+			"Experiment", "DUB", "Genes", "Protein IDs", "Description",
 			"Fold change (log2)", "p-value", "Peptide count (all)", "Peptide count (unique)",
 			"Molecular weight (kDa)", "Sequence coverage (%)", "GlyGly (K) site positions",
 			"Sample_1 LFQ (log2)", "Sample_2 LFQ (log2)", "Sample_3 LFQ (log2)",
@@ -27,6 +27,7 @@ public class CsvExporter {
 				String.format("EXP%05d", ev.getExperimentBean().getId()),
 				ev.getExperimentBean().getEnzymeBean().getGene(),
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
+				CsvUtils.getCsv(SEP2, ev.getProteins().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getDescriptions().toArray()),
 				ev.getScore(ScoreType.FOLD_CHANGE),
 				Math.pow(10,-ev.getScore(ScoreType.P_VALUE)),

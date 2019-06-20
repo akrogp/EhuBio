@@ -46,6 +46,10 @@ public class DetailsBean {
 		return searchBean.getGenes();
 	}
 	
+	public String getProteins() {
+		return searchBean.getProteins();
+	}
+	
 	public String getDescriptions() {
 		return searchBean.getDescriptions();
 	}
