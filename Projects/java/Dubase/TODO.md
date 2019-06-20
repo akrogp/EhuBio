@@ -3,7 +3,7 @@
 * [x] Meter logo
 * [x] Meter resto de DUBs
 * [x] Mejorar menú
-* [ ] Meter metainfo de los experimentos (me lo pasa Unai). Se meterá enlace a PX para poder descargar los datos raw.
+* [x] Meter metainfo de los experimentos (me lo pasa Unai). Se meterá enlace a PX para poder descargar los datos raw.
 
 # Vistas
 

@@ -10,11 +10,19 @@ public class CsvUtils {
 			return "";
 		StringBuilder builder = new StringBuilder();
 		int i = 0;
-		for( ; i < fields.length - 1; i++ ) {
-			builder.append(String.valueOf(fields[i]));
-			builder.append(separator);
+		String str;
+		boolean escape;
+		for( ; i < fields.length; i++ ) {
+			str = String.valueOf(fields[i]);
+			escape = str.contains(separator);
+			if( escape )
+				builder.append('"');
+			builder.append(str);
+			if( escape )
+				builder.append('"');
+			if( i < fields.length - 1)
+				builder.append(separator);
 		}
-		builder.append(String.valueOf(fields[i]));
 		return builder.toString();
 	}
 }
