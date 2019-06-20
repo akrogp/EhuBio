@@ -31,8 +31,6 @@ public class DetailsView {
 		control.setLfq(String.format("%.2f", meanLfq(evBean, true)));
 		control.getLfqs().addAll(getLfqs(evBean, true));
 		detailsBean.getSamples().add(control);
-		
-		detailsBean.setCoverage(String.format("%.1f", evBean.getScore(ScoreType.SEQ_COVERAGE)));
 	}
 	
 	private static double meanLfq(Evidence ev, boolean control) {

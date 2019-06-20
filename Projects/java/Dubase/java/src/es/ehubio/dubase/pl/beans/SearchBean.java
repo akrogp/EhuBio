@@ -23,7 +23,9 @@ public class SearchBean {
 	private int uniqPepts;
 	private String weightFmt;
 	private double weight;
-	private String glygly;
+	private double coverage;
+	private String coverageFmt;
+	private String glygly;	
 	
 	public SearchBean(Evidence ev) {
 		entity = ev;		
@@ -43,6 +45,7 @@ public class SearchBean {
 		setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
 		setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
 		setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
+		setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));
 		setGlygly(ev.getModifications().stream()
 			.map(m->String.valueOf(m.getPosition()))
 			.collect(Collectors.joining(";"))
@@ -135,5 +138,18 @@ public class SearchBean {
 
 	public void setProteins(String proteins) {
 		this.proteins = proteins;
+	}
+
+	public double getCoverage() {
+		return coverage;
+	}
+
+	public void setCoverage(double coverage) {
+		this.coverage = coverage;
+		coverageFmt = String.format("%.1f %%", coverage);
+	}
+	
+	public String getCoverageFmt() {
+		return coverageFmt;
 	}
 }

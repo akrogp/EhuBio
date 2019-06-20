@@ -24,6 +24,11 @@
 				<p:message for="query"/>
 			</h:form><br/>
 			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" style="display: inline">
+				<p:commandButton value="Extended view" action="#{searchView.toggle()}" rendered="#{!searchView.extended}" ajax="false"/>
+				<p:commandButton value="Compact view" action="#{searchView.toggle()}" rendered="#{searchView.extended}" ajax="false"/>
+				&nbsp;
+			</h:form>
+			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" style="display: inline">
 				<p:commandButton ajax="false" value="Download #{searchView.results.size()} results" action="#{searchView.download()}"/>
 				&nbsp;
 			</h:form>
@@ -36,10 +41,12 @@
 				<br/><br/>
 			</h:form>
 			<h:form>
-				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}" rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending">
+				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}"
+					rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending" scrollable="#{searchView.extended}">					
 					<p:column headerText="Experiment" sortBy="#{result.experiment}">#{result.experiment}</p:column>
 					<p:column headerText="DUB" sortBy="#{result.enzyme}">#{result.enzyme}</p:column>
-					<p:column headerText="Substrate" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
+					<p:column headerText="Genes" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
+					<p:column headerText="Protein IDs" sortBy="#{result.proteins}" rendered="#{searchView.extended}"><h:outputText value="#{result.proteins}" escape="false"/></p:column>
 					<p:column sortBy="#{result.foldChange}">
 						<f:facet name="header">
 							<h:panelGroup id="fold">
@@ -57,13 +64,14 @@
 						<h:outputText value="#{result.foldChangeFmt}" escape="false"/>						
 					</p:column>
 					<p:column headerText="p-value" sortBy="#{result.pValue}">#{result.pValueFmt}</p:column>
-					<p:column headerText="Peptide count (all)" sortBy="#{result.totalPepts}">#{result.totalPepts}</p:column>
 					<p:column headerText="Peptide count (unique)" sortBy="#{result.uniqPepts}">#{result.uniqPepts}</p:column>
+					<p:column headerText="Peptide count (all)" sortBy="#{result.totalPepts}" rendered="#{searchView.extended}">#{result.totalPepts}</p:column>
 					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}">#{result.weightFmt}</p:column>
-					<p:column headerText="More fields">
+					<p:column headerText="Sequence coverage" sortBy="#{result.coverage}" rendered="#{searchView.extended}">#{result.coverageFmt}</p:column>
+					<p:column headerText="GlyGly (K) site positions" sortBy="#{result.glygly}" rendered="#{searchView.extended}">#{result.glygly}</p:column>
+					<p:column headerText="Details" style="width:100px;">
 						<p:commandButton value="..." ajax="false" action="#{searchView.onDetails(result)}"/>
 					</p:column>
-					<p:columns var=""></p:columns>
 				</p:dataTable>
 			</h:form>
 		</ui:define>

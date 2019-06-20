@@ -29,7 +29,7 @@ public class SearchView implements Serializable {
 	@EJB
 	private Searcher db;
 	private String query, gene;
-	private boolean dub, substrate;
+	private boolean dub, substrate, extended;
 	private List<String> genes;
 	private List<Evidence> rawResults;
 	private List<SearchBean> results;
@@ -152,5 +152,17 @@ public class SearchView implements Serializable {
 	
 	public boolean isInvalid() {
 		return !dub && !substrate;
+	}
+
+	public boolean isExtended() {
+		return extended;
+	}
+
+	public void setExtended(boolean extended) {
+		this.extended = extended;
+	}
+	
+	public void toggle() {
+		extended = !extended;
 	}
 }

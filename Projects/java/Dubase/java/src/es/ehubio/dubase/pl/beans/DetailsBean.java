@@ -91,14 +91,9 @@ public class DetailsBean {
 	}
 	
 	public String getCoverage() {
-		return coverage;
-	}
-
-	public void setCoverage(String coverage) {
-		this.coverage = coverage;
+		return searchBean.getCoverageFmt();
 	}
 
 	private final SearchBean searchBean;
 	private final List<Sample> samples = new ArrayList<>();
-	private String coverage;
 }
