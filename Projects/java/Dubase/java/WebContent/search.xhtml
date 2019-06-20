@@ -43,7 +43,9 @@
 			<h:form>
 				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}"
 					rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending" scrollable="#{searchView.extended}">					
-					<p:column headerText="Experiment" sortBy="#{result.experiment}">#{result.experiment}</p:column>
+					<p:column headerText="Experiment" sortBy="#{result.experiment}">
+						<p:commandLink value="#{result.experiment}" action="#{experimentView.showExperiment(result.entity.experimentBean)}" ajax="false"/>
+					</p:column>
 					<p:column headerText="DUB" sortBy="#{result.enzyme}">#{result.enzyme}</p:column>
 					<p:column headerText="Genes" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
 					<p:column headerText="Protein IDs" sortBy="#{result.proteins}" rendered="#{searchView.extended}"><h:outputText value="#{result.proteins}" escape="false"/></p:column>
@@ -70,7 +72,7 @@
 					<p:column headerText="Sequence coverage" sortBy="#{result.coverage}" rendered="#{searchView.extended}">#{result.coverageFmt}</p:column>
 					<p:column headerText="GlyGly (K) site positions" sortBy="#{result.glygly}" rendered="#{searchView.extended}">#{result.glygly}</p:column>
 					<p:column headerText="Details" style="width:100px;">
-						<p:commandButton value="..." ajax="false" action="#{searchView.onDetails(result)}"/>
+						<p:commandButton value="..." ajax="false" action="#{detailsView.showDetails(result)}"/>
 					</p:column>
 				</p:dataTable>
 			</h:form>

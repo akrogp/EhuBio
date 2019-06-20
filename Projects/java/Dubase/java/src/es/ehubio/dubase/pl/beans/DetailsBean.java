@@ -93,6 +93,10 @@ public class DetailsBean {
 	public String getCoverage() {
 		return searchBean.getCoverageFmt();
 	}
+	
+	public SearchBean getSearchBean() {
+		return searchBean;
+	}
 
 	private final SearchBean searchBean;
 	private final List<Sample> samples = new ArrayList<>();

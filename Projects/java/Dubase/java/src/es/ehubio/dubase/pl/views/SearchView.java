@@ -34,8 +34,6 @@ public class SearchView implements Serializable {
 	private List<Evidence> rawResults;
 	private List<SearchBean> results;
 	@Inject
-	private DetailsView detailsView;
-	@Inject
 	private PrefView prefs;
 	@Inject
 	private VolcanoView volcanoView;
@@ -121,11 +119,6 @@ public class SearchView implements Serializable {
 	
 	public List<SearchBean> getResults() {
 		return results;
-	}
-	
-	public String onDetails(SearchBean res) {		
-		detailsView.setResult(res.getEntity());
-		return "details";
 	}
 	
 	public List<String> getGenes() {

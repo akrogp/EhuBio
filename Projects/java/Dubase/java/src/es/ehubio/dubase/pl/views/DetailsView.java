@@ -16,9 +16,27 @@ import es.ehubio.dubase.pl.beans.SearchBean;
 @RequestScoped
 public class DetailsView {
 	private DetailsBean detailsBean;
+	
+	public String showDetails(SearchBean searchBean) {
+		detailsBean = new DetailsBean(searchBean);
+		Evidence evBean = searchBean.getEntity();
+		
+		DetailsBean.Sample sample = new DetailsBean.Sample();
+		sample.setName("Sample");
+		sample.setLfq(String.format("%.2f", meanLfq(evBean, false)));
+		sample.getLfqs().addAll(getLfqs(evBean, false));
+		detailsBean.getSamples().add(sample);
+		
+		DetailsBean.Sample control = new DetailsBean.Sample();
+		control.setName("Control");
+		control.setLfq(String.format("%.2f", meanLfq(evBean, true)));
+		control.getLfqs().addAll(getLfqs(evBean, true));
+		detailsBean.getSamples().add(control);
+		
+		return "details";
+	}
 
 	public void setResult(Evidence evBean) {
-		detailsBean = new DetailsBean(new SearchBean(evBean));
 		
 		DetailsBean.Sample sample = new DetailsBean.Sample();
 		sample.setName("Sample");
@@ -53,5 +71,5 @@ public class DetailsView {
 
 	public DetailsBean getDetailsBean() {
 		return detailsBean;
-	}
+	}	
 }

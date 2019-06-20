@@ -29,7 +29,7 @@ public class SearchBean {
 	
 	public SearchBean(Evidence ev) {
 		entity = ev;		
-		setExperiment(String.format("EXP%05d", ev.getExperimentBean().getId()));
+		setExperiment(ev.getExperimentBean().getFmtId());
 		setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
 		setGenes(ev.getAmbiguities().stream()
 				.map(a->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",a.getProteinBean().getAccession(),a.getProteinBean().getGeneBean().getName()))

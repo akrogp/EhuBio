@@ -15,10 +15,12 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
@@ -58,6 +60,12 @@ public class Experiment implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	@Transient
+	@XmlTransient
+	public String getFmtId() {
+		return String.format("EXP%05d", getId());
 	}
 
 
