@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment>
+    <title>USP11</title>
+    <description>Silencing of USP11 via siRNA</description>
+    <expDate>2018-03-05</expDate>
+    <author>
+	    <name>Ugo Mayor</name>
+	    <mail>ugo.mayor@ehu.eus</mail>
+	    <affiliation>UPV/EHU</affiliation>
+    </author>
+    <cell>
+    	<name>Hek293</name>
+    	<taxon>9606</taxon>
+    </cell>
+    <enzyme>USP11</enzyme>
+    <method>
+    	<description><![CDATA[<ul>
+    		<li>Sample size: 150 mm dish</li>
+    		<li>Lysis buffer: 8 M Urea, 1 % SDS, 1X PBS, 3.4X Protease inhibitor, 50 mM NEM</li>
+    		<li>Amount beads: 150 mm dish</li>
+    		<li>Incubation time: 40 min RT + 2h20 min 4C</li>
+    		<li>Whasing buffers:<ol>
+    			<li>WB1: 8 M Urea, 0.25 % SDS, 1X PBS</li>
+    			<li>WB2: 6 M Guanidine hydrochloride, 1X PBS</li>
+    			<li>WB3: 6.4 M Urea, 1 M NaCl, 0.2 % SDS, 1X PBS</li>
+    			<li>WB4: 4 M Urea, 1 M NaCl, 10 % Isopropanol, 10 % ethanol, 0.2 % SDS, 1X PBS</li>
+    			<li>WB5: 8 M Urea, 1 % SDS, 1X PBS</li>
+    			<li>WB6: 2 % SDS, 1X PBS</li>
+    		</ol></li>
+    		<li>Elution buffer:<ul>
+    			<li>Volume: 80 uL</li>
+    			<li>Composition: 250 mM Tris-HCl pH 7.5, 40 % Glycerol, 4 % SDS, 0.2 % bromophenol blue, 100 mM DTT</li>
+   			</ul></li>
+    		</ul>]]>
+    	</description>
+    	<column>EASY nLC 1200</column>
+    	<instrument>QExactive HF-X</instrument>
+    	<foldThreshold>2.0</foldThreshold>
+    	<pvalueThreshold>0.05</pvalueThreshold>
+    </method>
+    <files>
+    	<file>
+    		<name>USP11.csv</name>
+    		<type>1</type>
+    	</file>
+    	<file>
+    		<name>01A_Human_Can_20187.fasta</name>
+    		<type>2</type>
+    	</file>
+    </files>
+    <conditions>
+        <condition>
+    		<name>siUSP11</name>
+    		<description>Silencing</description>
+    		<replicateType>Biological</replicateType>
+    		<control>false</control>
+    		<replicates>
+    			<replicate>siUSP11 1</replicate>
+    			<replicate>siUSP11 2</replicate>
+    			<replicate>siUSP11 3</replicate>
+    		</replicates>    	
+    	</condition>
+        <condition>
+    		<name>USP11 C</name>
+    		<description>Control</description>
+    		<replicateType>Biological</replicateType>
+    		<control>true</control>
+    		<replicates>
+    			<replicate>USP11 C1</replicate>
+    			<replicate>USP11 C2</replicate>
+    			<replicate>USP11 C3</replicate>
+    		</replicates>
+    	</condition>
+    </conditions>
+</experiment>

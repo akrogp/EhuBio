@@ -1,4 +1,4 @@
 *.xlsx
 *.txt
 *.fasta
-*.xml
+mqpar*

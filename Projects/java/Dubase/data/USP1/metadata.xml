@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<experiment>
+    <title>USP1</title>
+    <description>Silencing of USP1 via siRNA</description>
+    <expDate>2016-11-08</expDate>
+    <author>
+	    <name>Ugo Mayor</name>
+	    <mail>ugo.mayor@ehu.eus</mail>
+	    <affiliation>UPV/EHU</affiliation>
+    </author>
+    <cell>
+    	<name>Hek293</name>
+    	<taxon>9606</taxon>
+    </cell>
+    <enzyme>USP1</enzyme>
+    <method>
+    	<description><![CDATA[<ul>
+    		<li>Sample size: 150 mm dish</li>
+    		<li>Lysis buffer: 8 M Urea, 1 % SDS, 1X PBS, 3.4X Protease inhibitor, 50 mM NEM</li>
+    		<li>Amount beads: 150 mm dish</li>
+    		<li>Incubation time: 40 min RT + 2h20 min 4C</li>
+    		<li>Whasing buffers:<ol>
+    			<li>WB1: 8 M Urea, 0.25 % SDS, 1X PBS</li>
+    			<li>WB2: 6 M Guanidine hydrochloride, 1X PBS</li>
+    			<li>WB3: 6.4 M Urea, 1 M NaCl, 0.2 % SDS, 1X PBS</li>
+    			<li>WB4: 4 M Urea, 1 M NaCl, 10 % Isopropanol, 10 % ethanol, 0.2 % SDS, 1X PBS</li>
+    			<li>WB5: 8 M Urea, 1 % SDS, 1X PBS</li>
+    			<li>WB6: 2 % SDS, 1X PBS</li>
+    		</ol></li>
+    		<li>Elution buffer:<ul>
+    			<li>Volume: 80 uL</li>
+    			<li>Composition: 250 mM Tris-HCl pH 7.5, 40 % Glycerol, 4 % SDS, 0.2 % bromophenol blue, 100 mM DTT</li>
+   			</ul></li>
+    		</ul>]]>
+    	</description>
+    	<column>EASY nLC 1000</column>
+    	<instrument>QExactive</instrument>
+    	<foldThreshold>2.0</foldThreshold>
+    	<pvalueThreshold>0.05</pvalueThreshold>
+    </method>
+    <files>
+    	<file>
+    		<name>USP1.csv</name>
+    		<type>1</type>
+    	</file>
+    	<file>
+    		<name>01A_Human_Can_20187.fasta</name>
+    		<type>2</type>
+    	</file>
+    </files>
+    <conditions>
+        <condition>
+    		<name>USP1_C</name>
+    		<description>Silencing</description>
+    		<replicateType>Biological</replicateType>
+    		<control>false</control>
+    		<replicates>
+    			<replicate>USP1_M</replicate>
+    			<replicate>USP1_O</replicate>
+    			<replicate>USP1_P</replicate>
+    		</replicates>    	
+    	</condition>
+        <condition>
+    		<name>CONTROL</name>
+    		<description>Control</description>
+    		<replicateType>Biological</replicateType>
+    		<control>true</control>
+    		<replicates>
+    			<replicate>CONTROL_A</replicate>
+    			<replicate>CONTROL_B</replicate>
+    			<replicate>CONTROL_C</replicate>
+    		</replicates>
+    	</condition>
+    </conditions>
+</experiment>
