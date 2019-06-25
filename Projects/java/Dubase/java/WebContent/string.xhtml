@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"> 
+
+<h:head></h:head> 
+<body> 
+	<form id="tmpString" action="https://string-db.org/cgi/network.pl">
+		<input type="hidden" name="required_score" value="400"/>
+		<input type="hidden" name="limit" value="0"/>
+		<input type="hidden" name="multi_input" value="1"/>
+		<input type="hidden" name="multiple_input_items" value="#{stringView.genes}"/>
+		<input type="hidden" name="multiple_input_type" value="multi_identifier"/>
+		<input type="hidden" name="species_text_multiple_identifiers" value="#{stringView.organism}"/>
+	</form>
+	
+	<script type="text/javascript">
+		document.getElementById("tmpString").submit();
+	</script>
+</body> 
+</html>

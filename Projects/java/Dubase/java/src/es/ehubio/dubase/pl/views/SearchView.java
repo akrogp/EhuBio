@@ -121,6 +121,10 @@ public class SearchView implements Serializable {
 		return results;
 	}
 	
+	public List<Evidence> getRawResults() {
+		return rawResults;
+	}
+	
 	public List<String> getGenes() {
 		if( genes == null )
 			genes = db.searchEnzymesWithData().stream().map(e -> e.getGene()).collect(Collectors.toList()); 

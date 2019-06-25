@@ -36,10 +36,14 @@
 				<p:commandButton value="Volcano" ajax="false" action="#{searchView.volcano()}" disabled="#{!searchView.dub}"/>
 				&nbsp;
 			</h:form>
+			<h:form rendered="#{searchView.results != null and searchView.results.size() > 1}" target="string" style="display: inline">
+				<p:commandButton value="STRING" ajax="false" action="#{stringView.redirect(searchView.rawResults)}"/>
+				&nbsp;
+			</h:form>
 			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" target="gprofiler" style="display: inline">
 				<p:commandButton value="g:Profiler" ajax="false" action="#{searchView.gprofiler()}"/>
 				<br/><br/>
-			</h:form>
+			</h:form>			
 			<h:form>
 				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}"
 					rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending" scrollable="#{searchView.extended}">					
