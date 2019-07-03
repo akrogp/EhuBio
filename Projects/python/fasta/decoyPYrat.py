@@ -114,14 +114,35 @@ def shuffle(peptide):
 	#return new peptide
 	return ''.join(l) + s 
 	
-	
+def build_decoy(outfa, header, seq):
+	# make sequence isobaric (check args for switch off)
+	if args.iso == False:
+		seq = seq.replace('I', 'L')
+
+	# digest sequence add peptides to set
+	upeps.update(digest(seq, args.csites, args.cpos, args.noc, args.minlen))
+
+	# reverse and switch protein sequence
+	decoyseq = revswitch(seq, args.noswitch, args.csites)
+
+	# do not store decoy peptide set in reduced memory mode
+	if args.mem == False:
+		# update decoy peptide set
+		dpeps.update(digest(decoyseq, args.csites, args.cpos, args.noc, args.minlen))
+
+	# write decoy protein accession and sequence to file
+	outfa.write('>' + args.dprefix + header)
+	outfa.write(decoyseq + '\n')
 
 #Create empty sets to add all target and decoy peptides
 upeps = set()	
 dpeps = set()
 	
 #Counter for number of decoy sequences
-dcount = 0;	
+dcount = 0;
+
+#fasta header of current seq
+header = ''
 
 #empty protein sequence
 seq = ''	
@@ -136,34 +157,18 @@ for line in fasta:
 	#if this line starts with ">" then process sequence if not empty
 	if line[0] == '>':
 		if seq != '':
-		
-			#make sequence isobaric (check args for switch off)
-			if args.iso == False:
-				seq = seq.replace('I', 'L')
-		
-			#digest sequence add peptides to set
-			upeps.update( digest(seq, args.csites, args.cpos, args.noc, args.minlen) )
-			
-			
-			
-			#reverse and switch protein sequence
-			decoyseq = revswitch(seq, args.noswitch, args.csites)
-			
-			#do not store decoy peptide set in reduced memory mode
-			if args.mem == False:
-				#update decoy peptide set
-				dpeps.update( digest(decoyseq, args.csites, args.cpos, args.noc, args.minlen) )
-			
-			#write decoy protein accession and sequence to file
+			build_decoy(outfa, header, seq)
 			dcount += 1
-			outfa.write('>' + args.dprefix + line[1:])
-			outfa.write(decoyseq + '\n')
-			
+
+		header = line[1:]
 		seq = '';
 	
 	#if not accession line then append aa sequence (with no newline or white space) to seq string
 	else:
 		seq+=line.rstrip()
+if seq != '':
+	build_decoy(outfa, header, seq)
+	dcount += 1
 		
 #Close files
 fasta.close()
