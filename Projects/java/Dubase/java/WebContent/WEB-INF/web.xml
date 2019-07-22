@@ -7,8 +7,8 @@
   <env-entry>
     <env-entry-name>es.ehubio.dubase.inputDir</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>/home/gorka/MyProjects/EhuBio/Projects/java/Dubase/data</env-entry-value>
-  </env-entry>
+    <env-entry-value>/media/data/Sequences/Dubase</env-entry-value>
+  </env-entry>    
   <servlet>
     <servlet-name>Faces Servlet</servlet-name>
     <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>

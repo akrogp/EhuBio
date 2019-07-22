@@ -85,14 +85,18 @@
 				</p:panelGrid>
 				
 				<h:outputText value="Supporting files" />
-				<p:panelGrid>
-					<ui:repeat var="file" value="#{experimentView.entity.supportingFiles}">
-						<p:row>
-							<p:column>#{file.name}</p:column>
-							<p:column>#{file.fileType.description}</p:column>
-						</p:row>
-					</ui:repeat>
-				</p:panelGrid>
+				<h:form>
+					<p:panelGrid>
+						<ui:repeat var="file" value="#{experimentView.entity.supportingFiles}">
+							<p:row>
+								<p:column>								
+										<p:commandLink ajax="false" value="#{file.name}" action="#{experimentView.download(file)}"/>								
+								</p:column>
+								<p:column>#{file.fileType.description}</p:column>
+							</p:row>
+						</ui:repeat>
+					</p:panelGrid>
+				</h:form>
 			</p:panelGrid>
 		</ui:define>
 	</ui:composition>

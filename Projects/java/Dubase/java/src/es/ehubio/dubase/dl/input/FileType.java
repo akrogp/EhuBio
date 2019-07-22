@@ -4,7 +4,9 @@ package es.ehubio.dubase.dl.input;
 public enum FileType {
 	UNKNOWN("Unknown type"),
 	UGO_CSV("Internal CSV format of Ugo's lab"),
-	FASTA("Fasta database used for MS/MS search");
+	FASTA("Fasta database used for MS/MS search"),
+	MQ_PAR("MaxQuant parameters file"),
+	MQ_TXT("MaxQuant results file");
 	
 	private FileType(String description) {
 		this.description = description;
