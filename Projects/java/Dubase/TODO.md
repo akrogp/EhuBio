@@ -66,6 +66,7 @@
 * [x] Mejorar eficiencia de búsqueda
 * [x] Poder seleccionar umbrales
 * [ ] Poder seleccionar imputaciones
+* [x] Poder seleccionar número mínimo de péptidos
 * [x] Por defecto solo verdes pero poder incluir rojas o sólo rojas
 * [x] Cambiar nombre de settings a thresholds y ponerlo como pestaña entre home y search
 

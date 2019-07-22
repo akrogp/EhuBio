@@ -5,6 +5,7 @@ public final class Thresholds {
 	public static final double FOLD_CHANGE = 2;	
 	public static final double P_VALUE = 0.05;
 	public static final int MAX_IMPUTATIONS = 1;
+	public static final int MIN_PEPTIDES = 2;
 	
 	// Log
 	public static final double LOG2_FOLD_CHANGE = Math.log(FOLD_CHANGE)/Math.log(2);
@@ -15,6 +16,7 @@ public final class Thresholds {
 	private double pValue = P_VALUE, log10PValue = LOG10_P_VALUE;
 	private boolean up = true;
 	private boolean down = false;
+	private int minPeptides = MIN_PEPTIDES;
 	
 	public double getFoldChange() {
 		return foldChange;
@@ -58,5 +60,11 @@ public final class Thresholds {
 	}
 	public void setDown(boolean down) {
 		this.down = down;
+	}
+	public int getMinPeptides() {
+		return minPeptides;
+	}
+	public void setMinPeptides(int minPeptides) {
+		this.minPeptides = minPeptides;
 	}
 }

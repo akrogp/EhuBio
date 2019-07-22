@@ -29,25 +29,39 @@ public class Searcher {
 
 	public List<Evidence> searchSubstrate(String gene, Thresholds th) {
 		return em
-			.createQuery("SELECT a.evidenceBean FROM Ambiguity a WHERE a.proteinBean.geneBean.name = :gene AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0 AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0", Evidence.class)
+			.createQuery(
+				"SELECT a.evidenceBean FROM Ambiguity a WHERE a.proteinBean.geneBean.name = :gene" +
+				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
+				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0" +
+				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0",
+				Evidence.class)
 			.setParameter("gene", gene)
 			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())
 			.setParameter("s11", th.isUp() ? th.getLog2FoldChange() : 1000)
 			.setParameter("s12", th.isDown() ? -th.getLog2FoldChange() : -1000)
 			.setParameter("t2", ScoreType.P_VALUE.ordinal())
 			.setParameter("s2", th.getLog10PValue())
+			.setParameter("t3", ScoreType.UNIQ_PEPTS.ordinal())
+			.setParameter("s3", (double)th.getMinPeptides())
 			.getResultList();
 	}
 	
 	public List<Evidence> searchEnzyme(String gene, Thresholds th) {
 		return em
-			.createQuery("SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0 AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0", Evidence.class)
+			.createQuery(
+				"SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene" +
+				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
+				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0" +
+				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0 ",
+				Evidence.class)
 			.setParameter("gene", gene)
 			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())
 			.setParameter("s11", th.isUp() ? th.getLog2FoldChange() : 1000)
 			.setParameter("s12", th.isDown() ? -th.getLog2FoldChange() : -1000)
 			.setParameter("t2", ScoreType.P_VALUE.ordinal())
 			.setParameter("s2", th.getLog10PValue())
+			.setParameter("t3", ScoreType.UNIQ_PEPTS.ordinal())
+			.setParameter("s3", (double)th.getMinPeptides())
 			.getResultList();
 	}
 	

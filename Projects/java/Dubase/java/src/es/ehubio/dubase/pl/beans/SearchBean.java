@@ -32,7 +32,8 @@ public class SearchBean {
 		setExperiment(ev.getExperimentBean().getFmtId());
 		setEnzyme(ev.getExperimentBean().getEnzymeBean().getGene());
 		setGenes(ev.getAmbiguities().stream()
-				.map(a->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",a.getProteinBean().getAccession(),a.getProteinBean().getGeneBean().getName()))
+				//.map(a->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",a.getProteinBean().getAccession(),a.getProteinBean().getGeneBean().getName()))
+				.map(a->String.format("<a href='https://www.uniprot.org/uniprot/?query=gene%%3A%s+organism%%3A%d&sort=score' target='_blank'>%s</a>",a.getProteinBean().getGeneBean().getName(),ev.getExperimentBean().getCellBean().getTaxonBean().getId(),a.getProteinBean().getGeneBean().getName()))
 				.distinct()
 				.collect(Collectors.joining("<br/>")));
 		setProteins(ev.getProteins().stream()

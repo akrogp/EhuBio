@@ -26,6 +26,11 @@
         				<p:slider for="p_value" display="p_label" style="width:200px" displayTemplate="p-value = {value}" minValue="0.01" maxValue="0.3" step="0.01"/>
 					</p:panelGrid>
 					<p:panelGrid columns="1" styleClass="ui-noborder">
+						<h:outputText id="pep_label" value="Min. unique peptides = #{prefView.thresholds.minPeptides}" />
+						<h:inputHidden id="min_peps" value="#{prefView.thresholds.minPeptides}" />
+        				<p:slider for="min_peps" display="pep_label" style="width:200px" displayTemplate="Min. unique peptides = {value}" minValue="1" maxValue="10" step="1"/>
+					</p:panelGrid>
+					<p:panelGrid columns="1" styleClass="ui-noborder">
 						<p:selectBooleanCheckbox value="#{prefView.thresholds.up}" itemLabel="Upregulated">
 							<p:ajax event="change" update="@form" />
 						</p:selectBooleanCheckbox>
