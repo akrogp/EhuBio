@@ -19,9 +19,10 @@
 					<f:ajax listener="#{searchView.clear()}" render="@all"/>
 				</p:selectBooleanCheckbox>
 				<p:commandButton value="Reset" ajax="false" action="#{searchView.reset()}"/>
-				&nbsp;<p:commandButton value="Search!" ajax="false" action="#{searchView.search()}" disabled="#{searchView.invalid}"/>
+				&nbsp;<p:commandButton id="search" value="Search!" ajax="false" action="#{searchView.search()}" disabled="#{searchView.invalid}"/>
 				&nbsp;<p:commandButton value="Feed examples" ajax="false" action="#{feedView.saveExamples()}" rendered="false"/>
 				<p:message for="query"/>
+				<p:defaultCommand target="search"/>
 			</h:form><br/>
 			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" style="display: inline">
 				<p:commandButton value="Extended view" action="#{searchView.toggle()}" rendered="#{!searchView.extended}" ajax="false"/>
