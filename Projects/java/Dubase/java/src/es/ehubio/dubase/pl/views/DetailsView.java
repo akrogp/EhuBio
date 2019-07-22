@@ -1,9 +1,10 @@
 package es.ehubio.dubase.pl.views;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.enterprise.context.RequestScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
 import es.ehubio.dubase.dl.entities.Evidence;
@@ -13,8 +14,9 @@ import es.ehubio.dubase.pl.beans.DetailsBean;
 import es.ehubio.dubase.pl.beans.SearchBean;
 
 @Named
-@RequestScoped
-public class DetailsView {
+@SessionScoped
+public class DetailsView implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private DetailsBean detailsBean;
 	
 	public String showDetails(SearchBean searchBean) {

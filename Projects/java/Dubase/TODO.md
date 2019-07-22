@@ -58,6 +58,11 @@
 * [x] Vulcano: controles de calidad en azul. Me los pasa Juanma y aparte está el DUB que se haya usado para la búsqueda.
 * [x] STRING (pendiente de que Juanma vea si los resultados que salen merecen)
 
+## Experimento
+
+* [ ] Mostrar ficheros de MaxQuant
+* [ ] Permitir descargar ficheros
+
 # Preferencias
 
 ## Filtrado
