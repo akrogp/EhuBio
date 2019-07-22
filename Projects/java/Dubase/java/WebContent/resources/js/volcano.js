@@ -166,7 +166,7 @@ function volcanoPlot() {
             
             function onClick(d) {
             	if( d.gene )
-            		window.location.href = `search.xhtml?gene=${d.gene}`;
+            		window.location.href = `search.xhtml?subs=${d.gene}`;
             }
 
             function yTickFormat(n) {

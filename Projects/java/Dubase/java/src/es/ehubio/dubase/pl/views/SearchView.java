@@ -103,14 +103,29 @@ public class SearchView implements Serializable {
 	}
 
 	public String getQuery() {
-		String param = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("dub"); 
-		if( param != null ) {
+		String geneParam = getParam("gene");
+		String dubParam = getParam("dub");
+		String subsParam = getParam("subs");
+		if( geneParam != null ) {
+			setQuery(geneParam);
+			setDub(true);
+			setSubstrate(true);
+		} else if( dubParam != null ) {
+			setQuery(dubParam);
 			setDub(true);
 			setSubstrate(false);
-			setQuery(param);
-			search();
-		}
+		} else if( subsParam != null ) {
+			setQuery(subsParam);
+			setDub(false);
+			setSubstrate(true);
+		} else
+			return query;
+		search();
 		return query;
+	}
+	
+	private String getParam(String param) {
+		return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(param);
 	}
 
 	public void setQuery(String query) {
