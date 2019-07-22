@@ -60,8 +60,8 @@
 
 ## Experimento
 
-* [ ] Mostrar ficheros de MaxQuant
-* [ ] Permitir descargar ficheros
+* [x] Mostrar ficheros de MaxQuant
+* [x] Permitir descargar ficheros
 
 # Preferencias
 
