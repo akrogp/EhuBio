@@ -55,7 +55,7 @@
 						&nbsp;<p:commandButton value="g:Profiler" ajax="false" action="#{profilerView.gprofiler()}" rendered="#{profilerView.gene != null and !profilerView.gene.isEmpty()}"/>
 					</h:form>
 					</p:column>
-				</p:row>
+				</p:row>				
 				<p:row rendered="false">
 					<p:column><h:graphicImage name="images/venn-preview.png"/></p:column>
 					<p:column>
@@ -73,6 +73,15 @@
 							</p:selectOneMenu>
 							&nbsp;<p:commandButton value="Compare" ajax="false" action="#{vennView.compare()}"
 								rendered="#{vennView.gene1 != null and vennView.gene2 != null and !vennView.gene1.isEmpty() and !vennView.gene2.isEmpty() and !vennView.gene1.equalsIgnoreCase(vennView.gene2)}"/>
+						</h:form>
+					</p:column>
+				</p:row>
+				<p:row>
+					<p:column><h:graphicImage name="images/overlap-preview.png"/></p:column>
+					<p:column>
+						<p>Substrates of multiple DUBs</p>
+						<h:form>
+							<p:commandButton value="Search" action="overlaps"/>
 						</h:form>
 					</p:column>
 				</p:row>				

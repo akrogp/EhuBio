@@ -67,7 +67,7 @@ public class Browser {
 			.getResultList();
 	}
 	
-	private List<String> getEnzymesWithEvidences() {
+	public List<String> getEnzymesWithEvidences() {
 		return em
 			.createQuery("SELECT DISTINCT e.enzymeBean.gene FROM Experiment e", String.class)
 			.getResultList();
