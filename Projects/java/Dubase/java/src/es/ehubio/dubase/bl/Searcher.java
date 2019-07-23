@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.input.ScoreType;
 
 @LocalBean
@@ -69,5 +70,9 @@ public class Searcher {
 		return em
 			.createQuery("SELECT DISTINCT e.experimentBean.enzymeBean FROM Evidence e", Enzyme.class)
 			.getResultList();
+	}
+	
+	public List<Experiment> findExperiments() {
+		return em.createNamedQuery("Experiment.findAll", Experiment.class).getResultList();
 	}
 }
