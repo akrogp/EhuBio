@@ -40,7 +40,7 @@
 * [x] LFQ de cada caso
 * [x] Sequence coverage
 * [x] Resto de campos del xls
-* [ ] Enlace a búsqueda de los sitios GlyGly en phosphosite
+* [x] Enlace a búsqueda de los sitios GlyGly en phosphosite
 * [x] Cuando entras en la opción more fields, se podría añadir un link a uniprot, por ejemplo en la descripción de la proteina?? -> query UniProt por nombre de gen.
 
 ## Gráfica

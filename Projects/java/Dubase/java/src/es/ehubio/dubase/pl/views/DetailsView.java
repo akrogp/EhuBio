@@ -73,5 +73,9 @@ public class DetailsView implements Serializable {
 
 	public DetailsBean getDetailsBean() {
 		return detailsBean;
-	}	
+	}
+
+	public String getPhospho() {
+		return detailsBean.getSearchBean().getEntity().getAmbiguities().stream().map(a->a.getProteinBean().getAccession()).collect(Collectors.joining("\n"));
+	}
 }
