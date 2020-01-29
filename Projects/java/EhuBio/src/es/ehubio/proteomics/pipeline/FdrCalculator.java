@@ -19,7 +19,7 @@ import es.ehubio.proteomics.Score;
 import es.ehubio.proteomics.ScoreType;
 
 public class FdrCalculator {
-	private enum FdrFormula {DT, D2TD, MAYU, PICKED, REFINED};
+	private enum FdrFormula {DT, D2TD, MAYU, PICKED, REFINED, D1T};
 	
 	private static final Logger logger = Logger.getLogger(FdrCalculator.class.getName());
 	private final FdrFormula fdrFormula;
@@ -35,6 +35,12 @@ public class FdrCalculator {
 	}
 	
 	public static FdrCalculator newSeparatedFdr() {
+		return newSeparatedFdr(false);
+	}
+	
+	public static FdrCalculator newSeparatedFdr(boolean adjust) {
+		if( adjust )
+			return new FdrCalculator(FdrFormula.D1T);
 		return new FdrCalculator(FdrFormula.DT);
 	}
 	
@@ -68,6 +74,8 @@ public class FdrCalculator {
 			case PICKED:
 			case DT:
 				return ((double)d)/t;
+			case D1T:
+				return ((double)d+1)/t;
 			case D2TD:
 				return (2.0*d)/(t+d);
 			case MAYU:
