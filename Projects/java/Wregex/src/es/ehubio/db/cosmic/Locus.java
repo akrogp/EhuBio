@@ -35,13 +35,17 @@ public class Locus {
 		Integer count = counts.get(aa);
 		return count == null ? 0 : count.intValue();
 	}
-
+	
 	public void incMutationCount(Aminoacid aa) {
+		incMutationCount(aa, 1);
+	}
+
+	public void incMutationCount(Aminoacid aa, int inc) {
 		Integer count = counts.get(aa);
 		if( count == null )
-			count = 1;
+			count = inc;
 		else
-			count = count+1;
+			count = count+inc;
 		counts.put(aa, count);
 	}
 	

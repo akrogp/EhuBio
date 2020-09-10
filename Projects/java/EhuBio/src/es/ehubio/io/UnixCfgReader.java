@@ -1,12 +1,13 @@
 package es.ehubio.io;
 
 import java.io.BufferedReader;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UnixCfgReader {
+public class UnixCfgReader implements Closeable {
 	private BufferedReader mReader;
 	private List<String> comments;	
 
@@ -30,6 +31,7 @@ public class UnixCfgReader {
 		return str;
 	}
 	
+	@Override
 	public void close() throws IOException {
 		if( mReader != null )
 			mReader.close();

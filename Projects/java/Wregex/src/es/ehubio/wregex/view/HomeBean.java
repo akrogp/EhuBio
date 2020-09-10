@@ -80,7 +80,8 @@ public class HomeBean implements Serializable {
 			
 	}
 	
-	private void setWregexLogDev(List<LatestNew> news2) {
+	private void setWregexLogDev(List<LatestNew> news) {
+		news.add(new LatestNew("Sep 10, 2020", "Databases updated"));
 		news.add(new LatestNew("Sep 28, 2017", "Included support for coarse/fine PSSM"));
 		news.add(new LatestNew("Sep 26, 2017", "Filtered SNPs from COSMIC"));
 		news.add(new LatestNew("Sep 14, 2017", "Updated to latest versions of COSMIC and UniProt"));
@@ -111,6 +112,7 @@ public class HomeBean implements Serializable {
 	}
 
 	private void setWregexLog2(List<LatestNew> news) {
+		news.add(new LatestNew("Sep 10, 2020", "Databases updated"));
 		news.add(new LatestNew("Sep 26, 2017", "Wregex v2.1 published"));
 		news.add(new LatestNew("Sep 14, 2017", "Updated to latest versions of COSMIC and UniProt"));
 		news.add(new LatestNew("May 12, 2016", "Wregex v2.0 published in Scientific Reports"));

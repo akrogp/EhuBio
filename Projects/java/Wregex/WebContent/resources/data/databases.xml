@@ -13,7 +13,7 @@
     <database>
         <name>COSMIC</name>
         <type>cosmic</type>
-        <path>/media/data/Sequences/Cosmic/current/CosmicMutantExport.tsv.gz</path>
+        <path>/media/data/Sequences/Cosmic/current/cmc_export.tsv.gz</path>
         <versionFile>/media/data/Sequences/Cosmic/current/version.txt</versionFile>
         <wregexVersion>2</wregexVersion>
     </database>

@@ -276,40 +276,42 @@ public class DatabasesBean implements Serializable {
 		MotifReference reference;
 		List<MotifReference> references;
 		File elmFile = new File(elm.getPath());
-		UnixCfgReader rd = new UnixCfgReader(new FileReader(elmFile));
-		String line;
-		String[] fields;
-		boolean first = true;
-		while( (line=rd.readLine()) != null ) {
-			if( first == true ) {
-				first = false;
-				continue;
+		try(UnixCfgReader rd = new UnixCfgReader(new FileReader(elmFile))) {
+			String line;
+			String[] fields;
+			boolean first = true;
+			while( (line=rd.readLine()) != null ) {
+				if( first == true ) {
+					first = false;
+					continue;
+				}
+				if( !rd.getComment("ELM_Classes_Download_Version").contains("1.4") )
+					throw new IOException("ELM file version not supported");
+				fields = line.replaceAll("\"","").split("\t");
+				motif = new MotifInformation();
+				motif.setName(fields[1]);
+				motif.setSummary(fields[3]);
+				definition = new MotifDefinition();
+				definition.setName(fields[0]);
+				definition.setDescription("ELM regular expression without using Wregex capturing groups and PSSM capabilities");
+				definition.setRegex(fields[4].replaceAll("\\(", "(?:"));
+				definitions = new ArrayList<>();
+				definitions.add(definition);
+				motif.setDefinitions(definitions);
+				reference = new MotifReference();
+				reference.setName("Original ELM entry");
+				reference.setLink("http://elm.eu.org/elms/elmPages/"+fields[1]+".html");
+				references = new ArrayList<>();
+				references.add(reference);
+				motif.setReferences(references);
+				elmMotifs.add(motif);
 			}
-			fields = line.replaceAll("\"","").split("\t");
-			motif = new MotifInformation();
-			motif.setName(fields[1]);
-			motif.setSummary(fields[2]);
-			definition = new MotifDefinition();
-			definition.setName(fields[0]);
-			definition.setDescription("ELM regular expression without using Wregex capturing groups and PSSM capabilities");
-			definition.setRegex(fields[3].replaceAll("\\(", "(?:"));
-			definitions = new ArrayList<>();
-			definitions.add(definition);
-			motif.setDefinitions(definitions);
-			reference = new MotifReference();
-			reference.setName("Original ELM entry");
-			reference.setLink("http://elm.eu.org/elms/elmPages/"+fields[1]+".html");
-			references = new ArrayList<>();
-			references.add(reference);
-			motif.setReferences(references);
-			elmMotifs.add(motif);
-		}
-		rd.close();
-		lastModifiedElm = elmFile.lastModified();
-		String version = rd.getComment("ELM_Classes_Download_Date");
-		if( version != null )
-			elm.setVersion(version.split(" ")[1]);
-		logger.info("Loaded " + elm.getFullName() + "!");
+			lastModifiedElm = elmFile.lastModified();
+			String version = rd.getComment("ELM_Classes_Download_Date");
+			if( version != null )
+				elm.setVersion(version.split(" ")[1]);
+			logger.info("Loaded " + elm.getFullName() + "!");
+		}		
 	}
 	
 	private void loadCosmic() throws FileNotFoundException, IOException {
