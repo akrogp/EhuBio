@@ -81,7 +81,7 @@ public class StatisticsBean {
 				displayTips.add(String.format("Bubble size has been limited to %d mutations", maxMutations));
 				displayTips.add(String.format("Motifs with less than %d mutations have been filtered", minMutations));
 				setTitle(String.format(
-					"Top %d proteins with COSMIC missense mutations for top Wregex motifs)", topCount));
+					"Top %d proteins with COSMIC missense mutations for top Wregex motifs", topCount));
 				jsonCosmic = loadBubbles(cosmicBubbles);
 				ok = jsonCosmic != null;
 				break;
@@ -89,7 +89,7 @@ public class StatisticsBean {
 				displayTips.add(String.format("Bubble size has been limited to %d PTMs", maxPTMs));
 				displayTips.add(String.format("Motifs with less than %d PTMs have been filtered", minPTMs));
 				setTitle(String.format(
-					"Top %d proteins with dbPTM experimental PTMs for top Wregex motifs)", topCount));
+					"Top %d proteins with dbPTM experimental PTMs for top Wregex motifs", topCount));
 				jsonDbPtm = loadBubbles(dbPtmBubbles);
 				ok = jsonDbPtm != null;
 				break;
