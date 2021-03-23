@@ -57,12 +57,6 @@
 					<h:commandButton action="phospho" value="Search" />
 				</h:form>
 				
-				<h:outputText value="Search Ub sites in mUbSiDa" />
-				<ui:repeat var="a" value="#{detailsView.detailsBean.searchBean.entity.ambiguities}">
-					<h:outputLink value="http://202.195.183.4:8000/Search.php?keywords=#{a.proteinBean.accession}" target="mUbSiDa">#{a.proteinBean.accession}</h:outputLink>
-					<br/>
-				</ui:repeat>
-				
 				<h:outputText value="LFQ (log2)" />
 				<h:panelGroup>
 				<p:dataTable value="#{detailsView.detailsBean.samples}" var="sample" style="width:500px;">

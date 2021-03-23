@@ -1,0 +1,31 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"> 
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+<h:head></h:head> 
+<h:body>
+	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
+		<ui:define name="title">List of uploaded experiments</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:dataTable value="#{experimentsView.experiments}" var="e">
+					<p:column headerText="ID">
+						<p:commandLink value="#{e.fmtId}" action="#{experimentView.showExperiment(e)}" ajax="false"/>
+					</p:column>
+					<p:column headerText="Title">#{e.title}</p:column>
+					<p:column headerText="Cell">#{e.cellBean.name}</p:column>
+					<p:column headerText="Organism">#{e.cellBean.taxonBean.commonName} (<i>#{e.cellBean.taxonBean.sciName}</i>)</p:column>
+					<p:column headerText="Uploaded">#{e.pubDate}</p:column>
+					<p:column headerText="Corresponding author">
+						<a href="mailto:#{e.authorBean.mail}">#{e.authorBean.name}</a> (#{e.authorBean.affiliation})
+					</p:column>
+					<p:column headerText="Description">#{e.description}</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</h:body> 
+</html>

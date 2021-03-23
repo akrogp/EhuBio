@@ -12,8 +12,8 @@
 <h:body>
 	<div id="container"> 
 		<div id="titlebar">
-			<a href="http://ehubio.ehu.eus/dubase" target="_blank"><h:graphicImage name="images/logo.svg" style="height:75px;float:left;margin-left:10px;"/></a>
-			<a href="http://www.ehu.eus" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
+			<a href="https://ehubio.ehu.eus/dubase" target="_blank"><h:graphicImage name="images/logo.svg" style="height:75px;float:left;margin-left:10px;"/></a>
+			<a href="https://www.ehu.eus" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
 		</div>
 		<ui:insert name="menu">
 			<div id="menubar">
@@ -21,7 +21,8 @@
 				<h:link value="Thresholds" outcome="settings" class="menuitem"/> &nbsp; | &nbsp;
 				<ui:repeat value="#{homeView.ops}" var="op">
 					<h:link value="#{op.name}" outcome="#{op.action}" class="menuitem"/> &nbsp; | &nbsp;
-				</ui:repeat>			
+				</ui:repeat>
+				<h:link value="Experiments" outcome="experiments" class="menuitem"/> &nbsp; | &nbsp;			
 				<h:link value="About" outcome="about" class="menuitem"/>
 			</div>
 		</ui:insert>

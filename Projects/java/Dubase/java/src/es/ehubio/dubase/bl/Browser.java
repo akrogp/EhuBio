@@ -3,7 +3,7 @@ package es.ehubio.dubase.bl;
 import java.util.List;
 
 import javax.ejb.LocalBean;
-import javax.ejb.Singleton;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.ws.rs.GET;
@@ -14,10 +14,11 @@ import javax.ws.rs.core.MediaType;
 import es.ehubio.dubase.bl.beans.Flare;
 import es.ehubio.dubase.dl.entities.Clazz;
 import es.ehubio.dubase.dl.entities.Enzyme;
+import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.Superfamily;
 
 @LocalBean
-@Singleton
+@Stateless
 @Path("/browse")
 public class Browser {
 	@PersistenceContext
@@ -71,5 +72,9 @@ public class Browser {
 		return em
 			.createQuery("SELECT DISTINCT e.enzymeBean.gene FROM Experiment e", String.class)
 			.getResultList();
+	}
+	
+	public List<Experiment> getExperiments() {
+		return em.createNamedQuery("Experiment.findAll", Experiment.class).getResultList();
 	}
 }
