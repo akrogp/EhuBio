@@ -6,13 +6,21 @@
 
 <h:head></h:head> 
 <body> 
-	<form id="tmpString" action="https://string-db.org/cgi/network.pl">
-		<input type="hidden" name="required_score" value="400"/>
-		<input type="hidden" name="limit" value="0"/>
+	<form id="tmpString" action="https://string-db.org/cgi/network" method="post" enctype="multipart/form-data">		
 		<input type="hidden" name="multi_input" value="1"/>
-		<input type="hidden" name="multiple_input_items" value="#{stringView.genes}"/>
+		<input type="hidden" name="have_user_input" value="2"/>
+		
+		<input type="hidden" name="identifiers" value="#{stringView.genes}"/>
+		
 		<input type="hidden" name="multiple_input_type" value="multi_identifier"/>
+		<input type="hidden" name="targetmode" value="proteins"/>
+		
 		<input type="hidden" name="species_text_multiple_identifiers" value="#{stringView.organism}"/>
+		
+		<input type="hidden" name="network_type" value="functional"/>
+		<input type="hidden" name="required_score" value="400"/>
+		<input type="hidden" name="net_fdr" value="0.05"/>
+		<input type="hidden" name="limit" value="0"/>
 	</form>
 	
 	<script type="text/javascript">

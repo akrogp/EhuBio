@@ -19,3 +19,4 @@ build
 .recommenders
 
 .idea/
+.Rproj.user
