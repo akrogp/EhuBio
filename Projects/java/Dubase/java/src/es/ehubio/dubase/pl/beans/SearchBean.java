@@ -3,6 +3,7 @@ package es.ehubio.dubase.pl.beans;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.Colors;
@@ -47,10 +48,7 @@ public class SearchBean {
 		setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
 		setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
 		setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));
-		setGlygly(ev.getModifications().stream()
-			.map(m->String.valueOf(m.getPosition()))
-			.collect(Collectors.joining(";"))
-		);
+		setGlygly(CsvExporter.buildModString(ev,"<br/>",", "));
 	}
 	
 	public String getExperiment() {

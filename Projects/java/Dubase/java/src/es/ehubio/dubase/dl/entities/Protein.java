@@ -1,6 +1,8 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +12,10 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 
 /**
@@ -28,6 +34,7 @@ public class Protein implements Serializable {
 	private String description;
 	private String name;
 	private Gene geneBean;
+	private List<Modification> modifications;
 
 	public Protein() {
 	}
@@ -82,4 +89,31 @@ public class Protein implements Serializable {
 		this.geneBean = geneBean;
 	}
 
+	
+	//bi-directional many-to-one association to Modification
+	@OneToMany(mappedBy="proteinBean")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	public List<Modification> getModifications() {
+		if( this.modifications == null )
+			this.modifications = new ArrayList<>();
+		return this.modifications;
+	}
+
+	public void setModifications(List<Modification> modifications) {
+		this.modifications = modifications;
+	}
+
+	public Modification addModification(Modification modification) {
+		getModifications().add(modification);
+		modification.setProteinBean(this);
+
+		return modification;
+	}
+
+	public Modification removeModification(Modification modification) {
+		getModifications().remove(modification);
+		modification.setProteinBean(null);
+
+		return modification;
+	}
 }

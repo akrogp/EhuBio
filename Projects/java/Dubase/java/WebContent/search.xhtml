@@ -75,7 +75,7 @@
 					<p:column headerText="Peptide count (all)" sortBy="#{result.totalPepts}" rendered="#{searchView.extended}">#{result.totalPepts}</p:column>
 					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}">#{result.weightFmt}</p:column>
 					<p:column headerText="Sequence coverage" sortBy="#{result.coverage}" rendered="#{searchView.extended}">#{result.coverageFmt}</p:column>
-					<p:column headerText="GlyGly (K) site positions" sortBy="#{result.glygly}" rendered="#{searchView.extended}">#{result.glygly}</p:column>
+					<p:column headerText="GlyGly (K) site positions" sortBy="#{result.glygly}" rendered="#{searchView.extended}"><h:outputText value="#{result.glygly}" escape="false"/></p:column>
 					<p:column headerText="Details" style="width:100px;">
 						<p:commandButton value="..." ajax="false" action="#{detailsView.showDetails(result)}"/>
 					</p:column>

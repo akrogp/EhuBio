@@ -65,7 +65,7 @@ public class Experiment implements Serializable {
 	@Transient
 	@XmlTransient
 	public String getFmtId() {
-		return String.format("EXP%05d", getId());
+		return String.format("DXP%05d", getId());
 	}
 
 

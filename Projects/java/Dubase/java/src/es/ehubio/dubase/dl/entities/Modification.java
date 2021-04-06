@@ -1,7 +1,14 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
 
 
 /**
@@ -14,8 +21,9 @@ public class Modification implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
 	private int position;
-	private Evidence evidenceBean;
+	private Protein proteinBean;
 	private ModType modType;
+	private Experiment experimentBean;
 
 	public Modification() {
 	}
@@ -43,13 +51,13 @@ public class Modification implements Serializable {
 
 	//bi-directional many-to-one association to Evidence
 	@ManyToOne
-	@JoinColumn(name="evidence")
-	public Evidence getEvidenceBean() {
-		return this.evidenceBean;
+	@JoinColumn(name="protein")
+	public Protein getProteinBean() {
+		return this.proteinBean;
 	}
 
-	public void setEvidenceBean(Evidence evidenceBean) {
-		this.evidenceBean = evidenceBean;
+	public void setProteinBean(Protein proteinBean) {
+		this.proteinBean = proteinBean;
 	}
 
 
@@ -64,4 +72,14 @@ public class Modification implements Serializable {
 		this.modType = modType;
 	}
 
+	//uni-directional many-to-one association to Experiment
+	@ManyToOne
+	@JoinColumn(name="experiment")
+	public Experiment getExperimentBean() {
+		return this.experimentBean;
+	}
+
+	public void setExperimentBean(Experiment experimentBean) {
+		this.experimentBean = experimentBean;
+	}
 }

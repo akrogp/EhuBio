@@ -10,6 +10,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import es.ehubio.dubase.Thresholds;
+import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.entities.Experiment;
@@ -29,7 +30,7 @@ public class Searcher {
 	}
 
 	public List<Evidence> searchSubstrate(String gene, Thresholds th) {
-		return em
+		return filterMods(em
 			.createQuery(
 				"SELECT a.evidenceBean FROM Ambiguity a WHERE a.proteinBean.geneBean.name = :gene" +
 				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
@@ -44,11 +45,11 @@ public class Searcher {
 			.setParameter("s2", th.getLog10PValue())
 			.setParameter("t3", ScoreType.UNIQ_PEPTS.ordinal())
 			.setParameter("s3", (double)th.getMinPeptides())
-			.getResultList();
+			.getResultList());
 	}
 	
 	public List<Evidence> searchEnzyme(String gene, Thresholds th) {
-		return em
+		return filterMods(em
 			.createQuery(
 				"SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene" +
 				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
@@ -63,7 +64,7 @@ public class Searcher {
 			.setParameter("s2", th.getLog10PValue())
 			.setParameter("t3", ScoreType.UNIQ_PEPTS.ordinal())
 			.setParameter("s3", (double)th.getMinPeptides())
-			.getResultList();
+			.getResultList());
 	}
 	
 	public List<Enzyme> searchEnzymesWithData() {
@@ -74,5 +75,12 @@ public class Searcher {
 	
 	public List<Experiment> findExperiments() {
 		return em.createNamedQuery("Experiment.findAll", Experiment.class).getResultList();
+	}
+	
+	private static List<Evidence> filterMods(List<Evidence> evs) {
+		for(Evidence ev : evs)
+			for(Ambiguity amb : ev.getAmbiguities())
+				amb.getProteinBean().getModifications().removeIf(m->m.getExperimentBean().getId()!=ev.getExperimentBean().getId());
+		return evs;
 	}
 }

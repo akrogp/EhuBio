@@ -2,8 +2,11 @@ package es.ehubio.dubase.dl.input;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -29,14 +32,21 @@ public class CsvProvider implements Provider {
 		SupportingFile csv = exp.getSupportingFiles().stream()
 				.filter(file -> file.getFileType().getId() == FileType.UGO_CSV.ordinal())
 				.findFirst()
-				.get();		
+				.get();
+		SupportingFile glyGly = exp.getSupportingFiles().stream()
+				.filter(file -> file.getFileType().getId() == FileType.MQ_TXT.ordinal() && file.getName().contains("GlyGly"))
+				.findFirst()
+				.get();
 		SupportingFile fasta = exp.getSupportingFiles().stream()
 				.filter(file -> file.getFileType().getId() == FileType.FASTA.ordinal())
 				.findFirst()
 				.get();
-		return loadUgoEvidences(exp, new File(dir,csv.getName()), new File(dir,fasta.getName()));
-	}
-	
+		List<Evidence> evs = loadUgoEvidences(exp, new File(dir,csv.getName()), new File(dir,fasta.getName()));
+		Map<String,Set<Integer>> mapMods = loadMaxQuantMods(new File(dir, glyGly.getName()));
+		setModifications(evs, mapMods);
+		return evs;
+	}		
+
 	private List<Evidence> loadUgoEvidences(Experiment exp, File csvFile, File fastaFile) throws Exception {		
 		List<Evidence> evs = new ArrayList<>();		
 		Map<String, Fasta> mapFasta = Fasta.readEntries(fastaFile.getAbsolutePath(), SequenceType.PROTEIN).stream()
@@ -52,26 +62,56 @@ public class CsvProvider implements Provider {
 				int size = getGroupSize(uniq, csv);
 				setAmbiguities(ev, csv, mapFasta, size);
 				addEvScores(ev, csv);
-				setRepScores(ev, csv);
-				setModifications(ev, csv);				
+				setRepScores(ev, csv);				
 				evs.add(ev);
 			}
 		}
 		return evs;
 	}
 	
-	private void setModifications(Evidence ev, CsvReader csv) {
-		ev.setModifications(new ArrayList<>());
-		if( csv.getFields().length <= IDX_MODS )
-			return;
+	private Map<String,Set<Integer>> loadMaxQuantMods(File glyFile) throws Exception {
+		Map<String,Set<Integer>> mapMods = new HashMap<>();
+		try( CsvReader csv = new CsvReader("\t", true, false) ) {
+			csv.open(glyFile.getAbsolutePath());
+			while( csv.readLine() != null ) {
+				if( csv.getDoubleField(GLY_INT) < 1.0 )	// Filter intensity = 0
+					continue;
+				if( csv.getDoubleField(GLY_PROB) < GLY_TH ) // Filter low probability
+					continue;
+				String[] prots = csv.getField(GLY_PROTS).split(";");
+				String[] positions = csv.getField(GLY_POS).split(";");
+				if( prots.length != positions.length )
+					continue;
+				for( int i = 0; i < prots.length; i++ ) {
+					if( prots[i].isEmpty() || prots[i].contains("__") )
+						continue;	// Filter contaminants and reverse
+					Set<Integer> set = mapMods.get(prots[i]);
+					if( set == null ) {
+						set = new TreeSet<>();
+						mapMods.put(prots[i], set);
+					}
+					set.add(Integer.parseInt(positions[i]));
+				}
+			}
+		}
+		return mapMods;
+	}
+	
+	private void setModifications(List<Evidence> evs, Map<String, Set<Integer>> mapMods) {
 		ModType modType = new ModType();
 		modType.setId(es.ehubio.dubase.dl.input.ModType.GLYGLY.ordinal());
-		for( String pos : csv.getField(IDX_MODS).split(";") ) {
-			Modification mod = new Modification();
-			mod.setModType(modType);
-			mod.setPosition(Integer.parseInt(pos));
-			ev.addModification(mod);
-		}
+		for(Evidence ev : evs)
+			for(Protein prot : ev.getProteinBeans()) {
+				Set<Integer> mods = mapMods.get(prot.getAccession());
+				if( mods == null )
+					continue;
+				for( Integer pos : mods ) {
+					Modification mod = new Modification();
+					mod.setModType(modType);
+					mod.setPosition(pos);
+					prot.addModification(mod);
+				}
+			}
 	}
 
 	private void setRepScores(Evidence ev, CsvReader csv) {
@@ -171,7 +211,13 @@ public class CsvProvider implements Provider {
 	//private static final int IDX_SAMPLE = 14;	
 	//private static final int IDX_CONTROL = 20;
 	private static final int IDX_REPS = 14;
-	private static final int IDX_MODS = 26;
+	//private static final int IDX_MODS = 26;
+	
+	private static final int GLY_PROTS = 0;
+	private static final int GLY_POS = 1;
+	private static final int GLY_PROB = 7;
+	private static final int GLY_INT = 54;
+	private static final double GLY_TH = 0.75;
 	
 	private static final double LOG2 = Math.log(2);
 }

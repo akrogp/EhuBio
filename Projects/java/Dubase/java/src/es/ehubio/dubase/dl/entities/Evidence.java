@@ -31,8 +31,7 @@ public class Evidence implements Serializable {
 	private long id;
 	private List<Ambiguity> ambiguities;
 	private List<EvScore> evScores;
-	private Experiment experimentBean;
-	private List<Modification> modifications;
+	private Experiment experimentBean;	
 	private List<RepScore> repScores;
 
 	public Evidence() {
@@ -114,32 +113,6 @@ public class Evidence implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Modification
-	@OneToMany(mappedBy="evidenceBean")
-	@LazyCollection(LazyCollectionOption.FALSE)
-	public List<Modification> getModifications() {
-		return this.modifications;
-	}
-
-	public void setModifications(List<Modification> modifications) {
-		this.modifications = modifications;
-	}
-
-	public Modification addModification(Modification modification) {
-		getModifications().add(modification);
-		modification.setEvidenceBean(this);
-
-		return modification;
-	}
-
-	public Modification removeModification(Modification modification) {
-		getModifications().remove(modification);
-		modification.setEvidenceBean(null);
-
-		return modification;
-	}
-
-
 	//bi-directional many-to-one association to RepScore
 	@OneToMany(mappedBy="evidenceBean")
 	@LazyCollection(LazyCollectionOption.FALSE)
@@ -173,6 +146,11 @@ public class Evidence implements Serializable {
 	@Transient
 	public List<String> getProteins() {
 		return getAmbiguities().stream().map(a->a.getProteinBean().getAccession()).distinct().collect(Collectors.toList());
+	}
+	
+	@Transient
+	public List<Protein> getProteinBeans() {
+		return getAmbiguities().stream().map(a->a.getProteinBean()).collect(Collectors.toList());
 	}
 	
 	@Transient

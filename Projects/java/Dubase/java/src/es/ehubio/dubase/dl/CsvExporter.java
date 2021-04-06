@@ -5,12 +5,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Protein;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
 public class CsvExporter {
 	private static final String SEP1 = ",";
 	private static final String SEP2 = ";";
+	private static final String SEP3 = " ";
 	
 	public static void export(List<Evidence> results, PrintWriter pw) {
 		pw.println(CsvUtils.getCsv(SEP1,
@@ -35,7 +37,7 @@ public class CsvExporter {
 				ev.getScore(ScoreType.UNIQ_PEPTS).intValue(),
 				ev.getScore(ScoreType.MOL_WEIGHT),
 				ev.getScore(ScoreType.SEQ_COVERAGE),
-				ev.getModifications().stream().map(m->String.valueOf(m.getPosition())).collect(Collectors.joining(SEP2))
+				buildModString(ev, SEP2, SEP3)
 			));
 			printLfqs(pw, ev, false);
 			printLfqs(pw, ev, true);
@@ -57,5 +59,13 @@ public class CsvExporter {
 			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
 			.map(s->String.valueOf(s.getImputed()))
 			.collect(Collectors.joining(SEP1,SEP1,"")));
+	}
+	
+	public static String buildModString(Evidence ev, String sep2, String sep3) {
+		return ev.getProteinBeans().stream().map(p -> buildModString(p, sep3)).filter(s->!s.isEmpty()).collect(Collectors.joining(sep2));
+	}
+
+	private static String buildModString(Protein p, String sep3) {
+		return p.getModifications().stream().map(m->m.getPosition()).sorted().map(pos->String.valueOf(pos)).collect(Collectors.joining(sep3));
 	}
 }

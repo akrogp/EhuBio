@@ -59,6 +59,7 @@ public class Importer {
 		saveConditions(exp);		
 		Provider provider = findProvider(exp);
 		List<Evidence> evs = provider.loadEvidences(expDir.getAbsolutePath(), exp); 
+		filter(evs);
 		saveEvidences(exp, evs);
 	}
 
@@ -121,19 +122,18 @@ public class Importer {
 		}		
 	}
 
-	private void saveEvidences(Experiment exp, List<Evidence> evs) {
-		filter(evs);
+	private void saveEvidences(Experiment exp, List<Evidence> evs) {		
 		for( Evidence ev : evs ) {
 			em.persist(ev);
 			saveEvScores(ev);
 			saveRepScores(ev);			
-			saveModifications(ev);
 			saveAmbiguities(ev);
 		}
 	}
 
 	private void saveAmbiguities(Evidence ev) {
 		for( Ambiguity amb : ev.getAmbiguities() ) {
+			List<Modification> mods = amb.getProteinBean().getModifications();
 			try {
 				Protein prot = em
 					.createNamedQuery("Protein.findByAcc", Protein.class)
@@ -153,6 +153,12 @@ public class Importer {
 				em.persist(amb.getProteinBean());
 			}
 			em.persist(amb);
+			for( Modification mod : mods ) {
+				mod.setModType(em.find(ModType.class, mod.getModType().getId()));
+				mod.setProteinBean(amb.getProteinBean());
+				mod.setExperimentBean(ev.getExperimentBean());
+				em.persist(mod);
+			}
 		}
 	}
 
@@ -170,15 +176,12 @@ public class Importer {
 		}
 	}
 
-	private void saveModifications(Evidence ev) {
-		for( Modification mod : ev.getModifications() ) {
-			mod.setModType(em.find(ModType.class, mod.getModType().getId()));
-			em.persist(mod);
-		}
-	}
-
 	private void filter(List<Evidence> evs) {
+		for( Evidence ev : evs )
+			ev.getAmbiguities().removeIf(amb -> amb.getProteinBean().getAccession().startsWith("CON_") || amb.getProteinBean().getAccession().startsWith("REV_") );
 		evs.removeIf(ev -> {
+			if( ev.getAmbiguities().isEmpty() )
+				return true;
 			int samplesImputed = countImputed(ev, false);
 			int controlsImputed = countImputed(ev, true);
 			if( samplesImputed != 0 && controlsImputed != 0 )
