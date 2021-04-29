@@ -118,6 +118,9 @@ public class SearchBean {
 	public void setpValue(double pValue) {
 		this.pValue = pValue;
 		pValueFmt = String.format(Locale.ENGLISH, "%4.1e", pValue);
+		String[] fields = pValueFmt.split("[eE]");
+		if( fields.length == 2 )
+			pValueFmt = String.format("%s x 10<sup>%s</sup>", fields[0], fields[1]);
 	}
 	public double getWeight() {
 		return weight;

@@ -70,7 +70,7 @@
 						</f:facet>						
 						<h:outputText value="#{result.foldChangeFmt}" escape="false"/>						
 					</p:column>
-					<p:column headerText="p-value" sortBy="#{result.pValue}">#{result.pValueFmt}</p:column>
+					<p:column headerText="p-value" sortBy="#{result.pValue}"><h:outputText value="#{result.pValueFmt}" escape="false"/></p:column>
 					<p:column headerText="Peptide count (unique)" sortBy="#{result.uniqPepts}">#{result.uniqPepts}</p:column>
 					<p:column headerText="Peptide count (all)" sortBy="#{result.totalPepts}" rendered="#{searchView.extended}">#{result.totalPepts}</p:column>
 					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}">#{result.weightFmt}</p:column>
