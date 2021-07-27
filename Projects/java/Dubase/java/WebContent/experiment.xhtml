@@ -11,8 +11,8 @@
 		<ui:define name="title">Experiment #{experimentView.entity.fmtId}</ui:define>
 		<ui:define name="content">
 			<p:panelGrid columns="2">
-				<h:outputText value="Title" />
-				<h:outputText value="#{experimentView.entity.title}" />
+				<h:outputText value="Publication" />
+				<h:outputLink value="#{experimentView.doi}" target="_blank">#{experimentView.entity.title}</h:outputLink>
 				
 				<h:outputText value="Enzyme" />
 				<h:outputText value="#{experimentView.entity.enzymeBean.gene} (#{experimentView.entity.enzymeBean.superfamilyBean.name})" />
@@ -20,13 +20,13 @@
 				<h:outputText value="Description" />
 				<h:outputText value="#{experimentView.entity.description}"/>
 				
-				<h:outputText value="Experiment date" />
+				<h:outputText value="Publication date" />
 				<h:outputText value="#{experimentView.entity.expDate}" />
 				
-				<h:outputText value="Publication date" />
+				<h:outputText value="Uploaded into DUBase" />
 				<h:outputText value="#{experimentView.entity.pubDate}" />
 				
-				<h:outputText value="Corresponding author" />
+				<h:outputText value="Submitted by" />
 				<h:panelGroup>
 					#{experimentView.entity.authorBean.name} <a href="mailto:#{experimentView.entity.authorBean.mail}">&lt;#{experimentView.entity.authorBean.mail}&gt;</a>
 					&ndash; #{experimentView.entity.authorBean.affiliation}
@@ -42,24 +42,27 @@
 				
 				<h:outputText value="Method" />
 				<p:panelGrid columns="2">
+					<h:outputText value="Type" />
+					<h:outputText value="#{experimentView.entity.methodBean.proteomic ? 'Proteomics' : 'Manual curation'}" />
+					
 					<h:outputText value="Description" />
 					<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
 					
-					<h:outputText value="Column type" />
+					<h:outputText value="Column type" rendered="#{experimentView.entity.methodBean.proteomic}"/>
 					<h:outputText value="#{experimentView.entity.methodBean.columnType}" />
 					
-					<h:outputText value="Instrument" />
+					<h:outputText value="Instrument" rendered="#{experimentView.entity.methodBean.proteomic}"/>
 					<h:outputText value="#{experimentView.entity.methodBean.instrument}" />
 					
-					<h:outputText value="Fold threshold" />
+					<h:outputText value="Fold threshold" rendered="#{experimentView.entity.methodBean.proteomic}"/>
 					<h:outputText value="#{experimentView.entity.methodBean.foldThreshold}" />
 					
-					<h:outputText value="p-value threshold" />
+					<h:outputText value="p-value threshold" rendered="#{experimentView.entity.methodBean.proteomic}"/>
 					<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
 				</p:panelGrid>
 				
-				<h:outputText value="Experimental conditions" />
-				<p:panelGrid>
+				<h:outputText value="Experimental conditions" rendered="#{experimentView.entity.methodBean.proteomic}"/>
+				<p:panelGrid rendered="#{experimentView.entity.methodBean.proteomic}">
 					<ui:repeat var="cond" value="#{experimentView.entity.conditions}">
 						<p:row>
 							<p:column>#{cond.name}</p:column>

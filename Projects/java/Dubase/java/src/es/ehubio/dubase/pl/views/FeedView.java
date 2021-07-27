@@ -18,12 +18,12 @@ public class FeedView implements Serializable {
 	private static final Logger LOG = Logger.getLogger(FeedView.class.getName());
 
 	public void saveExperiment(String inputId) throws Exception {
-		db.saveExperiment(inputId);
+		db.saveUgoExperiment(inputId);
 	}
 	
 	public void saveExamples() {
 		//String[] genes = {"USP1", "USP7", "USP9X", "USP11", "USP42"};
-		String[] genes = {"USP11"};
+		String[] genes = {"USP7"};
 		//String[] genes = {"USP7", "USP9X", "USP42"};
 		for( String gene : genes )
 			try {

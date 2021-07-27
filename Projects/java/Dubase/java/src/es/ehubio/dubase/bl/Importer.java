@@ -1,6 +1,7 @@
 package es.ehubio.dubase.bl;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+import es.ehubio.db.pubmed.Paper;
+import es.ehubio.db.pubmed.PubMed;
 import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Author;
@@ -22,9 +25,11 @@ import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.FileType;
 import es.ehubio.dubase.dl.entities.Gene;
+import es.ehubio.dubase.dl.entities.Method;
 import es.ehubio.dubase.dl.entities.ModType;
 import es.ehubio.dubase.dl.entities.Modification;
 import es.ehubio.dubase.dl.entities.Protein;
+import es.ehubio.dubase.dl.entities.Publication;
 import es.ehubio.dubase.dl.entities.RepScore;
 import es.ehubio.dubase.dl.entities.Replicate;
 import es.ehubio.dubase.dl.entities.ScoreType;
@@ -43,24 +48,48 @@ public class Importer {
 	private String inputPath;
 	public static final String METADATA = "metadata.xml"; 
 	
-	public void saveExperiment(String inputId) throws Exception {
+	public void saveUgoExperiment(String inputId) throws Exception {
 		File expDir = new File(inputPath, inputId);
 		File metaFile = new File(expDir, METADATA);		
 		Experiment exp = Metafile.load(metaFile);
 		
-		updateAuthor(exp);			
+		Method method = exp.getMethodBean();
+		method.setProteomic(true);
+		method.setSilencing(true);
+		method.setOverexpression(false);
+		method.setProteasomeInhibition(false);
 		em.persist(exp.getMethodBean());
+		
+		updateAuthor(exp);					
 		setEnzyme(exp);
 		setCell(exp);
 		exp.setPubDate(new Date());
 		em.persist(exp);
 		
+		Paper paper = savePublications(exp);
+		exp.setTitle(paper.getTitle());
+		exp.setDescription(paper.getAbs());
+		em.persist(exp);
 		saveFiles(exp);
 		saveConditions(exp);		
 		Provider provider = findProvider(exp);
 		List<Evidence> evs = provider.loadEvidences(expDir.getAbsolutePath(), exp); 
 		filter(evs);
 		saveEvidences(exp, evs);
+	}
+
+	private Paper savePublications(Experiment exp) throws IOException {
+		Paper first = null;
+		for( Publication pub : exp.getPublications() ) {
+			Paper paper = PubMed.fillPaper(pub.getPmid());
+			if( first == null )
+				first = paper;
+			pub.setExperiment(exp);
+			pub.setTitle(paper.getTitle());
+			pub.setJournal(paper.getJournal());
+			em.persist(pub);
+		}
+		return first;
 	}
 
 	private void saveConditions(Experiment exp) {

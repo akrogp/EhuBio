@@ -48,4 +48,10 @@ public class ExperimentView implements Serializable {
 			e.printStackTrace();
 		}
 	}
+	
+	public String getDoi() {
+		if( entity.getPublications().isEmpty() )
+			return null;
+		return "https://doi.org/" + entity.getPublications().get(0).getDoi();
+	}
 }

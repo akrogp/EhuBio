@@ -15,14 +15,16 @@
 					<p:column headerText="ID">
 						<p:commandLink value="#{e.fmtId}" action="#{experimentView.showExperiment(e)}" ajax="false"/>
 					</p:column>
-					<p:column headerText="Title">#{e.title}</p:column>
+					<p:column headerText="DUB">#{e.enzymeBean.gene}</p:column>
+					<p:column headerText="Publication">#{e.title}</p:column>
+					<p:column headerText="Type">#{e.methodBean.proteomic ? "Proteomics" : "Manual curation"}</p:column>
 					<p:column headerText="Cell">#{e.cellBean.name}</p:column>
 					<p:column headerText="Organism">#{e.cellBean.taxonBean.commonName} (<i>#{e.cellBean.taxonBean.sciName}</i>)</p:column>
+					<p:column headerText="Date">#{e.expDate}</p:column>
 					<p:column headerText="Uploaded">#{e.pubDate}</p:column>
-					<p:column headerText="Corresponding author">
+					<p:column headerText="Submitted by">
 						<a href="mailto:#{e.authorBean.mail}">#{e.authorBean.name}</a> (#{e.authorBean.affiliation})
 					</p:column>
-					<p:column headerText="Description">#{e.description}</p:column>
 				</p:dataTable>
 			</h:form>
 		</ui:define>
