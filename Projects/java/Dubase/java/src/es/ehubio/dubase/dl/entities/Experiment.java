@@ -46,6 +46,7 @@ public class Experiment implements Serializable {
 	private List<Condition> conditions;
 	private Cell cellBean;
 	private List<SupportingFile> supportingFiles;
+	private List<Publication> publications;
 
 	public Experiment() {
 	}
@@ -215,4 +216,31 @@ public class Experiment implements Serializable {
 		return supportingFile;
 	}
 
+	
+	//bi-directional many-to-one association to Publication
+	@OneToMany(mappedBy="experiment")
+	@LazyCollection(LazyCollectionOption.FALSE)
+	@XmlElementWrapper(name="papers")
+	@XmlElement(name="paper")
+	public List<Publication> getPublications() {
+		return this.publications;
+	}
+
+	public void setPublications(List<Publication> publications) {
+		this.publications = publications;
+	}
+
+	public Publication addPublication(Publication publication) {
+		getPublications().add(publication);
+		publication.setExperiment(this);
+
+		return publication;
+	}
+
+	public Publication removePublication(Publication publication) {
+		getPublications().remove(publication);
+		publication.setExperiment(null);
+
+		return publication;
+	}
 }

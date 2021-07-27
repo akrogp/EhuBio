@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <experiment>
-    <title>USP1</title>
+    <title>A Proteomic Approach for Systematic Mapping of Substrates of Human Deubiquitinating Enzymes</title>
     <description>Silencing of USP1 via siRNA</description>
-    <expDate>2016-11-08</expDate>
+    <expDate>2021-05-03</expDate>
     <author>
 	    <name>Ugo Mayor</name>
 	    <mail>ugo.mayor@ehu.eus</mail>
@@ -13,6 +13,12 @@
     	<taxon>9606</taxon>
     </cell>
     <enzyme>USP1</enzyme>
+    <papers>
+        <paper>
+            <doi>10.3390/ijms22094851</doi>
+            <pmid>34063716</pmid>
+        </paper>
+    </papers>
     <method>
     	<description><![CDATA[<ul>
     		<li>Sample size: 150 mm dish</li>

@@ -1,10 +1,7 @@
 package es.ehubio.proteomics.test;
 
-import static org.junit.Assert.*;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import es.ehubio.proteomics.MsMsData;
 import es.ehubio.proteomics.Score;
@@ -14,15 +11,7 @@ import es.ehubio.proteomics.pipeline.Filter;
 
 public class PlgsTest {
 
-	@BeforeClass
-	public static void setUpBeforeClass() throws Exception {
-	}
-
-	@AfterClass
-	public static void tearDownAfterClass() throws Exception {
-	}
-
-	@Test
+	//@Test
 	public void test() throws Exception {
 		MsMsData data;
 		data = MsMsFile.autoLoad(path24, false);

@@ -1,13 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <experiment>
-    <title>USP7</title>
+    <title>A Proteomic Approach for Systematic Mapping of Substrates of Human Deubiquitinating Enzymes</title>
     <description>Silencing of USP7 via siRNA</description>
-    <expDate>2017-10-03</expDate>
+    <expDate>2021-05-03</expDate>
     <author>
 	    <name>Ugo Mayor</name>
 	    <mail>ugo.mayor@ehu.eus</mail>
 	    <affiliation>UPV/EHU</affiliation>
     </author>
+    <papers>
+        <paper>
+            <doi>10.3390/ijms22094851</doi>
+            <pmid>34063716</pmid>
+        </paper>
+    </papers>
     <cell>
     	<name>Hek293</name>
     	<taxon>9606</taxon>

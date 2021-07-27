@@ -2,8 +2,6 @@ package es.ehubio.proteomics.test;
 
 import static org.junit.Assert.assertNotNull;
 
-import org.junit.Test;
-
 import es.ehubio.proteomics.MsMsData;
 import es.ehubio.proteomics.io.MsMsFile;
 import es.ehubio.proteomics.pipeline.ConfigDetector;
@@ -12,7 +10,7 @@ import es.ehubio.proteomics.pipeline.Searcher;
 
 public class CfgDetectorTest {
 
-	@Test
+	//@Test
 	public void test() throws Exception {
 		MsMsData data = MsMsFile.autoLoad(DATA, false);
 		data.updateProteinInformation(FASTA);

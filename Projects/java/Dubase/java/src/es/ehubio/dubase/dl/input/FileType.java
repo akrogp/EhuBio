@@ -6,7 +6,8 @@ public enum FileType {
 	UGO_CSV("Internal CSV format of Ugo's lab"),
 	FASTA("Fasta database used for MS/MS search"),
 	MQ_PAR("MaxQuant parameters file"),
-	MQ_TXT("MaxQuant results file");
+	MQ_TXT("MaxQuant results file"),
+	URL("External URL");
 	
 	private FileType(String description) {
 		this.description = description;

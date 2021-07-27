@@ -24,9 +24,13 @@ public class Method implements Serializable {
 	private int id;
 	private String columnType;
 	private String description;
-	private double foldThreshold;
+	private Double foldThreshold;
 	private String instrument;
-	private double pvalueThreshold;
+	private Double pvalueThreshold;
+	private Boolean overexpression;
+	private Boolean proteasomeInhibition;
+	private Boolean proteomic;
+	private Boolean silencing;
 
 	public Method() {
 	}
@@ -89,4 +93,39 @@ public class Method implements Serializable {
 		this.pvalueThreshold = pvalueThreshold;
 	}
 
+	
+	public Boolean getOverexpression() {
+		return this.overexpression;
+	}
+
+	public void setOverexpression(Boolean overexpression) {
+		this.overexpression = overexpression;
+	}
+
+
+	public Boolean getProteasomeInhibition() {
+		return this.proteasomeInhibition;
+	}
+
+	public void setProteasomeInhibition(Boolean proteasomeInhibition) {
+		this.proteasomeInhibition = proteasomeInhibition;
+	}
+
+
+	public Boolean getProteomic() {
+		return this.proteomic;
+	}
+
+	public void setProteomic(Boolean proteomic) {
+		this.proteomic = proteomic;
+	}
+
+
+	public Boolean getSilencing() {
+		return this.silencing;
+	}
+
+	public void setSilencing(Boolean silencing) {
+		this.silencing = silencing;
+	}
 }

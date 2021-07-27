@@ -2,14 +2,12 @@ package es.ehubio.proteomics.test;
 
 import static org.junit.Assert.assertEquals;
 
-import org.junit.Test;
-
 import es.ehubio.proteomics.MsMsData;
 import es.ehubio.proteomics.io.MsMsFile;
 
 public class PepXmlTest {
 
-	@Test
+	//@Test
 	public void test() throws Exception {
 		MsMsData data = MsMsFile.autoLoad("/home/gorka/Descargas/Temp/Adult_Adrenalgland_bRP_Velos_1_f23.pep.xml", false);
 		assertEquals(2181, data.getSpectraCount());
