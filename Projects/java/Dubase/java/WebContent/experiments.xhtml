@@ -11,7 +11,7 @@
 		<ui:define name="title">List of uploaded experiments</ui:define>
 		<ui:define name="content">
 			<h:form>
-				<p:dataTable value="#{experimentsView.experiments}" var="e">
+				<p:dataTable value="#{experimentsView.experiments}" var="e" tableStyle="width:auto">
 					<p:column headerText="ID">
 						<p:commandLink value="#{e.fmtId}" action="#{experimentView.showExperiment(e)}" ajax="false"/>
 					</p:column>
@@ -19,7 +19,7 @@
 					<p:column headerText="Publication">#{e.title}</p:column>
 					<p:column headerText="Type">#{e.methodBean.proteomic ? "Proteomics" : "Manual curation"}</p:column>
 					<p:column headerText="Cell">#{e.cellBean.name}</p:column>
-					<p:column headerText="Organism">#{e.cellBean.taxonBean.commonName} (<i>#{e.cellBean.taxonBean.sciName}</i>)</p:column>
+					<p:column headerText="Organism"><i>#{e.cellBean.taxonBean.sciName}</i></p:column>
 					<p:column headerText="Date">#{e.expDate}</p:column>
 					<p:column headerText="Uploaded">#{e.pubDate}</p:column>
 					<p:column headerText="Submitted by">
