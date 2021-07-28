@@ -15,6 +15,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
+import es.ehubio.db.fasta.Fasta;
+import es.ehubio.db.fasta.Fasta.SequenceType;
+import es.ehubio.db.uniprot.Fetcher;
 import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Author;
 import es.ehubio.dubase.dl.entities.Cell;
@@ -129,9 +132,12 @@ public class XlsProvider implements Provider {
 					ev.setAmbiguities(new ArrayList<>());
 					Gene gene = new Gene();
 					gene.setName(getCell(row, map, "Gene"));
-					Protein prot = new Protein();
+					Protein prot = new Protein();					
 					prot.setAccession(getCell(row, map, "UniProt"));
+					Fasta fasta = Fetcher.downloadFasta(prot.getAccession(), SequenceType.PROTEIN);
 					prot.setGeneBean(gene);
+					prot.setName(fasta.getProteinName());
+					prot.setDescription(fasta.getDescription());
 					Ambiguity amb = new Ambiguity();
 					amb.setProteinBean(prot);			
 					ev.addAmbiguity(amb);
