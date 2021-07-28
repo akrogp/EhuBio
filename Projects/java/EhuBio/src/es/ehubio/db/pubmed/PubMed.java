@@ -5,10 +5,12 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 // https://www.nlm.nih.gov/bsd/mms/medlineelements.html
 public class PubMed {
-	public static Paper fillPaper(String pmid) throws IOException {
+	public static Paper fillPaper(String pmid) throws IOException, ParseException {
 		URL url = new URL(String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=%s&retmode=text&rettype=medline", pmid));
 		HttpURLConnection conn = null;
 		try {
@@ -22,7 +24,7 @@ public class PubMed {
 		}
 	}
 
-	private static Paper parse(BufferedReader br) throws IOException {
+	private static Paper parse(BufferedReader br) throws IOException, ParseException {
 		Paper paper = new Paper();
 		String line, tag, current = null;
 		StringBuilder text = null;
@@ -47,7 +49,7 @@ public class PubMed {
 		return paper;
 	}
 
-	private static void addElement(String tag, String text, Paper paper) {
+	private static void addElement(String tag, String text, Paper paper) throws ParseException {
 		if( tag.equalsIgnoreCase("TI") )
 			paper.setTitle(text);
 		else if( tag.equalsIgnoreCase("AB") )
@@ -55,7 +57,7 @@ public class PubMed {
 		else if( tag.equalsIgnoreCase("JT") )
 			paper.setJournal(text);
 		else if( tag.equalsIgnoreCase("DEP") )
-			paper.setDate(text);
+			paper.setDate(new SimpleDateFormat("yyyyMMdd").parse(text));
 		else if( tag.equalsIgnoreCase("FAU") ) {
 			Author author = new Author();
 			author.setFullName(text);

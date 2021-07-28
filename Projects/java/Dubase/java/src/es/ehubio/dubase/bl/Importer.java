@@ -2,6 +2,7 @@ package es.ehubio.dubase.bl;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +39,7 @@ import es.ehubio.dubase.dl.entities.Taxon;
 import es.ehubio.dubase.dl.input.CsvProvider;
 import es.ehubio.dubase.dl.input.Metafile;
 import es.ehubio.dubase.dl.input.Provider;
+import es.ehubio.dubase.dl.input.XlsProvider;
 
 @LocalBean
 @Stateless
@@ -48,7 +50,7 @@ public class Importer {
 	private String inputPath;
 	public static final String METADATA = "metadata.xml"; 
 	
-	public void saveUgoExperiment(String inputId) throws Exception {
+	public void saveUgoProteomics(String inputId) throws Exception {
 		File expDir = new File(inputPath, inputId);
 		File metaFile = new File(expDir, METADATA);		
 		Experiment exp = Metafile.load(metaFile);
@@ -56,19 +58,31 @@ public class Importer {
 		Method method = exp.getMethodBean();
 		method.setProteomic(true);
 		method.setSilencing(true);
-		method.setOverexpression(false);
 		method.setProteasomeInhibition(false);
-		em.persist(exp.getMethodBean());
 		
+		saveExperiment(exp, expDir);
+	}	
+	
+	public int saveUgoCurated(String xlsName) throws Exception {
+		File inputFile = new File(inputPath, xlsName);
+		List<Experiment> exps = XlsProvider.loadExperiments(inputFile.getAbsolutePath());
+		for( Experiment exp : exps ) {
+			saveExperiment(exp, inputFile);
+		}
+		return exps.size();
+	}
+	
+	private void saveExperiment(Experiment exp, File expDir) throws Exception {
+		em.persist(exp.getMethodBean());		
 		updateAuthor(exp);					
 		setEnzyme(exp);
 		setCell(exp);
 		exp.setPubDate(new Date());
-		em.persist(exp);
-		
+		em.persist(exp);		
 		Paper paper = savePublications(exp);
 		exp.setTitle(paper.getTitle());
 		exp.setDescription(paper.getAbs());
+		exp.setExpDate(paper.getDate());
 		em.persist(exp);
 		saveFiles(exp);
 		saveConditions(exp);		
@@ -78,7 +92,7 @@ public class Importer {
 		saveEvidences(exp, evs);
 	}
 
-	private Paper savePublications(Experiment exp) throws IOException {
+	private Paper savePublications(Experiment exp) throws IOException, ParseException {
 		Paper first = null;
 		for( Publication pub : exp.getPublications() ) {
 			Paper paper = PubMed.fillPaper(pub.getPmid());
@@ -93,6 +107,8 @@ public class Importer {
 	}
 
 	private void saveConditions(Experiment exp) {
+		if( exp.getConditions() == null )
+			return;
 		for( Condition cond : exp.getConditions() ) {
 			cond.setExperimentBean(exp);
 			em.persist(cond);
@@ -112,7 +128,10 @@ public class Importer {
 	}
 
 	private Provider findProvider(Experiment exp) {
-		return new CsvProvider();
+		if( Boolean.TRUE.equals(exp.getMethodBean().getProteomic()) )
+			return new CsvProvider();
+		else
+			return new XlsProvider();
 	}
 
 	private void setCell(Experiment exp) {
@@ -229,5 +248,5 @@ public class Importer {
 				count++;
 		}
 		return count;
-	}
+	}	
 }

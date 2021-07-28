@@ -25,6 +25,7 @@ public class SupportingFile implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
 	private String name;
+	private String url;
 	private Experiment experimentBean;
 	private FileType fileType;
 
@@ -51,6 +52,15 @@ public class SupportingFile implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
 
 
 	//bi-directional many-to-one association to Experiment
@@ -76,6 +86,6 @@ public class SupportingFile implements Serializable {
 
 	public void setFileType(FileType fileType) {
 		this.fileType = fileType;
-	}
+	}	
 
 }

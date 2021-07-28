@@ -27,7 +27,6 @@ public class Method implements Serializable {
 	private Double foldThreshold;
 	private String instrument;
 	private Double pvalueThreshold;
-	private Boolean overexpression;
 	private Boolean proteasomeInhibition;
 	private Boolean proteomic;
 	private Boolean silencing;
@@ -67,11 +66,11 @@ public class Method implements Serializable {
 	}
 
 
-	public double getFoldThreshold() {
+	public Double getFoldThreshold() {
 		return this.foldThreshold;
 	}
 
-	public void setFoldThreshold(double foldThreshold) {
+	public void setFoldThreshold(Double foldThreshold) {
 		this.foldThreshold = foldThreshold;
 	}
 
@@ -85,21 +84,12 @@ public class Method implements Serializable {
 	}
 
 
-	public double getPvalueThreshold() {
+	public Double getPvalueThreshold() {
 		return this.pvalueThreshold;
 	}
 
-	public void setPvalueThreshold(double pvalueThreshold) {
+	public void setPvalueThreshold(Double pvalueThreshold) {
 		this.pvalueThreshold = pvalueThreshold;
-	}
-
-	
-	public Boolean getOverexpression() {
-		return this.overexpression;
-	}
-
-	public void setOverexpression(Boolean overexpression) {
-		this.overexpression = overexpression;
 	}
 
 

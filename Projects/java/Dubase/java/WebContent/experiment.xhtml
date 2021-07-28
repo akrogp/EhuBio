@@ -41,24 +41,32 @@
 				</h:panelGroup>
 				
 				<h:outputText value="Method" />
-				<p:panelGrid columns="2">
+				<p:panelGrid columns="2" rendered="#{experimentView.entity.methodBean.proteomic}">
 					<h:outputText value="Type" />
-					<h:outputText value="#{experimentView.entity.methodBean.proteomic ? 'Proteomics' : 'Manual curation'}" />
+					<h:outputText value="Proteomics" />
 					
 					<h:outputText value="Description" />
 					<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
 					
-					<h:outputText value="Column type" rendered="#{experimentView.entity.methodBean.proteomic}"/>
+					<h:outputText value="Column type" />
 					<h:outputText value="#{experimentView.entity.methodBean.columnType}" />
 					
-					<h:outputText value="Instrument" rendered="#{experimentView.entity.methodBean.proteomic}"/>
+					<h:outputText value="Instrument" />
 					<h:outputText value="#{experimentView.entity.methodBean.instrument}" />
 					
-					<h:outputText value="Fold threshold" rendered="#{experimentView.entity.methodBean.proteomic}"/>
+					<h:outputText value="Fold threshold" />
 					<h:outputText value="#{experimentView.entity.methodBean.foldThreshold}" />
 					
-					<h:outputText value="p-value threshold" rendered="#{experimentView.entity.methodBean.proteomic}"/>
+					<h:outputText value="p-value threshold" />
 					<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
+				</p:panelGrid>
+				
+				<p:panelGrid columns="2" rendered="#{not experimentView.entity.methodBean.proteomic}">
+					<h:outputText value="Type" />
+					<h:outputText value="Manual curation" />
+					
+					<h:outputText value="Proteasome inhibition" />
+					<h:outputText value="#{experimentView.entity.methodBean.proteasomeInhibition}" />
 				</p:panelGrid>
 				
 				<h:outputText value="Experimental conditions" rendered="#{experimentView.entity.methodBean.proteomic}"/>
@@ -93,7 +101,8 @@
 						<ui:repeat var="file" value="#{experimentView.entity.supportingFiles}">
 							<p:row>
 								<p:column>								
-										<p:commandLink ajax="false" value="#{file.name}" action="#{experimentView.download(file)}"/>								
+										<p:commandLink ajax="false" value="#{file.name}" action="#{experimentView.download(file)}" rendered="#{empty file.url}"/>
+										<h:outputLink value="#{file.url}" target="_blank" rendered="#{not empty file.url}">#{file.name}</h:outputLink>								
 								</p:column>
 								<p:column>#{file.fileType.description}</p:column>
 							</p:row>

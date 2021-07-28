@@ -1,11 +1,12 @@
 package es.ehubio.db.pubmed;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class Paper {
 	private String pmid;
-	private String date;
+	private Date date;
 	private String title;
 	private String abs;
 	private final List<Author> authors = new ArrayList<>();
@@ -17,10 +18,10 @@ public class Paper {
 	public void setPmid(String pmid) {
 		this.pmid = pmid;
 	}
-	public String getDate() {
+	public Date getDate() {
 		return date;
 	}
-	public void setDate(String date) {
+	public void setDate(Date date) {
 		this.date = date;
 	}
 	public String getTitle() {
