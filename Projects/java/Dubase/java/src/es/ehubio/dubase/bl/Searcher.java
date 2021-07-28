@@ -33,9 +33,12 @@ public class Searcher {
 		return filterMods(em
 			.createQuery(
 				"SELECT a.evidenceBean FROM Ambiguity a WHERE a.proteinBean.geneBean.name = :gene" +
-				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
-				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0" +
-				" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0",
+			    " AND ( a.evidenceBean.experimentBean.methodBean.proteomic = 0" +
+				" OR (" +
+					" (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
+					" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0" +
+					" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0" +
+				" ) )",
 				Evidence.class)
 			.setParameter("gene", gene)
 			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())
@@ -52,9 +55,12 @@ public class Searcher {
 		return filterMods(em
 			.createQuery(
 				"SELECT e FROM Evidence e WHERE e.experimentBean.enzymeBean.gene = :gene" +
-				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
-				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0" +
-				" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0 ",
+				" AND ( e.experimentBean.methodBean.proteomic = 0" +
+				" OR (" +
+					" (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
+					" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value >= :s2) > 0" +
+					" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0" +
+				" ) )",
 				Evidence.class)
 			.setParameter("gene", gene)
 			.setParameter("t1", ScoreType.FOLD_CHANGE.ordinal())

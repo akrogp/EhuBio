@@ -33,6 +33,7 @@ public class SearchView implements Serializable {
 	private List<String> genes;
 	private List<Evidence> rawResults;
 	private List<SearchBean> results;
+	private boolean proteomics, manual;
 	@Inject
 	private PrefView prefs;
 	@Inject
@@ -68,6 +69,8 @@ public class SearchView implements Serializable {
 		substrate = true;
 		query = null;
 		gene = null;
+		proteomics = false;
+		manual = false;
 	}
 	
 	public void download() {
@@ -98,8 +101,14 @@ public class SearchView implements Serializable {
 
 	private void parseResults() {
 		results = new ArrayList<>(rawResults.size());
-		for( Evidence ev : rawResults )
-			results.add(new SearchBean(ev));
+		for( Evidence ev : rawResults ) {
+			SearchBean result = new SearchBean(ev); 
+			results.add(result);
+			if( result.isProteomic() )
+				proteomics = true;
+			else
+				manual = true;
+		}
 	}
 
 	public String getQuery() {
@@ -176,5 +185,17 @@ public class SearchView implements Serializable {
 	
 	public void toggle() {
 		extended = !extended;
+	}
+	
+	public boolean isProteomics() {
+		return proteomics;
+	}
+	
+	public boolean isManual() {
+		return manual;
+	}
+	
+	public String getStyle() {
+		return isExtended() ? "" : "width:auto";
 	}
 }

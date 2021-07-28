@@ -24,15 +24,15 @@
 				<p:defaultCommand target="search"/>
 			</h:form><br/>
 			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" style="display: inline">
-				<p:commandButton value="Extended view" action="#{searchView.toggle()}" rendered="#{!searchView.extended}" ajax="false"/>
-				<p:commandButton value="Compact view" action="#{searchView.toggle()}" rendered="#{searchView.extended}" ajax="false"/>
+				<p:commandButton value="Proteomics view" action="#{searchView.toggle()}" rendered="#{!searchView.extended and searchView.proteomics}" ajax="false"/>
+				<p:commandButton value="General view" action="#{searchView.toggle()}" rendered="#{searchView.extended}" ajax="false"/>
 				&nbsp;
 			</h:form>
 			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" style="display: inline">
 				<p:commandButton ajax="false" value="Download #{searchView.results.size()} results" action="#{searchView.download()}"/>
 				&nbsp;
 			</h:form>
-			<h:form rendered="#{searchView.results != null and !searchView.results.isEmpty()}" target="volcano" style="display: inline">
+			<h:form rendered="#{searchView.proteomics}" target="volcano" style="display: inline">
 				<p:commandButton value="Volcano" ajax="false" action="#{searchView.volcano()}" disabled="#{!searchView.dub}"/>
 				&nbsp;
 			</h:form>
@@ -46,14 +46,16 @@
 			</h:form>			
 			<h:form>
 				<p:dataTable value="#{searchView.results}" var="result" rendered="#{searchView.results != null}"
-					rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending" scrollable="#{searchView.extended}">					
+					rowIndexVar="i" sortBy="#{result.foldChange}" sortOrder="descending" scrollable="#{searchView.extended}" tableStyle="#{searchView.style}">					
 					<p:column headerText="Experiment" sortBy="#{result.experiment}">
 						<p:commandLink value="#{result.experiment}" action="#{experimentView.showExperiment(result.entity.experimentBean)}" ajax="false"/>
 					</p:column>
+					<p:column headerText="Type" sortBy="#{result.type}">#{result.type}</p:column>
 					<p:column headerText="DUB" sortBy="#{result.enzyme}">#{result.enzyme}</p:column>
 					<p:column headerText="Genes" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
-					<p:column headerText="Protein IDs" sortBy="#{result.proteins}" rendered="#{searchView.extended}"><h:outputText value="#{result.proteins}" escape="false"/></p:column>
-					<p:column sortBy="#{result.foldChange}">
+					<p:column headerText="Protein IDs" sortBy="#{result.proteins}"><h:outputText value="#{result.proteins}" escape="false"/></p:column>
+					<p:column headerText="Descriptions" sortBy="#{result.descriptions}" rendered="#{not searchView.extended}"><h:outputText value="#{result.descriptions}" escape="false"/></p:column>
+					<p:column sortBy="#{result.foldChange}" rendered="#{searchView.extended}">
 						<f:facet name="header">
 							<h:panelGroup id="fold">
 								Fold change <br/>(log2)
@@ -69,10 +71,10 @@
 						</f:facet>						
 						<h:outputText value="#{result.foldChangeFmt}" escape="false"/>						
 					</p:column>
-					<p:column headerText="p-value" sortBy="#{result.pValue}"><h:outputText value="#{result.pValueFmt}" escape="false"/></p:column>
-					<p:column headerText="Peptide count (unique)" sortBy="#{result.uniqPepts}">#{result.uniqPepts}</p:column>
+					<p:column headerText="p-value" sortBy="#{result.pValue}" rendered="#{searchView.extended}"><h:outputText value="#{result.pValueFmt}" escape="false"/></p:column>
+					<p:column headerText="Peptide count (unique)" sortBy="#{result.uniqPepts}" rendered="#{searchView.extended}">#{result.uniqPepts}</p:column>
 					<p:column headerText="Peptide count (all)" sortBy="#{result.totalPepts}" rendered="#{searchView.extended}">#{result.totalPepts}</p:column>
-					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}">#{result.weightFmt}</p:column>
+					<p:column headerText="Mol. weight (kDa)" sortBy="#{result.weight}" rendered="#{searchView.extended}">#{result.weightFmt}</p:column>
 					<p:column headerText="Sequence coverage" sortBy="#{result.coverage}" rendered="#{searchView.extended}">#{result.coverageFmt}</p:column>
 					<p:column headerText="GlyGly (K) site positions" sortBy="#{result.glygly}" rendered="#{searchView.extended}"><h:outputText value="#{result.glygly}" escape="false"/></p:column>
 					<p:column headerText="Details" style="width:100px;">

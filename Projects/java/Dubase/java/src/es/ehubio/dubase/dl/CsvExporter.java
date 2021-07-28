@@ -16,7 +16,7 @@ public class CsvExporter {
 	
 	public static void export(List<Evidence> results, PrintWriter pw) {
 		pw.println(CsvUtils.getCsv(SEP1,
-			"Experiment", "DUB", "Genes", "Protein IDs", "Description",
+			"Experiment", "Type", "DUB", "Genes", "Protein IDs", "Description",
 			"Fold change (log2)", "p-value", "Peptide count (all)", "Peptide count (unique)",
 			"Molecular weight (kDa)", "Sequence coverage (%)", "GlyGly (K) site positions",
 			"Sample_1 LFQ (log2)", "Sample_2 LFQ (log2)", "Sample_3 LFQ (log2)",
@@ -25,19 +25,21 @@ public class CsvExporter {
 			"Imputed control_1", "Imputed control_2", "Imputed control_3"
 		));
 		for( Evidence ev : results ) {
+			boolean proteomics = Boolean.TRUE.equals(ev.getExperimentBean().getMethodBean().getProteomic());
 			pw.print(CsvUtils.getCsv(SEP1,
 				String.format("EXP%05d", ev.getExperimentBean().getId()),
+				proteomics ? "Proteomics" : "Manual curation",
 				ev.getExperimentBean().getEnzymeBean().getGene(),
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getProteins().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getDescriptions().toArray()),
-				ev.getScore(ScoreType.FOLD_CHANGE),
-				Math.pow(10,-ev.getScore(ScoreType.P_VALUE)),
-				ev.getScore(ScoreType.TOTAL_PEPTS).intValue(),
-				ev.getScore(ScoreType.UNIQ_PEPTS).intValue(),
-				ev.getScore(ScoreType.MOL_WEIGHT),
-				ev.getScore(ScoreType.SEQ_COVERAGE),
-				buildModString(ev, SEP2, SEP3)
+				proteomics ? ev.getScore(ScoreType.FOLD_CHANGE) : "",
+				proteomics ? Math.pow(10,-ev.getScore(ScoreType.P_VALUE)) : "",
+				proteomics ? ev.getScore(ScoreType.TOTAL_PEPTS).intValue() : "",
+				proteomics ? ev.getScore(ScoreType.UNIQ_PEPTS).intValue() : "",
+				proteomics ? ev.getScore(ScoreType.MOL_WEIGHT) : "",
+				proteomics ? ev.getScore(ScoreType.SEQ_COVERAGE) : "",
+				proteomics ? buildModString(ev, SEP2, SEP3) : ""
 			));
 			printLfqs(pw, ev, false);
 			printLfqs(pw, ev, true);
@@ -48,6 +50,8 @@ public class CsvExporter {
 	}	
 
 	private static void printLfqs(PrintWriter pw, Evidence ev, boolean control) {
+		if( ev.getRepScores() == null )
+			return;
 		pw.print(ev.getRepScores().stream()
 			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
 			.map(s->String.valueOf(s.getValue()))
@@ -55,6 +59,8 @@ public class CsvExporter {
 	}
 	
 	private static void printImputations(PrintWriter pw, Evidence ev, boolean control) {
+		if( ev.getRepScores() == null )
+			return;
 		pw.print(ev.getRepScores().stream()
 			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
 			.map(s->String.valueOf(s.getImputed()))

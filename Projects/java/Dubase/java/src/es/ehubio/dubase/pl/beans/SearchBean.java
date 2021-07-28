@@ -17,14 +17,14 @@ public class SearchBean {
 	private String proteins;
 	private String descriptions;
 	private String foldChangeFmt;
-	private double foldChange;
+	private Double foldChange;
 	private String pValueFmt;
-	private double pValue;
-	private int totalPepts;
-	private int uniqPepts;
+	private Double pValue;
+	private Integer totalPepts;
+	private Integer uniqPepts;
 	private String weightFmt;
-	private double weight;
-	private double coverage;
+	private Double weight;
+	private Double coverage;
 	private String coverageFmt;
 	private String glygly;	
 	
@@ -40,15 +40,17 @@ public class SearchBean {
 		setProteins(ev.getProteins().stream()
 				.map(p->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",p,p))
 				.collect(Collectors.joining("<br/>")));
-		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
-		setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
-		double pValue = ev.getScore(ScoreType.P_VALUE);
-		setpValue(Math.pow(10, -pValue));
-		setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
-		setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
-		setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
-		setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));
-		setGlygly(CsvExporter.buildModString(ev,"<br/>",", "));
+		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));		
+		if( Boolean.TRUE.equals(ev.getExperimentBean().getMethodBean().getProteomic()) ) {
+			setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
+			double pValue = ev.getScore(ScoreType.P_VALUE);
+			setpValue(Math.pow(10, -pValue));
+			setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
+			setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
+			setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
+			setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));
+			setGlygly(CsvExporter.buildModString(ev,"<br/>",", "));
+		}
 	}
 	
 	public String getExperiment() {
@@ -81,16 +83,16 @@ public class SearchBean {
 	public String getpValueFmt() {
 		return pValueFmt;
 	}
-	public int getTotalPepts() {
+	public Integer getTotalPepts() {
 		return totalPepts;
 	}
-	public void setTotalPepts(int totalPepts) {
+	public void setTotalPepts(Integer totalPepts) {
 		this.totalPepts = totalPepts;
 	}
-	public int getUniqPepts() {
+	public Integer getUniqPepts() {
 		return uniqPepts;
 	}
-	public void setUniqPepts(int uniqPepts) {
+	public void setUniqPepts(Integer uniqPepts) {
 		this.uniqPepts = uniqPepts;
 	}
 	public String getWeightFmt() {
@@ -102,30 +104,30 @@ public class SearchBean {
 	public void setGlygly(String glygly) {
 		this.glygly = glygly;
 	}
-	public double getFoldChange() {
+	public Double getFoldChange() {
 		return foldChange;
 	}
-	public void setFoldChange(double foldChange) {
+	public void setFoldChange(Double foldChange) {
 		this.foldChange = foldChange;
 		foldChangeFmt = String.format(Locale.ENGLISH,
 			"<font color='%s'>%.2f</font>",
 			foldChange >= 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
 			foldChange);
 	}
-	public double getpValue() {
+	public Double getpValue() {
 		return pValue;
 	}
-	public void setpValue(double pValue) {
+	public void setpValue(Double pValue) {
 		this.pValue = pValue;
 		pValueFmt = String.format(Locale.ENGLISH, "%4.1e", pValue);
 		String[] fields = pValueFmt.split("[eE]");
 		if( fields.length == 2 )
 			pValueFmt = String.format("%s x 10<sup>%s</sup>", fields[0], fields[1]);
 	}
-	public double getWeight() {
+	public Double getWeight() {
 		return weight;
 	}
-	public void setWeight(double weight) {
+	public void setWeight(Double weight) {
 		this.weight = weight;
 		weightFmt = String.format(Locale.ENGLISH, "%.3f", weight);
 	}
@@ -142,16 +144,24 @@ public class SearchBean {
 		this.proteins = proteins;
 	}
 
-	public double getCoverage() {
+	public Double getCoverage() {
 		return coverage;
 	}
 
-	public void setCoverage(double coverage) {
+	public void setCoverage(Double coverage) {
 		this.coverage = coverage;
 		coverageFmt = String.format("%.1f %%", coverage);
 	}
 	
 	public String getCoverageFmt() {
 		return coverageFmt;
+	}
+
+	public String getType() {
+		return isProteomic() ? "Proteomic" : "Manual curation";
+	}
+
+	public boolean isProteomic() {
+		return Boolean.TRUE.equals(entity.getExperimentBean().getMethodBean().getProteomic());
 	}
 }

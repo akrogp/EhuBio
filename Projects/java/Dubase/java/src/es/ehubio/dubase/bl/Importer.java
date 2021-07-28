@@ -211,6 +211,8 @@ public class Importer {
 	}
 
 	private void saveRepScores(Evidence ev) {
+		if( ev.getRepScores() == null )
+			return;
 		for( RepScore repScore : ev.getRepScores() ) {
 			repScore.setScoreType(em.find(ScoreType.class, repScore.getScoreType().getId()));
 			em.persist(repScore);
@@ -218,6 +220,8 @@ public class Importer {
 	}
 
 	private void saveEvScores(Evidence ev) {
+		if( ev.getEvScores() == null )
+			return;
 		for( EvScore evScore : ev.getEvScores() ) {
 			evScore.setScoreType(em.find(ScoreType.class, evScore.getScoreType().getId()));
 			em.persist(evScore);
@@ -239,7 +243,9 @@ public class Importer {
 		});
 	}
 
-	private int countImputed(Evidence ev, boolean control) {		
+	private int countImputed(Evidence ev, boolean control) {	
+		if( ev.getRepScores() == null )
+			return 0;
 		int count = 0;
 		for( RepScore score : ev.getRepScores() ) {
 			if( score.getReplicateBean().getConditionBean().getControl() != control )

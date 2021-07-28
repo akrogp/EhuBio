@@ -135,6 +135,7 @@ public class XlsProvider implements Provider {
 					Ambiguity amb = new Ambiguity();
 					amb.setProteinBean(prot);			
 					ev.addAmbiguity(amb);
+					evs.add(ev);
 				}
 			}
 		}

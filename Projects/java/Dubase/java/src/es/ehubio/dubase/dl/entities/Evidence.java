@@ -159,6 +159,8 @@ public class Evidence implements Serializable {
 	}
 	
 	public Double getScore(ScoreType type) {
+		if( getEvScores() == null || getEvScores().isEmpty() )
+			return null;
 		return getEvScores().stream()
 				.filter(score->score.getScoreType().getId() == type.ordinal())
 				.findFirst().get().getValue();
