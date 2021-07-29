@@ -16,6 +16,10 @@
 				<h:form>
 					<p:commandLink value="#{detailsView.detailsBean.experiment}" action="#{experimentView.showExperiment(detailsView.detailsBean.searchBean.entity.experimentBean)}" ajax="false"/>
 				</h:form>
+				
+				<h:outputText value="Type" />
+				<h:outputText value="#{detailsView.detailsBean.searchBean.type}"/>
+				
 				<h:outputText value="DUB" />
 				<h:outputText value="#{detailsView.detailsBean.enzyme}"/>
 				

@@ -158,7 +158,7 @@ public class SearchBean {
 	}
 
 	public String getType() {
-		return isProteomic() ? "Proteomic" : "Manual curation";
+		return entity.getExperimentBean().getMethodBean().getType();
 	}
 
 	public boolean isProteomic() {

@@ -28,7 +28,7 @@ public class CsvExporter {
 			boolean proteomics = Boolean.TRUE.equals(ev.getExperimentBean().getMethodBean().getProteomic());
 			pw.print(CsvUtils.getCsv(SEP1,
 				String.format("EXP%05d", ev.getExperimentBean().getId()),
-				proteomics ? "Proteomics" : "Manual curation",
+				ev.getExperimentBean().getMethodBean().getType(),
 				ev.getExperimentBean().getEnzymeBean().getGene(),
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getProteins().toArray()),

@@ -44,6 +44,17 @@ public class Browser {
 					enzyme.setSize(DEFAULT_SIZE);
 					enzyme.setDb(db.contains(enzymeBean.getGene()));
 					sf.addChild(enzyme);
+					/*if("USP1".equals(enzymeBean.getGene())) {
+						enzyme.setSize(0);
+						Flare proteomics = new Flare("Omics");
+						proteomics.setSize(DEFAULT_SIZE);
+						proteomics.setDb(true);
+						Flare manual = new Flare("Manual");
+						manual.setSize(DEFAULT_SIZE);
+						manual.setDb(true);
+						enzyme.addChild(proteomics);
+						enzyme.addChild(manual);
+					}*/
 				}
 			}
 		}		
