@@ -41,9 +41,9 @@
 				</h:panelGroup>
 				
 				<h:outputText value="Method" />
-				<p:panelGrid columns="2" rendered="#{experimentView.entity.methodBean.proteomic}">
+				<p:panelGrid columns="2" rendered="#{experimentView.proteomics}">
 					<h:outputText value="Type" />
-					<h:outputText value="#{experimentView.entity.methodBean.type}" />
+					<h:outputText value="#{experimentView.methodType}" />
 					
 					<h:outputText value="Description" />
 					<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
@@ -61,16 +61,16 @@
 					<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
 				</p:panelGrid>
 				
-				<p:panelGrid columns="2" rendered="#{not experimentView.entity.methodBean.proteomic}">
+				<p:panelGrid columns="2" rendered="#{not experimentView.proteomics}">
 					<h:outputText value="Type" />
-					<h:outputText value="#{experimentView.entity.methodBean.type}" />
+					<h:outputText value="#{experimentView.methodType}" />
 					
 					<h:outputText value="Proteasome inhibition" />
 					<h:outputText value="#{experimentView.entity.methodBean.proteasomeInhibition}" />
 				</p:panelGrid>
 				
-				<h:outputText value="Experimental conditions" rendered="#{experimentView.entity.methodBean.proteomic}"/>
-				<p:panelGrid rendered="#{experimentView.entity.methodBean.proteomic}">
+				<h:outputText value="Experimental conditions" rendered="#{experimentView.proteomics}"/>
+				<p:panelGrid rendered="#{experimentView.proteomics}">
 					<ui:repeat var="cond" value="#{experimentView.entity.conditions}">
 						<p:row>
 							<p:column>#{cond.name}</p:column>

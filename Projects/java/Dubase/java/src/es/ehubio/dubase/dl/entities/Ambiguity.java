@@ -2,6 +2,7 @@ package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
 import javax.persistence.*;
+import java.util.List;
 
 
 /**
@@ -15,6 +16,7 @@ public class Ambiguity implements Serializable {
 	private long id;
 	private Evidence evidenceBean;
 	private Protein proteinBean;
+	private List<Modification> modifications;
 
 	public Ambiguity() {
 	}
@@ -52,6 +54,31 @@ public class Ambiguity implements Serializable {
 
 	public void setProteinBean(Protein proteinBean) {
 		this.proteinBean = proteinBean;
+	}
+
+
+	//bi-directional many-to-one association to Modification
+	@OneToMany(mappedBy="ambiguityBean", fetch=FetchType.EAGER)
+	public List<Modification> getModifications() {
+		return this.modifications;
+	}
+
+	public void setModifications(List<Modification> modifications) {
+		this.modifications = modifications;
+	}
+
+	public Modification addModification(Modification modification) {
+		getModifications().add(modification);
+		modification.setAmbiguityBean(this);
+
+		return modification;
+	}
+
+	public Modification removeModification(Modification modification) {
+		getModifications().remove(modification);
+		modification.setAmbiguityBean(null);
+
+		return modification;
 	}
 
 }

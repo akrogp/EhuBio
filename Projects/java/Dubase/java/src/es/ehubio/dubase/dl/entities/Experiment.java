@@ -47,6 +47,7 @@ public class Experiment implements Serializable {
 	private Cell cellBean;
 	private List<SupportingFile> supportingFiles;
 	private List<Publication> publications;
+	private int index;
 
 	public Experiment() {
 	}
@@ -68,7 +69,16 @@ public class Experiment implements Serializable {
 	public String getFmtId() {
 		return String.format("DXP%05d", getId());
 	}
+	
+	@Transient
+	@XmlTransient
+	public int getIndex() {
+		return index;
+	}
 
+	public void setIndex(int index) {
+		this.index = index;
+	}
 
 	@Column(length = 65535, columnDefinition="TEXT")
 	public String getDescription() {

@@ -22,6 +22,7 @@ import javax.persistence.NamedQuery;
 public class Gene implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
+	private String aliases;
 	private String description;
 	private String name;
 
@@ -37,6 +38,15 @@ public class Gene implements Serializable {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+
+	public String getAliases() {
+		return this.aliases;
+	}
+
+	public void setAliases(String aliases) {
+		this.aliases = aliases;
 	}
 
 

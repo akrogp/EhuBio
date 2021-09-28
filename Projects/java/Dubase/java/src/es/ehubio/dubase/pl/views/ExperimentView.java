@@ -11,6 +11,7 @@ import javax.inject.Named;
 import org.primefaces.PrimeFaces;
 
 import es.ehubio.dubase.dl.entities.Experiment;
+import es.ehubio.dubase.dl.entities.Method;
 import es.ehubio.dubase.dl.entities.SupportingFile;
 
 @Named
@@ -53,5 +54,20 @@ public class ExperimentView implements Serializable {
 		if( entity.getPublications().isEmpty() )
 			return null;
 		return "https://doi.org/" + entity.getPublications().get(0).getDoi();
+	}
+	
+	public boolean isProteomics() {
+		return entity.getMethodBean().isProteomics();
+	}
+	
+	public boolean isManual() {
+		return entity.getMethodBean().isManual();
+	}
+	
+	public String getMethodType() {
+		Method method = entity.getMethodBean();
+		if( method.getSubtype() == null )
+			return method.getType().getName();
+		return String.format("%s (%s)", method.getType().getName(), method.getSubtype().getName());
 	}
 }

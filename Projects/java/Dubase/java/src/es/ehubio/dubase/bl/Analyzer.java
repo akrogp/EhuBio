@@ -50,7 +50,7 @@ public class Analyzer {
 		List<Evidence> evidences = searcher.searchEnzyme(gene, th);
 		List<Scatter> result = new ArrayList<>();
 		for( Evidence ev : evidences ) {
-			if( !Boolean.TRUE.equals(ev.getExperimentBean().getMethodBean().getProteomic()) )
+			if( !ev.getExperimentBean().getMethodBean().isProteomics() )
 				continue;
 			Scatter scatter = new Scatter();
 			scatter.setGene(CsvUtils.getCsv(';',ev.getGenes().toArray()));

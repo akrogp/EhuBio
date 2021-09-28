@@ -18,8 +18,8 @@ public class FeedView implements Serializable {
 	private static final Logger LOG = Logger.getLogger(FeedView.class.getName());
 	
 	public void saveUgoProteomics() {
-		String[] genes = {"USP1", "USP7", "USP9X", "USP11", "USP42"};
-		//String[] genes = {"USP7"};
+		//String[] genes = {"USP1", "USP7", "USP9X", "USP11", "USP42"};
+		String[] genes = {"USP1"};
 		for( String gene : genes )
 			try {
 				db.saveUgoProteomics(gene);
@@ -30,7 +30,8 @@ public class FeedView implements Serializable {
 	}
 	
 	public void saveUgoCurated() {
-		final String xlsName = "DUB substrates.v5.xlsx";
+		//final String xlsName = "DUB substrates.v5.xlsx";
+		final String xlsName = "DUB substrates Nago.xlsx";
 		try {
 			int count = db.saveUgoCurated(xlsName);
 			LOG.info(String.format("Saved %d entries from %s", count, xlsName));

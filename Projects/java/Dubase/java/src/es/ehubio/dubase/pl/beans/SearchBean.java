@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Method;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.Colors;
 import es.ehubio.io.CsvUtils;
@@ -15,6 +16,7 @@ public class SearchBean {
 	private String enzyme;
 	private String genes;
 	private String proteins;
+	private String cell;
 	private String descriptions;
 	private String foldChangeFmt;
 	private Double foldChange;
@@ -40,8 +42,9 @@ public class SearchBean {
 		setProteins(ev.getProteins().stream()
 				.map(p->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",p,p))
 				.collect(Collectors.joining("<br/>")));
+		setCell(ev.getExperimentBean().getCellBean().getName());
 		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));		
-		if( Boolean.TRUE.equals(ev.getExperimentBean().getMethodBean().getProteomic()) ) {
+		if( ev.getExperimentBean().getMethodBean().isProteomics() ) {
 			setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
 			double pValue = ev.getScore(ScoreType.P_VALUE);
 			setpValue(Math.pow(10, -pValue));
@@ -70,6 +73,12 @@ public class SearchBean {
 	}
 	public void setGenes(String genes) {
 		this.genes = genes;
+	}
+	public void setCell(String cell) {
+		this.cell = cell;
+	}
+	public String getCell() {
+		return cell;
 	}
 	public String getDescriptions() {
 		return descriptions;
@@ -158,10 +167,13 @@ public class SearchBean {
 	}
 
 	public String getType() {
-		return entity.getExperimentBean().getMethodBean().getType();
+		Method method = entity.getExperimentBean().getMethodBean();
+		if( method.getSubtype() == null )
+			return method.getType().getName();
+		return String.format("%s (%s)", method.getType().getName(), method.getSubtype().getName());
 	}
 
 	public boolean isProteomic() {
-		return Boolean.TRUE.equals(entity.getExperimentBean().getMethodBean().getProteomic());
+		return entity.getExperimentBean().getMethodBean().isProteomics();
 	}
 }

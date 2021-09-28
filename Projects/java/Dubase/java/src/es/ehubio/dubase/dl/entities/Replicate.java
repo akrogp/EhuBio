@@ -18,9 +18,9 @@ import javax.xml.bind.annotation.XmlValue;
  * The persistent class for the Replicate database table.
  * 
  */
+@XmlRootElement
 @Entity
 @NamedQuery(name="Replicate.findAll", query="SELECT r FROM Replicate r")
-@XmlRootElement
 public class Replicate implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private int id;
@@ -31,9 +31,9 @@ public class Replicate implements Serializable {
 	}
 
 
+	@XmlTransient
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@XmlTransient	
 	public int getId() {
 		return this.id;
 	}
@@ -53,16 +53,16 @@ public class Replicate implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to Condition
+	//bi-directional many-to-one association to ExpCondition
+	@XmlTransient
 	@ManyToOne
 	@JoinColumn(name="expCondition")
-	@XmlTransient
 	public Condition getConditionBean() {
 		return this.conditionBean;
 	}
 
 	public void setConditionBean(Condition conditionBean) {
 		this.conditionBean = conditionBean;
-	}
+	}	
 
 }

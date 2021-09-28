@@ -54,6 +54,7 @@
 					<p:column headerText="DUB" sortBy="#{result.enzyme}">#{result.enzyme}</p:column>
 					<p:column headerText="Genes" sortBy="#{result.genes}"><h:outputText value="#{result.genes}" escape="false"/></p:column>
 					<p:column headerText="Protein IDs" sortBy="#{result.proteins}"><h:outputText value="#{result.proteins}" escape="false"/></p:column>
+					<p:column headerText="Cell" sortBy="#{result.cell}">#{result.cell}</p:column>
 					<p:column headerText="Descriptions" sortBy="#{result.descriptions}" rendered="#{not searchView.extended}"><h:outputText value="#{result.descriptions}" escape="false"/></p:column>
 					<p:column sortBy="#{result.foldChange}" rendered="#{searchView.extended}">
 						<f:facet name="header">

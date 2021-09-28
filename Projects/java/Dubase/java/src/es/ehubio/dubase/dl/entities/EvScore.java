@@ -13,7 +13,7 @@ import javax.persistence.*;
 public class EvScore implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private long id;
-	private double value;
+	private Double value;
 	private Evidence evidenceBean;
 	private ScoreType scoreType;
 
@@ -32,11 +32,11 @@ public class EvScore implements Serializable {
 	}
 
 
-	public double getValue() {
+	public Double getValue() {
 		return this.value;
 	}
 
-	public void setValue(double value) {
+	public void setValue(Double value) {
 		this.value = value;
 	}
 

@@ -31,8 +31,8 @@ public class Evidence implements Serializable {
 	private long id;
 	private List<Ambiguity> ambiguities;
 	private List<EvScore> evScores;
-	private Experiment experimentBean;	
-	private List<RepScore> repScores;
+	private Experiment experimentBean;
+	private List<EvRepScore> evRepScores;
 
 	public Evidence() {
 	}
@@ -113,29 +113,29 @@ public class Evidence implements Serializable {
 	}
 
 
-	//bi-directional many-to-one association to RepScore
+	//bi-directional many-to-one association to EvRepScore
 	@OneToMany(mappedBy="evidenceBean")
 	@LazyCollection(LazyCollectionOption.FALSE)
-	public List<RepScore> getRepScores() {
-		return this.repScores;
+	public List<EvRepScore> getRepScores() {
+		return this.evRepScores;
 	}
 
-	public void setRepScores(List<RepScore> repScores) {
-		this.repScores = repScores;
+	public void setRepScores(List<EvRepScore> evRepScores) {
+		this.evRepScores = evRepScores;
 	}
 
-	public RepScore addRepScore(RepScore repScore) {
-		getRepScores().add(repScore);
-		repScore.setEvidenceBean(this);
+	public EvRepScore addRepScore(EvRepScore evRepScore) {
+		getRepScores().add(evRepScore);
+		evRepScore.setEvidenceBean(this);
 
-		return repScore;
+		return evRepScore;
 	}
 
-	public RepScore removeRepScore(RepScore repScore) {
-		getRepScores().remove(repScore);
-		repScore.setEvidenceBean(null);
+	public EvRepScore removeRepScore(EvRepScore evRepScore) {
+		getRepScores().remove(evRepScore);
+		evRepScore.setEvidenceBean(null);
 
-		return repScore;
+		return evRepScore;
 	}
 
 	@Transient

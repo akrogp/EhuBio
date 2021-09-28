@@ -4,8 +4,8 @@ import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Evidence;
-import es.ehubio.dubase.dl.entities.Protein;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
@@ -25,7 +25,7 @@ public class CsvExporter {
 			"Imputed control_1", "Imputed control_2", "Imputed control_3"
 		));
 		for( Evidence ev : results ) {
-			boolean proteomics = Boolean.TRUE.equals(ev.getExperimentBean().getMethodBean().getProteomic());
+			boolean proteomics = ev.getExperimentBean().getMethodBean().isProteomics();
 			pw.print(CsvUtils.getCsv(SEP1,
 				String.format("EXP%05d", ev.getExperimentBean().getId()),
 				ev.getExperimentBean().getMethodBean().getType(),
@@ -68,10 +68,10 @@ public class CsvExporter {
 	}
 	
 	public static String buildModString(Evidence ev, String sep2, String sep3) {
-		return ev.getProteinBeans().stream().map(p -> buildModString(p, sep3)).filter(s->!s.isEmpty()).collect(Collectors.joining(sep2));
+		return ev.getAmbiguities().stream().map(a -> buildModString(a, sep3)).filter(s->!s.isEmpty()).collect(Collectors.joining(sep2));
 	}
 
-	private static String buildModString(Protein p, String sep3) {
-		return p.getModifications().stream().map(m->m.getPosition()).sorted().map(pos->String.valueOf(pos)).collect(Collectors.joining(sep3));
+	private static String buildModString(Ambiguity a, String sep3) {
+		return a.getModifications().stream().map(m->m.getPosition()).sorted().map(pos->String.valueOf(pos)).collect(Collectors.joining(sep3));
 	}
 }

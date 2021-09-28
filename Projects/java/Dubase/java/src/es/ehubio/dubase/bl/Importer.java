@@ -21,25 +21,30 @@ import es.ehubio.dubase.dl.entities.Author;
 import es.ehubio.dubase.dl.entities.Cell;
 import es.ehubio.dubase.dl.entities.Condition;
 import es.ehubio.dubase.dl.entities.Enzyme;
+import es.ehubio.dubase.dl.entities.EvRepScore;
 import es.ehubio.dubase.dl.entities.EvScore;
 import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.FileType;
 import es.ehubio.dubase.dl.entities.Gene;
 import es.ehubio.dubase.dl.entities.Method;
+import es.ehubio.dubase.dl.entities.MethodSubtype;
+import es.ehubio.dubase.dl.entities.MethodType;
+import es.ehubio.dubase.dl.entities.ModRepScore;
+import es.ehubio.dubase.dl.entities.ModScore;
 import es.ehubio.dubase.dl.entities.ModType;
 import es.ehubio.dubase.dl.entities.Modification;
 import es.ehubio.dubase.dl.entities.Protein;
 import es.ehubio.dubase.dl.entities.Publication;
-import es.ehubio.dubase.dl.entities.RepScore;
 import es.ehubio.dubase.dl.entities.Replicate;
 import es.ehubio.dubase.dl.entities.ScoreType;
 import es.ehubio.dubase.dl.entities.SupportingFile;
 import es.ehubio.dubase.dl.entities.Taxon;
-import es.ehubio.dubase.dl.input.CsvProvider;
+import es.ehubio.dubase.dl.input.LiuUbiquitomicsProvider;
 import es.ehubio.dubase.dl.input.Metafile;
 import es.ehubio.dubase.dl.input.Provider;
-import es.ehubio.dubase.dl.input.XlsProvider;
+import es.ehubio.dubase.dl.input.UgoManualProvider;
+import es.ehubio.dubase.dl.input.UgoProteomicsProvider;
 
 @LocalBean
 @Stateless
@@ -56,7 +61,10 @@ public class Importer {
 		Experiment exp = Metafile.load(metaFile);
 		
 		Method method = exp.getMethodBean();
-		method.setProteomic(true);
+		method.setType(new MethodType());
+		method.getType().setId(es.ehubio.dubase.dl.input.MethodType.PROTEOMICS.ordinal());
+		method.setSubtype(new MethodSubtype());
+		method.getSubtype().setId(es.ehubio.dubase.dl.input.MethodSubtype.LABEL_FREE.ordinal());
 		method.setSilencing(true);
 		method.setProteasomeInhibition(false);
 		
@@ -65,7 +73,7 @@ public class Importer {
 	
 	public int saveUgoCurated(String xlsName) throws Exception {
 		File inputFile = new File(inputPath, xlsName);
-		List<Experiment> exps = XlsProvider.loadExperiments(inputFile.getAbsolutePath());
+		List<Experiment> exps = UgoManualProvider.loadExperiments(inputFile.getAbsolutePath());
 		for( Experiment exp : exps ) {
 			saveExperiment(exp, inputFile);
 		}
@@ -73,6 +81,9 @@ public class Importer {
 	}
 	
 	private void saveExperiment(Experiment exp, File expDir) throws Exception {
+		exp.getMethodBean().setType(em.find(MethodType.class, exp.getMethodBean().getType().getId()));
+		if( exp.getMethodBean().getSubtype() != null )
+			exp.getMethodBean().setSubtype(em.find(MethodSubtype.class, exp.getMethodBean().getSubtype().getId()));
 		em.persist(exp.getMethodBean());		
 		updateAuthor(exp);					
 		setEnzyme(exp);
@@ -82,7 +93,8 @@ public class Importer {
 		Paper paper = savePublications(exp);
 		exp.setTitle(paper.getTitle());
 		exp.setDescription(paper.getAbs());
-		exp.setExpDate(paper.getDate());
+		if( paper.getDate() != null )
+			exp.setExpDate(paper.getDate());
 		em.persist(exp);
 		saveFiles(exp);
 		saveConditions(exp);		
@@ -128,10 +140,13 @@ public class Importer {
 	}
 
 	private Provider findProvider(Experiment exp) {
-		if( Boolean.TRUE.equals(exp.getMethodBean().getProteomic()) )
-			return new CsvProvider();
-		else
-			return new XlsProvider();
+		if( exp.getMethodBean().isProteomics() )
+			return new UgoProteomicsProvider();
+		else if( exp.getMethodBean().isManual() )
+			return new UgoManualProvider();
+		else if( exp.getMethodBean().isUbiquitomics() )
+			return new LiuUbiquitomicsProvider();
+		return null;
 	}
 
 	private void setCell(Experiment exp) {
@@ -181,7 +196,6 @@ public class Importer {
 
 	private void saveAmbiguities(Evidence ev) {
 		for( Ambiguity amb : ev.getAmbiguities() ) {
-			List<Modification> mods = amb.getProteinBean().getModifications();
 			try {
 				Protein prot = em
 					.createNamedQuery("Protein.findByAcc", Protein.class)
@@ -201,19 +215,21 @@ public class Importer {
 				em.persist(amb.getProteinBean());
 			}
 			em.persist(amb);
-			for( Modification mod : mods ) {
-				mod.setModType(em.find(ModType.class, mod.getModType().getId()));
-				mod.setProteinBean(amb.getProteinBean());
-				mod.setExperimentBean(ev.getExperimentBean());
-				em.persist(mod);
-			}
+			if( amb.getModifications() != null )
+				for( Modification mod : amb.getModifications() ) {
+					mod.setModType(em.find(ModType.class, mod.getModType().getId()));
+					mod.setAmbiguityBean(amb);
+					em.persist(mod);
+					saveModScores(mod);
+					saveModRepScores(mod);
+				}
 		}
-	}
+	}	
 
 	private void saveRepScores(Evidence ev) {
 		if( ev.getRepScores() == null )
 			return;
-		for( RepScore repScore : ev.getRepScores() ) {
+		for( EvRepScore repScore : ev.getRepScores() ) {
 			repScore.setScoreType(em.find(ScoreType.class, repScore.getScoreType().getId()));
 			em.persist(repScore);
 		}		
@@ -225,6 +241,24 @@ public class Importer {
 		for( EvScore evScore : ev.getEvScores() ) {
 			evScore.setScoreType(em.find(ScoreType.class, evScore.getScoreType().getId()));
 			em.persist(evScore);
+		}
+	}
+	
+	private void saveModRepScores(Modification mod) {
+		if( mod.getRepScores() == null )
+			return;
+		for( ModRepScore modRepScore : mod.getRepScores() ) {
+			modRepScore.setScoreType(em.find(ScoreType.class, modRepScore.getScoreType().getId()));
+			em.persist(modRepScore);
+		}
+	}
+
+	private void saveModScores(Modification mod) {
+		if( mod.getScores() == null )
+			return;
+		for( ModScore modScore : mod.getScores() ) {
+			modScore.setScoreType(em.find(ScoreType.class, modScore.getScoreType().getId()));
+			em.persist(modScore);
 		}
 	}
 
@@ -247,7 +281,7 @@ public class Importer {
 		if( ev.getRepScores() == null )
 			return 0;
 		int count = 0;
-		for( RepScore score : ev.getRepScores() ) {
+		for( EvRepScore score : ev.getRepScores() ) {
 			if( score.getReplicateBean().getConditionBean().getControl() != control )
 				continue;
 			if( score.getScoreType().getId() == es.ehubio.dubase.dl.input.ScoreType.LFQ_INTENSITY.ordinal() && score.getImputed() )

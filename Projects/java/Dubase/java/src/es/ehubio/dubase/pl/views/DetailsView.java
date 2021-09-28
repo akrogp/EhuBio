@@ -7,8 +7,8 @@ import java.util.stream.Collectors;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Named;
 
+import es.ehubio.dubase.dl.entities.EvRepScore;
 import es.ehubio.dubase.dl.entities.Evidence;
-import es.ehubio.dubase.dl.entities.RepScore;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.dubase.pl.beans.DetailsBean;
 import es.ehubio.dubase.pl.beans.SearchBean;
@@ -56,7 +56,7 @@ public class DetailsView implements Serializable {
 	private static double meanLfq(Evidence ev, boolean control) {
 		return ev.getRepScores().stream()
 			.filter(s->s.getReplicateBean().getConditionBean().getControl()==control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
-			.collect(Collectors.averagingDouble(RepScore::getValue));
+			.collect(Collectors.averagingDouble(EvRepScore::getValue));
 	}
 
 	private static List<String> getLfqs(Evidence ev, boolean control) {
@@ -66,7 +66,7 @@ public class DetailsView implements Serializable {
 			.collect(Collectors.toList());
 	}
 
-	private static String parseLfq(RepScore score) {
+	private static String parseLfq(EvRepScore score) {
 		char tag = score.getImputed() ? 'i' : 'b';
 		return String.format("<%c>%.2f</%c>", tag, score.getValue(), tag);
 	}
