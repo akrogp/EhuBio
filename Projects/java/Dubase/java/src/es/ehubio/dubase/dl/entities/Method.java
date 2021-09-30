@@ -11,6 +11,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -50,6 +51,7 @@ public class Method implements Serializable {
 	}
 
 
+	@XmlElement(name = "column")
 	public String getColumnType() {
 		return this.columnType;
 	}

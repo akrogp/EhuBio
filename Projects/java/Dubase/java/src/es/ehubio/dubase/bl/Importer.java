@@ -13,6 +13,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
+import org.jboss.ejb3.annotation.TransactionTimeout;
+
 import es.ehubio.db.pubmed.Paper;
 import es.ehubio.db.pubmed.PubMed;
 import es.ehubio.dubase.Thresholds;
@@ -27,7 +29,6 @@ import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.FileType;
 import es.ehubio.dubase.dl.entities.Gene;
-import es.ehubio.dubase.dl.entities.Method;
 import es.ehubio.dubase.dl.entities.MethodSubtype;
 import es.ehubio.dubase.dl.entities.MethodType;
 import es.ehubio.dubase.dl.entities.ModRepScore;
@@ -55,19 +56,11 @@ public class Importer {
 	private String inputPath;
 	public static final String METADATA = "metadata.xml"; 
 	
+	@TransactionTimeout(600)	// 10 minutes ...
 	public void saveUgoProteomics(String inputId) throws Exception {
 		File expDir = new File(inputPath, inputId);
 		File metaFile = new File(expDir, METADATA);		
-		Experiment exp = Metafile.load(metaFile);
-		
-		Method method = exp.getMethodBean();
-		method.setType(new MethodType());
-		method.getType().setId(es.ehubio.dubase.dl.input.MethodType.PROTEOMICS.ordinal());
-		method.setSubtype(new MethodSubtype());
-		method.getSubtype().setId(es.ehubio.dubase.dl.input.MethodSubtype.LABEL_FREE.ordinal());
-		method.setSilencing(true);
-		method.setProteasomeInhibition(false);
-		
+		Experiment exp = Metafile.load(metaFile);		
 		saveExperiment(exp, expDir);
 	}	
 	
@@ -210,7 +203,10 @@ public class Importer {
 						.getSingleResult();
 					amb.getProteinBean().setGeneBean(gene);
 				} catch (NoResultException e2) {
-					em.persist(amb.getProteinBean().getGeneBean());
+					Gene gene = amb.getProteinBean().getGeneBean();
+					if( gene.getAliases() == null )
+						gene.setAliases(gene.getName());
+					em.persist(gene);
 				}
 				em.persist(amb.getProteinBean());
 			}

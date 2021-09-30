@@ -150,8 +150,10 @@ public class UgoProteomicsProvider implements Provider {
 	private void addEvScores(Evidence ev, CsvReader csv) {
 		ev.addEvScore(newEvScore(ScoreType.MOL_WEIGHT, csv.getDoubleField(IDX_MOL_WEIGHT)));
 		ev.addEvScore(newEvScore(ScoreType.SEQ_COVERAGE, csv.getDoubleField(IDX_SEQ_COVER)));
-		ev.addEvScore(newEvScore(ScoreType.FOLD_CHANGE, Math.log(csv.getDoubleField(IDX_FOLD_CHANGE))/LOG2));
-		ev.addEvScore(newEvScore(ScoreType.P_VALUE, -Math.log10(csv.getDoubleField(IDX_P_VALUE))));
+		//ev.addEvScore(newEvScore(ScoreType.FOLD_CHANGE, Math.log(csv.getDoubleField(IDX_FOLD_CHANGE))/LOG2));
+		ev.addEvScore(newEvScore(ScoreType.FOLD_CHANGE, csv.getDoubleField(IDX_FOLD_CHANGE)));
+		//ev.addEvScore(newEvScore(ScoreType.P_VALUE, -Math.log10(csv.getDoubleField(IDX_P_VALUE))));
+		ev.addEvScore(newEvScore(ScoreType.P_VALUE, csv.getDoubleField(IDX_P_VALUE)));
 	}
 
 	private int getGroupSize(int uniq, CsvReader csv) {
@@ -220,5 +222,5 @@ public class UgoProteomicsProvider implements Provider {
 	private static final int GLY_INT = 54;
 	private static final double GLY_TH = 0.75;
 	
-	private static final double LOG2 = Math.log(2);
+	//private static final double LOG2 = Math.log(2);
 }

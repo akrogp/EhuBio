@@ -18,7 +18,10 @@ public class FeedView implements Serializable {
 	private static final Logger LOG = Logger.getLogger(FeedView.class.getName());
 	
 	public void saveUgoProteomics() {
-		//String[] genes = {"USP1", "USP7", "USP9X", "USP11", "USP42"};
+		/*String[] genes = {
+			"USP1", "USP7", "USP9X", "USP11", "USP42",	// Ramirez et al.
+			"USP14"		// Liu et al.
+		};*/
 		String[] genes = {"USP1"};
 		for( String gene : genes )
 			try {
