@@ -1,13 +1,12 @@
 package es.ehubio.dubase.pl.beans;
 
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.entities.Method;
 import es.ehubio.dubase.dl.input.ScoreType;
-import es.ehubio.dubase.pl.Colors;
+import es.ehubio.dubase.pl.Formats;
 import es.ehubio.io.CsvUtils;
 
 public class SearchBean {
@@ -43,16 +42,15 @@ public class SearchBean {
 				.map(p->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",p,p))
 				.collect(Collectors.joining("<br/>")));
 		setCell(ev.getExperimentBean().getCellBean().getName());
-		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));		
+		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
+		setGlygly(CsvExporter.buildModString(ev,"<br/>",", "));
 		if( ev.getExperimentBean().getMethodBean().isProteomics() ) {
-			setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));		
-			double pValue = ev.getScore(ScoreType.P_VALUE);
-			setpValue(Math.pow(10, -pValue));
+			setFoldChange(Math.log(ev.getScore(ScoreType.FOLD_CHANGE))/Math.log(2));
+			setpValue(ev.getScore(ScoreType.P_VALUE));
 			setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
 			setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
 			setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
-			setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));
-			setGlygly(CsvExporter.buildModString(ev,"<br/>",", "));
+			setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));			
 		}
 	}
 	
@@ -118,27 +116,21 @@ public class SearchBean {
 	}
 	public void setFoldChange(Double foldChange) {
 		this.foldChange = foldChange;
-		foldChangeFmt = String.format(Locale.ENGLISH,
-			"<font color='%s'>%.2f</font>",
-			foldChange >= 0 ? Colors.UP_REGULATED : Colors.DOWN_REGULATED,
-			foldChange);
+		foldChangeFmt = Formats.logChange(foldChange);
 	}
 	public Double getpValue() {
 		return pValue;
 	}
 	public void setpValue(Double pValue) {
 		this.pValue = pValue;
-		pValueFmt = String.format(Locale.ENGLISH, "%4.1e", pValue);
-		String[] fields = pValueFmt.split("[eE]");
-		if( fields.length == 2 )
-			pValueFmt = String.format("%s x 10<sup>%s</sup>", fields[0], fields[1]);
+		pValueFmt = Formats.exp10(pValue);
 	}
 	public Double getWeight() {
 		return weight;
 	}
 	public void setWeight(Double weight) {
 		this.weight = weight;
-		weightFmt = String.format(Locale.ENGLISH, "%.3f", weight);
+		weightFmt = Formats.decimal3(weight);
 	}
 
 	public Evidence getEntity() {
@@ -159,7 +151,7 @@ public class SearchBean {
 
 	public void setCoverage(Double coverage) {
 		this.coverage = coverage;
-		coverageFmt = String.format("%.1f %%", coverage);
+		coverageFmt = Formats.percent(coverage);
 	}
 	
 	public String getCoverageFmt() {
@@ -168,12 +160,14 @@ public class SearchBean {
 
 	public String getType() {
 		Method method = entity.getExperimentBean().getMethodBean();
-		if( method.getSubtype() == null )
-			return method.getType().getName();
-		return String.format("%s (%s)", method.getType().getName(), method.getSubtype().getName());
+		return Formats.method(method);
 	}
 
-	public boolean isProteomic() {
+	public boolean isProteomics() {
 		return entity.getExperimentBean().getMethodBean().isProteomics();
+	}
+	
+	public boolean isUbiquitomics() {
+		return entity.getExperimentBean().getMethodBean().isUbiquitomics();
 	}
 }

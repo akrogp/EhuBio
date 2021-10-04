@@ -11,87 +11,87 @@
 		<ui:define name="title">Experiment #{experimentView.entity.fmtId}</ui:define>
 		<ui:define name="content">
 			<p:panelGrid columns="2">
-				<h:outputText value="Publication" />
+				<h:outputText value="Publication" styleClass="leftheader"/>
 				<h:outputLink value="#{experimentView.doi}" target="_blank">#{experimentView.entity.title}</h:outputLink>
 				
-				<h:outputText value="Enzyme" />
+				<h:outputText value="Enzyme" styleClass="leftheader"/>
 				<h:outputText value="#{experimentView.entity.enzymeBean.gene} (#{experimentView.entity.enzymeBean.superfamilyBean.name})" />
 				
-				<h:outputText value="Description" />
+				<h:outputText value="Description" styleClass="leftheader"/>
 				<h:outputText value="#{experimentView.entity.description}"/>
 				
-				<h:outputText value="Publication date" />
+				<h:outputText value="Publication date" styleClass="leftheader"/>
 				<h:outputText value="#{experimentView.entity.expDate}" />
 				
-				<h:outputText value="Uploaded into DUBase" />
+				<h:outputText value="Uploaded into DUBase" styleClass="leftheader"/>
 				<h:outputText value="#{experimentView.entity.pubDate}" />
 				
-				<h:outputText value="Submitted by" />
+				<h:outputText value="Submitted by" styleClass="leftheader"/>
 				<h:panelGroup>
 					#{experimentView.entity.authorBean.name} <a href="mailto:#{experimentView.entity.authorBean.mail}">&lt;#{experimentView.entity.authorBean.mail}&gt;</a>
 					&ndash; #{experimentView.entity.authorBean.affiliation}
 				</h:panelGroup>
 				
-				<h:outputText value="Cell" />
+				<h:outputText value="Cell" styleClass="leftheader"/>
 				<h:outputText value="#{experimentView.entity.cellBean.name}" />
 				
-				<h:outputText value="Organism" />
+				<h:outputText value="Organism" styleClass="leftheader"/>
 				<h:panelGroup>
 					#{experimentView.entity.cellBean.taxonBean.commonName} (<i>#{experimentView.entity.cellBean.taxonBean.sciName}</i>)
 				</h:panelGroup>
 				
-				<h:outputText value="Method" />
+				<h:outputText value="Method" styleClass="leftheader"/>
 				<p:panelGrid columns="2" rendered="#{experimentView.proteomics}">
-					<h:outputText value="Type" />
+					<h:outputText value="Type" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.methodType}" />
 					
-					<h:outputText value="DUB silencing" />
+					<h:outputText value="DUB silencing" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.silencing}" />
 					
-					<h:outputText value="Proteasome inhibition" />
+					<h:outputText value="Proteasome inhibition" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.proteasomeInhibition}" />
 					
-					<h:outputText value="Description" />
+					<h:outputText value="Description" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
 					
-					<h:outputText value="Column type" />
+					<h:outputText value="Column type" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.columnType}" />
 					
-					<h:outputText value="Instrument" />
+					<h:outputText value="Instrument" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.instrument}" />
 					
-					<h:outputText value="Fold threshold" />
+					<h:outputText value="Fold threshold" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.foldThreshold}" />
 					
-					<h:outputText value="p-value threshold" />
+					<h:outputText value="p-value threshold" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
 				</p:panelGrid>
 				
 				<p:panelGrid columns="2" rendered="#{not experimentView.proteomics}">
-					<h:outputText value="Type" />
+					<h:outputText value="Type" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.methodType}" />
 					
-					<h:outputText value="Proteasome inhibition" />
+					<h:outputText value="Proteasome inhibition" styleClass="leftheader"/>
 					<h:outputText value="#{experimentView.entity.methodBean.proteasomeInhibition}" />
 				</p:panelGrid>
 				
-				<h:outputText value="Experimental conditions" rendered="#{experimentView.proteomics}"/>
-				<p:panelGrid rendered="#{experimentView.proteomics}">
+				<h:outputText value="Experimental conditions" rendered="#{not experimentView.manual}" styleClass="leftheader"/>
+				<p:panelGrid rendered="#{not experimentView.manual}">
 					<ui:repeat var="cond" value="#{experimentView.entity.conditions}">
 						<p:row>
 							<p:column>#{cond.name}</p:column>
 							<p:column>
 								<p:panelGrid columns="2">
-									<h:outputText value="Description" />
+									<h:outputText value="Description" styleClass="leftheader"/>
 									<h:outputText value="#{cond.description}" />
 									
-									<h:outputText value="Control" />
+									<h:outputText value="Control" styleClass="leftheader"/>
 									<h:outputText value="#{cond.control}" />
 									
-									<h:outputText value="Replicate type" />
+									<h:outputText value="Replicate type" styleClass="leftheader"/>
 									<h:outputText value="#{cond.replicateType}" />
 									
-									<h:outputText value="Replicates" />
+									<h:outputText value="Replicates" styleClass="leftheader"/>
 									<h:panelGroup>
 										<ui:repeat var="rep" value="#{cond.replicates}">#{rep.name}<br/></ui:repeat>
 									</h:panelGroup>
@@ -101,9 +101,13 @@
 					</ui:repeat>
 				</p:panelGrid>
 				
-				<h:outputText value="Supporting files" />
+				<h:outputText value="Supporting files" styleClass="leftheader"/>
 				<h:form>
 					<p:panelGrid>
+						<p:row>
+							<p:column styleClass="topheader">Name</p:column>
+							<p:column styleClass="topheader">Type</p:column>
+						</p:row>
 						<ui:repeat var="file" value="#{experimentView.entity.supportingFiles}">
 							<p:row>
 								<p:column>								

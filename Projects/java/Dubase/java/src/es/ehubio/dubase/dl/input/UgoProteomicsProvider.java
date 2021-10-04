@@ -120,7 +120,7 @@ public class UgoProteomicsProvider implements Provider {
 		int i = IDX_REPS;
 		for( es.ehubio.dubase.dl.entities.Condition cond : ev.getExperimentBean().getConditions() )
 			for( Replicate rep : cond.getReplicates() ) {
-				ev.addRepScore(newRepScore(rep, ScoreType.LFQ_INTENSITY, csv.getDoubleField(i), csv.getIntField(i+1) == 1));
+				ev.addRepScore(newRepScore(rep, ScoreType.LFQ_INTENSITY_LOG2, csv.getDoubleField(i), csv.getIntField(i+1) == 1));
 				i += 2;
 			}
 	}

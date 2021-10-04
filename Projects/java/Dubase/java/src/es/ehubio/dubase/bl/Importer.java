@@ -280,7 +280,7 @@ public class Importer {
 		for( EvRepScore score : ev.getRepScores() ) {
 			if( score.getReplicateBean().getConditionBean().getControl() != control )
 				continue;
-			if( score.getScoreType().getId() == es.ehubio.dubase.dl.input.ScoreType.LFQ_INTENSITY.ordinal() && score.getImputed() )
+			if( score.getScoreType().getId() == es.ehubio.dubase.dl.input.ScoreType.LFQ_INTENSITY_LOG2.ordinal() && score.getImputed() )
 				count++;
 		}
 		return count;

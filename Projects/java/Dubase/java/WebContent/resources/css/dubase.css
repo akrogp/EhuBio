@@ -3,3 +3,13 @@
 .gprofiler {
 	background-image: url(https://biit.cs.ut.ee/gprofiler/gp2-logo-new.png) !important;
 }
+
+.topheader {
+	font-weight: bold;
+	text-align: center;
+}
+
+.leftheader {
+	font-weight: bold;
+	text-align: left;
+}

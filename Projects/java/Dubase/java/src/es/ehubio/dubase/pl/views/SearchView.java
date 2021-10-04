@@ -104,7 +104,7 @@ public class SearchView implements Serializable {
 		for( Evidence ev : rawResults ) {
 			SearchBean result = new SearchBean(ev); 
 			results.add(result);
-			if( result.isProteomic() )
+			if( result.isProteomics() )
 				proteomics = true;
 			else
 				manual = true;

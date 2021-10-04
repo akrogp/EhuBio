@@ -53,7 +53,7 @@ public class CsvExporter {
 		if( ev.getRepScores() == null )
 			return;
 		pw.print(ev.getRepScores().stream()
-			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
+			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY_LOG2.ordinal())
 			.map(s->String.valueOf(s.getValue()))
 			.collect(Collectors.joining(SEP1,SEP1,"")));
 	}
@@ -62,7 +62,7 @@ public class CsvExporter {
 		if( ev.getRepScores() == null )
 			return;
 		pw.print(ev.getRepScores().stream()
-			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY.ordinal())
+			.filter(s->s.getReplicateBean().getConditionBean().getControl() == control && s.getScoreType().getId() == ScoreType.LFQ_INTENSITY_LOG2.ordinal())
 			.map(s->String.valueOf(s.getImputed()))
 			.collect(Collectors.joining(SEP1,SEP1,"")));
 	}
