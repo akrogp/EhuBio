@@ -9,9 +9,9 @@
 		<ui:define name="title">Feed experiments</ui:define>
 		<ui:define name="content">
 		<h:form>
-			<p:commandButton value="Feed Initial USPs (proteomics)" ajax="false" action="#{feedView.saveUgoProteomics()}"/>
+			<p:commandButton value="Feed using metadata" ajax="false" action="#{feedView.saveUgoProteomics()}"/>
 			<p/>
-			<p:commandButton value="Feed Review DUBs (manual curation)" ajax="false" action="#{feedView.saveUgoCurated()}"/>
+			<p:commandButton value="Feed using excel" ajax="false" action="#{feedView.saveUgoCurated()}"/>
 		</h:form>
 		</ui:define>
 	</ui:composition>

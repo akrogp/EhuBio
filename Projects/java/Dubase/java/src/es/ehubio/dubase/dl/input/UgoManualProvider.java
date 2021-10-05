@@ -128,29 +128,35 @@ public class UgoManualProvider implements Provider {
 					int index = 0;
 					for( org.apache.poi.ss.usermodel.Cell cell : row )
 						map.put(cell.getStringCellValue(), index++);
-				} else if( exp.getIndex() == row.getRowNum() ) {					
-					Evidence ev = new Evidence();
-					ev.setExperimentBean(exp);
-					ev.setAmbiguities(new ArrayList<>());
-					Gene gene = new Gene();
-					gene.setName(getCell(row, map, "Gene"));
-					Protein prot = new Protein();					
-					prot.setAccession(getCell(row, map, "UniProt"));
-					prot.setGeneBean(gene);
-					//try {
-						Fasta fasta = Fetcher.downloadFasta(prot.getAccession(), SequenceType.PROTEIN);						
-						prot.setName(fasta.getProteinName());
-						prot.setDescription(fasta.getDescription());
-					/*} catch( Exception e ) {
-						e.printStackTrace();
-						System.err.println(String.format("Could not download UniProt accession '%s'", prot.getAccession()));
-						prot.setName(prot.getAccession());
-						prot.setDescription(prot.getAccession());
-					}*/
-					Ambiguity amb = new Ambiguity();
-					amb.setProteinBean(prot);			
-					ev.addAmbiguity(amb);
-					evs.add(ev);
+				} else if( exp.getIndex() == row.getRowNum() ) {										
+					String[] genes = getCell(row, map, "Gene").split(";");
+					String[] prots = getCell(row, map, "UniProt").split(";");
+					if( genes.length != prots.length )
+						throw new Exception("Genes and proteins numbers do no match");
+					for( int i = 0; i < prots.length; i++ ) {
+						Evidence ev = new Evidence();
+						ev.setExperimentBean(exp);
+						ev.setAmbiguities(new ArrayList<>());
+						Gene gene = new Gene();
+						gene.setName(genes[i]);
+						Protein prot = new Protein();					
+						prot.setAccession(prots[i]);
+						prot.setGeneBean(gene);
+						try {
+							Fasta fasta = Fetcher.downloadFasta(prot.getAccession(), SequenceType.PROTEIN);						
+							prot.setName(fasta.getProteinName());
+							prot.setDescription(fasta.getDescription());
+						} catch( Exception e ) {
+							//e.printStackTrace();
+							System.err.println(String.format("Could not download UniProt accession '%s'", prot.getAccession()));
+							//prot.setName(prot.getAccession());
+							//prot.setDescription(prot.getAccession());
+						}
+						Ambiguity amb = new Ambiguity();
+						amb.setProteinBean(prot);			
+						ev.addAmbiguity(amb);
+						evs.add(ev);
+					}
 					break;
 				}
 			}

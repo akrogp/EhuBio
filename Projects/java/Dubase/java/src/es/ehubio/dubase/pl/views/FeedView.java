@@ -18,15 +18,15 @@ public class FeedView implements Serializable {
 	private static final Logger LOG = Logger.getLogger(FeedView.class.getName());
 	
 	public void saveUgoProteomics() {
-		/*String[] genes = {
+		/*String[] experiments = {
 			"USP1", "USP7", "USP9X", "USP11", "USP42",	// Ramirez et al.
 			"USP14"		// Liu et al.
 		};*/
-		String[] genes = {"USP1"};
-		for( String gene : genes )
+		String[] experiments = {"USP1"};
+		for( String experiment : experiments )
 			try {
-				db.saveUgoProteomics(gene);
-				LOG.info("Saved " + gene);
+				db.saveUgoProteomics(experiment);
+				LOG.info("Saved " + experiment);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -34,12 +34,14 @@ public class FeedView implements Serializable {
 	
 	public void saveUgoCurated() {
 		//final String xlsName = "DUB substrates.v5.xlsx";
-		final String xlsName = "DUB substrates Nago.xlsx";
-		try {
-			int count = db.saveUgoCurated(xlsName);
-			LOG.info(String.format("Saved %d entries from %s", count, xlsName));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		//final String xlsName = "DUB substrates Nago.xlsx";
+		String[] experiments = {"USP14.xlsx"};
+		for( String experiment : experiments )
+			try {
+				int count = db.saveUgoCurated(experiment);
+				LOG.info(String.format("Saved %d entries from %s", count, experiment));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 	}
 }
