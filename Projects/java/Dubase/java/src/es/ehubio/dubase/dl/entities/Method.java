@@ -32,6 +32,7 @@ public class Method implements Serializable {
 	private String instrument;
 	private Boolean proteasomeInhibition;
 	private Double pvalueThreshold;
+	private Boolean adjustedPvalues;
 	private Boolean silencing;
 	private MethodSubtype methodSubtype;
 	private MethodType methodType;
@@ -106,6 +107,15 @@ public class Method implements Serializable {
 		this.pvalueThreshold = pvalueThreshold;
 	}
 
+	
+	public Boolean getAdjustedPvalues() {
+		return adjustedPvalues;
+	}
+
+	public void setAdjustedPvalues(Boolean adjustedPvalues) {
+		this.adjustedPvalues = adjustedPvalues;
+	}
+
 
 	public Boolean getSilencing() {
 		return this.silencing;
@@ -155,5 +165,11 @@ public class Method implements Serializable {
 	@Transient
 	public boolean isUbiquitomics() {
 		return getType().getId() == es.ehubio.dubase.dl.input.MethodType.UBIQUITOMICS.ordinal();
+	}
+	
+	@XmlTransient
+	@Transient
+	public boolean isAdjusted() {
+		return Boolean.TRUE.equals(getAdjustedPvalues());
 	}
 }

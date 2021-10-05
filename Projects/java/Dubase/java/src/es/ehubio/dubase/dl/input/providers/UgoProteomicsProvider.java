@@ -1,4 +1,4 @@
-package es.ehubio.dubase.dl.input;
+package es.ehubio.dubase.dl.input.providers;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,6 +23,8 @@ import es.ehubio.dubase.dl.entities.Modification;
 import es.ehubio.dubase.dl.entities.Protein;
 import es.ehubio.dubase.dl.entities.Replicate;
 import es.ehubio.dubase.dl.entities.SupportingFile;
+import es.ehubio.dubase.dl.input.FileType;
+import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvReader;
 
 public class UgoProteomicsProvider implements Provider {

@@ -41,11 +41,12 @@ import es.ehubio.dubase.dl.entities.Replicate;
 import es.ehubio.dubase.dl.entities.ScoreType;
 import es.ehubio.dubase.dl.entities.SupportingFile;
 import es.ehubio.dubase.dl.entities.Taxon;
-import es.ehubio.dubase.dl.input.LiuUbiquitomicsProvider;
 import es.ehubio.dubase.dl.input.Metafile;
-import es.ehubio.dubase.dl.input.Provider;
-import es.ehubio.dubase.dl.input.UgoManualProvider;
-import es.ehubio.dubase.dl.input.UgoProteomicsProvider;
+import es.ehubio.dubase.dl.input.providers.LiuUbiquitomicsProvider;
+import es.ehubio.dubase.dl.input.providers.PhuProteomicsProvider;
+import es.ehubio.dubase.dl.input.providers.Provider;
+import es.ehubio.dubase.dl.input.providers.UgoManualProvider;
+import es.ehubio.dubase.dl.input.providers.UgoProteomicsProvider;
 
 @LocalBean
 @Stateless
@@ -133,9 +134,11 @@ public class Importer {
 	}
 
 	private Provider findProvider(Experiment exp) {
-		if( exp.getMethodBean().isProteomics() )
+		if( exp.getMethodBean().isProteomics() ) {
+			if( exp.getPublications().get(0).getDoi().equals("10.1016/j.molcel.2020.02.012") )
+				return new PhuProteomicsProvider();
 			return new UgoProteomicsProvider();
-		else if( exp.getMethodBean().isManual() )
+		} else if( exp.getMethodBean().isManual() )
 			return new UgoManualProvider();
 		else if( exp.getMethodBean().isUbiquitomics() )
 			return new LiuUbiquitomicsProvider();

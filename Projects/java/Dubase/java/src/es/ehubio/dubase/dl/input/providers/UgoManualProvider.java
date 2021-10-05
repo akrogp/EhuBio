@@ -1,4 +1,4 @@
-package es.ehubio.dubase.dl.input;
+package es.ehubio.dubase.dl.input.providers;
 
 import java.io.FileInputStream;
 import java.io.IOException;
