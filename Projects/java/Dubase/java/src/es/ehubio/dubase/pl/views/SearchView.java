@@ -20,6 +20,7 @@ import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.pl.beans.SearchBean;
 
 @Named
@@ -51,9 +52,14 @@ public class SearchView implements Serializable {
 		gene = query.trim().toUpperCase();
 		if( gene.isEmpty() )
 			return;
-		Thresholds th = prefs.getThresholds();
-		Collection<Evidence> tmpResults = !substrate ? db.searchEnzyme(gene, th) : (!dub ? db.searchSubstrate(gene, th) : db.search(gene, th));
-		rawResults = new ArrayList<>(tmpResults);
+		rawResults = new ArrayList<>();
+		List<Experiment> exps = db.findExperiments();
+		for( Experiment exp : exps ) {
+			int expId = exp.getId();
+			Thresholds th = prefs.getThresholds(exp);			
+			Collection<Evidence> tmpResults = !substrate ? db.searchEnzyme(gene, expId, th) : (!dub ? db.searchSubstrate(gene, expId, th) : db.search(gene, expId, th));
+			rawResults.addAll(tmpResults);
+		}
 		parseResults();
 		return;
 	}

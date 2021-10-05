@@ -105,16 +105,16 @@
 				<h:form>
 					<p:panelGrid>
 						<p:row>
-							<p:column styleClass="topheader">Name</p:column>
 							<p:column styleClass="topheader">Type</p:column>
+							<p:column styleClass="topheader">Name</p:column>							
 						</p:row>
 						<ui:repeat var="file" value="#{experimentView.entity.supportingFiles}">
 							<p:row>
+								<p:column>#{file.fileType.description}</p:column>
 								<p:column>								
 										<p:commandLink ajax="false" value="#{file.name}" action="#{experimentView.download(file)}" rendered="#{empty file.url}"/>
 										<h:outputLink value="#{file.url}" target="_blank" rendered="#{not empty file.url}">#{file.name}</h:outputLink>								
-								</p:column>
-								<p:column>#{file.fileType.description}</p:column>
+								</p:column>								
 							</p:row>
 						</ui:repeat>
 					</p:panelGrid>

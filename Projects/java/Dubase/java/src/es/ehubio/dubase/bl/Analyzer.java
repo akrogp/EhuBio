@@ -47,7 +47,7 @@ public class Analyzer {
 			th.setLog2FoldChange(xth);
 		if( yth != null )
 			th.setLog10PValue(yth);
-		List<Evidence> evidences = searcher.searchEnzyme(gene, th);
+		List<Evidence> evidences = searcher.searchEnzyme(gene, 0, th);
 		List<Scatter> result = new ArrayList<>();
 		for( Evidence ev : evidences ) {
 			if( !ev.getExperimentBean().getMethodBean().isProteomics() )
@@ -67,7 +67,7 @@ public class Analyzer {
 		List<String> enzymes = browser.getEnzymesWithEvidences();
 		Map<String, Overlap> map = new HashMap<>();
 		for( String enzyme : enzymes ) {
-			List<Evidence> evs = searcher.searchEnzyme(enzyme, th);
+			List<Evidence> evs = searcher.searchEnzyme(enzyme, 0, th);
 			for( Evidence ev : evs )
 				for( Ambiguity a : ev.getAmbiguities() ) {
 					String gene = a.getProteinBean().getGeneBean().getName();

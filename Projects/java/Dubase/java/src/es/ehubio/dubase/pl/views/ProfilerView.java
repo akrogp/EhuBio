@@ -34,9 +34,9 @@ public class ProfilerView implements Serializable {
 		this.gene = gene;
 	}
 	
-	public void gprofiler() {
+	/*public void gprofiler() {
 		redirect(db.searchEnzyme(getGene(), prefs.getThresholds()));
-	}
+	}*/
 	
 	public static void redirect(List<Evidence> evidences) {
 		List<String> genes = new ArrayList<>();

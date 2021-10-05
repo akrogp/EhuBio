@@ -32,9 +32,9 @@ public class StringView implements Serializable {
 		this.gene = gene;
 	}
 	
-	public String string() {
+	/*public String string() {
 		return redirect(db.searchEnzyme(getGene(), prefs.getThresholds()));
-	}
+	}*/
 	
 	public String redirect(List<Evidence> evidences) {
 		genes = evidences.stream()

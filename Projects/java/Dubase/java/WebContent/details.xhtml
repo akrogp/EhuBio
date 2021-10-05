@@ -10,7 +10,7 @@
 	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
 		<ui:define name="title">Details</ui:define>
 		<ui:define name="content">			
-			<p:panelGrid columns="2">
+			<p:panelGrid columns="2" columnClasses="firstcolumn,secondcolumn">
 				<f:facet name="header">Search result</f:facet>
 				
 				<h:outputText value="Experiment" />
@@ -42,7 +42,7 @@
 				</h:form>
 			</p:panelGrid>
 			<p/>
-			<p:panelGrid columns="2" rendered="#{detailsView.detailsBean.searchBean.proteomics}">
+			<p:panelGrid columns="2" rendered="#{detailsView.detailsBean.searchBean.proteomics}" columnClasses="firstcolumn,secondcolumn">
 				<f:facet name="header">Proteomics info</f:facet>				
 				<h:panelGroup id="fold">
 					Fold change (log2)
@@ -85,17 +85,17 @@
 				</ul>				
 				</h:panelGroup>
 			</p:panelGrid>
-			
+			<p/>
 			<p:panelGrid rendered="#{not empty detailsView.detailsBean.mods}">
 				<f:facet name="header">
 					<p:row><p:column colspan="2">Ubiquitomics info</p:column></p:row>
 				</f:facet>
 				<ui:repeat value="#{detailsView.detailsBean.mods.entrySet()}" var="m">
 					<p:row>
-						<p:column>
+						<p:column styleClass="firstcolumn">
 							<h:outputText value="K#{m.key}" />
 						</p:column>
-						<p:column>
+						<p:column styleClass="secondcolumn">
 							<p:dataTable value="#{m.value}" var="sample" size="small" tableStyle="width:auto">
 								<p:column>
 									#{sample.name}
@@ -122,7 +122,28 @@
 						</ul>
 					</p:column>
 				</p:row>							
-			</p:panelGrid>		
+			</p:panelGrid>
+			<p/>
+			<h:form>
+			<p:panelGrid>
+				<f:facet name="header">
+					<p:row><p:column colspan="2">Supporting files</p:column></p:row>
+				</f:facet>
+				<p:row>
+					<p:column styleClass="topheader firstcolumn">Type</p:column>
+					<p:column styleClass="topheader secondcolumn">Name</p:column>					
+				</p:row>
+				<ui:repeat var="file" value="#{detailsView.detailsBean.evidence.experimentBean.supportingFiles}">
+					<p:row>
+						<p:column>#{file.fileType.description}</p:column>
+						<p:column>								
+								<p:commandLink ajax="false" value="#{file.name}" action="#{experimentView.download(file)}" rendered="#{empty file.url}"/>
+								<h:outputLink value="#{file.url}" target="_blank" rendered="#{not empty file.url}">#{file.name}</h:outputLink>								
+						</p:column>						
+					</p:row>
+				</ui:repeat>
+			</p:panelGrid>
+			</h:form>		
 				
 		</ui:define>
 	</ui:composition>

@@ -13,3 +13,11 @@
 	font-weight: bold;
 	text-align: left;
 }
+
+.firstcolumn {
+	width: 300px;
+}
+
+.secondcolumn {
+	min-width: 500px;
+}

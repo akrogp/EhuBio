@@ -5,6 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.entities.ScoreType;
 
 public class DetailsBean {
@@ -122,6 +123,10 @@ public class DetailsBean {
 	
 	public List<String> getReps() {
 		return reps;
+	}
+	
+	public Evidence getEvidence() {
+		return searchBean.getEntity();
 	}
 
 	private final SearchBean searchBean;

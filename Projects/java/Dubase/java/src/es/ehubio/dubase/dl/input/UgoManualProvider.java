@@ -85,7 +85,7 @@ public class UgoManualProvider implements Provider {
 					exp.setSupportingFiles(new ArrayList<>());
 					SupportingFile supp = new SupportingFile();
 					supp.setFileType(new FileType());
-					supp.getFileType().setId(es.ehubio.dubase.dl.input.FileType.URL.ordinal());
+					supp.getFileType().setId(es.ehubio.dubase.dl.input.FileType.PUB_RES.ordinal());
 					supp.setName(getCell(row, map, "Figure"));
 					String url = getCell(row, map, "Figure URL");
 					if( url.length() < 10 || url.length() > 255 )
