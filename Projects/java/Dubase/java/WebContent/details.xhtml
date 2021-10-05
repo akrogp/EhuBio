@@ -11,15 +11,7 @@
 		<ui:define name="title">Details</ui:define>
 		<ui:define name="content">			
 			<p:panelGrid columns="2" columnClasses="firstcolumn,secondcolumn">
-				<f:facet name="header">Search result</f:facet>
-				
-				<h:outputText value="Experiment" />
-				<h:form>
-					<p:commandLink value="#{detailsView.detailsBean.experiment}" action="#{experimentView.showExperiment(detailsView.detailsBean.searchBean.entity.experimentBean)}" ajax="false"/>
-				</h:form>
-				
-				<h:outputText value="Type" />
-				<h:outputText value="#{detailsView.detailsBean.searchBean.type}"/>
+				<f:facet name="header">Search result</f:facet>				
 				
 				<h:outputText value="DUB" />
 				<h:outputText value="#{detailsView.detailsBean.enzyme}"/>
@@ -40,6 +32,23 @@
 				<h:form target="phospho">					
 					<h:commandButton action="phospho" value="Search" />
 				</h:form>
+			</p:panelGrid>
+			<p/>
+			<p:panelGrid columns="2" columnClasses="firstcolumn,secondcolumn">
+				<f:facet name="header">Experiment info</f:facet>
+				<h:outputText value="Experiment" />
+				<h:form>
+					<p:commandLink value="#{detailsView.detailsBean.experiment}" action="#{experimentView.showExperiment(detailsView.detailsBean.searchBean.entity.experimentBean)}" ajax="false"/>
+				</h:form>
+				
+				<h:outputText value="Type" />
+				<h:outputText value="#{detailsView.detailsBean.searchBean.type}"/>
+				
+				<h:outputText value="DUB silencing"/>
+				<h:outputText value="#{detailsView.detailsBean.evidence.experimentBean.methodBean.silencing}" />
+				
+				<h:outputText value="Proteasome inhibition"/>
+				<h:outputText value="#{detailsView.detailsBean.evidence.experimentBean.methodBean.proteasomeInhibition}" />
 			</p:panelGrid>
 			<p/>
 			<p:panelGrid columns="2" rendered="#{detailsView.detailsBean.searchBean.proteomics}" columnClasses="firstcolumn,secondcolumn">

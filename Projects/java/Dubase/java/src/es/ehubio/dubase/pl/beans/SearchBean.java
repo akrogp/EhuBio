@@ -42,7 +42,8 @@ public class SearchBean {
 				.map(p->String.format("<a href='https://www.uniprot.org/uniprot/%s' target='_blank'>%s</a>",p,p))
 				.collect(Collectors.joining("<br/>")));
 		setCell(ev.getExperimentBean().getCellBean().getName());
-		setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
+		if( ev.getDescriptions().stream().anyMatch(d -> d!= null) )
+			setDescriptions(CsvUtils.getCsv("<br/>", ev.getDescriptions().toArray()));
 		setGlygly(CsvExporter.buildModString(ev,"<br/>",", "));
 		if( ev.getExperimentBean().getMethodBean().isProteomics() ) {
 			setFoldChange(Math.log(ev.getScore(ScoreType.FOLD_CHANGE))/Math.log(2));
