@@ -48,8 +48,8 @@ public class SearchBean {
 		if( ev.getExperimentBean().getMethodBean().isProteomics() ) {
 			setFoldChange(Math.log(ev.getScore(ScoreType.FOLD_CHANGE))/Math.log(2));
 			setpValue(ev.getScore(ScoreType.P_VALUE));
-			setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS).intValue());
-			setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS).intValue());
+			setTotalPepts(ev.getScore(ScoreType.TOTAL_PEPTS));
+			setUniqPepts(ev.getScore(ScoreType.UNIQ_PEPTS));
 			setWeight(ev.getScore(ScoreType.MOL_WEIGHT));
 			setCoverage(ev.getScore(ScoreType.SEQ_COVERAGE));			
 		}
@@ -97,11 +97,17 @@ public class SearchBean {
 	public void setTotalPepts(Integer totalPepts) {
 		this.totalPepts = totalPepts;
 	}
+	public void setTotalPepts(Double totalPepts) {
+		this.totalPepts = totalPepts == null ? null : totalPepts.intValue();
+	}
 	public Integer getUniqPepts() {
 		return uniqPepts;
 	}
 	public void setUniqPepts(Integer uniqPepts) {
 		this.uniqPepts = uniqPepts;
+	}
+	public void setUniqPepts(Double uniqPepts) {
+		this.uniqPepts = uniqPepts == null ? null : uniqPepts.intValue();
 	}
 	public String getWeightFmt() {
 		return weightFmt;
@@ -131,7 +137,7 @@ public class SearchBean {
 	}
 	public void setWeight(Double weight) {
 		this.weight = weight;
-		weightFmt = Formats.decimal3(weight);
+		weightFmt = weight == null ? null : Formats.decimal3(weight);
 	}
 
 	public Evidence getEntity() {
@@ -152,7 +158,7 @@ public class SearchBean {
 
 	public void setCoverage(Double coverage) {
 		this.coverage = coverage;
-		coverageFmt = Formats.percent(coverage);
+		coverageFmt = coverage == null ? null : Formats.percent(coverage);
 	}
 	
 	public String getCoverageFmt() {

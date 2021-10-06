@@ -2,7 +2,6 @@ package es.ehubio.dubase.dl.input.providers;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.Map;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
-import org.apache.poi.ss.usermodel.DateUtil;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -27,7 +25,6 @@ import es.ehubio.dubase.dl.entities.Modification;
 import es.ehubio.dubase.dl.entities.Protein;
 import es.ehubio.dubase.dl.entities.Replicate;
 import es.ehubio.dubase.dl.entities.ScoreType;
-import es.ehubio.io.StringUtils;
 
 public class LiuUbiquitomicsProvider implements Provider {
 
@@ -66,13 +63,10 @@ public class LiuUbiquitomicsProvider implements Provider {
 					prot.setAccession(row.getCell(IDX_PROT).getStringCellValue());
 					Gene gene = new Gene();
 					Cell name = row.getCell(IDX_GENE);
-					if( name == null || name.getCellTypeEnum() == CellType.BLANK )
-						gene.setName(prot.getAccession());
-					else if( name.getCellTypeEnum() == CellType.NUMERIC && DateUtil.isCellDateFormatted(name) )
-						gene.setName(StringUtils.fixGeneName(name.getDateCellValue(), ZoneId.of("Asia/Shanghai")));
-					else
-						gene.setName(row.getCell(IDX_GENE).getStringCellValue());
-					prot.setGeneBean(gene);
+					if( name.getCellTypeEnum() == CellType.STRING ) {						
+						gene.setName(name.getStringCellValue());
+						prot.setGeneBean(gene);
+					}
 					amb.setProteinBean(prot);
 				}
 				loadEvidence(amb, row);

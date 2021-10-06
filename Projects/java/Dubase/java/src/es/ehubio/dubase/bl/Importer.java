@@ -134,14 +134,15 @@ public class Importer {
 	}
 
 	private Provider findProvider(Experiment exp) {
-		if( exp.getMethodBean().isProteomics() ) {
-			if( exp.getPublications().get(0).getDoi().equals("10.1016/j.molcel.2020.02.012") )
-				return new PhuProteomicsProvider();
-			return new UgoProteomicsProvider();
-		} else if( exp.getMethodBean().isManual() )
-			return new UgoManualProvider();
-		else if( exp.getMethodBean().isUbiquitomics() )
+		String doi = exp.getPublications().get(0).getDoi();
+		if( doi.equals("10.1038/s41467-018-07185-y") )
 			return new LiuUbiquitomicsProvider();
+		if( doi.equals("10.1016/j.molcel.2020.02.012") )
+			return new PhuProteomicsProvider();
+		if( exp.getMethodBean().isProteomics() )
+			return new UgoProteomicsProvider();
+		if( exp.getMethodBean().isManual() )
+			return new UgoManualProvider();
 		return null;
 	}
 
@@ -205,8 +206,15 @@ public class Importer {
 						.setParameter("name", amb.getProteinBean().getGeneBean().getName())
 						.getSingleResult();
 					amb.getProteinBean().setGeneBean(gene);
-				} catch (NoResultException e2) {
+				} catch (Exception e2) {
 					Gene gene = amb.getProteinBean().getGeneBean();
+					if( gene == null ) {
+						gene = new Gene();
+						gene.setName(amb.getProteinBean().getName());
+						amb.getProteinBean().setGeneBean(gene);
+					}
+					if( gene.getName() == null )
+						gene.setName(amb.getProteinBean().getAccession());
 					if( gene.getAliases() == null )
 						gene.setAliases(gene.getName());
 					em.persist(gene);

@@ -25,32 +25,26 @@ public class DetailsView implements Serializable {
 	private DetailsBean detailsBean;
 	
 	public String showDetails(SearchBean searchBean) {
+		detailsBean = new DetailsBean(searchBean);
 		Evidence evBean = searchBean.getEntity();
-		es.ehubio.dubase.dl.entities.ScoreType scoreType = selectScore(evBean.getRepScores());
-		List<String> reps = null;
-		Ambiguity leading = null;
-		Modification mod = null;
-		if( scoreType != null ) {
-			reps = getReps(evBean.getRepScores());
-		} else {
-			leading = evBean.getAmbiguities().get(0);
-			if( !leading.getModifications().isEmpty() ) {
-				mod = leading.getModifications().get(0);
-				scoreType = selectScore(mod.getRepScores());
-				reps = getReps(mod.getRepScores());
-			}
-		}
-		detailsBean = new DetailsBean(searchBean, scoreType, reps);
-		if( scoreType != null ) {
-			if( leading == null )
-				fillEvScores(evBean, scoreType);
-			else
-				fillModScores(leading, scoreType);
+		detailsBean.setScoreType(selectScore(evBean.getRepScores()));
+		Ambiguity leading = evBean.getAmbiguities().get(0);
+		Modification mod = leading.getModifications().isEmpty() ? null : leading.getModifications().get(0);
+		if( detailsBean.getScoreType() != null ) {
+			detailsBean.setReps(getReps(evBean.getRepScores()));
+			fillEvScores();
+		} else if( mod != null ) {
+			detailsBean.setScoreType(selectScore(mod.getRepScores()));
+			if( detailsBean.getScoreType() != null )
+				detailsBean.setReps(getReps(mod.getRepScores()));
+			fillModScores(leading);
 		}
 		return "details";
 	}	
 
-	private void fillEvScores(Evidence evBean, es.ehubio.dubase.dl.entities.ScoreType scoreType) {
+	private void fillEvScores() {
+		Evidence evBean = detailsBean.getSearchBean().getEntity();
+		es.ehubio.dubase.dl.entities.ScoreType scoreType = detailsBean.getScoreType();
 		for( String cond : getCases(evBean.getRepScores()) ) {
 			DetailsBean.Result sample = new DetailsBean.Result();
 			sample.setName(cond);
@@ -61,8 +55,9 @@ public class DetailsView implements Serializable {
 		}
 	}
 	
-	private void fillModScores(Ambiguity leading, es.ehubio.dubase.dl.entities.ScoreType scoreType) {
+	private void fillModScores(Ambiguity leading) {
 		for( String cond : getCases(leading.getModifications().get(0).getRepScores()) ) {
+			es.ehubio.dubase.dl.entities.ScoreType scoreType = detailsBean.getScoreType();
 			List<DetailsBean.Result> results = new ArrayList<>();
 			detailsBean.getMods().put(cond, results);
 			for( Modification mod : leading.getModifications() ) {
@@ -78,7 +73,7 @@ public class DetailsView implements Serializable {
 	}	
 
 	private es.ehubio.dubase.dl.entities.ScoreType selectScore(List<? extends RepScore> scores) {
-		if( scores.isEmpty() )
+		if( scores == null || scores.isEmpty() )
 			return null;
 		return scores.stream()
 			.filter(s -> s.getScoreType().getId() == ScoreType.LFQ_INTENSITY_LOG2.ordinal() || s.getScoreType().getId() == ScoreType.FOLD_CHANGE.ordinal())
@@ -149,5 +144,12 @@ public class DetailsView implements Serializable {
 
 	public String getPhospho() {
 		return detailsBean.getSearchBean().getEntity().getAmbiguities().stream().map(a->a.getProteinBean().getAccession()).collect(Collectors.joining("\n"));
+	}
+	
+	public String getPvalueType() {
+		String type = "p-value";
+		if( detailsBean.getSearchBean().getEntity().getExperimentBean().getMethodBean().isAdjusted() )
+			type = type + " (adjusted)";
+		return type;
 	}
 }

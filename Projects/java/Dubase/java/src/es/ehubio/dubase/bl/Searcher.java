@@ -41,7 +41,8 @@ public class Searcher {
 					" OR ( a.evidenceBean.experimentBean.methodBean.type.id = :proteomics" +
 						" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
 						" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value <= :s2) > 0" +
-						" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0" +
+						" AND ( (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0" +
+							" OR (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t3) = 0)"+
 					" ) OR ( a.evidenceBean.experimentBean.methodBean.type.id = :ubiquitomics" +
 						" AND (SELECT COUNT(m) FROM a.modifications m WHERE" +
 							" (SELECT COUNT(s) FROM m.scores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
@@ -73,7 +74,8 @@ public class Searcher {
 					" OR ( e.experimentBean.methodBean.type.id = :proteomics" +
 						" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
 						" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t2 AND s.value <= :s2) > 0" +
-						" AND (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0" +
+						" AND ( (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t3 AND s.value >= :s3) > 0" +
+							" OR (SELECT COUNT(s) FROM e.evScores s WHERE s.scoreType.id = :t3) = 0)"+
 					" ) OR ( e.experimentBean.methodBean.type.id = :ubiquitomics" +
 						" AND (SELECT COUNT(a) FROM e.ambiguities a WHERE (SELECT COUNT(m) FROM a.modifications m WHERE" +
 							" (SELECT COUNT(s) FROM m.scores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +

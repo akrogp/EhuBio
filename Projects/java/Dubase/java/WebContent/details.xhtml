@@ -60,7 +60,7 @@
 				</h:panelGroup>				
 				<h:outputText value="#{detailsView.detailsBean.foldChangeFmt}" escape="false"/>
 				
-				<h:outputText value="p-value" />
+				<h:outputText value="#{detailsView.pvalueType}" />
 				<h:outputText value="#{detailsView.detailsBean.pValueFmt}" escape="false"/>
 				
 				<h:outputText value="Peptide count (unique)" />
@@ -69,14 +69,14 @@
 				<h:outputText value="Peptide count (all)" />
 				<h:outputText value="#{detailsView.detailsBean.totalPepts}"/>
 				
-				<h:outputText value="Molecular weight" />
-				<h:outputText value="#{detailsView.detailsBean.weightFmt} kDa"/>
+				<h:outputText value="Molecular weight (kDa)" />
+				<h:outputText value="#{detailsView.detailsBean.weightFmt}"/>
 				
 				<h:outputText value="Sequence coverage" />
 				<h:outputText value="#{detailsView.detailsBean.coverage}"/>				
 				
-				<h:outputText value="#{detailsView.detailsBean.scoreName}" />
-				<h:panelGroup>
+				<h:outputText value="#{detailsView.detailsBean.scoreName}" rendered="#{not empty detailsView.detailsBean.samples}"/>
+				<h:panelGroup rendered="#{not empty detailsView.detailsBean.samples}">
 				<p:dataTable value="#{detailsView.detailsBean.samples}" var="sample" tableStyle="width:auto">
 					<p:column>
 						#{sample.name}

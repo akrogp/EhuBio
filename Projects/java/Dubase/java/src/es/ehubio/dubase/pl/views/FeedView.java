@@ -21,8 +21,9 @@ public class FeedView implements Serializable {
 		/*String[] experiments = {
 			"USP1", "USP7", "USP9X", "USP11", "USP42",	// Ramirez et al.
 			"USP14"		// Liu et al.
+			"USP30"		// Phu et al.
 		};*/
-		String[] experiments = {"USP1"};
+		String[] experiments = {"USP30"};
 		for( String experiment : experiments )
 			try {
 				db.saveUgoProteomics(experiment);
@@ -33,9 +34,10 @@ public class FeedView implements Serializable {
 	}
 	
 	public void saveUgoCurated() {
-		//final String xlsName = "DUB substrates.v5.xlsx";
-		//final String xlsName = "DUB substrates Nago.xlsx";
-		String[] experiments = {"USP14.xlsx"};
+		String[] experiments = {
+			"DUB substrates Nago.xlsx",
+			"USP14.xlsx"
+		};
 		for( String experiment : experiments )
 			try {
 				int count = db.saveUgoCurated(experiment);

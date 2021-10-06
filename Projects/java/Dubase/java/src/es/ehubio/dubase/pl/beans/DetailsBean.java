@@ -42,10 +42,8 @@ public class DetailsBean {
 		}
 	}
 	
-	public DetailsBean(SearchBean searchBean, ScoreType scoreType, List<String> reps) {
+	public DetailsBean(SearchBean searchBean) {
 		this.searchBean = searchBean;
-		this.scoreName = scoreType == null ? null : scoreType.getName();
-		this.reps = reps;
 	}
 
 	public String getExperiment() {
@@ -76,11 +74,11 @@ public class DetailsBean {
 		return searchBean.getpValueFmt();
 	}
 
-	public int getTotalPepts() {
+	public Integer getTotalPepts() {
 		return searchBean.getTotalPepts();
 	}
 
-	public int getUniqPepts() {
+	public Integer getUniqPepts() {
 		return searchBean.getUniqPepts();
 	}
 
@@ -116,13 +114,25 @@ public class DetailsBean {
 	public SearchBean getSearchBean() {
 		return searchBean;
 	}
+	
+	public ScoreType getScoreType() {
+		return scoreType;
+	}
+	
+	public void setScoreType(ScoreType scoreType) {
+		this.scoreType = scoreType;
+	}
 
 	public String getScoreName() {
-		return scoreName;
+		return scoreType == null ? null : scoreType.getName();
 	}
 	
 	public List<String> getReps() {
 		return reps;
+	}
+	
+	public void setReps(List<String> reps) {
+		this.reps = reps;
 	}
 	
 	public Evidence getEvidence() {
@@ -130,8 +140,8 @@ public class DetailsBean {
 	}
 
 	private final SearchBean searchBean;
-	private final String scoreName;
-	private final List<String> reps;
+	private ScoreType scoreType;
+	private List<String> reps;
 	private final List<Result> samples = new ArrayList<>();
 	private final Map<String, List<Result>> mods = new LinkedHashMap<>();
 }
