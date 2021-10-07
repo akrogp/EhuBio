@@ -19,10 +19,10 @@ public class StringView implements Serializable {
 	private String gene;
 	@EJB
 	private Searcher db;
-	@Inject
-	private PrefView prefs;
 	private String genes;
 	private String organism;
+	@Inject
+	private PrefView prefs;
 	
 	public String getGene() {
 		return gene;
@@ -32,9 +32,9 @@ public class StringView implements Serializable {
 		this.gene = gene;
 	}
 	
-	/*public String string() {
-		return redirect(db.searchEnzyme(getGene(), prefs.getThresholds()));
-	}*/
+	public String string() {
+		return redirect(db.searchEnzyme(gene, prefs.getMapThresholds()));
+	}
 	
 	public String redirect(List<Evidence> evidences) {
 		genes = evidences.stream()

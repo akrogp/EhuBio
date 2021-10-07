@@ -37,17 +37,19 @@ public class Analyzer {
 	@PersistenceContext
 	private EntityManager em;
 	
-	@Path("{gene}.json")
+	@Path("{exp}/{gene}.json")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Scatter> getScatter(@PathParam("gene") String gene, @QueryParam("xth") Double xth, @QueryParam("yth") Double yth) {
+	public List<Scatter> getScatter(@PathParam("exp") int expId, @PathParam("gene") String gene, @QueryParam("xth") Double xth, @QueryParam("yth") Double yth) {
 		Thresholds th = new Thresholds();
 		th.setDown(true); // for vulcano
 		if( xth != null )
 			th.setLog2FoldChange(xth);
 		if( yth != null )
 			th.setLog10PValue(yth);
-		List<Evidence> evidences = null;//searcher.searchEnzyme(gene, 0, th);
+		Map<Integer, Thresholds> mapThresholds = new HashMap<>(1);
+		mapThresholds.put(expId, th);
+		List<Evidence> evidences = searcher.searchEnzyme(gene, mapThresholds);
 		List<Scatter> result = new ArrayList<>();
 		for( Evidence ev : evidences ) {
 			if( !ev.getExperimentBean().getMethodBean().isProteomics() )
@@ -56,8 +58,8 @@ public class Analyzer {
 			scatter.setGene(CsvUtils.getCsv(';',ev.getGenes().toArray()));
 			scatter.setDesc(CsvUtils.getCsv(';', ev.getDescriptions().toArray()));
 			scatter.setFoldChange(ev.getScore(ScoreType.FOLD_CHANGE));
+			scatter.setFoldChange(Math.log(scatter.getFoldChange())/Math.log(2));
 			scatter.setpValue(ev.getScore(ScoreType.P_VALUE));
-			scatter.setpValue(Math.pow(10, -scatter.getpValue()));
 			result.add(scatter);
 		}
 		return result;

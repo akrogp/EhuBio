@@ -93,6 +93,11 @@
 					<li>Imputed values are shown in <i>italics</i></li>
 				</ul>				
 				</h:panelGroup>
+				
+				<h:outputText value="Charts" />
+				<h:form target="volcano">
+					<p:commandButton value="Volcano" ajax="false" action="#{detailsView.volcano()}"/>
+				</h:form>
 			</p:panelGrid>
 			<p/>
 			<p:panelGrid rendered="#{not empty detailsView.detailsBean.mods}">

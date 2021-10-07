@@ -20,9 +20,10 @@ public class HomeView {
 	private Searcher db;
 	
 	public HomeView() {
-		ops.add(new OperationBean("Search", "search", "Query DUBase with your DUB or substrate of interest", "search-preview.png"));
 		ops.add(new OperationBean("Browse", "browse", "Browse DUBs and their potential substrates in DUBase graphically", "browse-preview.png"));
-		ops.add(new OperationBean("Analyze", "analyze", "Analyze global results from all the experiments in DUBase", "volcano-preview.png"));
+		ops.add(new OperationBean("Search", "search", "Query DUBase with your DUB or substrate of interest", "search-preview.png"));		
+		ops.add(new OperationBean("Analyze", "analyze", "Analyze global results from all the experiments in DUBase", "string-preview.png"));
+		ops.add(new OperationBean("Thresholds", "settings", "Configure your quality thresholds for each experiment", "volcano-preview.png"));
 	}
 	
 	public List<OperationBean> getOps() {

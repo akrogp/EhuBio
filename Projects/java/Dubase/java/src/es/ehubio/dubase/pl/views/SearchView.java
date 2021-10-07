@@ -36,8 +36,6 @@ public class SearchView implements Serializable {
 	private boolean proteomics, manual;
 	@Inject
 	private PrefView prefs;
-	@Inject
-	private VolcanoView volcanoView;
 	private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyyMMddHHmmss");
 	
 	public SearchView() {
@@ -91,11 +89,6 @@ public class SearchView implements Serializable {
 	
 	public void gprofiler() {
 		ProfilerView.redirect(rawResults);
-	}
-	
-	public String volcano() {
-		volcanoView.setGene(gene);
-		return volcanoView.plot();
 	}
 
 	private void parseResults() {

@@ -41,31 +41,37 @@
 				</h:panelGroup>
 				
 				<h:outputText value="Method" styleClass="leftheader"/>
-				<p:panelGrid columns="2" rendered="#{experimentView.proteomics}">
-					<h:outputText value="Type" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.methodType}" />
-					
-					<h:outputText value="DUB silencing" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.silencing}" />
-					
-					<h:outputText value="Proteasome inhibition" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.proteasomeInhibition}" />
-					
-					<h:outputText value="Description" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
-					
-					<h:outputText value="Column type" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.columnType}" />
-					
-					<h:outputText value="Instrument" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.instrument}" />
-					
-					<h:outputText value="Fold threshold" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.foldThreshold}" />
-					
-					<h:outputText value="p-value threshold" styleClass="leftheader"/>
-					<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
-				</p:panelGrid>
+				<h:panelGroup rendered="#{experimentView.proteomics}">
+					<p:panelGrid columns="2">
+						<h:outputText value="Type" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.methodType}" />
+						
+						<h:outputText value="DUB silencing" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.entity.methodBean.silencing}" />
+						
+						<h:outputText value="Proteasome inhibition" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.entity.methodBean.proteasomeInhibition}" />
+						
+						<h:outputText value="Description" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.entity.methodBean.description}" escape="false"/>
+						
+						<h:outputText value="Column type" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.entity.methodBean.columnType}" />
+						
+						<h:outputText value="Instrument" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.entity.methodBean.instrument}" />
+						
+						<h:outputText value="Fold threshold (log2)" styleClass="leftheader"/>
+						<h:outputText value="#{formats.decimal2(experimentView.entity.methodBean.log2FoldThreshold)}" />
+						
+						<h:outputText value="p-value threshold" styleClass="leftheader"/>
+						<h:outputText value="#{experimentView.entity.methodBean.pvalueThreshold}" />										
+					</p:panelGrid>
+					<p/>
+					<h:form target="volcano">
+						<p:commandButton value="Volcano" ajax="false" action="#{experimentView.volcano()}"/>
+					</h:form>
+				</h:panelGroup>
 				
 				<p:panelGrid columns="2" rendered="#{not experimentView.proteomics}">
 					<h:outputText value="Type" styleClass="leftheader"/>

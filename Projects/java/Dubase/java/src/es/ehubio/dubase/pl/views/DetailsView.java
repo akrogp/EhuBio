@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.SessionScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.dl.entities.Ambiguity;
@@ -22,6 +23,8 @@ import es.ehubio.dubase.pl.beans.SearchBean;
 public class DetailsView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private DetailsBean detailsBean;
+	@Inject
+	private VolcanoView volcanoView;
 	
 	public String showDetails(SearchBean searchBean) {
 		detailsBean = new DetailsBean(searchBean);
@@ -150,5 +153,10 @@ public class DetailsView implements Serializable {
 		if( detailsBean.getSearchBean().getEntity().getExperimentBean().getMethodBean().isAdjusted() )
 			type = type + " (adjusted)";
 		return type;
+	}
+	
+	public String volcano() {
+		volcanoView.setExperiment(detailsBean.getSearchBean().getEntity().getExperimentBean());
+		return volcanoView.plot();
 	}
 }

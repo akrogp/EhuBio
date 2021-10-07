@@ -18,7 +18,6 @@
 		<ui:insert name="menu">
 			<div id="menubar">
 				<h:link value="Home" outcome="index" class="menuitem"/> &nbsp; | &nbsp;
-				<h:link value="Thresholds" outcome="settings" class="menuitem"/> &nbsp; | &nbsp;
 				<ui:repeat value="#{homeView.ops}" var="op">
 					<h:link value="#{op.name}" outcome="#{op.action}" class="menuitem"/> &nbsp; | &nbsp;
 				</ui:repeat>

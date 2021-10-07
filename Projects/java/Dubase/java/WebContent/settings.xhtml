@@ -47,6 +47,9 @@
 						</p:panelGrid>
 					</p:column>
 				</p:dataTable>
+				<p/>
+				<p:commandButton value="Reset" ajax="false" action="#{prefView.reset()}"/>
+				&nbsp;<p:commandButton value="Save" ajax="false" action="#{prefView.save()}" disabled="#{prefView.invalid}"/>				
 			</h:form>
 		</ui:define>
 	</ui:composition>

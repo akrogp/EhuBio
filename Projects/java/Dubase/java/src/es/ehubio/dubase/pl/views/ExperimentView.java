@@ -6,6 +6,7 @@ import java.io.Serializable;
 import javax.annotation.Resource;
 import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.primefaces.PrimeFaces;
@@ -21,6 +22,8 @@ public class ExperimentView implements Serializable {
 	private Experiment entity;
 	@Resource(name="es.ehubio.dubase.inputDir")
 	private String inputPath;
+	@Inject
+	private VolcanoView volcanoView;
 
 	public Experiment getEntity() {
 		return entity;
@@ -69,5 +72,10 @@ public class ExperimentView implements Serializable {
 		if( method.getSubtype() == null )
 			return method.getType().getName();
 		return String.format("%s (%s)", method.getType().getName(), method.getSubtype().getName());
+	}
+	
+	public String volcano() {
+		volcanoView.setExperiment(getEntity());
+		return volcanoView.plot();
 	}
 }

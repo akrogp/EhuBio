@@ -79,6 +79,14 @@ public class Method implements Serializable {
 	public void setFoldThreshold(Double foldThreshold) {
 		this.foldThreshold = foldThreshold;
 	}
+	
+	@XmlTransient
+	@Transient
+	public Double getLog2FoldThreshold() {
+		if( foldThreshold == null )
+			return null;
+		return Math.log(foldThreshold) / Math.log(2);
+	}
 
 
 	public String getInstrument() {

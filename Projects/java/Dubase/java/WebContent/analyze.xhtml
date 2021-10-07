@@ -15,20 +15,6 @@
 					<p:row><p:column colspan="2">Operations</p:column></p:row>
 				</f:facet>
 				<p:row>
-					<p:column><h:graphicImage name="images/volcano-preview.png"/></p:column>
-					<p:column>
-						<p>Volcano plot with all the potential substrates available in DUBase for a given DUB</p>
-						<h:form target="volcano">
-							<p:selectOneMenu value="#{volcanoView.gene}">
-								<p:ajax update="@form"/>
-								<f:selectItem itemLabel="--" itemValue=""/>
-								<f:selectItems value="#{searchView.genes}"/>
-							</p:selectOneMenu>							
-							&nbsp;<p:commandButton value="Volcano plot" ajax="false" action="#{volcanoView.plot()}" rendered="#{volcanoView.gene != null and !volcanoView.gene.isEmpty()}"/>
-						</h:form>
-					</p:column>
-				</p:row>				
-				<p:row>
 					<p:column><h:graphicImage name="images/string-preview.png"/></p:column>
 					<p:column>
 					<p>Analyze potential substrates of the selected DUB in STRING</p>
