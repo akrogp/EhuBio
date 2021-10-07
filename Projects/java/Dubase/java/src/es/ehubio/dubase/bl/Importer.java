@@ -57,7 +57,7 @@ public class Importer {
 	private String inputPath;
 	public static final String METADATA = "metadata.xml"; 
 	
-	@TransactionTimeout(600)	// 10 minutes ...
+	@TransactionTimeout(1800)	// 30 minutes ...
 	public void saveUgoProteomics(String inputId) throws Exception {
 		File expDir = new File(inputPath, inputId);
 		File metaFile = new File(expDir, METADATA);		
