@@ -2,13 +2,16 @@ package es.ehubio.dubase.pl.views;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.Thresholds;
+import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.Method;
 
@@ -16,31 +19,40 @@ import es.ehubio.dubase.dl.entities.Method;
 @SessionScoped
 public class PrefView implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private Thresholds thresholds = new Thresholds();
 	@Inject
 	private SearchView searchView;
-	private Map<Integer, Thresholds> mapThresholds = new HashMap<>();
+	private Map<Integer, Thresholds> mapThresholds;
+	private List<Experiment> exps;
+	@EJB
+	private Searcher searcher;
 	
-	public Thresholds getThresholds(Experiment exp) {
-		Method method = exp.getMethodBean();
-		if( method.isManual() )
-			return thresholds;
-		Thresholds th = mapThresholds.get(exp.getId());
-		if( th == null ) {
-			th = new Thresholds();
-			th.setFoldChange(method.getFoldThreshold());
-			th.setpValue(method.getPvalueThreshold());
-			mapThresholds.put(exp.getId(), th);
-		}
-		return th;
+	public List<Experiment> getExperiments() {
+		if( exps == null )
+			exps = searcher.findExperimentsWithThreholds();
+		return exps;
 	}
 	
-	public Thresholds getThresholds() {
-		return thresholds;
+	public Map<Integer, Thresholds> getMapThresholds() {
+		if( mapThresholds == null ) {
+			mapThresholds = new HashMap<>();
+			for( Experiment exp : getExperiments() ) {
+				Method method = exp.getMethodBean();
+				Thresholds th = new Thresholds();
+				th.setFoldChange(method.getFoldThreshold());
+				th.setpValue(method.getPvalueThreshold());
+				mapThresholds.put(exp.getId(), th);
+			}
+		}
+		return mapThresholds;
+	}
+	
+	public Thresholds getThresholds(Experiment exp) {
+		return getMapThresholds().get(exp.getId());
 	}
 	
 	public void reset() {
-		thresholds = new Thresholds();
+		exps = null;
+		mapThresholds = null;
 		save();
 	}
 	
@@ -49,6 +61,9 @@ public class PrefView implements Serializable {
 	}
 	
 	public boolean isInvalid() {
-		return !thresholds.isUp() && !thresholds.isDown();
+		for( Thresholds th : getMapThresholds().values() )
+			if( !th.isUp() && !th.isDown() )
+				return true;
+		return false;
 	}
 }

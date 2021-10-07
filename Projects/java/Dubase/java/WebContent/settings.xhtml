@@ -8,39 +8,45 @@
 <h:head></h:head> 
 <h:body>
 	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
-		<ui:define name="title">Thresholds (for proteomics experiments)</ui:define>
+		<ui:define name="title">Thresholds (for large-scale experiments)</ui:define>
 		<ui:define name="content">
 			<h:form>
-				<p:panelGrid columns="1">
-					<f:facet name="header">
-						<p:row><p:column colspan="2">Preferences</p:column></p:row>
-					</f:facet>
-					<p:panelGrid columns="1" styleClass="ui-noborder">
-						<h:outputText id="fold_label" value="Fold change (log2) = #{prefView.thresholds.log2FoldChange}" />
-						<h:inputHidden id="fold_value" value="#{prefView.thresholds.log2FoldChange}" />
-        				<p:slider for="fold_value" display="fold_label" style="width:200px" displayTemplate="Fold change (log2) = {value}" minValue="0.2" maxValue="10" step="0.1"/>												
-					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="ui-noborder">
-						<h:outputText id="p_label" value="p-value = #{prefView.thresholds.pValue}" />
-						<h:inputHidden id="p_value" value="#{prefView.thresholds.pValue}" />
-        				<p:slider for="p_value" display="p_label" style="width:200px" displayTemplate="p-value = {value}" minValue="0.01" maxValue="0.3" step="0.01"/>
-					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="ui-noborder">
-						<h:outputText id="pep_label" value="Min. unique peptides = #{prefView.thresholds.minPeptides}" />
-						<h:inputHidden id="min_peps" value="#{prefView.thresholds.minPeptides}" />
-        				<p:slider for="min_peps" display="pep_label" style="width:200px" displayTemplate="Min. unique peptides = {value}" minValue="1" maxValue="10" step="1"/>
-					</p:panelGrid>
-					<p:panelGrid columns="1" styleClass="ui-noborder">
-						<p:selectBooleanCheckbox value="#{prefView.thresholds.up}" itemLabel="Upregulated">
-							<p:ajax event="change" update="@form" />
-						</p:selectBooleanCheckbox>
-						<p:selectBooleanCheckbox value="#{prefView.thresholds.down}" itemLabel="Downregulated">
-							<p:ajax event="change" update="@form" />
-						</p:selectBooleanCheckbox>
-					</p:panelGrid>					
-				</p:panelGrid>
-				<br/><p:commandButton value="Reset" ajax="false" action="#{prefView.reset()}"/>
+				<p:commandButton value="Reset" ajax="false" action="#{prefView.reset()}"/>
 				&nbsp;<p:commandButton value="Save" ajax="false" action="#{prefView.save()}" disabled="#{prefView.invalid}"/>
+				<p/>
+				<p:dataTable value="#{prefView.experiments}" var="exp" tableStyle="width:auto">
+					<p:column headerText="Experiment">#{exp.fmtId}</p:column>
+					<p:column headerText="DUB">#{exp.enzymeBean.gene}</p:column>
+					<p:column headerText="Title">#{exp.title}</p:column>
+					<p:column headerText="Type">#{exp.methodBean.typeFmt}</p:column>
+					<p:column headerText="Thresholds">
+						<p:panelGrid columns="1" style="width:auto">
+							<p:panelGrid columns="1" styleClass="ui-noborder" style="width:auto">
+								<h:outputText id="fold_label" value="Fold change (log2) = #{formats.decimal2(prefView.getThresholds(exp).log2FoldChange)}"/>
+								<h:inputHidden id="fold_value" value="#{prefView.getThresholds(exp).log2FoldChange}" />
+		        				<p:slider for="fold_value" display="fold_label" style="width:200px" displayTemplate="Fold change (log2) = {value}" minValue="0.2" maxValue="10" step="0.1"/>
+							</p:panelGrid>
+							<p:panelGrid columns="1" styleClass="ui-noborder" style="width:auto">
+								<h:outputText id="p_label" value="p-value = #{prefView.getThresholds(exp).pValue}" />
+								<h:inputHidden id="p_value" value="#{prefView.getThresholds(exp).pValue}" />
+		        				<p:slider for="p_value" display="p_label" style="width:200px" displayTemplate="p-value = {value}" minValue="0.01" maxValue="0.3" step="0.01"/>
+							</p:panelGrid>
+							<p:panelGrid columns="1" styleClass="ui-noborder" style="width:auto" rendered="#{exp.methodBean.proteomics}">
+								<h:outputText id="pep_label" value="Min. unique peptides = #{prefView.getThresholds(exp).minPeptides}" />
+								<h:inputHidden id="min_peps" value="#{prefView.getThresholds(exp).minPeptides}" />
+		        				<p:slider for="min_peps" display="pep_label" style="width:200px" displayTemplate="Min. unique peptides = {value}" minValue="1" maxValue="10" step="1"/>
+							</p:panelGrid>
+							<p:panelGrid columns="1" styleClass="ui-noborder" style="width:auto">
+								<p:selectBooleanCheckbox value="#{prefView.getThresholds(exp).up}" itemLabel="Upregulated">
+									<p:ajax event="change" update="@form" />
+								</p:selectBooleanCheckbox>
+								<p:selectBooleanCheckbox value="#{prefView.getThresholds(exp).down}" itemLabel="Downregulated">
+									<p:ajax event="change" update="@form" />
+								</p:selectBooleanCheckbox>
+							</p:panelGrid>					
+						</p:panelGrid>
+					</p:column>
+				</p:dataTable>
 			</h:form>
 		</ui:define>
 	</ui:composition>

@@ -1,12 +1,15 @@
-package es.ehubio.dubase.pl;
+package es.ehubio.dubase.pl.views;
 
 import java.util.Locale;
 
-import es.ehubio.dubase.dl.entities.Method;
+import javax.enterprise.context.RequestScoped;
+import javax.inject.Named;
 
-public final class Formats {
-	private Formats() {}
-	
+import es.ehubio.dubase.pl.Colors;
+
+@Named
+@RequestScoped
+public class Formats {
 	public static String exp10(Double pValue) {
 		if( pValue == null )
 			return na();
@@ -23,6 +26,12 @@ public final class Formats {
 	
 	public static String na() {
 		return imputed("N/A");
+	}
+	
+	public static String decimal1(Double score) {
+		if( score == null )
+			return na();
+		return String.format(Locale.ENGLISH, "%.1f", score);
 	}
 	
 	public static String decimal2(Double score) {
@@ -47,11 +56,11 @@ public final class Formats {
 		return String.format("%.1f %%", value);
 	}
 	
-	public static String method(Method m) {
+	/*public static String method(Method m) {
 		if( m.getSubtype() == null )
 			return m.getType().getName();
 		return String.format("%s (%s)", m.getType().getName(), m.getSubtype().getName());
-	}
+	}*/
 	
 	public static String logChange(Double change) {
 		if( change == null )

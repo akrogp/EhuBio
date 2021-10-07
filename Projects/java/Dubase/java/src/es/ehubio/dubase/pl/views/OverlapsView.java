@@ -24,7 +24,7 @@ public class OverlapsView implements Serializable {
 	
 	@PostConstruct
 	private void init() {
-		overlaps = db.findOverlaps(prefs.getThresholds());
+		overlaps = db.findOverlaps(prefs.getMapThresholds());
 	}
 	
 	public List<Overlap> getOverlaps() {

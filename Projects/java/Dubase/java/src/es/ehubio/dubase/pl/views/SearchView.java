@@ -4,9 +4,9 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
@@ -20,7 +20,6 @@ import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
-import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.pl.beans.SearchBean;
 
 @Named
@@ -52,14 +51,8 @@ public class SearchView implements Serializable {
 		gene = query.trim().toUpperCase();
 		if( gene.isEmpty() )
 			return;
-		rawResults = new ArrayList<>();
-		List<Experiment> exps = db.findExperiments();
-		for( Experiment exp : exps ) {
-			int expId = exp.getId();
-			Thresholds th = prefs.getThresholds(exp);			
-			Collection<Evidence> tmpResults = !substrate ? db.searchEnzyme(gene, expId, th) : (!dub ? db.searchSubstrate(gene, expId, th) : db.search(gene, expId, th));
-			rawResults.addAll(tmpResults);
-		}
+		Map<Integer, Thresholds> mapThreshols = prefs.getMapThresholds();
+		rawResults = !substrate ? db.searchEnzyme(gene, mapThreshols) : (!dub ? db.searchSubstrate(gene, mapThreshols) : db.search(gene, mapThreshols));
 		parseResults();
 		return;
 	}

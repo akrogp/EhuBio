@@ -14,7 +14,6 @@ import es.ehubio.dubase.dl.entities.Modification;
 import es.ehubio.dubase.dl.entities.RepScore;
 import es.ehubio.dubase.dl.entities.Score;
 import es.ehubio.dubase.dl.input.ScoreType;
-import es.ehubio.dubase.pl.Formats;
 import es.ehubio.dubase.pl.beans.DetailsBean;
 import es.ehubio.dubase.pl.beans.SearchBean;
 

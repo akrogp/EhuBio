@@ -172,4 +172,12 @@ public class Method implements Serializable {
 	public boolean isAdjusted() {
 		return Boolean.TRUE.equals(getAdjustedPvalues());
 	}
+	
+	@XmlTransient
+	@Transient
+	public String getTypeFmt() {
+		if( getSubtype() == null )
+			return getType().getName();
+		return String.format("%s (%s)", getType().getName(), getSubtype().getName());
+	}
 }

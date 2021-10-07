@@ -31,7 +31,7 @@ public final class Thresholds {
 	}
 	public void setLog2FoldChange(double log2FoldChange) {
 		this.log2FoldChange = log2FoldChange;
-		this.foldChange = Math.pow(2, foldChange);
+		this.foldChange = Math.pow(2, log2FoldChange);
 	}
 	
 	public double getpValue() {

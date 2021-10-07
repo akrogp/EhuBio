@@ -4,9 +4,8 @@ import java.util.stream.Collectors;
 
 import es.ehubio.dubase.dl.CsvExporter;
 import es.ehubio.dubase.dl.entities.Evidence;
-import es.ehubio.dubase.dl.entities.Method;
 import es.ehubio.dubase.dl.input.ScoreType;
-import es.ehubio.dubase.pl.Formats;
+import es.ehubio.dubase.pl.views.Formats;
 import es.ehubio.io.CsvUtils;
 
 public class SearchBean {
@@ -166,8 +165,7 @@ public class SearchBean {
 	}
 
 	public String getType() {
-		Method method = entity.getExperimentBean().getMethodBean();
-		return Formats.method(method);
+		return entity.getExperimentBean().getMethodBean().getTypeFmt();
 	}
 
 	public boolean isProteomics() {
