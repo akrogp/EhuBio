@@ -1,5 +1,9 @@
 package es.ehubio.dubase.dl;
 
+import static es.ehubio.dubase.Operations.log2;
+import static es.ehubio.dubase.Operations.null2str;
+import static es.ehubio.dubase.Operations.toint;
+
 import java.io.PrintWriter;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -8,6 +12,8 @@ import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Evidence;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
+
+
 
 public class CsvExporter {
 	private static final String SEP1 = ",";
@@ -26,20 +32,21 @@ public class CsvExporter {
 		));
 		for( Evidence ev : results ) {
 			boolean proteomics = ev.getExperimentBean().getMethodBean().isProteomics();
+			boolean ubiquitomics = ev.getExperimentBean().getMethodBean().isUbiquitomics();
 			pw.print(CsvUtils.getCsv(SEP1,
 				String.format("EXP%05d", ev.getExperimentBean().getId()),
-				ev.getExperimentBean().getMethodBean().getType(),
+				ev.getExperimentBean().getMethodBean().getTypeFmt(),
 				ev.getExperimentBean().getEnzymeBean().getGene(),
 				CsvUtils.getCsv(SEP2, ev.getGenes().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getProteins().toArray()),
 				CsvUtils.getCsv(SEP2, ev.getDescriptions().toArray()),
-				proteomics ? ev.getScore(ScoreType.FOLD_CHANGE) : "",
-				proteomics ? Math.pow(10,-ev.getScore(ScoreType.P_VALUE)) : "",
-				proteomics ? ev.getScore(ScoreType.TOTAL_PEPTS).intValue() : "",
-				proteomics ? ev.getScore(ScoreType.UNIQ_PEPTS).intValue() : "",
-				proteomics ? ev.getScore(ScoreType.MOL_WEIGHT) : "",
-				proteomics ? ev.getScore(ScoreType.SEQ_COVERAGE) : "",
-				proteomics ? buildModString(ev, SEP2, SEP3) : ""
+				proteomics ? log2(ev.getScore(ScoreType.FOLD_CHANGE)) : "",
+				proteomics ? ev.getScore(ScoreType.P_VALUE) : "",
+				proteomics ? null2str(toint(ev.getScore(ScoreType.TOTAL_PEPTS))) : "",
+				proteomics ? null2str(toint(ev.getScore(ScoreType.UNIQ_PEPTS))) : "",
+				proteomics ? null2str(ev.getScore(ScoreType.MOL_WEIGHT)) : "",
+				proteomics ? null2str(ev.getScore(ScoreType.SEQ_COVERAGE)) : "",
+				(proteomics || ubiquitomics) ? buildModString(ev, SEP2, SEP3) : ""
 			));
 			printLfqs(pw, ev, false);
 			printLfqs(pw, ev, true);
