@@ -1,8 +1,8 @@
 package es.ehubio.dubase.pl.views;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -13,7 +13,6 @@ import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Searcher;
 import es.ehubio.dubase.dl.entities.Evidence;
-import es.ehubio.io.CsvUtils;
 import es.ehubio.io.UrlBuilder;
 
 @Named
@@ -39,14 +38,16 @@ public class ProfilerView implements Serializable {
 	}
 	
 	public static void redirect(List<Evidence> evidences) {
-		List<String> genes = new ArrayList<>();
-		for( Evidence ev : evidences )
-			genes.addAll(ev.getGenes());
+		String genes = evidences.stream()
+			.flatMap(e->e.getAmbiguities().stream())
+			.map(a->a.getProteinBean().getGeneBean().getName())
+			.distinct()
+			.collect(Collectors.joining("\n"));
 		try {
 			ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
 			ec.redirect( new UrlBuilder("https", "biit.cs.ut.ee", "gprofiler/gost")
 				.param("organism", "hsapiens")
-				.param("query", CsvUtils.getCsv('\n', genes.toArray()))
+				.param("query", genes)
 				.build());
 		} catch (Exception e) {
 			e.printStackTrace();

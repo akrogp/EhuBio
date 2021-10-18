@@ -15,6 +15,20 @@
 					<p:row><p:column colspan="2">Operations</p:column></p:row>
 				</f:facet>
 				<p:row>
+					<p:column><h:graphicImage name="images/volcano-preview.png"/></p:column>
+					<p:column>
+						<p>Volcano plot with all the potential substrates for a given DUB experiment</p>
+						<h:form target="volcano">
+							<p:selectOneMenu value="#{analyzeView.expIdx}">
+								<p:ajax update="@form"/>
+								<f:selectItem itemLabel="--" itemValue="-1"/>
+								<f:selectItems value="#{analyzeView.volcanos}" var="v" itemLabel="#{v}" itemValue="#{analyzeView.volcanos.indexOf(v)}"/>
+							</p:selectOneMenu>							
+							&nbsp;<p:commandButton value="Volcano plot" ajax="false" action="#{analyzeView.volcano()}" rendered="#{analyzeView.expIdx != -1}"/>
+						</h:form>
+					</p:column>
+				</p:row>
+				<p:row>
 					<p:column><h:graphicImage name="images/string-preview.png"/></p:column>
 					<p:column>
 					<p>Analyze potential substrates of the selected DUB in STRING</p>
@@ -22,7 +36,7 @@
 						<p:selectOneMenu value="#{stringView.gene}">
 							<p:ajax update="@form"/>
 							<f:selectItem itemLabel="--" itemValue=""/>
-							<f:selectItems value="#{searchView.genes}"/>
+							<f:selectItems value="#{analyzeView.genes}"/>
 						</p:selectOneMenu>							
 						&nbsp;<p:commandButton value="STRING" ajax="false" action="#{stringView.string()}" rendered="#{stringView.gene != null and !stringView.gene.isEmpty()}"/>
 					</h:form>
@@ -36,7 +50,7 @@
 						<p:selectOneMenu value="#{profilerView.gene}">
 							<p:ajax update="@form"/>
 							<f:selectItem itemLabel="--" itemValue=""/>
-							<f:selectItems value="#{searchView.genes}"/>
+							<f:selectItems value="#{analyzeView.genes}"/>
 						</p:selectOneMenu>							
 						&nbsp;<p:commandButton value="g:Profiler" ajax="false" action="#{profilerView.gprofiler()}" rendered="#{profilerView.gene != null and !profilerView.gene.isEmpty()}"/>
 					</h:form>
@@ -50,12 +64,12 @@
 							<p:selectOneMenu value="#{vennView.gene1}">
 								<p:ajax update="@form"/>
 								<f:selectItem itemLabel="--" itemValue=""/>
-								<f:selectItems value="#{searchView.genes}"/>
+								<f:selectItems value="#{analyzeView.genes}"/>
 							</p:selectOneMenu>
 							&nbsp;<p:selectOneMenu value="#{vennView.gene2}">
 								<p:ajax update="@form"/>
 								<f:selectItem itemLabel="--" itemValue=""/>
-								<f:selectItems value="#{searchView.genes}"/>
+								<f:selectItems value="#{analyzeView.genes}"/>
 							</p:selectOneMenu>
 							&nbsp;<p:commandButton value="Compare" ajax="false" action="#{vennView.compare()}"
 								rendered="#{vennView.gene1 != null and vennView.gene2 != null and !vennView.gene1.isEmpty() and !vennView.gene2.isEmpty() and !vennView.gene1.equalsIgnoreCase(vennView.gene2)}"/>

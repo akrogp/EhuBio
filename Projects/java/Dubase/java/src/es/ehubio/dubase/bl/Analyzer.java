@@ -23,6 +23,8 @@ import es.ehubio.dubase.bl.beans.Overlap;
 import es.ehubio.dubase.bl.beans.Scatter;
 import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Evidence;
+import es.ehubio.dubase.dl.entities.Experiment;
+import es.ehubio.dubase.dl.input.MethodType;
 import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvUtils;
 
@@ -66,7 +68,7 @@ public class Analyzer {
 	}
 
 	public List<Overlap> findOverlaps(Map<Integer, Thresholds> mapThresholds) {
-		List<String> enzymes = browser.getEnzymesWithEvidences();
+		List<String> enzymes = getEnzymesWithEvidences();
 		Map<String, Overlap> map = new HashMap<>();
 		for( String enzyme : enzymes ) {
 			List<Evidence> evs = searcher.searchEnzyme(enzyme, mapThresholds);
@@ -87,5 +89,17 @@ public class Analyzer {
 			.sorted()
 			.filter(o -> o.getEnzymes().size() > 1)
 			.collect(Collectors.toList());
+	}
+	
+	public List<Experiment> getVolcanoExperiments() {
+		return em.createQuery("SELECT e FROM Experiment e WHERE e.methodBean.type.id = :proteomics ORDER BY LENGTH(e.enzymeBean.gene), e.enzymeBean.gene", Experiment.class)
+			.setParameter("proteomics", MethodType.PROTEOMICS.ordinal())
+			.getResultList();
+	}
+	
+	public List<String> getEnzymesWithEvidences() {
+		return em
+			.createQuery("SELECT DISTINCT e.enzymeBean.gene FROM Experiment e ORDER BY LENGTH(e.enzymeBean.gene), e.enzymeBean.gene", String.class)
+			.getResultList();
 	}
 }

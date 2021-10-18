@@ -20,7 +20,7 @@ public class FeedView implements Serializable {
 	public void saveUgoProteomics() {
 		String[] experiments = {
 			"USP1", "USP7", "USP9X", "USP11", "USP42",	// Ramirez et al.
-			"USP14",		// Liu et al.
+			//"USP14",		// Liu et al.
 			"USP30"			// Phu et al.
 		};
 		//String[] experiments = {"USP14"};
@@ -36,7 +36,7 @@ public class FeedView implements Serializable {
 	public void saveUgoCurated() {
 		String[] experiments = {
 			"DUB substrates Nago.xlsx",
-			//"USP14.xlsx"
+			"USP14.xlsx"
 		};
 		for( String experiment : experiments )
 			try {

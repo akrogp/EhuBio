@@ -42,13 +42,7 @@ public class Browser {
 			.createQuery("SELECT e FROM Enzyme e WHERE e.superfamilyBean.id = :familyId", Enzyme.class)
 			.setParameter("familyId", familyId)
 			.getResultList();
-	}
-	
-	public List<String> getEnzymesWithEvidences() {
-		return em
-			.createQuery("SELECT DISTINCT e.enzymeBean.gene FROM Experiment e", String.class)
-			.getResultList();
-	}
+	}	
 	
 	public Map<String, Stats> getEnzymesStats() {
 		Map<String, Stats> map = new HashMap<>();

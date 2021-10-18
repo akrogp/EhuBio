@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.SessionScoped;
@@ -30,7 +29,6 @@ public class SearchView implements Serializable {
 	private Searcher db;
 	private String query, gene;
 	private boolean dub, substrate, extended;
-	private List<String> genes;
 	private List<Evidence> rawResults;
 	private List<SearchBean> results;
 	private boolean proteomics, manual;
@@ -139,13 +137,7 @@ public class SearchView implements Serializable {
 	
 	public List<Evidence> getRawResults() {
 		return rawResults;
-	}
-	
-	public List<String> getGenes() {
-		if( genes == null )
-			genes = db.searchEnzymesWithData().stream().map(e -> e.getGene()).collect(Collectors.toList()); 
-		return genes;
-	}
+	}	
 
 	public boolean isDub() {
 		return dub;
