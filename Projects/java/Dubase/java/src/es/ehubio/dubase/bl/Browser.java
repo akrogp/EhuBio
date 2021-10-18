@@ -44,6 +44,12 @@ public class Browser {
 			.getResultList();
 	}
 	
+	public List<String> getEnzymesWithEvidences() {
+		return em
+			.createQuery("SELECT DISTINCT e.enzymeBean.gene FROM Experiment e", String.class)
+			.getResultList();
+	}
+	
 	public Map<String, Stats> getEnzymesStats() {
 		Map<String, Stats> map = new HashMap<>();
 		List<Stats> list = em
