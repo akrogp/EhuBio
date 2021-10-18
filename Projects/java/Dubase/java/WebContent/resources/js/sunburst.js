@@ -1,6 +1,6 @@
 // https://gist.github.com/vasturiano/12da9071095fbd4df434e60d52d2d58d
 
-function sunBurst(url) {
+function sunBurst(root) {
 	const width = window.innerWidth;
 	const height = window.innerHeight;
 	const maxRadius = (Math.min(width, height) / 2) - 5;
@@ -12,7 +12,10 @@ function sunBurst(url) {
 		.range([0, 2 * Math.PI])
 		.clamp(true);
 	
-	const y = d3.scaleLinear()
+	const y = d3
+		.scaleLinear()
+		//.scalePow()
+		//.exponent(1.2)
 		.range([0, maxRadius]);
 	
 	const color = d3.scaleOrdinal(d3.schemeCategory20);
@@ -41,9 +44,9 @@ function sunBurst(url) {
 	
 	const calcColor = d => {
 		if( d.data.db )
-			return 'yellow';
+			return 'gold';
 		else
-			return color((d.children ? d : d.parent).data.name);
+			return color((d.children && !d.children[0].data.db ? d : d.parent).data.name);
 	}
 	
 	const labelTransform = d => {
@@ -76,20 +79,14 @@ function sunBurst(url) {
 	
 	const showRotated = d => !showPath(d) && d.depth > depth && rotatedFits(d);
 	
-	const logData = d => {
-		if( d.data.name === "ARAF" )
-		//if( d.data.name === "USP" )
-			console.log(d);
-	}
-	
 	const svg = d3.select('body').append('svg')
 		.style('width', '100vw')
 		.style('height', '100vh')
 		.attr('viewBox', `${-width / 2} ${-height / 2} ${width} ${height}`)
 		.on('click', () => focusOn()); // Reset zoom on canvas click
 	
-	d3.json(url, (error, root) => {
-		if (error) throw error;
+	/*d3.json(url, (error, root) => {
+		if (error) throw error;*/
 	
 		root = d3.hierarchy(root);
 		root.sum(d => d.size);
@@ -145,17 +142,19 @@ function sunBurst(url) {
 			.attr('class', 'leaf-text')
 			.attr('display', d => showRotated(d) ? null : 'none')
 			.attr("transform", labelTransform)
-			.text(d => d.data.name);
+			.text(d => d.data.db ? d.data.desc : d.data.name);
 		
-	});
+	//});
 	
 	function focusOn(d = { x0: 0, x1: 1, y0: 0, y1: 1, depth: 0 }) {
-		if( d.data )
-			if( !d.children ) {
-				if( d.data.db )
-					window.location.href = `search.xhtml?dub=${d.data.name}`;
+		if( d.data ) {
+			if( (!d.children && d.data.db) || (d.children && d.children[0].data.db) ) {
+				window.location.href = `search.xhtml?dub=${d.data.name}`;
 				return;
 			}
+			if( !d.children )
+				return;
+		}
 		
 		// Travel back if current node is clicked
 		if( depth && d.depth === depth && d.parent )

@@ -2,17 +2,28 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xmlns:f="http://java.sun.com/jsf/core"
-      xmlns:h="http://java.sun.com/jsf/html">
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/WEB-INF/templates/menupage.xhtml">
 <ui:define name="content">
 	<script src="https://d3js.org/d3.v4.min.js"></script>
 	<h:outputScript name="sunburst.js" library="js" target="head" />
 	<h:outputStylesheet name="sunburst.css" library="css"/>
-	
+	<h:form>
+		<p:remoteCommand name="flare" action="#{browseView.getFlare()}" oncomplete="onSunBurst(xhr, status, args)"/>		
+	</h:form>
 	<script>
-		sunBurst('rest/browse/flare.json');
-	</script>		
+		$(document).ready(() => {
+			flare();
+		});
+		//sunBurst('rest/browse/flare.json');
+		
+		onSunBurst = (xhr, status, args) => {
+			//console.log(args.flare);
+			sunBurst(args.flare);
+		}
+	</script>
 </ui:define>
 </ui:composition>
 </html>
