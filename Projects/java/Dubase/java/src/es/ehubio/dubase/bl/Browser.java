@@ -1,5 +1,6 @@
 package es.ehubio.dubase.bl;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -17,6 +18,7 @@ import es.ehubio.dubase.dl.entities.Clazz;
 import es.ehubio.dubase.dl.entities.Enzyme;
 import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.Superfamily;
+import es.ehubio.dubase.dl.entities.Taxon;
 import es.ehubio.dubase.dl.input.MethodType;
 import es.ehubio.dubase.dl.input.ScoreType;
 
@@ -95,5 +97,30 @@ public class Browser {
 			);
 		}
 		return set;
+	}
+	
+	public List<String> getEnzymes() {
+		return em.createQuery("SELECT e.gene FROM Enzyme e ORDER BY e.gene", String.class).getResultList();
+	}
+	
+	public List<Taxon> queryTaxon(String query) {
+		if( query != null && !query.isEmpty() )
+			return em.createQuery("SELECT t FROM Taxon t WHERE sciName LIKE :q ORDER BY ISNULL(commonName),sciName", Taxon.class)
+				.setParameter("q", "%"+query+"%")
+				.setMaxResults(10)
+				.getResultList();
+		List<Taxon> taxons = new ArrayList<>();
+		int[] ids = {
+			9606,	// Human
+			9544,	// Rhesus macaque
+			10090,	// Mouse
+			10116,	// Rat
+			9031,	// Chicken
+			7955,	// Zebrafish
+			7227,	// Fruit fly
+		};
+		for( int id : ids )
+			taxons.add(em.find(Taxon.class, id));
+		return taxons;
 	}
 }

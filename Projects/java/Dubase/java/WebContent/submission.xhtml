@@ -1,0 +1,119 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"> 
+
+	<ui:composition template="/WEB-INF/templates/menupage.xhtml">
+		<ui:define name="title">Submission form</ui:define>
+		<ui:define name="content">
+			<h:form>
+				<p:panelGrid columns="2">
+					<f:facet name="header">Basic information</f:facet>
+					
+					<p:outputLabel>Name:</p:outputLabel>
+					<p:inputText value="#{submissionView.entity.authorBean.name}" required="true" placeholder="Name Surname" requiredMessage="Please, specify your name"/>
+					
+					<p:outputLabel>E-mail:</p:outputLabel>
+					<p:inputText value="#{submissionView.entity.authorBean.mail}" required="true" placeholder="name@domain.com" requiredMessage="An e-mail is required in order to contact you" validatorMessage="Incorrect e-mail">
+						<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+					</p:inputText>
+					
+					<p:outputLabel>DOI of the publication:</p:outputLabel>
+					<p:inputText value="#{submissionView.doi}" required="true" placeholder="10.3390/ijms22094851" requiredMessage="DOI of your publication is required"/>
+					
+					<p:outputLabel>DUB:</p:outputLabel>
+					<p:selectOneMenu value="#{submissionView.entity.enzymeBean.gene}" required="true" requiredMessage="Select one DUB">
+						<f:selectItem itemValue="#{null}" itemLabel="--- Select one ---" />
+						<f:selectItems value="#{submissionView.dubs}"/>
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Organism:"/>
+					<p:autoComplete placeholder="Eg. Homo sapiens" value="#{submissionView.entity.cellBean.taxonBean.sciName}" dropdown="true" required="true"
+						completeMethod="#{submissionView.completeOrganism}" forceSelection="true" minQueryLength="3" requiredMessage="Please, specify organism"/>
+						
+					<p:outputLabel value="Cell line:"/>
+					<p:inputText value="#{submissionView.entity.cellBean.name}" required="true" placeholder="HEK293" requiredMessage="Cell line is required"/>
+					
+					<p:outputLabel value="Ubiquitination is validated in:"/>
+					<p:selectOneRadio value="#{submissionView.purified}" required="true" id="purified" binding="#{submissionView.uiPurified}">
+						<f:selectItem itemLabel="Whole cell extracts" itemValue="#{false}"/>
+						<f:selectItem itemLabel="Purified material" itemValue="#{true}"/>
+						<p:ajax update="@form"/>						
+					</p:selectOneRadio>
+					
+					<p:outputLabel value="Used proteasomal inhibitors:"/>
+					<p:selectOneRadio value="#{submissionView.entity.methodBean.proteasomeInhibition}" required="rue">
+						<f:selectItem itemLabel="Yes" itemValue="#{true}"/>
+						<f:selectItem itemLabel="No" itemValue="#{false}"/>
+					</p:selectOneRadio>
+					
+					<p:outputLabel value="Results format:"/>
+					<p:selectOneRadio value="#{submissionView.entity.methodBean.type.id}" required="true">
+						<f:selectItem itemLabel="List of substrates" itemValue="1"/>
+						<f:selectItem itemLabel="Protein-level scores" itemValue="2"/>
+						<p:ajax update="@form"/>
+					</p:selectOneRadio>
+					
+					<p:outputLabel value="Additional notes:" />
+					<p:inputTextarea value="#{submissionView.notes}" rows="5" cols="40" autoResize="false"/>
+				</p:panelGrid>
+				<p:messages for="purified"/>
+				<br/>
+				
+				<h:panelGroup rendered="#{submissionView.purified}">
+					<p:panelGrid columns="2" rendered="#{submissionView.manual}">
+						<f:facet name="header">List of substrates</f:facet>
+						
+						<p:outputLabel value="Method:"/>
+						<p:selectOneRadio value="#{submissionView.entity.methodBean.subtype.id}" required="true">
+							<f:selectItem itemLabel="Western blot" itemValue="6"/>
+							<f:selectItem itemLabel="Mass spectrometry" itemValue="5"/>
+						</p:selectOneRadio>
+						
+						<p:outputLabel value="UniProt accessions:"/>
+						<p:inputText value="#{submissionView.accessions}" required="true" placeholder="P49327;P62979;A6NJA2"/>
+						
+						<p:outputLabel value="Gene names:"/>
+						<p:inputText value="#{submissionView.genes}" required="true" placeholder="FASN;UBB;USP14"/>
+						
+						<p:outputLabel value="Supporting figure/file:"/>
+						<p:inputText value="#{submissionView.entity.supportingFiles.get(0).name}" required="true" placeholder="Figure 6A"/>
+					</p:panelGrid>
+					
+					<p:panelGrid columns="2" rendered="#{submissionView.proteomics}">
+						<f:facet name="header">Protein-level scores</f:facet>
+						
+						<p:outputLabel value="Column type:"/>
+						<p:inputText value="#{submissionView.entity.methodBean.columnType}" placeholder="EASY nLC 1000"/>
+						
+						<p:outputLabel value="Instrument:"/>
+						<p:inputText value="#{submissionView.entity.methodBean.instrument}" placeholder="QExactive HF-X"/>
+						
+						<p:outputLabel value="Fold-change threshold (log2):"/>
+						<p:inputText value="#{submissionView.entity.methodBean.foldThreshold}" placeholder="1.0" required="true"/>
+						
+						<p:outputLabel value="p-value threshold:"/>
+						<p:inputText value="#{submissionView.entity.methodBean.pvalueThreshold}" placeholder="0.05" required="true"/>
+						
+						<p:outputLabel value="Are p-values adjusted?:"/>
+						<p:selectOneRadio value="#{submissionView.entity.methodBean.adjustedPvalues}" required="true">
+							<f:selectItem itemLabel="Yes" itemValue="#{true}"/>
+							<f:selectItem itemLabel="No" itemValue="#{false}"/>
+						</p:selectOneRadio>
+						
+						<p:outputLabel value="Supporting file name:"/>
+						<p:inputText value="#{submissionView.entity.supportingFiles.get(0).name}" required="true" placeholder="Table S1"/>
+						
+						<p:outputLabel value="Supporting file URL:"/>
+						<p:inputText value="#{submissionView.entity.supportingFiles.get(0).url}" required="true" placeholder="https://..."/>
+					</p:panelGrid>
+													
+					<br/>
+					<p:commandButton ajax="false" action="#{submissionView.submit()}" value="Submit" rendered="#{submissionView.manual or submissionView.proteomics}"/>
+				</h:panelGroup>
+			</h:form>			
+		</ui:define>
+	</ui:composition>
+</html>

@@ -5,7 +5,9 @@ public enum MethodSubtype {
 	LABEL_FREE("Label-free"),
 	SILAC("SILAC"),
 	ITRAQ("iTRAQ"),
-	TMT("TMT");
+	TMT("TMT"),
+	MS("MS-based"),
+	WESTERN("Western-based");
 	
 	private MethodSubtype(String name) {
 		this.name = name;
