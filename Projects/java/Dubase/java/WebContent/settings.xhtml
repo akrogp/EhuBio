@@ -31,7 +31,7 @@
 								<h:inputHidden id="p_value" value="#{prefView.getThresholds(exp).pValue}" />
 		        				<p:slider for="p_value" display="p_label" style="width:200px" displayTemplate="p-value = {value}" minValue="0.01" maxValue="0.3" step="0.01"/>
 							</p:panelGrid>
-							<p:panelGrid columns="1" styleClass="ui-noborder" style="width:auto" rendered="#{exp.methodBean.proteomics}">
+							<p:panelGrid columns="1" styleClass="ui-noborder" style="width:auto" rendered="#{exp.methodBean.proteomics and exp.methodBean.subtype.id == 1}">
 								<h:outputText id="pep_label" value="Min. unique peptides = #{prefView.getThresholds(exp).minPeptides}" />
 								<h:inputHidden id="min_peps" value="#{prefView.getThresholds(exp).minPeptides}" />
 		        				<p:slider for="min_peps" display="pep_label" style="width:200px" displayTemplate="Min. unique peptides = {value}" minValue="1" maxValue="10" step="1"/>

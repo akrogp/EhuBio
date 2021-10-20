@@ -42,7 +42,6 @@ import es.ehubio.dubase.dl.entities.ScoreType;
 import es.ehubio.dubase.dl.entities.SupportingFile;
 import es.ehubio.dubase.dl.entities.Taxon;
 import es.ehubio.dubase.dl.input.Metafile;
-import es.ehubio.dubase.dl.input.providers.LiuUbiquitomicsProvider;
 import es.ehubio.dubase.dl.input.providers.PhuProteomicsProvider;
 import es.ehubio.dubase.dl.input.providers.Provider;
 import es.ehubio.dubase.dl.input.providers.UgoManualProvider;
@@ -135,8 +134,8 @@ public class Importer {
 
 	private Provider findProvider(Experiment exp) {
 		String doi = exp.getPublications().get(0).getDoi();
-		if( doi.equals("10.1038/s41467-018-07185-y") )
-			return new LiuUbiquitomicsProvider();
+		/*if( doi.equals("10.1038/s41467-018-07185-y") )
+			return new LiuUbiquitomicsProvider();*/
 		if( doi.equals("10.1016/j.molcel.2020.02.012") )
 			return new PhuProteomicsProvider();
 		if( exp.getMethodBean().isProteomics() )

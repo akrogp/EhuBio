@@ -17,7 +17,7 @@
   <env-entry>
     <env-entry-name>es.ehubio.dubase.rcptTo</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
-    <env-entry-value>gorka.prieto@ehu.eus</env-entry-value>
+    <env-entry-value>juanmanuel.ramirez@ehu.eus</env-entry-value>
   </env-entry>
   <servlet>
     <servlet-name>Faces Servlet</servlet-name>

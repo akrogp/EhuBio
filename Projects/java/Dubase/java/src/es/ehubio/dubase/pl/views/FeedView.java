@@ -35,8 +35,10 @@ public class FeedView implements Serializable {
 	
 	public void saveUgoCurated() {
 		String[] experiments = {
-			"DUB substrates Nago.xlsx",
-			"USP14.xlsx"
+			//"DUB substrates Nago.xlsx",
+			//"Gorka.xlsx",			
+			"USP14.xlsx",
+			//"USP7.xlsx"
 		};
 		for( String experiment : experiments )
 			try {

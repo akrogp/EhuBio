@@ -27,6 +27,7 @@ import es.ehubio.dubase.dl.entities.Experiment;
 import es.ehubio.dubase.dl.entities.FileType;
 import es.ehubio.dubase.dl.entities.Gene;
 import es.ehubio.dubase.dl.entities.Method;
+import es.ehubio.dubase.dl.entities.MethodSubtype;
 import es.ehubio.dubase.dl.entities.MethodType;
 import es.ehubio.dubase.dl.entities.Protein;
 import es.ehubio.dubase.dl.entities.Publication;
@@ -99,6 +100,8 @@ public class UgoManualProvider implements Provider {
 					method.getType().setId(es.ehubio.dubase.dl.input.MethodType.MANUAL.ordinal());
 					method.setProteasomeInhibition(getCell(row, map, "Proteasome inhibition").equals("1"));
 					method.setDescription("Manual curation");
+					method.setSubtype(new MethodSubtype());
+					method.getSubtype().setId(getInt(row, map, "Method"));
 					exp.setMethodBean(method);
 					
 					exp.setSupportingFiles(new ArrayList<>());

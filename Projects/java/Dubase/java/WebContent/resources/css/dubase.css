@@ -21,3 +21,7 @@
 .secondcolumn {
 	min-width: 500px;
 }
+
+.nowrap {
+	white-space: nowrap;
+}

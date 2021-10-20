@@ -17,12 +17,12 @@
 					</p:column>
 					<p:column headerText="DUB">#{e.enzymeBean.gene}</p:column>
 					<p:column headerText="Publication">#{e.title}</p:column>
-					<p:column headerText="Type">#{e.methodBean.typeFmt}</p:column>
+					<p:column headerText="Type" styleClass="nowrap">#{e.methodBean.typeFmt}</p:column>
 					<p:column headerText="Cell">#{e.cellBean.name}</p:column>
-					<p:column headerText="Organism"><i>#{e.cellBean.taxonBean.sciName}</i></p:column>
+					<p:column headerText="Organism" styleClass="nowrap"><i>#{e.cellBean.taxonBean.sciName}</i></p:column>
 					<p:column headerText="Date">#{e.expDate}</p:column>
 					<p:column headerText="Uploaded">#{e.pubDate}</p:column>
-					<p:column headerText="Submitted by">
+					<p:column headerText="Submitted by" styleClass="nowrap">
 						<a href="mailto:#{e.authorBean.mail}">#{e.authorBean.name}</a> (#{e.authorBean.affiliation})
 					</p:column>
 				</p:dataTable>
