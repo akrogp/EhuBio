@@ -10,6 +10,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.view.ViewScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Browser;
@@ -42,6 +43,8 @@ public class SubmissionView implements Serializable {
 	private String accessions;
 	private String genes;
 	private String notes;
+	@Inject
+	private SubmissionResultView result;
 	
 	public SubmissionView() {
 		entity = new Experiment();
@@ -96,8 +99,11 @@ public class SubmissionView implements Serializable {
 	
 	public void setOrganism(String sciName) {
 		entity.getCellBean().getTaxonBean().setSciName(sciName);
-		if( !HUMAN.equals(sciName) )
+		if( !HUMAN.equals(sciName) ) {
+			entity.getCellBean().getTaxonBean().setId(-1);
 			showError("DUBase is specific for human substrates");
+		} else
+			entity.getCellBean().getTaxonBean().setId(9606);
 	}
 	
 	public void showError(String msg) {
@@ -125,16 +131,22 @@ public class SubmissionView implements Serializable {
 		return entity.getMethodBean().getType().getId() == es.ehubio.dubase.dl.input.MethodType.PROTEOMICS.ordinal();
 	}
 	
-	public void submit() {
+	public String submit() {
 		try {
+			String reference = null;
 			if( isProteomics() )
-				submitter.submitProteomics(entity, notes);
+				reference = submitter.submitProteomics(entity, notes);
 			else if( isManual() )
-				submitter.submitManual(entity, notes, accessions, genes);
+				reference = submitter.submitManual(entity, notes, accessions, genes);
+			else
+				throw new Exception("Unsupported experiment type");
+			result.setReference(reference);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			showError(e.getMessage());
+			return null;
 		}
+		return "thanks";
 	}	
 
 	public UIComponent getUiPurified() {

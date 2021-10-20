@@ -8,7 +8,12 @@
     <env-entry-name>es.ehubio.dubase.inputDir</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>
     <env-entry-value>/media/data/Sequences/Dubase</env-entry-value>
-  </env-entry>    
+  </env-entry>
+  <env-entry>
+    <env-entry-name>es.ehubio.dubase.tmpDir</env-entry-name>
+    <env-entry-type>java.lang.String</env-entry-type>
+    <env-entry-value>/tmp</env-entry-value>
+  </env-entry>
   <env-entry>
     <env-entry-name>es.ehubio.dubase.rcptTo</env-entry-name>
     <env-entry-type>java.lang.String</env-entry-type>

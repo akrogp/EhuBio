@@ -34,6 +34,25 @@ import es.ehubio.dubase.dl.entities.SupportingFile;
 import es.ehubio.dubase.dl.entities.Taxon;
 
 public class UgoManualProvider implements Provider {
+	public enum Header {
+		DUB, DOI, PMID, Gene, UniProt, Organism, Cell, Figure, FigureURL("Figure URL"), ProteasomeInhibition("Proteasome inhibition"), Method;
+		
+		Header() {	
+			header = null;
+		}
+		
+		Header(String header) {
+			this.header = header;
+		}
+		
+		@Override
+		public String toString() {
+			return header == null ? super.toString() : header;
+		}
+		
+		private final String header;
+	}
+	
 	public static List<Experiment> loadExperiments(String path) throws InvalidFormatException, IOException {
 		try(
 			FileInputStream fis = new FileInputStream(path);
