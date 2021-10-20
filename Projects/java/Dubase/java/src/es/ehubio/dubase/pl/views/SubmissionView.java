@@ -13,6 +13,7 @@ import javax.faces.view.ViewScoped;
 import javax.inject.Named;
 
 import es.ehubio.dubase.bl.Browser;
+import es.ehubio.dubase.bl.Submitter;
 import es.ehubio.dubase.dl.entities.Author;
 import es.ehubio.dubase.dl.entities.Cell;
 import es.ehubio.dubase.dl.entities.Enzyme;
@@ -28,12 +29,15 @@ import es.ehubio.dubase.dl.entities.Taxon;
 @ViewScoped
 public class SubmissionView implements Serializable {
 	private static final long serialVersionUID = 1L;
+	private static final String HUMAN = "Homo sapiens";
 	private Boolean purified;
 	private Boolean western;	
 	private final Experiment entity;
 	private List<String> dubs;
 	@EJB
 	private Browser db;
+	@EJB
+	private Submitter submitter;
 	private UIComponent uiPurified;
 	private String accessions;
 	private String genes;
@@ -83,8 +87,26 @@ public class SubmissionView implements Serializable {
 	public void setPurified(Boolean purified) {
 		this.purified = purified;
 		if( Boolean.FALSE.equals(purified) )
-			FacesContext.getCurrentInstance().addMessage(uiPurified.getClientId(),
-				new FacesMessage(FacesMessage.SEVERITY_ERROR, "DUBase requires the use of purified material", null));
+			showError("DUBase requires the use of purified material");
+	}
+	
+	public String getOrganism() {
+		return entity.getCellBean().getTaxonBean().getSciName();
+	}
+	
+	public void setOrganism(String sciName) {
+		entity.getCellBean().getTaxonBean().setSciName(sciName);
+		if( !HUMAN.equals(sciName) )
+			showError("DUBase is specific for human substrates");
+	}
+	
+	public void showError(String msg) {
+		FacesContext.getCurrentInstance().addMessage(uiPurified.getClientId(),
+			new FacesMessage(FacesMessage.SEVERITY_ERROR, msg, null));
+	}
+	
+	public boolean isCompatible() {
+		return Boolean.TRUE.equals(purified) && HUMAN.equals(entity.getCellBean().getTaxonBean().getSciName()) && entity.getMethodBean().getType().getId() != 0;
 	}
 
 	public Boolean getWestern() {
@@ -104,8 +126,16 @@ public class SubmissionView implements Serializable {
 	}
 	
 	public void submit() {
-		
-	}
+		try {
+			if( isProteomics() )
+				submitter.submitProteomics(entity, notes);
+			else if( isManual() )
+				submitter.submitManual(entity, notes, accessions, genes);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}	
 
 	public UIComponent getUiPurified() {
 		return uiPurified;
