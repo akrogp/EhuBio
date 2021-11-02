@@ -47,8 +47,8 @@
 							<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
 						</p:inputText>
 						
-						<p:outputLabel>DOI of the publication:</p:outputLabel>
-						<p:inputText value="#{submissionView.doi}" required="true" placeholder="10.3390/ijms22094851" requiredMessage="DOI of your publication is required"/>
+						<p:outputLabel>PMID of the publication:</p:outputLabel>
+						<p:inputText value="#{submissionView.pmid}" required="true" placeholder="34063716" requiredMessage="PMID of your publication is required"/>
 						
 						<p:outputLabel>DUB:</p:outputLabel>
 						<p:selectOneMenu value="#{submissionView.entity.enzymeBean.gene}" required="true" requiredMessage="Select one DUB">

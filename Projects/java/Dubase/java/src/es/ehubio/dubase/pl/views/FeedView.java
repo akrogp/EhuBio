@@ -37,8 +37,9 @@ public class FeedView implements Serializable {
 		String[] experiments = {
 			//"DUB substrates Nago.xlsx",
 			//"Gorka.xlsx",			
-			"USP14.xlsx",
-			//"USP7.xlsx"
+			//"USP14.xlsx",
+			//"USP7.xlsx",
+			"20210111-Juanma.fixed.xlsx"
 		};
 		for( String experiment : experiments )
 			try {

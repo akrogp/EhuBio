@@ -5,6 +5,15 @@
       xmlns:h="http://java.sun.com/jsf/html"> 
 
 <h:head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async="async" src="https://www.googletagmanager.com/gtag/js?id=UA-69742735-4"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'UA-69742735-4');
+    </script>
 	<h:outputStylesheet library="css" name="menubar.css" />
 	<h:outputStylesheet library="css" name="dubase.css" />
 	<title><ui:insert name="title">DUBase</ui:insert></title>

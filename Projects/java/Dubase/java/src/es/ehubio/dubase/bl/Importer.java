@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.annotation.Resource;
 import javax.ejb.LocalBean;
@@ -55,6 +56,7 @@ public class Importer {
 	@Resource(name="es.ehubio.dubase.inputDir")
 	private String inputPath;
 	public static final String METADATA = "metadata.xml"; 
+	private static final Logger LOG = Logger.getLogger(Importer.class.getName());
 	
 	@TransactionTimeout(1800)	// 30 minutes ...
 	public void saveUgoProteomics(String inputId) throws Exception {
@@ -199,6 +201,7 @@ public class Importer {
 					.getSingleResult();
 				amb.setProteinBean(prot);
 			} catch (NoResultException e) {
+				LOG.warning(String.format("Protein accession '%s' not present in DB", amb.getProteinBean().getAccession()));
 				try {
 					Gene gene = em
 						.createNamedQuery("Gene.findByName", Gene.class)
@@ -206,6 +209,7 @@ public class Importer {
 						.getSingleResult();
 					amb.getProteinBean().setGeneBean(gene);
 				} catch (Exception e2) {
+					LOG.warning(String.format("Gene name '%s' not present in DB", amb.getProteinBean().getGeneBean().getName()));
 					Gene gene = amb.getProteinBean().getGeneBean();
 					if( gene == null ) {
 						gene = new Gene();

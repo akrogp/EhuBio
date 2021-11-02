@@ -56,7 +56,7 @@ public class ExperimentView implements Serializable {
 	public String getDoi() {
 		if( entity.getPublications().isEmpty() )
 			return null;
-		return "https://doi.org/" + entity.getPublications().get(0).getDoi();
+		return entity.getPublications().get(0).getUrl();
 	}
 	
 	public boolean isProteomics() {

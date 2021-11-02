@@ -111,7 +111,7 @@ public class UgoManualProvider implements Provider {
 					supp.setName(getCell(row, map, "Figure"));
 					String url = getCell(row, map, "Figure URL");
 					if( url.length() < 10 || url.length() > 255 )
-						url = "https://doi.org/" + pub.getDoi();
+						url = pub.getUrl();
 					supp.setUrl(url);
 					exp.addSupportingFile(supp);
 					

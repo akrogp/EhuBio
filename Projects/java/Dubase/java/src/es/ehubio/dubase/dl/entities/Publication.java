@@ -1,7 +1,16 @@
 package es.ehubio.dubase.dl.entities;
 
 import java.io.Serializable;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQuery;
+import javax.persistence.Transient;
+import javax.xml.bind.annotation.XmlTransient;
 
 
 /**
@@ -79,6 +88,15 @@ public class Publication implements Serializable {
 		this.year = year;
 	}
 
+	@Transient
+	@XmlTransient
+	public String getUrl() {
+		if( doi != null )
+			return "https://doi.org/" + doi;
+		if( pmid != null )
+			return "https://pubmed.ncbi.nlm.nih.gov/" + pmid;
+		return null;
+	}
 
 	//bi-directional many-to-one association to Experiment
 	@ManyToOne

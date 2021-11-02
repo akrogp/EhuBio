@@ -65,12 +65,12 @@ public class SubmissionView implements Serializable {
 		return entity;
 	}
 	
-	public void setDoi(String doi) {
-		entity.getPublications().get(0).setDoi(doi);
+	public void setPmid(String pmid) {
+		entity.getPublications().get(0).setPmid(pmid);
 	}
 	
-	public String getDoi() {
-		return entity.getPublications().get(0).getDoi();
+	public String getPmid() {
+		return entity.getPublications().get(0).getPmid();
 	}
 	
 	public List<String> getDubs() {
