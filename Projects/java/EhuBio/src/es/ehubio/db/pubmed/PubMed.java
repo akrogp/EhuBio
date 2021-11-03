@@ -11,7 +11,11 @@ import java.text.SimpleDateFormat;
 // https://www.nlm.nih.gov/bsd/mms/medlineelements.html
 public class PubMed {
 	public static Paper fillPaper(String pmid) throws IOException, ParseException {
-		URL url = new URL(String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=%s&retmode=text&rettype=medline", pmid));
+		String path = String.format("https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?db=pubmed&id=%s&retmode=text&rettype=medline", pmid);
+		String key = getApiKey();
+		if( key != null )
+			path = path.concat("&api_key=" + key);
+		URL url = new URL(path);
 		HttpURLConnection conn = null;
 		try {
 			conn = (HttpURLConnection)url.openConnection();
@@ -22,6 +26,17 @@ public class PubMed {
 			if( conn != null )
 				conn.disconnect();
 		}
+	}
+	
+	/*public static Paper fillPaper(String pmid) throws IOException, ParseException {
+		try(BufferedReader br = new BufferedReader(new FileReader("/home/gorka/Descargas/Temp/pubmed.txt"))) {
+			return parse(br);
+		}
+	}*/
+	
+	public static void waitLimit() throws InterruptedException {
+		long limit = getApiKey() == null ? 334 : 100;
+		Thread.sleep(limit);
 	}
 
 	private static Paper parse(BufferedReader br) throws IOException, ParseException {
@@ -74,4 +89,17 @@ public class PubMed {
 			}
 		}
 	}
+	
+	private static String getApiKey() {
+		if( apiKey == null )
+			try(BufferedReader br = new BufferedReader(new InputStreamReader(PubMed.class.getResourceAsStream(KEY_PATH)))) {
+				apiKey = br.readLine();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}			
+		return apiKey;
+	}
+	
+	private static String apiKey;
+	private static final String KEY_PATH = "/keys/ncbi.txt";
 }

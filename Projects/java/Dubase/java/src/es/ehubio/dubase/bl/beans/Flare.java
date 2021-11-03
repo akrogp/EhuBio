@@ -11,6 +11,8 @@ public class Flare {
 	private String desc;
 	private Double size;
 	private Boolean db;
+	private Integer substrates;
+	private Integer experiments;
 	private List<Flare> children;
 	
 	public Flare() {
@@ -60,5 +62,21 @@ public class Flare {
 
 	public void setDb(Boolean db) {
 		this.db = db;
+	}
+
+	public Integer getSubstrates() {
+		return substrates;
+	}
+
+	public void setSubstrates(Integer substrates) {
+		this.substrates = substrates;
+	}
+
+	public Integer getExperiments() {
+		return experiments;
+	}
+
+	public void setExperiments(Integer experiments) {
+		this.experiments = experiments;
 	}
 }

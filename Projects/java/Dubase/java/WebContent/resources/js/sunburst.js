@@ -43,9 +43,24 @@ function sunBurst(root) {
 	};
 	
 	const calcColor = d => {
-		if( d.data.db )
-			return 'gold';
-		else
+		if( d.data.substrates ) {
+			//return 'gold';
+			//const grade1 = 127+Math.round(128/d.data.substrates);
+			//const grade2 = 215-Math.round(128/d.data.substrates);
+			//const grade2 = grade1;
+			//return `rgb(${grade1},${grade2},0)`;
+			//const steps = ['#FFFFE0', '#FFFACD', '#F0E68C', '#FFD700', '#DAA520'];
+			const steps = ['rgb(255, 255, 0)', 'rgb(240, 240, 0)', 'rgb(220, 220, 0)', 'rgb(200, 200, 0)', 'rgb(150, 150, 0)'];
+			if( d.data.substrates <= 4 )
+				return steps[0];
+			if( d.data.substrates <= 10 )
+				return steps[1];
+			if( d.data.substrates <= 24 )
+				return steps[2];
+			if( d.data.substrates <= 50 )
+				return steps[3];
+			return steps[4];
+		} else
 			return color((d.children && !d.children[0].data.db ? d : d.parent).data.name);
 	}
 	

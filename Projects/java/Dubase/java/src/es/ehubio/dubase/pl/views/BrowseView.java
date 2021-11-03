@@ -55,6 +55,8 @@ public class BrowseView implements Serializable {
 						counts.setDesc(String.format("%d (%d)", substratesCount, stats.getPapersCount()));
 						counts.setSize(DEFAULT_SIZE);
 						counts.setDb(true);
+						counts.setSubstrates(substratesCount);
+						counts.setExperiments((int)stats.getPapersCount());
 						enzyme.addChild(counts);
 					} else
 						enzyme.setSize(DEFAULT_SIZE);

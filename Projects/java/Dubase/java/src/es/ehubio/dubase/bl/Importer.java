@@ -1,8 +1,7 @@
 package es.ehubio.dubase.bl;
 
 import java.io.File;
-import java.io.IOException;
-import java.text.ParseException;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Logger;
@@ -16,8 +15,11 @@ import javax.persistence.PersistenceContext;
 
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
+import es.ehubio.db.fasta.Fasta;
+import es.ehubio.db.fasta.Fasta.SequenceType;
 import es.ehubio.db.pubmed.Paper;
 import es.ehubio.db.pubmed.PubMed;
+import es.ehubio.db.uniprot.Fetcher;
 import es.ehubio.dubase.Thresholds;
 import es.ehubio.dubase.dl.entities.Ambiguity;
 import es.ehubio.dubase.dl.entities.Author;
@@ -58,7 +60,7 @@ public class Importer {
 	public static final String METADATA = "metadata.xml"; 
 	private static final Logger LOG = Logger.getLogger(Importer.class.getName());
 	
-	@TransactionTimeout(1800)	// 30 minutes ...
+	@TransactionTimeout(3600)	// 60 minutes ...
 	public void saveUgoProteomics(String inputId) throws Exception {
 		File expDir = new File(inputPath, inputId);
 		File metaFile = new File(expDir, METADATA);		
@@ -68,7 +70,7 @@ public class Importer {
 	
 	public int saveUgoCurated(String xlsName) throws Exception {
 		File inputFile = new File(inputPath, xlsName);
-		List<Experiment> exps = UgoManualProvider.loadExperiments(inputFile.getAbsolutePath());
+		Collection<Experiment> exps = UgoManualProvider.loadExperiments(inputFile.getAbsolutePath());
 		for( Experiment exp : exps ) {
 			saveExperiment(exp, inputFile);
 		}
@@ -88,6 +90,8 @@ public class Importer {
 		Paper paper = savePublications(exp);
 		exp.setTitle(paper.getTitle());
 		exp.setDescription(paper.getAbs());
+		if( exp.getDescription() == null )
+			exp.setDescription(paper.getTitle());
 		if( paper.getDate() != null )
 			exp.setExpDate(paper.getDate());
 		em.persist(exp);
@@ -99,10 +103,11 @@ public class Importer {
 		saveEvidences(exp, evs);
 	}
 
-	private Paper savePublications(Experiment exp) throws IOException, ParseException {
+	private Paper savePublications(Experiment exp) throws Exception {
 		Paper first = null;
 		for( Publication pub : exp.getPublications() ) {
 			Paper paper = PubMed.fillPaper(pub.getPmid());
+			PubMed.waitLimit();
 			if( first == null )
 				first = paper;
 			pub.setExperiment(exp);
@@ -162,11 +167,16 @@ public class Importer {
 	}
 
 	private void setEnzyme(Experiment exp) {
-		Enzyme enzyme = em
-			.createNamedQuery("Enzyme.findByGene", Enzyme.class)
-			.setParameter("gene", exp.getEnzymeBean().getGene())
-			.getSingleResult();
-		exp.setEnzymeBean(enzyme);		
+		try {
+			Enzyme enzyme = em
+				.createNamedQuery("Enzyme.findByGene", Enzyme.class)
+				.setParameter("gene", exp.getEnzymeBean().getGene())
+				.getSingleResult();
+			exp.setEnzymeBean(enzyme);		
+		} catch(NoResultException e) {
+			LOG.severe(String.format("DUB '%s' not in DB", exp.getEnzymeBean().getGene()));
+			throw e;
+		}
 	}
 
 	private void updateAuthor(Experiment exp) {
@@ -194,36 +204,7 @@ public class Importer {
 
 	private void saveAmbiguities(Evidence ev) {
 		for( Ambiguity amb : ev.getAmbiguities() ) {
-			try {
-				Protein prot = em
-					.createNamedQuery("Protein.findByAcc", Protein.class)
-					.setParameter("acc", amb.getProteinBean().getAccession())
-					.getSingleResult();
-				amb.setProteinBean(prot);
-			} catch (NoResultException e) {
-				LOG.warning(String.format("Protein accession '%s' not present in DB", amb.getProteinBean().getAccession()));
-				try {
-					Gene gene = em
-						.createNamedQuery("Gene.findByName", Gene.class)
-						.setParameter("name", amb.getProteinBean().getGeneBean().getName())
-						.getSingleResult();
-					amb.getProteinBean().setGeneBean(gene);
-				} catch (Exception e2) {
-					LOG.warning(String.format("Gene name '%s' not present in DB", amb.getProteinBean().getGeneBean().getName()));
-					Gene gene = amb.getProteinBean().getGeneBean();
-					if( gene == null ) {
-						gene = new Gene();
-						gene.setName(amb.getProteinBean().getName());
-						amb.getProteinBean().setGeneBean(gene);
-					}
-					if( gene.getName() == null )
-						gene.setName(amb.getProteinBean().getAccession());
-					if( gene.getAliases() == null )
-						gene.setAliases(gene.getName());
-					em.persist(gene);
-				}
-				em.persist(amb.getProteinBean());
-			}
+			saveSubstrate(amb);
 			em.persist(amb);
 			if( amb.getModifications() != null )
 				for( Modification mod : amb.getModifications() ) {
@@ -234,7 +215,64 @@ public class Importer {
 					saveModRepScores(mod);
 				}
 		}
-	}	
+	}
+	
+	private void saveSubstrate(Ambiguity amb) {
+		Protein prot = amb.getProteinBean();
+		if( prot.getAccession() == null )
+			try {
+				prot.setAccession(em
+					.createQuery("SELECT MIN(p.accession) FROM Protein p WHERE p.geneBean.aliases LIKE :gene", String.class)
+					.setParameter("gene", "%" + prot.getGeneBean().getName() + "%")
+					.getSingleResult());
+			} catch (NoResultException eAccession) {
+				LOG.warning(String.format("Protein accession not found for gene '%s'", prot.getGeneBean().getName()));
+			}
+		try {
+			prot = em
+				.createNamedQuery("Protein.findByAcc", Protein.class)
+				.setParameter("acc", prot.getAccession())
+				.getSingleResult();
+			amb.setProteinBean(prot);
+		} catch (NoResultException eProtein) {				
+			LOG.warning(String.format("Protein accession '%s' not present in DB", prot.getAccession()));
+			if( prot.getName() == null || prot.getDescription() == null ) {
+				LOG.info("Downloading information from UniProt ...");
+				try {
+					Fasta fasta = Fetcher.downloadFasta(prot.getAccession(), SequenceType.PROTEIN);
+					prot.setName(fasta.getProteinName());
+					prot.setDescription(fasta.getDescription());
+				} catch (Exception eFasta) {
+					LOG.warning(String.format("Could not download UniProt accession '%s'", prot.getAccession()));
+					eFasta.printStackTrace();
+				}
+			}
+			LOG.warning(String.format("Using %s: %s", prot.getName(), prot.getDescription()));
+			
+			Gene gene = prot.getGeneBean();
+			if( gene == null ) {
+				gene = new Gene();
+				gene.setName(prot.getName());
+				prot.setGeneBean(gene);
+			}			
+			try {
+				gene.setName(gene.getName().toUpperCase());
+				gene = em
+					.createNamedQuery("Gene.findByName", Gene.class)
+					.setParameter("name", gene.getName())
+					.getSingleResult();
+				prot.setGeneBean(gene);
+			} catch (Exception eGene) {
+				LOG.warning(String.format("Gene name '%s' not present in DB", prot.getGeneBean().getName()));				
+				if( gene.getName() == null )
+					gene.setName(prot.getAccession());
+				if( gene.getAliases() == null )
+					gene.setAliases(gene.getName());
+				em.persist(gene);
+			}
+			em.persist(prot);
+		}
+	}
 
 	private void saveRepScores(Evidence ev) {
 		if( ev.getRepScores() == null )
@@ -274,7 +312,7 @@ public class Importer {
 
 	private void filter(List<Evidence> evs) {
 		for( Evidence ev : evs )
-			ev.getAmbiguities().removeIf(amb -> amb.getProteinBean().getAccession().startsWith("CON_") || amb.getProteinBean().getAccession().startsWith("REV_") );
+			ev.getAmbiguities().removeIf(amb -> amb.getProteinBean().getAccession() != null && (amb.getProteinBean().getAccession().startsWith("CON_") || amb.getProteinBean().getAccession().startsWith("REV_")) );
 		evs.removeIf(ev -> {
 			if( ev.getAmbiguities().isEmpty() )
 				return true;
