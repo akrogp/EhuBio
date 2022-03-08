@@ -136,3 +136,10 @@ h1, h2 {
 	margin-right: auto;
 	margin-top: 1rem;
 }
+
+.twitter-container {
+	display: block;
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
