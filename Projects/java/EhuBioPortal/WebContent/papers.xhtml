@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition template="/WEB-INF/templates/page.xhtml">
+		<ui:define name="title">Publications</ui:define>
+		<ui:define name="content">
+			<p:chronoline value="#{papersView.works}" var="work" align="alternate">
+				<h:panelGroup styleClass="work">
+					<h:panelGroup styleClass="icon #{work.type}"/>
+					<p:card>
+			            <f:facet name="title">		            	
+			                #{work.title}
+			            </f:facet>
+			            <f:facet name="subtitle">
+			                #{work.journal}<br/>
+			                #{work.date}
+			            </f:facet>
+			            <p:button value="Read" href="#{work.url}" target="_blank" ajax="false" icon="pi pi-book" rendered="#{not empty work.url}"/>		            
+		            </p:card>
+	            </h:panelGroup>
+	            <f:facet name="opposite">
+	            	<h:panelGroup rendered="#{work.first}">
+	            		<h2>#{work.year}</h2>
+            		</h:panelGroup>
+	            </f:facet>
+			</p:chronoline>
+		</ui:define>
+	</ui:composition>
+</html>

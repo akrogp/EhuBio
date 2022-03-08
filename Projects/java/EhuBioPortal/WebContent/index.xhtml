@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/WEB-INF/templates/page.xhtml">
+	<ui:define name="title">Check our Apps</ui:define>
+	<ui:define name="content">
+		<h:form>
+			<div class="carousel">				
+				<ui:repeat value="#{projectsView.projects}" var="prj">
+					<div class="project">
+						<p:card style="width: 20em;">
+							<f:facet name="header">
+								<span></span>
+								<h:panelGroup rendered='#{prj.preview.startsWith("http")}'>
+									<img src="#{prj.preview}"/>
+								</h:panelGroup>
+								<p:graphicImage name="#{prj.preview}" rendered='#{not prj.preview.startsWith("http")}'/>
+							</f:facet>
+							<f:facet name="title">
+								<span></span>
+								#{prj.title}
+							</f:facet>
+							<f:facet name="subtitle">
+								<span></span>
+								#{prj.subtile}
+							</f:facet>
+							<f:facet name="footer">
+								<p:button value="Visit" href="#{prj.url}" target="_blank" ajax="false" icon="pi pi-globe" rendered="#{prj.url != null}"/>
+								<h:panelGroup>
+								<p:commandButton id="desc" value="Info" type="button" icon="pi pi-plus" rendered="#{prj.desc != null}"/>
+									<p:overlayPanel for="desc" styleClass="desc">
+										<p>#{prj.desc}</p>
+									</p:overlayPanel>
+								</h:panelGroup>
+								<p:button value="Paper" href="#{prj.paper}" target="_blank" ajax="false" icon="pi pi-book" rendered="#{prj.paper != null}"/>
+							</f:facet>
+						</p:card>
+					</div>
+				</ui:repeat>
+			</div>
+		</h:form>
+	</ui:define>
+</ui:composition>
+</html>
