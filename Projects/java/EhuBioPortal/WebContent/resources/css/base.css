@@ -1,5 +1,7 @@
 @charset "UTF-8";
 
+/* Common */
+
 h1, h2 {
 	color: var(--text-color);
 }
@@ -23,7 +25,7 @@ h1, h2 {
 	margin-right: auto;
 }
 
-.carousel {
+.projects {
 	display: flex;
 	justify-content: center;
 	flex-wrap: wrap;
@@ -32,44 +34,39 @@ h1, h2 {
 	gap: 1rem;
 }
 
-.carousel .project img {
-	max-height: 200px;
-	max-width: 200px;
-	vertical-align: middle;		
-}
-
-.carousel .project {
-	/*border: 1px solid var(--surface-d);
-	border-radius: 3px;*/
-	/*margin: .3rem;
-	padding: 2rem 0;*/
+.projects .project {
 	text-align: center;	
-	/*display: inline-block;
-	vertical-align:top;*/
 }
 
-.carousel .project .ui-card-header {
-	height: 200px;	
+.projects .project img {
+	max-height: 200px;
+	max-width: 90%;
+	width: auto;
+    height: auto;
+	vertical-align: middle;
+	/*margin-left: auto;
+	margin-right: auto;*/
+	/*margin-top: 1rem;*/
 }
 
-.carousel .project .ui-card-body {
-	height: 200px;	
+.projects .project .ui-card-header {
+	height: 220px;	
 }
 
-.carousel .project .ui-card-footer {
+.projects .project .ui-card-content {
+	display: none;
+}
+
+.projects .project .ui-card-footer {
 	display: flex;
 	justify-content: center;
 	gap: 0.5rem;	
 }
 
-.carousel .project span {
+.projects .project span {
 	display: inline-block;
     height: 100%;
     vertical-align: middle;
-}
-
-.carousel .project .desc {
-	width: 300px;
 }
 
 .ui-chronoline-event .work .ui-card .ui-card-body .ui-card-title {
@@ -93,9 +90,8 @@ h1, h2 {
 	content: url("#{resource['img/book.svg']}");
 }
 
-.ui-chronoline-event .dissertation-thesis {
-	
-}
+/*.ui-chronoline-event .dissertation-thesis {	
+}*/
 
 .ui-chronoline-event .work {
 	display: flex;
@@ -109,6 +105,10 @@ h1, h2 {
 	flex-direction: row-reverse;
 }
 
+.customized-chronoline .top-year {
+	display: none;
+}
+
 .about {
 	display: flex;
 	justify-content: center;
@@ -118,17 +118,13 @@ h1, h2 {
 	gap: 1rem;
 }
 
-.about .item {
-	width: 600px;
-}
-
 .about .item .ui-card-title {
 	text-align: center;
 }
 
 .about .item .ui-card-header img {
 	display: block;
-	max-width: 500px;
+	max-width: 90%;
 	max-height: 200px;
 	width: auto;
   	height: auto;
@@ -138,8 +134,88 @@ h1, h2 {
 }
 
 .twitter-container {
-	display: block;
-	max-width: 600px;
+	display: block;	
 	margin-left: auto;
 	margin-right: auto;
+}
+
+/* Mobile */
+
+.projects .project {
+	max-width: 100vw;	
+}
+
+.about .item {
+	max-width: 100vw;
+}
+
+.twitter-container {
+	max-width: 100vw;
+}
+
+@media screen and (max-width: 960px) {
+	.customized-chronoline .ui-chronoline-event:nth-child(even) {
+        flex-direction: row !important;
+    }
+
+    .customized-chronoline .ui-chronoline-event:nth-child(even) .ui-chronoline-event-content {
+        text-align: left !important;
+    }
+
+    .customized-chronoline .ui-chronoline-event-opposite {
+        flex: 0;
+    }
+
+    .customized-chronoline .ui-card {
+        margin-top: 1rem;        
+    }
+    
+    .customized-chronoline .work .ui-card .ui-card-body .ui-card-title{
+    	font-size: 1rem;
+    }
+    
+    .customized-chronoline .ui-chronoline-event .icon {
+    	display: none;
+    }
+    
+    .customized-chronoline .ui-chronoline-event .work {
+    	flex-direction: column;
+    }
+    
+    .customized-chronoline .top-year {
+    	display: inline-block;
+		max-height: 3rem;		
+    }
+    
+    .customized-chronoline .opp-year {
+		display: none;
+    }
+    
+    .customized-chronoline .ui-chronoline-event-opposite {
+    	display: none;
+    }
+    
+    .customized-chronoline .ui-chronoline-event-separator {
+    	display: none;
+    }
+}
+
+/* Desktop */
+
+@media only screen and (min-width: 600px) {
+	.projects .project {
+		max-width: 350px;	
+	}		
+	
+	.about .item {
+		max-width: 600px;
+	}
+	
+	.about .item .ui-card-header img {
+		max-width: 500px;
+	}
+	
+	.twitter-container {
+		max-width: 600px;
+	}	
 }

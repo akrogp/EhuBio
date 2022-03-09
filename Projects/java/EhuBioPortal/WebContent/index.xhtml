@@ -9,16 +9,18 @@
 	<ui:define name="title">Check our Apps</ui:define>
 	<ui:define name="content">
 		<h:form>
-			<div class="carousel">				
+			<div class="projects">				
 				<ui:repeat value="#{projectsView.projects}" var="prj">
 					<div class="project">
 						<p:card style="width: 20em;">
 							<f:facet name="header">
 								<span></span>
-								<h:panelGroup rendered='#{prj.preview.startsWith("http")}'>
-									<img src="#{prj.preview}"/>
-								</h:panelGroup>
-								<p:graphicImage name="#{prj.preview}" rendered='#{not prj.preview.startsWith("http")}'/>
+								<a href="#{prj.url}" target="_blank">
+									<h:panelGroup rendered='#{prj.preview.startsWith("http")}'>
+										<img src="#{prj.preview}"/>
+									</h:panelGroup>
+									<p:graphicImage name="#{prj.preview}" rendered='#{not prj.preview.startsWith("http")}'/>
+								</a>
 							</f:facet>
 							<f:facet name="title">
 								<span></span>

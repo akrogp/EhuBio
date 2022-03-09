@@ -8,9 +8,12 @@
 	<ui:composition template="/WEB-INF/templates/page.xhtml">
 		<ui:define name="title">Publications</ui:define>
 		<ui:define name="content">
-			<p:chronoline value="#{papersView.works}" var="work" align="alternate">
+			<p:chronoline value="#{papersView.works}" var="work" align="alternate" styleClass="customized-chronoline">
 				<h:panelGroup styleClass="work">
-					<h:panelGroup styleClass="icon #{work.type}"/>
+					<h:panelGroup rendered="#{work.first}" styleClass="top-year">
+	            		<h2>#{work.year}</h2>
+            		</h:panelGroup>
+					<h:panelGroup styleClass="icon #{work.type}"/>					
 					<p:card>
 			            <f:facet name="title">		            	
 			                #{work.title}
@@ -23,7 +26,7 @@
 		            </p:card>
 	            </h:panelGroup>
 	            <f:facet name="opposite">
-	            	<h:panelGroup rendered="#{work.first}">
+	            	<h:panelGroup rendered="#{work.first}" styleClass="opp-year">
 	            		<h2>#{work.year}</h2>
             		</h:panelGroup>
 	            </f:facet>
