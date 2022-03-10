@@ -15,12 +15,10 @@
 						<p:card style="width: 20em;">
 							<f:facet name="header">
 								<span></span>
-								<a href="#{prj.url}" target="_blank">
-									<h:panelGroup rendered='#{prj.preview.startsWith("http")}'>
-										<img src="#{prj.preview}"/>
-									</h:panelGroup>
-									<p:graphicImage name="#{prj.preview}" rendered='#{not prj.preview.startsWith("http")}'/>
-								</a>
+								<h:panelGroup rendered='#{prj.preview.startsWith("http")}'>
+									<img src="#{prj.preview}"/>
+								</h:panelGroup>
+								<p:graphicImage name="#{prj.preview}" rendered='#{not prj.preview.startsWith("http")}'/>
 							</f:facet>
 							<f:facet name="title">
 								<span></span>

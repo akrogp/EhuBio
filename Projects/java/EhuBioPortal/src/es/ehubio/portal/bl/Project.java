@@ -1,4 +1,4 @@
-package es.ehubio.portal.ui;
+package es.ehubio.portal.bl;
 
 public class Project {
 	private String title;
