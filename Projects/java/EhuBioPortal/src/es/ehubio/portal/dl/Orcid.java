@@ -1,20 +1,14 @@
-package es.ehubio.portal.bl;
+package es.ehubio.portal.dl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ws.rs.client.ClientBuilder;
-import javax.ws.rs.core.MediaType;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Orcid {
-	private static final String URL = "https://pub.orcid.org/v3.0/0000-0002-6433-8452/works";
-	
-	public List<Work> getWorks() {
+public class Orcid {	
+	public static List<Work> parseWorks(JSONObject json) {
 		List<Work> works = new ArrayList<>();
-		JSONObject json = requestWorks();
 		JSONArray array = json.getJSONArray("group");
 		for( int i = 0; i < array.length(); i++) {
 			JSONObject obj = array.getJSONObject(i);
@@ -25,7 +19,7 @@ public class Orcid {
 		return works;
 	}
 
-	private Work parseWork(JSONObject summary) {
+	private static Work parseWork(JSONObject summary) {
 		Work work = new Work();
 		work.setId(summary.get("put-code").toString());
 		work.setTitle(summary.getJSONObject("title").getJSONObject("title").getString("value"));
@@ -42,7 +36,7 @@ public class Orcid {
 		return work;
 	}
 
-	private Integer parseDate(JSONObject date, String field) {
+	private static Integer parseDate(JSONObject date, String field) {
 		JSONObject obj = date.optJSONObject(field);
 		if( obj == null )
 			return null;
@@ -50,7 +44,7 @@ public class Orcid {
 		return Integer.parseInt(value);
 	}
 
-	private String parseUrl(JSONObject summary) {
+	private static String parseUrl(JSONObject summary) {
 		if( !summary.isNull("url") )
 			return summary.getJSONObject("url").getString("value");
 		JSONArray extIds = summary.getJSONObject("external-ids").getJSONArray("external-id");
@@ -60,10 +54,5 @@ public class Orcid {
 				return "https://doi.org/" + extId.getString("external-id-value");
 		}
 		return null;
-	}
-
-	private JSONObject requestWorks() {
-		String json = ClientBuilder.newClient().target(URL).request(MediaType.APPLICATION_JSON).get(String.class);
-		return new JSONObject(json);
-	}
+	}	
 }
