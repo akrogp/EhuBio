@@ -7,15 +7,24 @@
 
 <h:head>
 	<f:facet name="first">
-		<meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0"/> 	
 		<meta name="description" content="EhuB10 collaboration in bioinformatics"/>
 		<meta name="author" content="Gorka Prieto"/>
 		<meta name="keywords" content="Bioinformatics, Proteomics, Protein motif, DUB"/>
 		<meta property="og:image" content="https://ehubio.ehu.eus/javax.faces.resource/img/logo.png.xhtml"/>
+		<meta property="og:image:type" content="image/png" />
 	</f:facet>
 	<title><ui:insert name="pageTitle">EhuBio</ui:insert></title>
 	<h:outputStylesheet name="css/base.css"/>
+	<!-- Global site tag (gtag.js) - Google Analytics -->
+	<script async="true" src="https://www.googletagmanager.com/gtag/js?id=G-1LW9BL82NM"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	
+	  gtag('config', 'G-1LW9BL82NM');
+	</script>
 </h:head>
 <h:body>
 	<a href="https://ehubio.ehu.eus">
