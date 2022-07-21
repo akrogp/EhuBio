@@ -1,7 +1,9 @@
 package es.ehubio.wregex.data;
 
 @SuppressWarnings("all")
-public class Versions {
+public final class Versions {
+	private Versions() {}
+	
 	public static final int MAJOR = 2;
 	//public static final int MAJOR = 3;
 	public static final int MINOR = 2;

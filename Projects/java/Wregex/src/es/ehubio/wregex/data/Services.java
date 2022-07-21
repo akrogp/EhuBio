@@ -257,7 +257,7 @@ public class Services {
 				if( ptm.position >= result.getStart() && ptm.position <= result.getEnd() )
 					count += ptm.count;
 			result.setDbPtmUrl(String.format(
-				"http://dbptm.mbc.nctu.edu.tw/search_result.php?search_type=db_id&swiss_id=%s",ptms.getId()));
+				"https://awi.cuhk.edu.cn/dbPTM/info.php?id=%s",ptms.getId()));
 			result.setDbPtms(count);			
 		}
 	}

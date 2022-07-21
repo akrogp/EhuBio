@@ -20,8 +20,8 @@
     <database>
         <name>dbPTM</name>
         <type>dbptm</type>
-        <path>/media/data/Sequences/dbPTM/dbPTM3.txt</path>
-        <version>3.0</version>
+        <path>/media/data/Sequences/dbPTM/dbPTM2022</path>
+        <version>2022</version>
         <wregexVersion>0</wregexVersion>
     </database>
     <database>

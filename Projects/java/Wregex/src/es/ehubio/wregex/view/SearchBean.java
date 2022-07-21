@@ -20,12 +20,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
@@ -37,51 +37,38 @@ import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.fasta.Fasta.SequenceType;
 import es.ehubio.io.Streams;
 import es.ehubio.wregex.InputGroup;
-import es.ehubio.wregex.Pssm;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
 import es.ehubio.wregex.data.CachedResult;
 import es.ehubio.wregex.data.DatabaseInformation;
-import es.ehubio.wregex.data.MotifDefinition;
-import es.ehubio.wregex.data.MotifInformation;
-import es.ehubio.wregex.data.MotifReference;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
 import es.ehubio.wregex.view.DatabasesBean.ReloadException;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class SearchBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final static Logger logger = Logger.getLogger(SearchBean.class.getName());
-	private String motif, auxMotif;
-	private String definition, auxDefinition;
 	private String target;
-	private MotifInformation motifInformation, auxMotifInformation;
-	private MotifDefinition motifDefinition, auxMotifDefinition;
-	private DatabaseInformation targetInformation;
-	private boolean custom = false;
-	private String customRegex;
-	private String customPssm;
+	private DatabaseInformation targetInformation;	
 	private String searchError;
 	private List<ResultEx> results = null;
 	private String cachedAlnPath;
-	private boolean usingPssm;
 	private boolean grouping = true;
 	private boolean filterEqual = false;
 	private double scoreThreshold = 0.0;
 	private boolean cosmic = false;
-	private boolean dbPtm = false;
-	private boolean useAuxMotif = false; 
-	private boolean allMotifs = false;
-	private String baseFileName, pssmFileName, fastaFileName;
+	private boolean dbPtm = false;	
+	private String baseFileName, fastaFileName;
 	private boolean assayScores = false;
 	private List<InputGroup> inputGroups = null;
-	private Pssm pssm = null, auxPssm = null;
-	@ManagedProperty(value="#{databasesBean}")
+	@Inject
 	private DatabasesBean databases;
+	@Inject
+	private MotifView motifs;
 	private final Services services;
 	private int flanking = 0;
 	
@@ -89,76 +76,13 @@ public class SearchBean implements Serializable {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
 	}
 	
-	public List<MotifInformation> getWregexMotifs() {
-		return databases.getWregexMotifs();
-	}
-	
-	public List<MotifInformation> getElmMotifs() {
-		return databases.getElmMotifs();
-	}
-	
-	public List<MotifInformation> getAllMotifs() {
-		return databases.getAllMotifs();
-	}
-	
-	public List<MotifDefinition> getDefinitions() {
-		return motifInformation == null ? null : motifInformation.getDefinitions();
-	}
-	
-	public List<MotifDefinition> getAuxDefinitions() {
-		return auxMotifInformation == null ? null : auxMotifInformation.getDefinitions();
+	public void resetResult() {
+		searchError = null;
+		results = null;
 	}
 	
 	public List<DatabaseInformation> getTargets() {
 		return databases.getTargets();
-	}
-	
-	public String getRegex() {
-		return motifDefinition == null || motifInformation == null ? null : motifDefinition.getRegex();
-	}
-	
-	public String getAuxRegex() {
-		return auxMotifDefinition == null || auxMotifInformation == null ? null : auxMotifDefinition.getRegex();
-	}
-	
-	public String getPssm() {
-		return motifDefinition == null ? null : motifDefinition.getPssm();
-	}
-	
-	public String getAuxPssm() {
-		return auxMotifDefinition == null ? null : auxMotifDefinition.getPssm();
-	}
-	
-	public String getSummary() {
-		return motifDefinition == null || motifInformation == null ? null : motifInformation.getSummary();
-	}
-	
-	public String getAuxSummary() {
-		return auxMotifDefinition == null || auxMotifInformation == null ? null : auxMotifInformation.getSummary();
-	}
-	
-	public String getDescription() {
-		return motifDefinition == null || motifInformation == null ? null : motifDefinition.getDescription();
-	}
-	
-	public String getAuxDescription() {
-		return auxMotifDefinition == null || auxMotifInformation == null ? null : auxMotifDefinition.getDescription();
-	}
-	
-	public List<MotifReference> getReferences() {
-		return motifDefinition == null || motifInformation == null ? null : motifInformation.getReferences();
-	}
-	
-	public List<MotifReference> getAuxReferences() {
-		return auxMotifDefinition == null || auxMotifInformation == null ? null : auxMotifInformation.getReferences();
-	}
-
-	public String getMotif() {
-		return motif;
-	}
-	
-	public MotifInformation getMotifInformation() {
-		return motifInformation;
 	}
 	
 	public DatabaseInformation getTargetInformation() {
@@ -176,18 +100,6 @@ public class SearchBean implements Serializable {
 	public DatabaseInformation getDbPtmInformation() {
 		return databases.getDbPtmInformation();
 	}
-
-	public void setMotif(String motif) {
-		this.motif = motif;
-	}
-
-	public String getConfiguration() {
-		return definition;
-	}
-
-	public void setConfiguration(String configuration) {
-		this.definition = configuration;
-	}
 	
 	public String getTarget() {
 		return target;
@@ -195,30 +107,7 @@ public class SearchBean implements Serializable {
 
 	public void setTarget(String target) {
 		this.target = target;
-	}
-	
-	private MotifInformation stringToMotif( Object object ) {
-		if( object == null )
-			return null;
-		String name = object.toString();
-		for( MotifInformation motif : databases.getWregexMotifs() )
-			if( motif.getName().equals(name) )
-				return motif;
-		for( MotifInformation motif : databases.getElmMotifs() )
-			if( motif.getName().equals(name) )
-				return motif;
-		return null;
-	}
-	
-	private MotifDefinition stringToDefinition( Object object ) {
-		if( object == null )
-			return null;
-		String name = object.toString();
-		for( MotifDefinition def : getDefinitions() )
-			if( def.getName().equals(name) )
-				return def;
-		return null;
-	}
+	}	
 	
 	private DatabaseInformation stringToTarget( Object object ) {
 		if( object == null )
@@ -228,63 +117,7 @@ public class SearchBean implements Serializable {
 			if( name.startsWith(target.getName()) )
 				return target;
 		return null;
-	}
-	
-	public void onChangeMotif( ValueChangeEvent event ) {
-		Object value = event.getNewValue();
-		custom = false;
-		allMotifs = false;
-		motifInformation = null;
-		if( value != null ) {			
-			if( value.toString().equals("Custom") )
-				custom = true;
-			else if( value.toString().equals("All") )
-				allMotifs = true;
-			else
-				motifInformation = (MotifInformation)stringToMotif(event.getNewValue());
-		}
-		if( motifInformation == null ) {
-			motifDefinition = null;
-			setConfiguration("Default");
-		} else {
-			motifDefinition = motifInformation.getDefinitions().get(0);
-			setConfiguration(motifDefinition.toString());
-		}
-		searchError = null;
-		results = null;
-		pssm = null;
-	}
-	
-	public void onChangeAuxMotif( ValueChangeEvent event ) {
-		Object value = event.getNewValue();
-		auxMotifInformation = null;
-		if( value != null )
-			auxMotifInformation = (MotifInformation)stringToMotif(event.getNewValue());
-		if( auxMotifInformation == null ) {
-			auxMotifDefinition = null;
-			setAuxConfiguration("Default");
-		} else {
-			auxMotifDefinition = auxMotifInformation.getDefinitions().get(0);
-			setAuxConfiguration(auxMotifDefinition.toString());
-		}
-		searchError = null;
-		results = null;
-		auxPssm = null;
-	}
-	
-	public void onChangeDefinition( ValueChangeEvent event ) {
-		motifDefinition = (MotifDefinition)stringToDefinition(event.getNewValue());
-		searchError = null;
-		results = null;
-		pssm = null;
-	}
-	
-	public void onChangeAuxDefinition( ValueChangeEvent event ) {
-		auxMotifDefinition = (MotifDefinition)stringToDefinition(event.getNewValue());
-		searchError = null;
-		results = null;
-		auxPssm = null;
-	}
+	}	
 	
 	public void onChangeTarget( ValueChangeEvent event ) {
 		inputGroups = null;
@@ -306,30 +139,6 @@ public class SearchBean implements Serializable {
 		}
 	}
 
-	public boolean isCustom() {
-		return custom;
-	}
-
-	public void setCustom(boolean custom) {
-		this.custom = custom;
-	}
-
-	public String getCustomRegex() {
-		return customRegex;
-	}
-
-	public void setCustomRegex(String customRegex) {
-		this.customRegex = customRegex;
-	}
-
-	public String getCustomPssm() {
-		return customPssm;
-	}
-
-	public void setCustomPssm(String customPssm) {
-		this.customPssm = customPssm;
-	}
-
 	public String getConfigError() {
 		String error = checkConfigError();
 		if( error != null )
@@ -338,28 +147,14 @@ public class SearchBean implements Serializable {
 	}
 	
 	private String checkConfigError() {
-		if( custom ) {
-			if( customRegex == null || customRegex.isEmpty() )
-				return "A regular expression must be defined";
-			/*if( Wregex.countCapturingGroups(customRegex) > 0 && customPssm == null )
-				return "A PSSM must be provided when using regex groups";*/
-		} else if( !allMotifs ) {
-			if( motifInformation == null )
-				return "A motif must be selected";
-			if( motifDefinition == null )
-				return "A configuration must be selected for motif " + motif;
-		}
-		if( isUseAuxMotif() ) {
-			if( auxMotifInformation == null )
-				return "An aux motif must be selected";
-			if( auxMotifDefinition == null )
-				return "A configuration must be selected for aux motif " + auxMotif;
-		}
+		String error = motifs.checkConfigError();
+		if( error != null )
+			return error;
 		if( targetInformation == null )
 			return "A target must be selected";
 		if( inputGroups == null )
 			return "A fasta file with input sequences must be uploaded";
-		if( allMotifs && inputGroups.size() > services.getInitNumber("wregex.allMotifs") )
+		if( motifs.isAllMotifs() && inputGroups.size() > services.getInitNumber("wregex.allMotifs") )
 			return String.format("Sorry, when searching for all motifs the number of target sequences is limited to %d", services.getInitNumber("wregex.allMotifs"));
 		return null;
 	}
@@ -370,11 +165,11 @@ public class SearchBean implements Serializable {
 			updateAssayScores();
 			results = loadSearchCache();
 			if( results == null ) {
-				List<ResultGroupEx> resultGroups = allMotifs == false ? singleSearch() : allSearch();
+				List<ResultGroupEx> resultGroups = motifs.isAllMotifs() == false ? singleSearch() : allSearch();
 				results = Services.expand(resultGroups, grouping);				
 				results = Services.filter(results, filterEqual, scoreThreshold);
 				Services.flanking(results, flanking);
-				if( useAuxMotif )
+				if( motifs.isUseAuxMotif() )
 					searchAux();
 				if( cosmic )
 					searchCosmic();
@@ -394,27 +189,28 @@ public class SearchBean implements Serializable {
 		}
 	}
 	
-	private void initPssm() throws IOException, PssmBuilderException {
-		if( !custom && getPssm() != null )
-			pssm = services.getPssm(getPssm());
-		usingPssm = pssm == null ? false : true;		
-	}
-	
 	private String getSingleRegex() {
-		return custom ? getCustomRegex() : getRegex();
+		MotifBean motif = this.motifs.getMainMotif();
+		return motif.isCustom() ? motif.getCustomRegex() : motif.getRegex();
 	}
 	
 	private List<ResultGroupEx> singleSearch() throws NumberFormatException, Exception {
 		initPssm();		
-		Wregex wregex = new Wregex(getSingleRegex(), pssm);
-		return Services.search(wregex, motifInformation, inputGroups, assayScores, services.getInitNumber("wregex.watchdogtimer")*1000);
+		Wregex wregex = new Wregex(getSingleRegex(), motifs.getMainMotif().getPssm());
+		return Services.search(wregex, motifs.getMainMotif().getMotifInformation(), inputGroups, assayScores, services.getInitNumber("wregex.watchdogtimer")*1000);
+	}
+	
+	private void initPssm() throws IOException, PssmBuilderException {
+		MotifBean motif = this.motifs.getMainMotif();
+		if( !motif.isCustom() && motif.getPssmFile() != null )
+			motif.setPssm(services.getPssm(motif.getPssmFile()));		
 	}
 	
 	private File getSearchCache() {
 		if( services.getInitNumber("wregex.cacheSearch") == 0 )
 			return null;
 		DatabaseInformation cacheDb = databases.getDbWregex(); 
-		if( cacheDb == null || useAuxMotif || dbPtm || assayScores || custom )
+		if( cacheDb == null || motifs.isUseAuxMotif() || dbPtm || assayScores || motifs.getMainMotif().isCustom() )
 			return null;
 		return new File(cacheDb.getPath());
 	}
@@ -439,9 +235,9 @@ public class SearchBean implements Serializable {
 					continue;
 				if( !dis.readUTF().equals(targetInformation.getPath()) )
 					continue;
-				if( !dis.readUTF().equals(getRegex()) )
+				if( !dis.readUTF().equals(motifs.getMainMotif().getRegex()) )
 					continue;
-				if( !dis.readUTF().equals(getPssm()) )
+				if( !dis.readUTF().equals(motifs.getMainMotif().getPssmFile()) )
 					continue;
 				if( dis.readBoolean() != grouping )
 					continue;
@@ -480,8 +276,8 @@ public class SearchBean implements Serializable {
 		try( DataOutputStream dos = new DataOutputStream(Streams.getBinWriter(file)); ) {
 			dos.writeUTF("WCV3");
 			dos.writeUTF(targetInformation.getPath());
-			dos.writeUTF(getRegex());
-			dos.writeUTF(getPssm());
+			dos.writeUTF(motifs.getMainMotif().getRegex());
+			dos.writeUTF(motifs.getMainMotif().getPssmFile());
 			dos.writeBoolean(grouping);
 			dos.writeBoolean(cosmic);
 			dos.writeBoolean(filterEqual);
@@ -578,13 +374,12 @@ public class SearchBean implements Serializable {
 		//long div = getWregexMotifs().size() + getElmMotifs().size();
 		//long tout = getInitNumber("wregex.watchdogtimer")*1000/div;
 		long tout = services.getInitNumber("wregex.watchdogtimer")*1000;
-		List<ResultGroupEx> results = services.searchAll(getAllMotifs(), inputGroups, tout);
-		usingPssm = true;
+		List<ResultGroupEx> results = services.searchAll(motifs.getAllMotifs(), inputGroups, tout);
 		return results;
-	}
+	}	
 
 	private void searchCosmic() throws ReloadException {
-		Services.searchCosmic(databases.getMapCosmic(), results, isUsingPssm());
+		Services.searchCosmic(databases.getMapCosmic(), results, motifs.isUsingPssm());
 	}
 	
 	private void searchDbPtm() throws ReloadException {
@@ -592,26 +387,17 @@ public class SearchBean implements Serializable {
 	}
 	
 	private void searchAux() throws Exception {
-		if( getAuxPssm() != null )
-			auxPssm = services.getPssm(getAuxPssm());
-		Wregex wregex = new Wregex(getAuxRegex(), auxPssm);		
+		MotifBean motif = this.motifs.getAuxMotif();
+		if( motif.getPssmFile() != null )
+			motif.setPssm(services.getPssm(motif.getPssmFile()));
+		Wregex wregex = new Wregex(motif.getRegex(), motif.getPssm());		
 		Services.searchAux(wregex, results);
 	}
 
 	public void uploadPssm( FileUploadEvent event ) {
-		searchError = null;
-		results = null;
-		UploadedFile pssmFile = event.getFile();
-		if( !custom || pssmFile == null ) {
-			pssm = null;
-			return;
-		}
-		pssmFileName = pssmFile.getFileName();
-		//Reader rd = new InputStreamReader(pssmFile.getInputstream());
-		Reader rd = new InputStreamReader(new ByteArrayInputStream(pssmFile.getContents()));
+		resetResult();
 		try {
-			pssm = Pssm.load(rd, true);
-			rd.close();
+			motifs.uploadPssm(event);
 		} catch (IOException e) {
 			searchError = "File error: " + e.getMessage();
 		} catch (PssmBuilderException e) {
@@ -673,10 +459,6 @@ public class SearchBean implements Serializable {
 		return count + " results!";
 	}
 
-	public boolean isUsingPssm() {
-		return usingPssm;
-	}
-
 	public boolean isGrouping() {
 		return grouping;
 	}
@@ -702,7 +484,7 @@ public class SearchBean implements Serializable {
 	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+baseFileName+".csv\"");
 		try {
 			OutputStream output = ec.getResponseOutputStream();
-			ResultEx.saveCsv(new OutputStreamWriter(output), results, assayScores, useAuxMotif, cosmic, dbPtm );
+			ResultEx.saveCsv(new OutputStreamWriter(output), results, assayScores, motifs.isUseAuxMotif(), cosmic, dbPtm );
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
@@ -755,11 +537,11 @@ public class SearchBean implements Serializable {
 	}
 	
 	public void downloadPssm() {
-		downloadFile(getPssm());
+		downloadFile(motifs.getMainMotif().getPssmFile());
 	}
 	
 	public void downloadAuxPssm() {
-		downloadFile(getAuxPssm());
+		downloadFile(motifs.getAuxMotif().getPssmFile());
 	}
 
 	public boolean getAssayScores() {
@@ -772,13 +554,7 @@ public class SearchBean implements Serializable {
 		if( fastaFileName == null )
 			return inputGroups.size() + " entries";
 		return fastaFileName + ": " + inputGroups.size() + " entries";
-	}
-	
-	public String getPssmSummary() {
-		if( custom && pssmFileName != null )
-			return pssmFileName;
-		return null;
-	}
+	}	
 	
 	public void onChangeOption() {
 		searchError = null;
@@ -801,10 +577,6 @@ public class SearchBean implements Serializable {
 		this.cosmic = cosmic;
 	}
 
-	public boolean isAllMotifs() {
-		return allMotifs;
-	}
-
 	public boolean isDbPtm() {
 		return dbPtm;
 	}
@@ -815,51 +587,7 @@ public class SearchBean implements Serializable {
 	
 	public boolean isInitialized() {
 		return databases.isInitialized();
-	}
-	
-	public String getAuxMotif() {
-		return auxMotif;
-	}
-
-	public void setAuxMotif(String auxMotif) {
-		this.auxMotif = auxMotif;
-	}
-
-	public String getAuxConfiguration() {
-		return auxDefinition;
-	}
-
-	public void setAuxConfiguration(String auxDefinition) {
-		this.auxDefinition = auxDefinition;
-	}
-
-	public MotifInformation getAuxMotifInformation() {
-		return auxMotifInformation;
-	}
-
-	public void setAuxMotifInformation(MotifInformation auxMotifInformation) {
-		this.auxMotifInformation = auxMotifInformation;
-	}
-
-	public MotifDefinition getAuxMotifDefinition() {
-		return auxMotifDefinition;
-	}
-
-	public void setAuxMotifDefinition(MotifDefinition auxMotifDefinition) {
-		this.auxMotifDefinition = auxMotifDefinition;
-	}
-
-	public boolean isUseAuxMotif() {
-		return useAuxMotif;
-	}
-
-	public void setUseAuxMotif(boolean useAuxMotif) {
-		this.useAuxMotif = useAuxMotif;
-	}
-	
-	public boolean isShowMotifDetails() {
-		return motifInformation != null || (isUseAuxMotif() && auxMotifInformation != null);
-	}
+	}	
 
 	public int getFlanking() {
 		return flanking;

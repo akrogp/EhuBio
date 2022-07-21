@@ -4,14 +4,14 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
+import javax.inject.Named;
 
 import es.ehubio.wregex.data.LatestNew;
 import es.ehubio.wregex.data.PageSummary;
 import es.ehubio.wregex.data.Versions;
 
-@ManagedBean
+@Named
 @ApplicationScoped
 public class HomeBean implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -81,6 +81,7 @@ public class HomeBean implements Serializable {
 	}
 	
 	private void setWregexLogDev(List<LatestNew> news) {
+		news.add(new LatestNew("Jun 30, 2022", "Databases updated"));
 		news.add(new LatestNew("Sep 10, 2020", "Databases updated"));
 		news.add(new LatestNew("Sep 28, 2017", "Included support for coarse/fine PSSM"));
 		news.add(new LatestNew("Sep 26, 2017", "Filtered SNPs from COSMIC"));
@@ -112,6 +113,7 @@ public class HomeBean implements Serializable {
 	}
 
 	private void setWregexLog2(List<LatestNew> news) {
+		news.add(new LatestNew("Jun 30, 2022", "Databases updated"));
 		news.add(new LatestNew("Sep 10, 2020", "Databases updated"));
 		news.add(new LatestNew("Sep 26, 2017", "Wregex v2.1 published"));
 		news.add(new LatestNew("Sep 14, 2017", "Updated to latest versions of COSMIC and UniProt"));

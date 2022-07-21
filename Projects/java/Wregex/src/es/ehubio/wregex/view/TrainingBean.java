@@ -10,10 +10,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 import org.apache.commons.io.FilenameUtils;
 import org.primefaces.event.FileUploadEvent;
@@ -29,7 +29,7 @@ import es.ehubio.wregex.TrainingGroup;
 import es.ehubio.wregex.TrainingMotif;
 import es.ehubio.wregex.data.Services;
 
-@ManagedBean
+@Named
 @SessionScoped
 public class TrainingBean implements Serializable {
 	private static final long serialVersionUID = 1L;

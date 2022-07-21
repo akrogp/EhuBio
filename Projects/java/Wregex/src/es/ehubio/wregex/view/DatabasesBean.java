@@ -15,9 +15,9 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
+import javax.inject.Named;
 
 import es.ehubio.db.cosmic.CosmicStats;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
@@ -32,7 +32,7 @@ import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.MotifReference;
 import es.ehubio.wregex.data.Versions;
 
-@ManagedBean
+@Named
 @ApplicationScoped
 public class DatabasesBean implements Serializable {
 	private static final long serialVersionUID = 1L;

@@ -27,13 +27,13 @@ public class Entry {
 		this.position = position;
 	}
 	
-	public String getModification() {
+	/*public String getModification() {
 		return modification;
 	}
 	
 	public void setModification(String modification) {
 		this.modification = modification;
-	}
+	}*/
 	
 	public Set<String> getPubmedIds() {
 		return pubmedIds;
@@ -43,13 +43,13 @@ public class Entry {
 		this.pubmedIds = pubmedIds;
 	}
 	
-	public String getResource() {
+	/*public String getResource() {
 		return resource;
 	}
 	
 	public void setResource(String resource) {
 		this.resource = resource;
-	}
+	}*/
 	
 	public char getAminoacid() {
 		return aminoacid;
@@ -69,7 +69,7 @@ public class Entry {
 	
 	@Override
 	public String toString() {
-		StringBuilder str = new StringBuilder(id+":"+accession+":"+position+":"+modification);
+		StringBuilder str = new StringBuilder(id+":"+accession+":"+position+":"+aminoacid+":"+type);
 		boolean first = true;
 		for( String id : pubmedIds )
 			if( first ) {
@@ -77,16 +77,15 @@ public class Entry {
 				first = false;
 			} else
 				str.append(";"+id);
-		str.append(":"+resource+":"+aminoacid+":"+type);
 		return str.toString();
 	}
 	
 	private String id;
 	private String accession;
 	private int position;
-	private String modification;
+	//private String modification;
 	private Set<String> pubmedIds;
-	private String resource;
+	//private String resource;
 	private char aminoacid;
 	private String type;
 }

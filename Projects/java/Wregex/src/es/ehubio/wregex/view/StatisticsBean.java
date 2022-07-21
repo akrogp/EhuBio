@@ -11,12 +11,12 @@ import java.util.Scanner;
 import java.util.logging.Logger;
 
 import javax.annotation.PostConstruct;
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
+import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.inject.Inject;
+import javax.inject.Named;
 
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.wregex.Pssm;
@@ -30,7 +30,7 @@ import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
 import es.ehubio.wregex.data.Versions;
 
-@ManagedBean
+@Named
 @ApplicationScoped
 public class StatisticsBean {
 	private final static String cosmicBubbles = "cosmicBubbles.json";
@@ -45,7 +45,7 @@ public class StatisticsBean {
 	
 	private final static Logger logger = Logger.getLogger(StatisticsBean.class.getName());
 	
-	@ManagedProperty(value="#{databasesBean}")
+	@Inject
 	private DatabasesBean databases;
 	private final Services services;
 	

@@ -36,8 +36,8 @@ public class ProteinPtms {
 				map.put(entry.getAccession(), protein);
 			}
 			// Filter predicted PTMs
-			if( entry.getResource().contains("HMM") )
-				continue;
+			/*if( entry.getResource().contains("HMM") )
+				continue;*/
 			ptm = protein.getPtms().get(entry.getPosition());
 			if( ptm != null ) {
 				// Filter duplicates
