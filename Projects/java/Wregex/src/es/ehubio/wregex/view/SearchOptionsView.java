@@ -13,6 +13,9 @@ public class SearchOptionsView implements Serializable {
 	private boolean filterEqual = false;
 	private double scoreThreshold = 0.0;
 	private int flanking = 0;
+	private boolean cosmic = false;
+	private boolean dbPtm = false;
+	private String[] selectedPtms;
 	
 	public boolean isGrouping() {
 		return grouping;
@@ -44,5 +47,29 @@ public class SearchOptionsView implements Serializable {
 	
 	public void setFlanking(int flanking) {
 		this.flanking = flanking;
+	}
+	
+	public boolean isCosmic() {
+		return cosmic;
+	}
+
+	public void setCosmic(boolean cosmic) {
+		this.cosmic = cosmic;
+	}
+
+	public boolean isDbPtm() {
+		return dbPtm;
+	}
+
+	public void setDbPtm(boolean dbPtm) {
+		this.dbPtm = dbPtm;
+	}
+
+	public String[] getSelectedPtms() {
+		return selectedPtms;
+	}
+
+	public void setSelectedPtms(String[] selectedPtms) {
+		this.selectedPtms = selectedPtms;
 	}
 }

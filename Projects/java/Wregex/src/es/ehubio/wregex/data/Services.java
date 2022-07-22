@@ -254,8 +254,17 @@ public class Services {
 				continue;
 			count = 0;
 			for( Ptm ptm : ptms.getPtms().values() )
-				if( ptm.position >= result.getStart() && ptm.position <= result.getEnd() )
-					count += ptm.count;
+				if( ptm.position >= result.getStart() && ptm.position <= result.getEnd() ) {
+					count += ptm.types.size();
+					for( String type : ptm.types ) {
+						Integer typeCount = result.getPtmCounts().get(type);
+						if( typeCount == null )
+							typeCount = 1;
+						else
+							typeCount++;
+						result.getPtmCounts().put(type, typeCount);
+					}
+				}
 			result.setDbPtmUrl(String.format(
 				"https://awi.cuhk.edu.cn/dbPTM/info.php?id=%s",ptms.getId()));
 			result.setDbPtms(count);			

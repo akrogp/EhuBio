@@ -1,10 +1,6 @@
 package es.ehubio.wregex.view;
 
 import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -12,11 +8,8 @@ import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.Serializable;
-import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
@@ -26,16 +19,11 @@ import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
 
-import es.ehubio.db.fasta.Fasta;
-import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
-import es.ehubio.db.fasta.Fasta.SequenceType;
 import es.ehubio.io.Streams;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
-import es.ehubio.wregex.data.CachedResult;
-import es.ehubio.wregex.data.DatabaseInformation;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
@@ -44,13 +32,10 @@ import es.ehubio.wregex.view.DatabasesBean.ReloadException;
 @Named
 @SessionScoped
 public class SearchView implements Serializable {
-	private static final long serialVersionUID = 1L;
-	private final static Logger logger = Logger.getLogger(SearchView.class.getName());		
+	private static final long serialVersionUID = 1L;		
 	private String searchError;
 	private List<ResultEx> results = null;
-	private String cachedAlnPath;	
-	private boolean cosmic = false;
-	private boolean dbPtm = false;	
+	private String cachedAlnPath;
 	private boolean assayScores = false;	
 	@Inject
 	private DatabasesBean databases;
@@ -98,21 +83,17 @@ public class SearchView implements Serializable {
 		searchError = null;		
 		try {
 			updateAssayScores();
-			results = loadSearchCache();
-			if( results == null ) {
-				List<ResultGroupEx> resultGroups = motifView.isAllMotifs() == false ? singleSearch() : allSearch();
-				results = Services.expand(resultGroups, options.isGrouping());				
-				results = Services.filter(results, options.isFilterEqual(), options.getScoreThreshold());
-				Services.flanking(results, options.getFlanking());
-				if( motifView.isUseAuxMotif() )
-					searchAux();
-				if( cosmic )
-					searchCosmic();
-				if( dbPtm )
-					searchDbPtm();
-				Collections.sort(results);
-				saveSearchCache(results);
-			}
+			List<ResultGroupEx> resultGroups = motifView.isAllMotifs() == false ? singleSearch() : allSearch();
+			results = Services.expand(resultGroups, options.isGrouping());				
+			results = Services.filter(results, options.isFilterEqual(), options.getScoreThreshold());
+			Services.flanking(results, options.getFlanking());
+			if( motifView.isUseAuxMotif() )
+				searchAux();
+			if( options.isCosmic() )
+				searchCosmic();
+			if( options.isDbPtm() )
+				searchDbPtm();
+			Collections.sort(results);
 		} catch( IOException e ) {
 			searchError = "File error: " + e.getMessage();
 		} catch( PssmBuilderException e ) {
@@ -134,172 +115,7 @@ public class SearchView implements Serializable {
 		MotifBean motif = this.motifView.getMainMotif();
 		if( !motif.isCustom() && motif.getPssmFile() != null )
 			motif.setPssm(services.getPssm(motif.getPssmFile()));		
-	}
-	
-	private File getSearchCache() {
-		if( services.getInitNumber("wregex.cacheSearch") == 0 )
-			return null;
-		DatabaseInformation cacheDb = databases.getDbWregex(); 
-		if( cacheDb == null || motifView.isUseAuxMotif() || dbPtm || assayScores || motifView.getMainMotif().isCustom() )
-			return null;
-		return new File(cacheDb.getPath());
-	}
-
-	private List<ResultEx> loadSearchCache() {
-		cachedAlnPath = null;
-		DatabaseInformation targetInformation = targetView.getTargetInformation();
-		if( targetInformation == null || !targetInformation.getType().equals("fasta") )
-			return null;
-		File dir = getSearchCache();
-		if( dir == null )
-			return null;		
-		String[] files = dir.list(new FilenameFilter() {			
-			@Override
-			public boolean accept(File dir, String name) {
-				return name.contains("-search.dat");
-			}
-		});
-		for( String file : files ) {
-			File cache = new File(dir,file);
-			try( DataInputStream dis = new DataInputStream(Streams.getBinReader(cache)); ) {
-				if( !dis.readUTF().equals("WCV3") )
-					continue;
-				if( !dis.readUTF().equals(targetInformation.getPath()) )
-					continue;
-				if( !dis.readUTF().equals(motifView.getMainMotif().getRegex()) )
-					continue;
-				if( !dis.readUTF().equals(motifView.getMainMotif().getPssmFile()) )
-					continue;
-				if( dis.readBoolean() != options.isGrouping() )
-					continue;
-				if( dis.readBoolean() != cosmic )
-					continue;
-				if( dis.readBoolean() != options.isFilterEqual() )
-					continue;
-				if( dis.readDouble() != options.getScoreThreshold() )
-					continue;
-				if( dis.readInt() != options.getFlanking() )
-					continue;
-				logger.info("Using cached search");
-				cachedAlnPath = cache.getAbsolutePath().replaceAll("\\.dat", ".aln");
-				int len = dis.readInt();
-				List<ResultEx> results = new ArrayList<>(len);
-				for( int i = 0; i < len; i++ )
-					results.add(loadSearchItem(dis));
-				initPssm();
-				return results;
-			} catch( Exception e ) {
-				logger.severe(e.getMessage());
-			}
-		}
-		return null;
-	}
-
-	private void saveSearchCache(List<ResultEx> results) {
-		DatabaseInformation targetInformation = targetView.getTargetInformation();
-		if( targetInformation == null || !targetInformation.getType().equals("fasta") )
-			return;
-		File dir = getSearchCache();
-		if( dir == null )
-			return;
-		boolean delete = false;
-		long id = System.currentTimeMillis();
-		File file = new File(dir,String.format("%s-search.dat.gz", id));
-		try( DataOutputStream dos = new DataOutputStream(Streams.getBinWriter(file)); ) {
-			dos.writeUTF("WCV3");
-			dos.writeUTF(targetInformation.getPath());
-			dos.writeUTF(motifView.getMainMotif().getRegex());
-			dos.writeUTF(motifView.getMainMotif().getPssmFile());
-			dos.writeBoolean(options.isGrouping());
-			dos.writeBoolean(cosmic);
-			dos.writeBoolean(options.isFilterEqual());
-			dos.writeDouble(options.getScoreThreshold());
-			dos.writeInt(options.getFlanking());
-			dos.writeInt(results.size());
-			for( ResultEx result : results )
-				saveSearchItem(dos, result);
-			cachedAlnPath = new File(dir, String.format("%s-search.aln.gz", id)).getAbsolutePath();
-			try( Writer wr = Streams.getTextWriter(cachedAlnPath); ) {
-				ResultEx.saveAln(wr, results);
-			} catch( Exception e ) {
-				logger.severe(String.format("Could not save ALN cache: %s", e.getMessage()));
-				new File(cachedAlnPath).delete();
-			}
-		} catch( Exception e ) {
-			logger.severe(e.getMessage());
-			delete = true;
-		}
-		if( delete )
-			file.delete();
-	}
-	
-	private void saveSearchItem( DataOutputStream dos, ResultEx result ) throws IOException {
-		dos.writeUTF(result.getEntry());
-		dos.writeInt(result.getStart());
-		dos.writeInt(result.getEnd());
-		dos.writeUTF(result.getAlignment());
-		dos.writeInt(result.getCombinations());
-		dos.writeDouble(result.getScore());
-		dos.writeInt(result.getGroups().size());
-		for( String group : result.getGroups() )
-			if( group == null )
-				dos.writeUTF("@null");
-			else
-				dos.writeUTF(group);
-		dos.writeUTF(result.getMatch());
-		dos.writeUTF(result.getSequence());
-		dos.writeUTF(result.getName());
-		dos.writeUTF(result.toString());
-		dos.writeUTF(result.getAccession());
-		dos.writeUTF(result.getMotif());
-		dos.writeUTF(result.getFasta().getHeader());
-		dos.writeUTF(result.getFasta().getSequence());
-		if( cosmic ) {
-			dos.writeUTF(result.getGene());
-			dos.writeInt(result.getCosmicMissense());
-			if( result.getCosmicMissense() >= 0 ) {
-				dos.writeUTF(result.getMutSequence());
-				dos.writeDouble(result.getMutScore());
-				dos.writeUTF(result.getCosmicUrl());
-			}
-		}
-	}
-	
-	private CachedResult loadSearchItem( DataInputStream dis ) throws IOException, InvalidSequenceException {
-		CachedResult result = new CachedResult();
-		result.setEntry(dis.readUTF());
-		result.setStart(dis.readInt());
-		result.setEnd(dis.readInt());
-		result.setAlignement(dis.readUTF());
-		result.setCombinations(dis.readInt());
-		result.setScore(dis.readDouble());
-		int ngroups = dis.readInt();
-		List<String> groups = new ArrayList<String>(ngroups);
-		for( int j = 0; j < ngroups; j++ ) {
-			String group = dis.readUTF();
-			if( group.equals("@null") )
-				group = null;
-			groups.add(group);
-		}
-		result.setGroups(groups);
-		result.setMatch(dis.readUTF());
-		result.setSequence(dis.readUTF());
-		result.setName(dis.readUTF());
-		result.setString(dis.readUTF());
-		result.setAccession(dis.readUTF());
-		result.setMotif(dis.readUTF());
-		result.setFasta(new Fasta(dis.readUTF(), dis.readUTF(), SequenceType.PROTEIN));
-		if( cosmic ) {
-			result.setGene(dis.readUTF());
-			result.setCosmicMissense(dis.readInt());
-			if( result.getCosmicMissense() >= 0 ) {
-				result.setMutSequence(dis.readUTF());							
-				result.setMutScore(dis.readDouble());
-				result.setCosmicUrl(dis.readUTF());
-			}
-		}
-		return result;
-	}
+	}	
 
 	private List<ResultGroupEx> allSearch() throws Exception {
 		assayScores = false;
@@ -365,7 +181,7 @@ public class SearchView implements Serializable {
 	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+targetView.getBaseFileName()+".csv\"");
 		try {
 			OutputStream output = ec.getResponseOutputStream();
-			ResultEx.saveCsv(new OutputStreamWriter(output), results, assayScores, motifView.isUseAuxMotif(), cosmic, dbPtm );
+			ResultEx.saveCsv(new OutputStreamWriter(output), results, assayScores, motifView.isUseAuxMotif(), options.isCosmic(), options.isDbPtm() );
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
@@ -430,23 +246,6 @@ public class SearchView implements Serializable {
 	}	
 	
 	public void onChangeOption() {
-		searchError = null;
-		results = null;
-	}
-
-	public boolean isCosmic() {
-		return cosmic;
-	}
-
-	public void setCosmic(boolean cosmic) {
-		this.cosmic = cosmic;
-	}
-
-	public boolean isDbPtm() {
-		return dbPtm;
-	}
-
-	public void setDbPtm(boolean dbPtm) {
-		this.dbPtm = dbPtm;
-	}
+		resetResult();
+	}	
 }

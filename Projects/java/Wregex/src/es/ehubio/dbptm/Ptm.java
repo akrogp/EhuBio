@@ -1,10 +1,9 @@
 package es.ehubio.dbptm;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Ptm {
 	public int position;
-	public int count;
-	public List<String> types = new ArrayList<>();
+	public final Set<String> types = new HashSet<>();
 }

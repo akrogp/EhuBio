@@ -12,7 +12,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -20,6 +22,8 @@ import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
 import es.ehubio.db.cosmic.CosmicStats;
+import es.ehubio.db.dbptm.Entry;
+import es.ehubio.db.dbptm.TxtReader;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.dbptm.ProteinPtms;
 import es.ehubio.io.UnixCfgReader;
@@ -54,6 +58,7 @@ public class DatabasesBean implements Serializable {
 	private Map<String,FastaDb> mapFasta;
 	private Map<String,CosmicStats> mapCosmic;
 	private Map<String, ProteinPtms> mapDbPtm;
+	private List<String> ptms;
 	private long lastModifiedCosmic;
 	private long lastModifiedElm;
 	private long lastModifiedDbPtm;
@@ -226,7 +231,11 @@ public class DatabasesBean implements Serializable {
 		if( !isInitialized() || refreshDbPtm() )
 			throw new ReloadException(dbPtm.getFullName());
 		return mapDbPtm;
-	}	
+	}
+	
+	public List<String> getPtms() {
+		return ptms;
+	}
 
 	public boolean isInitialized() {
 		return initialized == 0;
@@ -323,7 +332,16 @@ public class DatabasesBean implements Serializable {
 	
 	private void loadDbPtm() throws IOException {
 		logger.info("Loading DB: " + dbPtm.getFullName());
-		mapDbPtm = ProteinPtms.load(dbPtm.getPath());
+		List<Entry> list = TxtReader.readFile(dbPtm.getPath());
+		mapDbPtm = ProteinPtms.load(list);
+		//ptms = list.stream().map(ptm -> ptm.getType()).distinct().collect(Collectors.toList());
+		ptms = list.stream().map(Entry::getType)
+			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) 
+		    .entrySet()
+		    .stream()
+		    .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
+		    .map(Map.Entry::getKey)
+		    .collect(Collectors.toList());
 		lastModifiedDbPtm = new File(dbPtm.getPath()).lastModified();
 		logger.info("Loaded!");
 	}

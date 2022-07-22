@@ -4,7 +4,9 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -19,6 +21,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	private String cosmicUrl;
 	private int dbPtms = -1;
 	private String dbPtmUrl;
+	private final Map<String, Integer> ptmCounts = new HashMap<>();
 	private String motif;
 	private String motifUrl;
 	private String mutSequence;
@@ -472,5 +475,9 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public void setAlignment(String alignment) {
 		this.alignment = alignment;
+	}
+	
+	public Map<String, Integer> getPtmCounts() {
+		return ptmCounts;
 	}
 }

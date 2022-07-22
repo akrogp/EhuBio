@@ -191,19 +191,18 @@
 					</p:row>
 					
 					<p:row>
-            			<p:column>Connections:</p:column>
+            			<p:column style="vertical-align:baseline;">Connections:</p:column>
             			<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-            				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
+            				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							<br/>
-							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
+							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
-							<p:selectManyCheckbox rendered="#{searchView.dbPtm}">
+							<p:selectManyCheckbox rendered="#{searchOptionsView.dbPtm}" layout="grid" columns="6" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">
 								<p:ajax event="change" update="@form" />
-								<f:selectItem itemLabel="Phospho"/>
-								<f:selectItem itemLabel="Ub"/>
+								<f:selectItems value="#{databasesBean.ptms}"/>
 							</p:selectManyCheckbox>
             			</p:column>
            			</p:row>
@@ -261,7 +260,7 @@
 						<f:facet name="header">Sequence</f:facet>
 						<h:outputText value="#{item.alignment}"/>
 					</p:column>
-					<p:column rendered="#{searchView.cosmic and motifView.usingPssm}">
+					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}">
 						<f:facet name="header">Mutant</f:facet>
 						<h:outputText value="#{item.mutLeft}"/>
 						<h:outputText value="#{item.mutAa}" style="color:red"/>
@@ -284,27 +283,31 @@
 						<f:facet name="header">Aux score</f:facet>
 						<h:outputText value="#{item.auxScoreAsString}"/>
 					</p:column>		
-					<p:column rendered="#{searchView.cosmic}" width="100">
+					<p:column rendered="#{searchOptionsView.cosmic}" width="100">
 						<f:facet name="header">Gene</f:facet>
 						<h:outputText value="#{item.gene}"/>
 					</p:column>
-					<p:column rendered="#{searchView.cosmic}" width="80" style="text-align:center;">
+					<p:column rendered="#{searchOptionsView.cosmic}" width="80" style="text-align:center;">
 						<f:facet name="header">COSMIC missense</f:facet>
 						<h:outputText rendered="#{item.cosmicUrl == null}" value="#{item.cosmicMissenseAsString}"/>
 						<h:outputLink rendered="#{item.cosmicUrl != null}" value="#{item.cosmicUrl}" target="_blank">#{item.cosmicMissenseAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
-					<p:column rendered="#{searchView.cosmic and motifView.usingPssm}" width="80" style="text-align:center;">
+					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}" width="80" style="text-align:center;">
 						<f:facet name="header">Mutation impact</f:facet>
 						<h:outputText value="NA" rendered="#{item.mutScore == null}"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore lt 0}" style="color:red"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore gt 0}" style="color:blue"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore == 0}"/>						
 					</p:column>
-					<p:column rendered="#{searchView.dbPtm}" width="80" style="text-align:center;">
+					<p:columns value="#{searchOptionsView.selectedPtms}" var="ptm" rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;text-overflow:ellipsis;">
+						<f:facet name="header">#{ptm}</f:facet>
+						<h:outputText value="#{item.ptmCounts.get(ptm)}" />
+					</p:columns>
+					<p:column rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;">
 						<f:facet name="header">dbPTM entries</f:facet>
 						<h:outputText rendered="#{item.dbPtmUrl == null}" value="#{item.dbPtmsAsString}"/>
 						<h:outputLink rendered="#{item.dbPtmUrl != null}" value="#{item.dbPtmUrl}" target="_blank">#{item.dbPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
-					</p:column>
+					</p:column>					
 				</p:dataTable>
 			</h:form>
 <!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!databasesBean.initialized}"/> -->
