@@ -32,18 +32,7 @@ public class MotifView implements Serializable {
 	private DatabasesBean databases;
 	@Inject
 	private SearchBean searchBean;
-	
-	public List<MotifInformation> getWregexMotifs() {
-		return databases.getWregexMotifs();
-	}
-	
-	public List<MotifInformation> getElmMotifs() {
-		return databases.getElmMotifs();
-	}
-	
-	public List<MotifInformation> getAllMotifs() {
-		return databases.getAllMotifs();
-	}
+
 	
 	public MotifBean getMainMotif() {
 		return mainMotif;
@@ -158,7 +147,8 @@ public class MotifView implements Serializable {
 		return mainMotif.getMotifInformation() != null || (isUseAuxMotif() && auxMotif.getMotifInformation() != null);
 	}
 	
-	public void uploadPssm( FileUploadEvent event ) throws PssmBuilderException, IOException {
+	public void uploadPssm( FileUploadEvent event ){
+		searchBean.resetResult();
 		UploadedFile pssmFile = event.getFile();
 		if( !mainMotif.isCustom() || pssmFile == null ) {
 			mainMotif.setCustomPssmFile(null);
@@ -168,7 +158,11 @@ public class MotifView implements Serializable {
 			//Reader rd = new InputStreamReader(pssmFile.getInputstream());
 			try(Reader rd = new InputStreamReader(new ByteArrayInputStream(pssmFile.getContents()))) {
 				mainMotif.setPssm(Pssm.load(rd, true));
-			}		
+			} catch (IOException e) {
+				searchBean.resetResult("File error: " + e.getMessage());
+			} catch (PssmBuilderException e) {
+				searchBean.resetResult("PSSM not valid: " + e.getMessage());
+			}	
 		}
 	}
 	

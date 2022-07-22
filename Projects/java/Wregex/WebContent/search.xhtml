@@ -26,11 +26,11 @@
 									itemValue="Default" />
 <!-- 								<f:selectItem itemLabel="All motifs" itemValue="All" /> -->
 								<f:selectItem itemLabel="Custom" itemValue="Custom" />
-								<f:selectItems value="#{motifView.wregexMotifs}" />
+								<f:selectItems value="#{databasesBean.wregexMotifs}" />
 								<f:selectItem
-									itemLabel="--- #{searchBean.elmInformation.fullName} ---"
+									itemLabel="--- #{databasesBean.elmInformation.fullName} ---"
 									itemValue="ELM" />
-								<f:selectItems value="#{motifView.elmMotifs}" />
+								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
 							</p:selectOneMenu>
 							<p:selectOneMenu value="#{motifView.mainMotif.configuration}"
@@ -46,11 +46,11 @@
 								valueChangeListener="#{motifView.onChangeAuxMotif}">
 								<f:selectItem itemLabel="--- Select motif ---"
 									itemValue="Default" />
-								<f:selectItems value="#{motifView.wregexMotifs}" />
+								<f:selectItems value="#{databasesBean.wregexMotifs}" />
 								<f:selectItem
-									itemLabel="--- #{searchBean.elmInformation.fullName} ---"
+									itemLabel="--- #{databasesBean.elmInformation.fullName} ---"
 									itemValue="ELM" />
-								<f:selectItems value="#{motifView.elmMotifs}" />
+								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
 							</p:selectOneMenu>
 							<p:selectOneMenu value="#{motifView.auxMotif.configuration}"
@@ -119,7 +119,7 @@
 								value="Scores will be available only for motifs with a PSSM (Wregex but not ELM)"
 								rendered="#{motifView.allMotifs}" />
 							<h:panelGroup rendered="#{motifView.mainMotif.custom}">
-								<p:fileUpload fileUploadListener="#{searchBean.uploadPssm}"
+								<p:fileUpload fileUploadListener="#{motifView.uploadPssm}"
 									mode="advanced" sizeLimit="#{initParam['wregex.pssm']}"
 									multiple="false" auto="true" label="Select PSSM" update="@form"
 									allowTypes="/(\.|\/)(te?xt|pssm)$/" style="width:400px;" />
@@ -140,22 +140,22 @@
 							<p:panelGrid style="border-style:hidden;">
 								<p:row>
 								<p:column>
-									<p:selectOneMenu value="#{searchBean.target}"
-										valueChangeListener="#{searchBean.onChangeTarget}">
+									<p:selectOneMenu value="#{targetView.target}"
+										valueChangeListener="#{targetView.onChangeTarget}">
 										<f:selectItem itemLabel="--- Select target ---" itemValue="Default" />
-										<f:selectItems value="#{searchBean.targets}" />
+										<f:selectItems value="#{databasesBean.targets}" />
 										<p:ajax update="@form" />
 									</p:selectOneMenu>
 								</p:column>
-								<p:column rendered="#{searchBean.uploadTarget}">
-									<p:fileUpload fileUploadListener="#{searchBean.uploadFasta}"
+								<p:column rendered="#{targetView.uploadTarget}">
+									<p:fileUpload fileUploadListener="#{targetView.uploadFasta}"
 										mode="advanced" sizeLimit="#{initParam['wregex.fasta']}"
 										multiple="false" auto="true" label="Select fasta"
 										update="@form" allowTypes="/(\.|\/)(te?xt|fasta)$/"
 										style="width:400px;" />
 								</p:column>
-								<p:column rendered="#{searchBean.fastaSummary != null}">
-									<h:outputText id="fasta" value="#{searchBean.fastaSummary}" />
+								<p:column rendered="#{targetView.fastaSummary != null}">
+									<h:outputText id="fasta" value="#{targetView.fastaSummary}" />
 								</p:column>
 								</p:row>
 							</p:panelGrid>
@@ -193,11 +193,11 @@
 					<p:row>
             			<p:column>Connections:</p:column>
             			<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-            				<p:selectBooleanCheckbox itemLabel="#{searchBean.cosmicInformation.fullName}" value="#{searchBean.cosmic}" valueChangeListener="#{searchBean.onChangeOption}">
+            				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchBean.cosmic}" valueChangeListener="#{searchBean.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							<br/>
-							<p:selectBooleanCheckbox itemLabel="#{searchBean.dbPtmInformation.fullName}" value="#{searchBean.dbPtm}" valueChangeListener="#{searchBean.onChangeOption}" rendered="#{homeBean.development}">
+							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchBean.dbPtm}" valueChangeListener="#{searchBean.onChangeOption}" rendered="#{homeBean.development}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							<p:selectManyCheckbox rendered="#{searchBean.dbPtm}">

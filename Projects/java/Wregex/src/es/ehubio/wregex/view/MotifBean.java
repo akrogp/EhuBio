@@ -24,6 +24,10 @@ public class MotifBean {
 	public String getRegex() {
 		return motifDefinition == null || motifInformation == null ? null : motifDefinition.getRegex();
 	}
+	
+	public String getSingleRegex() {
+		return isCustom() ? getCustomRegex() : getRegex();
+	}
 		
 	public String getPssmFile() {
 		return motifDefinition == null ? null : motifDefinition.getPssm();
