@@ -31,7 +31,7 @@ public class MotifView implements Serializable {
 	@Inject
 	private DatabasesBean databases;
 	@Inject
-	private SearchBean searchBean;
+	private SearchView searchBean;
 
 	
 	public MotifBean getMainMotif() {

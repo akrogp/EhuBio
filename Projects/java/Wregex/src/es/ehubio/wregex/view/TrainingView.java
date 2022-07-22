@@ -31,7 +31,7 @@ import es.ehubio.wregex.data.Services;
 
 @Named
 @SessionScoped
-public class TrainingBean implements Serializable {
+public class TrainingView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private List<InputMotif> inputList = new ArrayList<>();
 	private List<InputGroup> inputGroupList = null;
@@ -44,7 +44,7 @@ public class TrainingBean implements Serializable {
 	private final Services services;
 	private String trainingError = null;
 
-	public TrainingBean() {
+	public TrainingView() {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
 	}
 

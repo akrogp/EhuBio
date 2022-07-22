@@ -43,9 +43,9 @@ import es.ehubio.wregex.view.DatabasesBean.ReloadException;
 
 @Named
 @SessionScoped
-public class SearchBean implements Serializable {
+public class SearchView implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private final static Logger logger = Logger.getLogger(SearchBean.class.getName());		
+	private final static Logger logger = Logger.getLogger(SearchView.class.getName());		
 	private String searchError;
 	private List<ResultEx> results = null;
 	private String cachedAlnPath;
@@ -64,7 +64,7 @@ public class SearchBean implements Serializable {
 	private final Services services;
 	private int flanking = 0;
 	
-	public SearchBean() {
+	public SearchView() {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
 	}
 	

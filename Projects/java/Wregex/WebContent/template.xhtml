@@ -25,7 +25,7 @@
 		<a href="http://www.ehu.eus" target="_blank"><h:graphicImage name="images/ehu.png" style="float:right;margin-right:10px;"/></a>
 	</div>
 	<div id="menubar">
-		<ui:repeat var="page" value="#{homeBean.firstPages}">
+		<ui:repeat var="page" value="#{homeView.firstPages}">
 			<h:link value="#{page.name}" outcome="#{page.action}" style="color:white"/> &nbsp; | &nbsp;
 		</ui:repeat>		
 		<!--<h:link value="Search" outcome="search" style="color:white"/> &nbsp; | &nbsp;
@@ -33,7 +33,7 @@
 		<h:link value="Training" outcome="training" style="color:white"/> &nbsp; | &nbsp;
 		<h:link value="Documentation" outcome="documentation" style="color:white"/> &nbsp; | &nbsp;
 		<h:link value="Downloads" outcome="downloads" style="color:white"/>-->
-		<h:link value="#{homeBean.lastPage.name}" outcome="#{homeBean.lastPage.action}" style="color:white"/>
+		<h:link value="#{homeView.lastPage.name}" outcome="#{homeView.lastPage.action}" style="color:white"/>
 	</div>
 	<div id="body">
 	<ui:insert name="content" />

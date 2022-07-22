@@ -13,13 +13,13 @@
 		</ui:define>
 		<ui:define name="content">
 		<h:form>
-			<h3>Welcome to the <h:outputText value="#{homeBean.signature}"/> home page</h3><p:separator/>
+			<h3>Welcome to the <h:outputText value="#{homeView.signature}"/> home page</h3><p:separator/>
 			
 			<p>We present a novel approach for amino acid motif searching termed Wregex (weighted regular expression),
 			which combines regular expressions with a Position-Specific Scoring Matrix (PSSM).</p>
 			
 			<p>This website provides the following pages:
-			<p:dataTable value="#{homeBean.pages}" var="page">
+			<p:dataTable value="#{homeView.pages}" var="page">
 				<f:facet name="header">Wregex website pages</f:facet>
 				<p:column width="130">
 					<f:facet name="header">Name</f:facet>
@@ -37,10 +37,10 @@
 			<p>This project has been developed in the context of the <a href="http://ehubio.ehu.eus/" target="_blank">EhuBio</a>
 			collaboration. For further information please contact <a href="mailto:wregex@ehubio.es">wregex@ehubio.es</a>.</p>
 			
-			<p style="text-align:right">Site last updated: #{homeBean.lastUpdated}</p>
+			<p style="text-align:right">Site last updated: #{homeView.lastUpdated}</p>
 			
 			<h3>Latest news</h3><p:separator/>
-			<p:dataList value="#{homeBean.news}" var="latest" itemType="circle">
+			<p:dataList value="#{homeView.news}" var="latest" itemType="circle">
 				#{latest.date} - #{latest.summary}
 			</p:dataList>
 		</h:form>			

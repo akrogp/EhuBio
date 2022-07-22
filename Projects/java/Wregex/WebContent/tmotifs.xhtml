@@ -13,7 +13,7 @@
 				<p:panelGrid columns="1" headerClass="cfg_header">
 					<f:facet name="header">Input motifs</f:facet>
 					<h:panelGroup>
-						<p:fileUpload fileUploadListener="#{trainingBean.upload}"
+						<p:fileUpload fileUploadListener="#{trainingView.upload}"
 	            			mode="advanced"     
 	            			sizeLimit="#{initParam['wregex.training']}"
 	            			multiple="false"
@@ -21,19 +21,19 @@
 	            			label="Select fasta"
 	            			update="@all"
 	            			allowTypes="/(\.|\/)(te?xt|fasta)$/" />
-	            		<h:outputText value="#{trainingBean.fastaSummary}"/>
+	            		<h:outputText value="#{trainingView.fastaSummary}"/>
             		</h:panelGroup>
 					<h:panelGroup>
-					<p:commandButton value="Refresh" actionListener="#{trainingBean.refresh}" ajax="false"/>
-					<h:outputText value="#{trainingBean.uploadError}" rendered="#{trainingBean.uploadError != null}" style="color:red"/>
-					<h:outputText value="#{trainingBean.trainingError}" rendered="#{trainingBean.uploadError == null and trainingBean.trainingError != null}" style="color:red"/>
-					<h:outputText value="#{trainingBean.inputSummary}" rendered="#{trainingBean.inputSummary != null and trainingBean.uploadError == null and trainingBean.trainingError == null}"/>
+					<p:commandButton value="Refresh" actionListener="#{trainingView.refresh}" ajax="false"/>
+					<h:outputText value="#{trainingView.uploadError}" rendered="#{trainingView.uploadError != null}" style="color:red"/>
+					<h:outputText value="#{trainingView.trainingError}" rendered="#{trainingView.uploadError == null and trainingView.trainingError != null}" style="color:red"/>
+					<h:outputText value="#{trainingView.inputSummary}" rendered="#{trainingView.inputSummary != null and trainingView.uploadError == null and trainingView.trainingError == null}"/>
 					</h:panelGroup>
-					<p:commandButton value="Download motifs" actionListener="#{trainingBean.downloadInputMotifs}" ajax="false"/>
+					<p:commandButton value="Download motifs" actionListener="#{trainingView.downloadInputMotifs}" ajax="false"/>
 				</p:panelGrid>
 				<br/>
-				<p:dataTable value="#{trainingBean.inputList}" var="item" rowIndexVar="row"
-					rendered="#{not empty trainingBean.inputList and trainingBean.trainingError == null}"
+				<p:dataTable value="#{trainingView.inputList}" var="item" rowIndexVar="row"
+					rendered="#{not empty trainingView.inputList and trainingView.trainingError == null}"
 					scrollable="true" scrollHeight="450" liveScroll="true" scrollRows="40">
 					<f:facet name="header">Input motifs - live scroll (scroll and wait for more results)</f:facet>
 					<p:column width="50" style="text-align:center;">

@@ -13,7 +13,7 @@ import es.ehubio.wregex.data.Versions;
 
 @Named
 @ApplicationScoped
-public class HomeBean implements Serializable {
+public class HomeView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final List<PageSummary> pages;
 	private List<PageSummary> firstPages = new ArrayList<>();
@@ -21,7 +21,7 @@ public class HomeBean implements Serializable {
 	private final List<LatestNew> news;	
 
 	@SuppressWarnings("unused")
-	public HomeBean() {
+	public HomeView() {
 		pages = new ArrayList<>();
 		
 		PageSummary page = new PageSummary();

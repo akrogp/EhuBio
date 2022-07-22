@@ -12,7 +12,7 @@
 			<meta name="description" content="Wregex search page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
 		</ui:define>
 		<ui:define name="content">
-<!-- 			<h:form enctype="multipart/form-data" rendered="#{searchBean.initialized}"> -->
+<!-- 			<h:form enctype="multipart/form-data" rendered="#{searchView.initialized}"> -->
 			<h:form enctype="multipart/form-data">
 				<p:panelGrid headerClass="cfg_header">
 					<f:facet name="header">Search configuration</f:facet>
@@ -112,7 +112,7 @@
 									value="Not available (scores will not be available)"
 									rendered="#{motifView.mainMotif.motifInformation != null and motifView.mainMotif.pssmFile == null}" />
 								<p:commandButton value="Download"
-									actionListener="#{searchBean.downloadPssm}"
+									actionListener="#{searchView.downloadPssm}"
 									rendered="#{motifView.mainMotif.pssmFile != null}" ajax="false" />
 							</h:panelGroup>
 							<h:outputText
@@ -129,7 +129,7 @@
 						<p:column rendered="#{motifView.useAuxMotif}">
 							#{motifView.auxMotif.pssmFile}
 							<p:commandButton value="Download"
-								actionListener="#{searchBean.downloadAuxPssm}"
+								actionListener="#{searchView.downloadAuxPssm}"
 								rendered="#{motifView.auxMotif.pssmFile != null}" ajax="false" />
 						</p:column>					
             		</p:row>
@@ -165,24 +165,24 @@
             		<p:row>
             			<p:column>Options:</p:column>	
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-							<p:selectBooleanCheckbox itemLabel="Grouping" value="#{searchBean.grouping}" valueChangeListener="#{searchBean.onChangeOption}">
+							<p:selectBooleanCheckbox itemLabel="Grouping" value="#{searchView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							&nbsp;
-							<h:panelGroup rendered="#{homeBean.development}">
-								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchBean.filterEqual}" valueChangeListener="#{searchBean.onChangeOption}">
+							<h:panelGroup rendered="#{homeView.development}">
+								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
 									<p:ajax event="change" update="@form" />
 								</p:selectBooleanCheckbox>
 								&nbsp;Threshold:
-								<p:spinner value="#{searchBean.scoreThreshold}" valueChangeListener="#{searchBean.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
+								<p:spinner value="#{searchView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
 									<p:ajax event="change" update="@form" />
 								</p:spinner>
 								&nbsp;Flanking:
-								<p:spinner value="#{searchBean.flanking}" valueChangeListener="#{searchBean.onChangeOption}" min="0" suffix=" aa" size="5">
+								<p:spinner value="#{searchView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
 									<p:ajax event="change" update="@form" />
 								</p:spinner>
 								&nbsp;
-								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchBean.onChangeOption}" update="@form">
+								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchView.onChangeOption}" update="@form">
 									<p:ajax event="change" update="@form" />
 								</p:selectBooleanCheckbox>
 								&nbsp;
@@ -193,14 +193,14 @@
 					<p:row>
             			<p:column>Connections:</p:column>
             			<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-            				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchBean.cosmic}" valueChangeListener="#{searchBean.onChangeOption}">
+            				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							<br/>
-							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchBean.dbPtm}" valueChangeListener="#{searchBean.onChangeOption}" rendered="#{homeBean.development}">
+							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
-							<p:selectManyCheckbox rendered="#{searchBean.dbPtm}">
+							<p:selectManyCheckbox rendered="#{searchView.dbPtm}">
 								<p:ajax event="change" update="@form" />
 								<f:selectItem itemLabel="Phospho"/>
 								<f:selectItem itemLabel="Ub"/>
@@ -208,34 +208,34 @@
             			</p:column>
            			</p:row>
 					
-					<p:row rendered="#{searchBean.configError != null}">
+					<p:row rendered="#{searchView.configError != null}">
 						<p:column>Status:</p:column>
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-							<h:outputText value="#{searchBean.configError}" style="color:red"/>
+							<h:outputText value="#{searchView.configError}" style="color:red"/>
 						</p:column>						
 					</p:row>
 					
-					<p:row rendered="#{searchBean.configError == null and searchBean.results == null}">
+					<p:row rendered="#{searchView.configError == null and searchView.results == null}">
 						<p:column>
-							<p:commandButton value="Search!" actionListener="#{searchBean.search}" ajax="false"/>
+							<p:commandButton value="Search!" actionListener="#{searchView.search}" ajax="false"/>
 						</p:column>
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-							<h:outputText id="search" value="#{searchBean.searchError}" rendered="#{searchBean.searchError != null}" style="color:red"/>
+							<h:outputText id="search" value="#{searchView.searchError}" rendered="#{searchView.searchError != null}" style="color:red"/>
 						</p:column>
 					</p:row>
 					
-					<p:row rendered="#{searchBean.results != null and searchBean.configError == null and searchBean.searchError == null}">
+					<p:row rendered="#{searchView.results != null and searchView.configError == null and searchView.searchError == null}">
 						<p:column>Results:</p:column>
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-							<h:outputText value="#{searchBean.numberOfResults}"/>&nbsp;
-							<p:commandButton value="Download as CSV" rendered="#{not empty searchBean.results}" actionListener="#{searchBean.downloadCsv}" ajax="false"/>
-							<p:commandButton value="Download as ALN" rendered="#{not empty searchBean.results}" actionListener="#{searchBean.downloadAln}" ajax="false"/>
+							<h:outputText value="#{searchView.numberOfResults}"/>&nbsp;
+							<p:commandButton value="Download as CSV" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadCsv}" ajax="false"/>
+							<p:commandButton value="Download as ALN" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadAln}" ajax="false"/>
 						</p:column>
 					</p:row>
 				</p:panelGrid>
 				
 				<br/>
-				<p:dataTable value="#{searchBean.results}" rowIndexVar="row" var="item" rendered="#{searchBean.results != null and searchBean.configError == null}" scrollable="true" scrollHeight="300" liveScroll="true" scrollRows="40">
+				<p:dataTable value="#{searchView.results}" rowIndexVar="row" var="item" rendered="#{searchView.results != null and searchView.configError == null}" scrollable="true" scrollHeight="300" liveScroll="true" scrollRows="40">
 					<f:facet name="header">Search results - live scroll (scroll and wait for more results)</f:facet>
 					<p:column width="50" style="text-align:center;">
 						<f:facet name="header">#</f:facet>
@@ -261,7 +261,7 @@
 						<f:facet name="header">Sequence</f:facet>
 						<h:outputText value="#{item.alignment}"/>
 					</p:column>
-					<p:column rendered="#{searchBean.cosmic and motifView.usingPssm}">
+					<p:column rendered="#{searchView.cosmic and motifView.usingPssm}">
 						<f:facet name="header">Mutant</f:facet>
 						<h:outputText value="#{item.mutLeft}"/>
 						<h:outputText value="#{item.mutAa}" style="color:red"/>
@@ -276,7 +276,7 @@
 						<h:outputText value="#{item.scoreAsString}" rendered="#{motifView.usingPssm}" />
 						<h:outputText value="N/A" rendered="#{!motifView.usingPssm}"/>
 					</p:column>
-					<p:column rendered="#{searchBean.assayScores}" styleClass="trn_weight">
+					<p:column rendered="#{searchView.assayScores}" styleClass="trn_weight">
 						<f:facet name="header">Assay</f:facet>
 						<h:outputText value="#{item.assayAsString}"/>
 					</p:column>
@@ -284,30 +284,30 @@
 						<f:facet name="header">Aux score</f:facet>
 						<h:outputText value="#{item.auxScoreAsString}"/>
 					</p:column>		
-					<p:column rendered="#{searchBean.cosmic}" width="100">
+					<p:column rendered="#{searchView.cosmic}" width="100">
 						<f:facet name="header">Gene</f:facet>
 						<h:outputText value="#{item.gene}"/>
 					</p:column>
-					<p:column rendered="#{searchBean.cosmic}" width="80" style="text-align:center;">
+					<p:column rendered="#{searchView.cosmic}" width="80" style="text-align:center;">
 						<f:facet name="header">COSMIC missense</f:facet>
 						<h:outputText rendered="#{item.cosmicUrl == null}" value="#{item.cosmicMissenseAsString}"/>
 						<h:outputLink rendered="#{item.cosmicUrl != null}" value="#{item.cosmicUrl}" target="_blank">#{item.cosmicMissenseAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
-					<p:column rendered="#{searchBean.cosmic and motifView.usingPssm}" width="80" style="text-align:center;">
+					<p:column rendered="#{searchView.cosmic and motifView.usingPssm}" width="80" style="text-align:center;">
 						<f:facet name="header">Mutation impact</f:facet>
 						<h:outputText value="NA" rendered="#{item.mutScore == null}"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore lt 0}" style="color:red"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore gt 0}" style="color:blue"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore == 0}"/>						
 					</p:column>
-					<p:column rendered="#{searchBean.dbPtm}" width="80" style="text-align:center;">
+					<p:column rendered="#{searchView.dbPtm}" width="80" style="text-align:center;">
 						<f:facet name="header">dbPTM entries</f:facet>
 						<h:outputText rendered="#{item.dbPtmUrl == null}" value="#{item.dbPtmsAsString}"/>
 						<h:outputLink rendered="#{item.dbPtmUrl != null}" value="#{item.dbPtmUrl}" target="_blank">#{item.dbPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
 				</p:dataTable>
 			</h:form>
-<!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!searchBean.initialized}"/> -->
+<!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!searchView.initialized}"/> -->
 		</ui:define>
 	</ui:composition>
 </h:body>

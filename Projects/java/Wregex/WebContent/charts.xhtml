@@ -111,17 +111,17 @@ circle.child:hover {
 </ui:define>
 <ui:define name="content">
 	<h:form>
-	<h:panelGroup rendered="#{!statisticsBean.initialized}">
+	<h:panelGroup rendered="#{!statisticsView.initialized}">
 		Statistics are beeing updated, please try again in 15 minutes ...
 	</h:panelGroup>
-	<h:panelGroup rendered="#{statisticsBean.initialized}">
+	<h:panelGroup rendered="#{statisticsView.initialized}">
 		<div style="width:500px;margin-right:20px;float:left;">
-			<p:selectOneMenu value="#{statisticsBean.chart}" valueChangeListener="#{statisticsBean.onChangeChart}">
-				<f:selectItems value="#{statisticsBean.items}"/>
+			<p:selectOneMenu value="#{statisticsView.chart}" valueChangeListener="#{statisticsView.onChangeChart}">
+				<f:selectItems value="#{statisticsView.items}"/>
 				<p:ajax update="@form"/>
 			</p:selectOneMenu>			
-			<h3>#{statisticsBean.title}</h3>
-			<p:dataList value="#{statisticsBean.displayTips}" var="tip" itemType="circle">
+			<h3>#{statisticsView.title}</h3>
+			<p:dataList value="#{statisticsView.displayTips}" var="tip" itemType="circle">
 				<f:facet name="header">Display considerations:</f:facet>
 				#{tip}
 			</p:dataList>

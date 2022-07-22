@@ -32,7 +32,7 @@ import es.ehubio.wregex.data.Versions;
 
 @Named
 @ApplicationScoped
-public class StatisticsBean {
+public class StatisticsView {
 	private final static String cosmicBubbles = "cosmicBubbles.json";
 	private final static String dbPtmBubbles = "dbPtmBubbles.json";
 	
@@ -43,7 +43,7 @@ public class StatisticsBean {
 	private static final int maxPTMs = 100;
 	private static final int minPTMs = 30;
 	
-	private final static Logger logger = Logger.getLogger(StatisticsBean.class.getName());
+	private final static Logger logger = Logger.getLogger(StatisticsView.class.getName());
 	
 	@Inject
 	private DatabasesBean databases;
@@ -56,7 +56,7 @@ public class StatisticsBean {
 	private String title;
 	private final List<SelectItem> items;
 	
-	public StatisticsBean() {		
+	public StatisticsView() {		
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
 		items = new ArrayList<SelectItem>();
 		items.add(new SelectItem("COSMIC", "COSMIC missense mutations"));

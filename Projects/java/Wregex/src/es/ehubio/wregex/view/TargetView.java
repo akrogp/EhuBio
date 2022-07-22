@@ -31,7 +31,7 @@ public class TargetView implements Serializable {
 	@Inject
 	private DatabasesBean databases;
 	@Inject
-	private SearchBean searchBean;
+	private SearchView searchBean;
 	private String baseFileName, fastaFileName;
 	
 	public DatabaseInformation getTargetInformation() {

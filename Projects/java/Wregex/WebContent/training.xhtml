@@ -16,31 +16,31 @@
 				<p:panelGrid columns="2" headerClass="cfg_header">
 					<f:facet name="header">Training parameters</f:facet>
 					<p:commandButton value="Input motifs" action="tmotifs" ajax="false"/>
-					<h:outputText value="#{trainingBean.inputSummary}"
-						rendered="#{trainingBean.inputSummary != null}" />
+					<h:outputText value="#{trainingView.inputSummary}"
+						rendered="#{trainingView.inputSummary != null}" />
 					<h:outputText
 						value="You must upload a fasta file with training motifs"
-						rendered="#{trainingBean.inputSummary == null}" style="color:red" />
+						rendered="#{trainingView.inputSummary == null}" style="color:red" />
 
-					<p:commandButton value="Regular expression" actionListener="#{trainingBean.refresh}" ajax="false"/>
-					<p:inputText value="#{trainingBean.regex}" styleClass="trn_regex" />
+					<p:commandButton value="Regular expression" actionListener="#{trainingView.refresh}" ajax="false"/>
+					<p:inputText value="#{trainingView.regex}" styleClass="trn_regex" />
 
-					<p:commandButton value="Refresh" actionListener="#{trainingBean.refresh}" ajax="false"/>
-					<h:outputText value="#{trainingBean.trainingSummary}"
-						rendered="#{trainingBean.trainingSummary != null and trainingBean.trainingError == null}" />
+					<p:commandButton value="Refresh" actionListener="#{trainingView.refresh}" ajax="false"/>
+					<h:outputText value="#{trainingView.trainingSummary}"
+						rendered="#{trainingView.trainingSummary != null and trainingView.trainingError == null}" />
 					<h:outputText value="Define a regex matching any training motif"
-						rendered="#{trainingBean.trainingError == null and trainingBean.trainingSummary == null}"
+						rendered="#{trainingView.trainingError == null and trainingView.trainingSummary == null}"
 						style="color:red" />
-					<h:outputText value="#{trainingBean.trainingError}"
-						rendered="#{trainingBean.trainingError != null}"
+					<h:outputText value="#{trainingView.trainingError}"
+						rendered="#{trainingView.trainingError != null}"
 						style="color:red" />
 						
-					<p:commandButton value="Download Coarse PSSM" actionListener="#{trainingBean.downloadPssm(false)}" ajax="false"/>
-					<p:commandButton value="Download Fine PSSM" actionListener="#{trainingBean.downloadPssm(true)}" ajax="false"/>
+					<p:commandButton value="Download Coarse PSSM" actionListener="#{trainingView.downloadPssm(false)}" ajax="false"/>
+					<p:commandButton value="Download Fine PSSM" actionListener="#{trainingView.downloadPssm(true)}" ajax="false"/>
 				</p:panelGrid>
 				<p />
-				<p:dataTable value="#{trainingBean.trainingList}" var="item" rowIndexVar="row"
-					rendered="#{not empty trainingBean.trainingList and trainingBean.trainingError == null}"
+				<p:dataTable value="#{trainingView.trainingList}" var="item" rowIndexVar="row"
+					rendered="#{not empty trainingView.trainingList and trainingView.trainingError == null}"
 					scrollable="true" scrollHeight="450" liveScroll="true" scrollRows="40">
 					<f:facet name="header">Training motifs - live scroll (scroll and wait for more results)</f:facet>
 					<p:column width="50" style="text-align:center;">
