@@ -48,10 +48,7 @@ public class SearchView implements Serializable {
 	private final static Logger logger = Logger.getLogger(SearchView.class.getName());		
 	private String searchError;
 	private List<ResultEx> results = null;
-	private String cachedAlnPath;
-	private boolean grouping = true;
-	private boolean filterEqual = false;
-	private double scoreThreshold = 0.0;
+	private String cachedAlnPath;	
 	private boolean cosmic = false;
 	private boolean dbPtm = false;	
 	private boolean assayScores = false;	
@@ -61,8 +58,9 @@ public class SearchView implements Serializable {
 	private MotifView motifView;
 	@Inject
 	private TargetView targetView;
-	private final Services services;
-	private int flanking = 0;
+	@Inject
+	private SearchOptionsView options;
+	private final Services services;	
 	
 	public SearchView() {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
@@ -103,9 +101,9 @@ public class SearchView implements Serializable {
 			results = loadSearchCache();
 			if( results == null ) {
 				List<ResultGroupEx> resultGroups = motifView.isAllMotifs() == false ? singleSearch() : allSearch();
-				results = Services.expand(resultGroups, grouping);				
-				results = Services.filter(results, filterEqual, scoreThreshold);
-				Services.flanking(results, flanking);
+				results = Services.expand(resultGroups, options.isGrouping());				
+				results = Services.filter(results, options.isFilterEqual(), options.getScoreThreshold());
+				Services.flanking(results, options.getFlanking());
 				if( motifView.isUseAuxMotif() )
 					searchAux();
 				if( cosmic )
@@ -172,15 +170,15 @@ public class SearchView implements Serializable {
 					continue;
 				if( !dis.readUTF().equals(motifView.getMainMotif().getPssmFile()) )
 					continue;
-				if( dis.readBoolean() != grouping )
+				if( dis.readBoolean() != options.isGrouping() )
 					continue;
 				if( dis.readBoolean() != cosmic )
 					continue;
-				if( dis.readBoolean() != filterEqual )
+				if( dis.readBoolean() != options.isFilterEqual() )
 					continue;
-				if( dis.readDouble() != scoreThreshold )
+				if( dis.readDouble() != options.getScoreThreshold() )
 					continue;
-				if( dis.readInt() != flanking )
+				if( dis.readInt() != options.getFlanking() )
 					continue;
 				logger.info("Using cached search");
 				cachedAlnPath = cache.getAbsolutePath().replaceAll("\\.dat", ".aln");
@@ -212,11 +210,11 @@ public class SearchView implements Serializable {
 			dos.writeUTF(targetInformation.getPath());
 			dos.writeUTF(motifView.getMainMotif().getRegex());
 			dos.writeUTF(motifView.getMainMotif().getPssmFile());
-			dos.writeBoolean(grouping);
+			dos.writeBoolean(options.isGrouping());
 			dos.writeBoolean(cosmic);
-			dos.writeBoolean(filterEqual);
-			dos.writeDouble(scoreThreshold);
-			dos.writeInt(flanking);
+			dos.writeBoolean(options.isFilterEqual());
+			dos.writeDouble(options.getScoreThreshold());
+			dos.writeInt(options.getFlanking());
 			dos.writeInt(results.size());
 			for( ResultEx result : results )
 				saveSearchItem(dos, result);
@@ -358,22 +356,6 @@ public class SearchView implements Serializable {
 		return count + " results!";
 	}
 
-	public boolean isGrouping() {
-		return grouping;
-	}
-
-	public void setGrouping(boolean grouping) {
-		this.grouping = grouping;
-	}
-	
-	public boolean isFilterEqual() {
-		return filterEqual;
-	}
-
-	public void setFilterEqual(boolean filterEqual) {
-		this.filterEqual = filterEqual;
-	}
-	
 	public void downloadCsv() {
 		FacesContext fc = FacesContext.getCurrentInstance();
 	    ExternalContext ec = fc.getExternalContext();
@@ -450,10 +432,6 @@ public class SearchView implements Serializable {
 	public void onChangeOption() {
 		searchError = null;
 		results = null;
-	}	
-
-	public void setDatabases(DatabasesBean databases) {
-		this.databases = databases;
 	}
 
 	public boolean isCosmic() {
@@ -470,25 +448,5 @@ public class SearchView implements Serializable {
 
 	public void setDbPtm(boolean dbPtm) {
 		this.dbPtm = dbPtm;
-	}
-	
-	public boolean isInitialized() {
-		return databases.isInitialized();
-	}	
-
-	public int getFlanking() {
-		return flanking;
-	}
-
-	public void setFlanking(int flanking) {
-		this.flanking = flanking;
-	}
-
-	public double getScoreThreshold() {
-		return scoreThreshold;
-	}
-
-	public void setScoreThreshold(double scoreThreshold) {
-		this.scoreThreshold = scoreThreshold;
 	}
 }

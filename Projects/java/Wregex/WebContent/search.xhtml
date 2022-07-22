@@ -12,7 +12,7 @@
 			<meta name="description" content="Wregex search page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
 		</ui:define>
 		<ui:define name="content">
-<!-- 			<h:form enctype="multipart/form-data" rendered="#{searchView.initialized}"> -->
+<!-- 			<h:form enctype="multipart/form-data" rendered="#{databasesBean.initialized}"> -->
 			<h:form enctype="multipart/form-data">
 				<p:panelGrid headerClass="cfg_header">
 					<f:facet name="header">Search configuration</f:facet>
@@ -165,20 +165,20 @@
             		<p:row>
             			<p:column>Options:</p:column>	
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-							<p:selectBooleanCheckbox itemLabel="Grouping" value="#{searchView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
+							<p:selectBooleanCheckbox itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							&nbsp;
 							<h:panelGroup rendered="#{homeView.development}">
-								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
+								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
 									<p:ajax event="change" update="@form" />
 								</p:selectBooleanCheckbox>
 								&nbsp;Threshold:
-								<p:spinner value="#{searchView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
+								<p:spinner value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
 									<p:ajax event="change" update="@form" />
 								</p:spinner>
 								&nbsp;Flanking:
-								<p:spinner value="#{searchView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
+								<p:spinner value="#{searchOptionsView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
 									<p:ajax event="change" update="@form" />
 								</p:spinner>
 								&nbsp;
@@ -307,7 +307,7 @@
 					</p:column>
 				</p:dataTable>
 			</h:form>
-<!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!searchView.initialized}"/> -->
+<!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!databasesBean.initialized}"/> -->
 		</ui:define>
 	</ui:composition>
 </h:body>
