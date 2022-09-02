@@ -4,10 +4,10 @@ package es.ehubio.wregex.data;
 public final class Versions {
 	private Versions() {}
 	
-	public static final int MAJOR = 2;
-	//public static final int MAJOR = 3;
-	public static final int MINOR = 2;
-	//public static final int MINOR = 0;
+	//public static final int MAJOR = 2;
+	public static final int MAJOR = 3;
+	//public static final int MINOR = 2;
+	public static final int MINOR = 0;
 	//public static final int ALPHA = 0;
 	public static final int ALPHA = 1;
 	public static boolean DEV = ALPHA != 0;

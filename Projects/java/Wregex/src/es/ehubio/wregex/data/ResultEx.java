@@ -11,6 +11,7 @@ import java.util.Map;
 import org.apache.commons.lang.StringUtils;
 
 import es.ehubio.db.fasta.Fasta;
+import es.ehubio.db.uniprot.UniProtUtils;
 import es.ehubio.io.CsvUtils;
 import es.ehubio.wregex.Result;
 import es.ehubio.wregex.Wregex;
@@ -328,6 +329,17 @@ public class ResultEx implements Comparable<ResultEx> {
 		if( result.getFasta().getAccession() == null )
 			return "?";
 		return result.getFasta().getAccession();
+	}
+	
+	public String getProtUrl() {
+		String acc = getAccession();
+		if( acc == null || acc.length() < 2 )
+			return null;
+		if( UniProtUtils.validAccession(acc) )
+			return "https://www.uniprot.org/uniprotkb/" + acc;
+		if( acc.startsWith("SPRO") )
+			return "http://bigdata.ibp.ac.cn/SmProt/SmProt.php?ID=" + acc;
+		return null;
 	}
 	
 	public String getGene() {

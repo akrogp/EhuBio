@@ -240,9 +240,10 @@
 						<f:facet name="header">#</f:facet>
 						<h:outputText value="#{row + 1}"/>
 					</p:column>
-					<p:column width="200">
+					<p:column width="250">
 						<f:facet name="header">Entry</f:facet>
-						<h:outputText value="#{item.entry}"/>
+						<h:outputText value="#{item.entry}" rendered="#{item.protUrl == null}"/>
+						<h:outputLink value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
 					<p:column styleClass="trn_pos">
 						<f:facet name="header">Start</f:facet>

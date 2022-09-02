@@ -43,11 +43,19 @@
         </definition>
         <reference>
             <authors>Prieto, G., Fullaondo, A. and Rodriguez, J. A.</authors>
+            <year>2016</year>
+            <title>Proteome-wide search for functional motifs altered in tumors: Prediction of nuclear export signals inactivated by cancer-related mutations</title>
+            <journal>Scientific Reports</journal>
+            <doi>10.1038/srep25869</doi>
+            <link>https://doi.org/10.1038/srep25869</link>            
+        </reference>
+        <reference>
+            <authors>Prieto, G., Fullaondo, A. and Rodriguez, J. A.</authors>
             <year>2014</year>
             <title>Prediction of nuclear export signals using weighted regular expressions (Wregex)</title>
             <journal>Bioinformatics</journal>
             <doi>10.1093/bioinformatics/btu016</doi>
-            <link>http://bioinformatics.oxfordjournals.org/content/30/9/1220</link>            
+            <link>https://doi.org/10.1093/bioinformatics/btu016</link>            
         </reference>
         <reference>
             <name>Original ELM entry</name>

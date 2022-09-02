@@ -44,6 +44,20 @@
         <wregexVersion>0</wregexVersion>
     </database>
     <database>
+        <name>SmProt human high-confidence</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/SmProt/current/highConfidenceHuman.fasta</path>
+        <versionFile>/media/data/Sequences/SmProt/current/version.txt</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
+        <name>Standardized human Ribo-seq ORFs catalog</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/RiboSeq/ribo-seq.fasta</path>
+        <versionFile>/media/data/Sequences/RiboSeq/version.txt</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
         <name>NESdb</name>
         <type>fasta</type>
         <path>/media/data/Sequences/NESdb/current/NESdb.fasta</path>
