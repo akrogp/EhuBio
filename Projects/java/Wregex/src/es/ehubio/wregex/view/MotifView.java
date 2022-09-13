@@ -32,6 +32,7 @@ public class MotifView implements Serializable {
 	private DatabasesBean databases;
 	@Inject
 	private SearchView searchBean;
+	private String motifError;
 
 	
 	public MotifBean getMainMotif() {
@@ -59,6 +60,7 @@ public class MotifView implements Serializable {
 	}
 	
 	public void onChangeMainMotif( ValueChangeEvent event ) {
+		motifError = null;
 		onChangeMotif(event, mainMotif);
 	}
 	
@@ -92,7 +94,7 @@ public class MotifView implements Serializable {
 			if( auxMotif.getMotifDefinition() == null )
 				return "A configuration must be selected for aux motif " + auxMotif.getMotif();
 		}
-		return null;
+		return motifError;
 	}	
 	
 	private void onChangeMotif( ValueChangeEvent event, MotifBean motif ) {
@@ -149,6 +151,7 @@ public class MotifView implements Serializable {
 	
 	public void uploadPssm( FileUploadEvent event ){
 		searchBean.resetResult();
+		motifError = null;
 		UploadedFile pssmFile = event.getFile();
 		if( !mainMotif.isCustom() || pssmFile == null ) {
 			mainMotif.setCustomPssmFile(null);
@@ -159,9 +162,9 @@ public class MotifView implements Serializable {
 			try(Reader rd = new InputStreamReader(new ByteArrayInputStream(pssmFile.getContents()))) {
 				mainMotif.setPssm(Pssm.load(rd, true));
 			} catch (IOException e) {
-				searchBean.resetResult("File error: " + e.getMessage());
+				motifError = "File error: " + e.getMessage();
 			} catch (PssmBuilderException e) {
-				searchBean.resetResult("PSSM not valid: " + e.getMessage());
+				motifError = "PSSM not valid: " + e.getMessage();
 			}	
 		}
 	}

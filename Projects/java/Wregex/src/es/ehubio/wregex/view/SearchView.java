@@ -52,11 +52,7 @@ public class SearchView implements Serializable {
 	}
 	
 	public void resetResult() {
-		resetResult(null);
-	}
-	
-	public void resetResult(String error) {
-		searchError = error;
+		searchError = null;
 		results = null;
 	}
 
@@ -80,7 +76,7 @@ public class SearchView implements Serializable {
 	}
 	
 	public void search() {
-		searchError = null;		
+		resetResult();		
 		try {
 			updateAssayScores();
 			List<ResultGroupEx> resultGroups = motifView.isAllMotifs() == false ? singleSearch() : allSearch();

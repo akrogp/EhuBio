@@ -2,8 +2,22 @@
 <!DOCTYPE project>
 <databases>
     <database>
-        <name>Custom fasta file</name>
-        <type>upload</type>
+        <name>Custom fasta entries</name>
+        <type>manual</type>
+        <hint>&gt;header&#xA;QELVLQLLALQLDRQE</hint>
+        <extPattern>/(\.|\/)(fasta|fa|faa)$/</extPattern>        
+    </database>
+    <database>
+        <name>List of human UniProtKB/Swiss-Prot accessions</name>
+        <type>manual</type>
+        <hint>Q13285,O15405,P78424</hint>
+        <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
+    </database>
+    <database>
+        <name>List of human official gene symbols</name>
+        <type>manual</type>
+        <hint>NR5A1,TOX3,POU6F2</hint>
+        <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
     </database>
     <database>
         <name>ELM</name>

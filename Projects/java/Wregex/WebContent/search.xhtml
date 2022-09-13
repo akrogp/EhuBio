@@ -98,7 +98,9 @@
 						<p:column>
 							<h:outputText value="#{motifView.mainMotif.regex}" rendered="#{!motifView.mainMotif.custom and !motifView.allMotifs}"/>
 							<h:outputText value="All Wregex and ELM regular expressions" rendered="#{motifView.allMotifs}"/>
-							<p:inputText value="#{motifView.mainMotif.customRegex}" rendered="#{motifView.mainMotif.custom}" styleClass="trn_regex" onchange="submit()"/>
+							<p:inputText value="#{motifView.mainMotif.customRegex}" rendered="#{motifView.mainMotif.custom}" styleClass="trn_regex">
+								<p:ajax event="change" update="@form"/>
+							</p:inputText>
 						</p:column>
 						<p:column rendered="#{motifView.useAuxMotif}">#{motifView.auxMotif.regex}</p:column>
 					</p:row>
@@ -146,14 +148,19 @@
 										<f:selectItems value="#{databasesBean.targets}" />
 										<p:ajax update="@form" />
 									</p:selectOneMenu>
-								</p:column>
-								<p:column rendered="#{targetView.uploadTarget}">
-									<p:fileUpload fileUploadListener="#{targetView.uploadFasta}"
-										mode="advanced" sizeLimit="#{initParam['wregex.fasta']}"
-										multiple="false" auto="true" label="Select fasta"
-										update="@form" allowTypes="/(\.|\/)(te?xt|fasta)$/"
-										style="width:400px;" />
-								</p:column>
+									<h:panelGroup rendered="#{targetView.manualTarget}">
+										<br/><br/>Enter text:<br/>								
+										<p:inputTextarea value="#{targetView.inputText}" rows="6" cols="80" placeholder="#{targetView.targetInformation.hint}">
+											<p:ajax event="change" update="@form" listener="#{targetView.onChangeInput()}"/>
+										</p:inputTextarea>
+										<br/>or:<br/>
+										<p:fileUpload fileUploadListener="#{targetView.uploadFile}"
+											mode="advanced" sizeLimit="#{initParam['wregex.fasta']}"
+											multiple="false" auto="true" label="Select file"
+											update="@form" allowTypes="#{targetView.targetInformation.extPattern}"
+											style="width:400px;" />
+									</h:panelGroup>
+								</p:column>								
 								<p:column rendered="#{targetView.fastaSummary != null}">
 									<h:outputText id="fasta" value="#{targetView.fastaSummary}" />
 								</p:column>

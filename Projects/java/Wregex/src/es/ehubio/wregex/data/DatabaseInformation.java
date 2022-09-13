@@ -39,6 +39,14 @@ public class DatabaseInformation implements Serializable {
 		this.type = type;
 	}
 	
+	public String getHint() {
+		return hint;
+	}
+	
+	public void setHint(String hint) {
+		this.hint = hint;
+	}
+	
 	public String getPath() {
 		return path;
 	}
@@ -50,6 +58,14 @@ public class DatabaseInformation implements Serializable {
 			lastModified = file.lastModified();
 		else
 			lastModified = -1;
+	}
+	
+	public String getExtPattern() {
+		return extPattern;
+	}
+	
+	public void setExtPattern(String extPattern) {
+		this.extPattern = extPattern;
 	}
 	
 	public String getVersionFile() {
@@ -112,7 +128,9 @@ public class DatabaseInformation implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String name;
 	private String type;
+	private String hint;
 	private String path;
+	private String extPattern;
 	private String version;
 	private String versionFile;
 	private Integer wregexVersion;

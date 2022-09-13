@@ -146,13 +146,14 @@ public final class Fasta {
 					if( n.isRNA ) chars.add(Character.toUpperCase(n.symbol));
 				break;
 			case PROTEIN:
+				sequence = sequence.replaceAll("\\*.*", ""); // Stop codon
 				for( Aminoacid a : Aminoacid.values() )
 					chars.add(Character.toUpperCase(a.letter));
 				break;
 		}
 		for( char c : sequence.toUpperCase().toCharArray() )
 			if( !chars.contains(c) )
-				new InvalidSequenceException(c);
+				throw new InvalidSequenceException(c);
 	}
 	
 	public String getSequence() {

@@ -55,14 +55,14 @@ public class DatabasesBean implements Serializable {
 	private DatabaseInformation cosmic;
 	private DatabaseInformation dbPtm;
 	private DatabaseInformation dbWregex;
+	private DatabaseInformation humanProteome;
 	private Map<String,FastaDb> mapFasta;
 	private Map<String,CosmicStats> mapCosmic;
 	private Map<String, ProteinPtms> mapDbPtm;
 	private List<String> ptms;
 	private long lastModifiedCosmic;
 	private long lastModifiedElm;
-	private long lastModifiedDbPtm;
-	private String humanProteome;
+	private long lastModifiedDbPtm;	
 	private int initialized = 0;	
 	
 	private class FastaDb {
@@ -122,11 +122,11 @@ public class DatabasesBean implements Serializable {
 			fasta.entries = loadFasta(database.getPath());
 			mapFasta.put(database.getPath(), fasta);
 			if( database.getName().contains("Human Proteome") )
-				humanProteome = database.getPath();
+				humanProteome = database;
 		}
 		
 		refreshCosmic();
-		refreshDbPtm();
+		//refreshDbPtm();
 	}
 	
 	private void filterPrivateMotifs() {
@@ -202,7 +202,11 @@ public class DatabasesBean implements Serializable {
 	}
 	
 	public List<InputGroup> getHumanProteome() throws IOException, InvalidSequenceException {
-		return getFasta(humanProteome);
+		return getFasta(humanProteome.getPath());
+	}
+	
+	public DatabaseInformation getHumanProteomeInformation() {
+		return humanProteome;
 	}
 	
 	public DatabaseInformation getElmInformation() {

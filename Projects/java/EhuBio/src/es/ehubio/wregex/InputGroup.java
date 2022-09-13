@@ -14,7 +14,7 @@ import es.ehubio.db.fasta.Fasta.SequenceType;
 public final class InputGroup {	
 	/**
 	 * Motif positions are read if the last part of the header is in the form
-	 * x-y;z-... Is this pattern is not found, the whole sequence is interpreted
+	 * x-y;z-... If this pattern is not found, the whole sequence is interpreted
 	 * as the motif
 	 */
 	public InputGroup(Fasta fasta) {
