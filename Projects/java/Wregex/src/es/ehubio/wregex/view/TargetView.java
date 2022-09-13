@@ -11,6 +11,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import javax.enterprise.context.SessionScoped;
@@ -20,6 +22,7 @@ import javax.inject.Named;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -129,9 +132,10 @@ public class TargetView implements Serializable {
 			else if( isManualUniprot() ) {
 				String inputText = IOUtils.toString(rd);
 				parseInputUniProt(inputText);
-			} else if( isManualGenes() )
-				loadFromGenes(rd);
-			if( targetError != null )
+			} else if( isManualGenes() ) {
+				String inputText = IOUtils.toString(rd);
+				parseInputGenes(inputText);
+			} if( targetError != null )
 				throw new Exception(targetError);
 		} catch (IOException e) {
 			inputGroups = null;
@@ -148,11 +152,6 @@ public class TargetView implements Serializable {
 		} 		
 		baseFileName = FilenameUtils.removeExtension(file.getFileName());
 	}	
-	
-	private void loadFromGenes(Reader rd) {
-		// TODO Auto-generated method stub
-		
-	}
 
 	public String getBaseFileName() {
 		return baseFileName;
@@ -204,9 +203,10 @@ public class TargetView implements Serializable {
 			else if( isManualUniprot() )
 				parseInputUniProt(inputText);
 			else if( isManualGenes() )
-				parseInputGenes();
+				parseInputGenes(inputText);
 		} catch (Exception e) {
 			//searchBean.resetResult(e.getMessage());
+			//e.printStackTrace();
 			targetError = e.getMessage();
 			inputGroups = null;
 		}
@@ -228,30 +228,38 @@ public class TargetView implements Serializable {
 	}
 	
 	private void parseInputUniProt(String inputText) throws Exception {
-		String accessions[] = inputText.strip().split("[ \\t\\n\\r,;:]+");
-		for( String acc : accessions )
-			if( !UniProtUtils.validAccession(acc) )
-				throw new Exception(acc + " is not a valid UniProt accession");
-		Set<String> set = new TreeSet<>(Arrays.asList(accessions));
+		parseIdList(inputText, UniProtUtils::validAccession, "UniProt accession", Fasta::getAccession);
+	}
+	
+	private void parseInputGenes(String inputText) throws Exception {
+		parseIdList(inputText, null, "gene symbol", Fasta::getGeneName);		
+	}
+	
+	private void parseIdList(String inputText, Predicate<String> checkId, String idType, Function<Fasta, String> getId) throws Exception {
+		String ids[] = inputText.strip().toUpperCase().split("[ \\t\\n\\r,;:]+");
+		if( checkId != null )
+			for( String id : ids )
+				if( !checkId.test(id) )
+					throw new Exception(id + " is not a valid " + idType);
+		Set<String> set = new TreeSet<>(Arrays.asList(ids));
 		inputGroups = databases.getHumanProteome().stream()
-			.filter(inputGroup -> set.contains(inputGroup.getFasta().getAccession()))
+			.filter(inputGroup -> {
+				String id = getId.apply(inputGroup.getFasta());
+				return id != null && set.contains(id);
+			})
 			.collect(Collectors.toList());
-		if( inputGroups.size() != accessions.length ) {
+		if( inputGroups.size() != ids.length ) {
 			Set<String> found = inputGroups.stream()
-				.map(inputGroup -> inputGroup.getFasta().getAccession())
+				.map(inputGroup -> getId.apply(inputGroup.getFasta()))
 				.collect(Collectors.toSet());
 			List<String> missing = set.stream()
-				.filter(acc -> !found.contains(acc))
+				.filter(id -> !found.contains(id))
 				.collect(Collectors.toList());
-			throw new Exception(String.format("%s %s cannot be mapped to %s",
-				missing.size() == 1 ? "Accession" : "Accessions",
+			throw new Exception(String.format("%s%s %s cannot be mapped to %s",
+				StringUtils.capitalize(idType),
+				missing.size() == 1 ? "" : "s",
 				missing.size() == 1 ? missing.iterator().next() : missing.toString(),
 				databases.getHumanProteomeInformation().getFullName()));
 		}
-	}
-	
-	private void parseInputGenes() {
-		// TODO Auto-generated method stub
-		
 	}
 }
