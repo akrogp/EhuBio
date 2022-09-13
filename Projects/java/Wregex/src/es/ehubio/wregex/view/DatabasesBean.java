@@ -126,7 +126,7 @@ public class DatabasesBean implements Serializable {
 		}
 		
 		refreshCosmic();
-		//refreshDbPtm();
+		refreshDbPtm();
 	}
 	
 	private void filterPrivateMotifs() {
