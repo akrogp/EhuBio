@@ -276,14 +276,17 @@ public class ResultEx implements Comparable<ResultEx> {
 		pw.flush();
 	}
 	
-	public static void saveCsv(Writer wr, List<ResultEx> results, boolean assays, boolean aux, boolean cosmic, boolean dbPtm ) {
+	public static void saveCsv(Writer wr, List<ResultEx> results, boolean assays, boolean aux, boolean cosmic, boolean dbPtm, String[] selectedPtms ) {
 		PrintWriter pw = new PrintWriter(wr);
 		List<String> fields = new ArrayList<>();
 		fields.addAll(Arrays.asList(new String[]{"#","ID","Entry","Motif","Begin","End","Combinations","Sequence","Alignment","Score"}));
 		if( assays ) { fields.add("Assay"); fields.add("Assay"); }
 		if( aux ) fields.add("Aux");
 		if( cosmic ) { fields.add("Gene"); fields.add("Mutant"); fields.add("Mutation effect"); fields.add("COSMIC:Missense"); }
-		if( dbPtm ) fields.add("dbPTM");
+		if( dbPtm ) {
+			fields.addAll(Arrays.asList(selectedPtms));
+			fields.add("dbPTM");
+		}
 		pw.println(CsvUtils.getCsv(separator, fields.toArray()));
 		long count = 1;
 		for( ResultEx result : results ) {
@@ -311,8 +314,13 @@ public class ResultEx implements Comparable<ResultEx> {
 				fields.add(String.valueOf(result.getMutScore()));
 				fields.add(result.getCosmicMissenseAsString());
 			}
-			if( dbPtm )
+			if( dbPtm ) {
+				for( String ptm : selectedPtms ) {
+					Integer n = result.ptmCounts.get(ptm);
+					fields.add(n == null ? "" : n.toString());
+				}
 				fields.add(result.getDbPtmsAsString());
+			}
 			pw.println(CsvUtils.getCsv(separator, fields.toArray()));
 		}
 		pw.flush();

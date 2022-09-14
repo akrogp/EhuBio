@@ -8,15 +8,15 @@
         <extPattern>/(\.|\/)(fasta|fa|faa)$/</extPattern>        
     </database>
     <database>
-        <name>List of human UniProtKB/Swiss-Prot accessions</name>
+        <name>Custom list of human UniProtKB/Swiss-Prot accessions</name>
         <type>manual</type>
-        <hint>Q13285,O15405,P78424</hint>
+        <hint>Q13285&#xA;O15405&#xA;P78424</hint>
         <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
     </database>
     <database>
-        <name>List of human official gene symbols</name>
+        <name>Custom list of human official gene symbols</name>
         <type>manual</type>
-        <hint>NR5A1,TOX3,POU6F2</hint>
+        <hint>NR5A1&#xA;TOX3&#xA;POU6F2</hint>
         <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
     </database>
     <database>
