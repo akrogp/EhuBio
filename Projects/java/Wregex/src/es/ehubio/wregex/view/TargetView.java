@@ -29,6 +29,7 @@ import org.primefaces.model.UploadedFile;
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.fasta.Fasta.SequenceType;
+import es.ehubio.db.uniprot.Fetcher;
 import es.ehubio.db.uniprot.UniProtUtils;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.data.DatabaseInformation;
@@ -63,11 +64,18 @@ public class TargetView implements Serializable {
 		return inputGroups;
 	}
 	
-	public void onChangeTarget( ValueChangeEvent event ) {
+	private void reset(boolean resetInput) {
 		searchBean.resetResult();
 		inputGroups = null;
-		inputText = "";
+		if( resetInput )
+			inputText = "";
 		targetError = null;
+		fileName = null;
+		baseFileName = null;
+	}
+	
+	public void onChangeTarget( ValueChangeEvent event ) {
+		reset(true);
 		Object value = event.getNewValue();		
 		if( value == null || value.toString().equals("Default") ) {
 			targetInformation = null;
@@ -77,7 +85,6 @@ public class TargetView implements Serializable {
 		if( targetInformation.getType().equals("fasta") ) {
 			try {
 				inputGroups = databases.getFasta(targetInformation.getPath());
-				fileName = null;
 				baseFileName = FilenameUtils.removeExtension(new File(targetInformation.getPath()).getName());
 			} catch( Exception e ) {
 				targetError = e.getMessage();
@@ -105,22 +112,20 @@ public class TargetView implements Serializable {
 		if( inputText.isBlank() ) {
 			if( isManualFasta() )
 				return "Target fasta sequences must be specified, manually or uploading a fasta file";
+			if( isManualSubproteome() )
+				return "Gene Ontology term must be specified to filter the proteome";
 			if( isManualUniprot() )
 				return "UniProt accessions must be specified, manually or uploading a text file";
 			if( isManualGenes() )
-				return "Gene symbols must be specified, manually or uploading a text file";
+				return "Gene symbols must be specified, manually or uploading a text file";			
 		}
 		return "Unknown error";
 	}
 	
 	public void uploadFile(FileUploadEvent event) {
 		if( targetInformation == null )
-			return;
-		searchBean.resetResult();
-		inputGroups = null;
-		inputText = "";
-		targetError = null;
-		fileName = null;
+			return;		
+		reset(true);
 		UploadedFile file = event.getFile();
 		if( file == null )			
 			return;
@@ -154,7 +159,7 @@ public class TargetView implements Serializable {
 	}	
 
 	public String getBaseFileName() {
-		return baseFileName;
+		return baseFileName != null ? baseFileName : "results";
 	}
 	
 	public String getFastaSummary() {
@@ -163,6 +168,10 @@ public class TargetView implements Serializable {
 		if( fileName == null )
 			return inputGroups.size() + " entries";
 		return fileName + ": " + inputGroups.size() + " entries";
+	}
+	
+	public boolean isRemote() {
+		return targetInformation != null || targetInformation.getType().equals("remote");
 	}
 	
 	public boolean isManualTarget() {
@@ -180,6 +189,10 @@ public class TargetView implements Serializable {
 	public boolean isManualGenes() {
 		return isManualTarget() && targetInformation.getName().contains("gene symbol");
 	}
+	
+	public boolean isManualSubproteome() {
+		return isManualTarget() && targetInformation.getName().contains("Subproteome");
+	}
 
 	public void setInputText(String inputText) {
 		this.inputText = inputText;
@@ -189,41 +202,50 @@ public class TargetView implements Serializable {
 		return inputText;
 	}
 	
-	public void onChangeInput() {
-		searchBean.resetResult();
-		targetError = null;
-		inputGroups = null;		
+	public void onChangeInput() {		
+		reset(false);		
 		inputText = inputText.trim();
-		fileName = null;
 		if( inputText.isBlank() )
 			return;
 		try {
 			if( isManualFasta() )
 				parseIputFasta(inputText);
+			else if( isManualSubproteome() )
+				downloadGo(inputText);
 			else if( isManualUniprot() )
 				parseInputUniProt(inputText);
 			else if( isManualGenes() )
-				parseInputGenes(inputText);
+				parseInputGenes(inputText);			
 		} catch (Exception e) {
 			//searchBean.resetResult(e.getMessage());
-			//e.printStackTrace();
+			e.printStackTrace();
 			targetError = e.getMessage();
 			inputGroups = null;
 		}
 	}	
 
+	public List<String> completeGo(String query) {
+		String queryLower = query.toLowerCase();
+		List<String> result = databases.getGoTerms().stream()
+			.filter(term -> !term.isObsolete())
+			.map(term -> String.format("%s (%s)", term.getId(), term.getName()))
+			.filter(term -> term.toLowerCase().contains(queryLower))
+			.collect(Collectors.toList());
+		return result;
+	}
+
 	private void parseIputFasta(String inputText) throws InvalidSequenceException {
 		if( inputText.charAt(0) != '>' )
 			inputText = ">unnamed\n" + inputText;
-		int i1 = 0, i2;
+		int i1 = 1, i2;
 		do {
-			i2 = inputText.indexOf('>', i1+1);
+			i2 = inputText.indexOf('>', i1);
 			String protein = inputText.substring(i1, i2 > 0 ? i2 : inputText.length());
 			Fasta fasta = new Fasta(protein, SequenceType.PROTEIN);
 			if( inputGroups == null )
 				inputGroups = new ArrayList<>();
 			inputGroups.add(new InputGroup(fasta));
-			i1 = i2;
+			i1 = i2+1;
 		} while( i2 > 0);
 	}
 	
@@ -248,7 +270,7 @@ public class TargetView implements Serializable {
 				return id != null && set.contains(id);
 			})
 			.collect(Collectors.toList());
-		if( inputGroups.size() != ids.length ) {
+		if( inputGroups.size() != set.size() ) {
 			Set<String> found = inputGroups.stream()
 				.map(inputGroup -> getId.apply(inputGroup.getFasta()))
 				.collect(Collectors.toSet());
@@ -261,5 +283,15 @@ public class TargetView implements Serializable {
 				missing.size() == 1 ? missing.iterator().next() : missing.toString(),
 				databases.getHumanProteomeInformation().getFullName()));
 		}
+	}
+	
+	private void downloadGo(String inputText) throws InvalidSequenceException, IOException {
+		String go = inputText.split(" ")[0];
+		int iName = inputText.indexOf('(');
+		if( iName > 0 )
+			baseFileName = inputText.substring(iName+1, inputText.length()-1);
+		String query = String.format("(%s) AND (organism_id:9606) AND (reviewed:true)", go);
+		String fasta = Fetcher.queryFasta(query);
+		parseIputFasta(fasta);
 	}
 }

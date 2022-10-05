@@ -1,5 +1,7 @@
 package es.ehubio.db.uniprot;
 
+import java.io.IOException;
+
 import javax.ws.rs.client.ClientBuilder;
 
 import es.ehubio.db.fasta.Fasta;
@@ -19,6 +21,16 @@ public class Fetcher {
 	
 	public static String downloadFasta( String acc ) {
 		return download(acc, "fasta");
+	}
+	
+	public static String queryFasta(String query) throws IOException {
+		return ClientBuilder.newClient()
+			.target("https://rest.uniprot.org/uniprotkb/stream")
+			//.queryParam("compressed", "true")
+			.queryParam("format", "fasta")
+			.queryParam("query", String.format("(%s)", query))			
+			.request()
+			.get(String.class);
 	}
 	
 	private static String download( String acc, String ext ) {

@@ -25,6 +25,8 @@ import es.ehubio.db.cosmic.CosmicStats;
 import es.ehubio.db.dbptm.Entry;
 import es.ehubio.db.dbptm.TxtReader;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
+import es.ehubio.db.go.Ontology;
+import es.ehubio.db.go.Term;
 import es.ehubio.dbptm.ProteinPtms;
 import es.ehubio.io.UnixCfgReader;
 import es.ehubio.wregex.InputGroup;
@@ -60,6 +62,7 @@ public class DatabasesBean implements Serializable {
 	private Map<String,CosmicStats> mapCosmic;
 	private Map<String, ProteinPtms> mapDbPtm;
 	private List<String> ptms;
+	private List<Term> goTerms;
 	private long lastModifiedCosmic;
 	private long lastModifiedElm;
 	private long lastModifiedDbPtm;	
@@ -107,6 +110,10 @@ public class DatabasesBean implements Serializable {
 			if( database.getType().equals("dbptm") ) {
 				dbPtm = database;
 				//refreshDbPtm();
+				continue;
+			}
+			if( database.getType().equals("go") ) {
+				goTerms = Ontology.loadTerms(database.getPath());
 				continue;
 			}
 			if( database.getType().equals("wregex") ) {
@@ -239,6 +246,10 @@ public class DatabasesBean implements Serializable {
 	
 	public List<String> getPtms() {
 		return ptms;
+	}
+	
+	public List<Term> getGoTerms() {
+		return goTerms;
 	}
 
 	public boolean isInitialized() {

@@ -39,9 +39,21 @@
         <wregexVersion>0</wregexVersion>
     </database>
     <database>
+        <name>Gene Ontology</name>
+        <type>go</type>
+        <path>/media/data/Sequences/GO/current/go.obo</path>
+        <wregexVersion>0</wregexVersion>
+    </database>
+    <database>
         <name>Wregex Cache</name>
         <type>wregex</type>
         <path>/media/data/Sequences/Wregex</path>        
+    </database>
+    <database>
+        <name>UniProtKB/Swiss-Prot Human Subproteome</name>
+        <type>manual</type>
+        <hint>GO:0007049 (cell cycle)</hint>
+        <wregexVersion>0</wregexVersion>
     </database>
     <database>
         <name>UniProtKB/Swiss-Prot Human Proteome</name>

@@ -148,8 +148,8 @@
 										<f:selectItems value="#{databasesBean.targets}" />
 										<p:ajax update="@form" />
 									</p:selectOneMenu>
-									<h:panelGroup rendered="#{targetView.manualTarget}">
-										<br/><br/>Enter text:<br/>								
+									<h:panelGroup rendered="#{targetView.manualTarget and !targetView.manualSubproteome}">
+										<br/><br/>Enter text:<br/>	
 										<p:inputTextarea value="#{targetView.inputText}" rows="6" cols="80" placeholder="#{targetView.targetInformation.hint}">
 											<p:ajax event="change" update="@form" listener="#{targetView.onChangeInput()}"/>
 										</p:inputTextarea>
@@ -159,6 +159,12 @@
 											multiple="false" auto="true" label="Select file"
 											update="@form" allowTypes="#{targetView.targetInformation.extPattern}"
 											style="width:400px;" />
+									</h:panelGroup>
+									<h:panelGroup rendered="#{targetView.manualSubproteome}">
+										<br/><br/>Enter Gene Ontology term:<br/>
+										<p:autoComplete minQueryLength="3" forceSelection="true" maxResults="10" value="#{targetView.inputText}" completeMethod="#{targetView.completeGo}" placeholder="#{targetView.targetInformation.hint}" size="40">
+											<p:ajax event="itemSelect" listener="#{targetView.onChangeInput()}" update="@form"/>
+										</p:autoComplete>
 									</h:panelGroup>
 								</p:column>								
 								<p:column rendered="#{targetView.fastaSummary != null}">
