@@ -47,6 +47,7 @@ public class TargetView implements Serializable {
 	private SearchView searchBean;
 	private String baseFileName, fileName;
 	private String inputText = "", targetError;
+	private boolean downloading;
 	
 	public DatabaseInformation getTargetInformation() {
 		return targetInformation;
@@ -118,7 +119,8 @@ public class TargetView implements Serializable {
 				return "UniProt accessions must be specified, manually or uploading a text file";
 			if( isManualGenes() )
 				return "Gene symbols must be specified, manually or uploading a text file";			
-		}
+		} else if( downloading )
+			return inputText + " query was still processing";
 		return "Unknown error";
 	}
 	
@@ -193,6 +195,10 @@ public class TargetView implements Serializable {
 	public boolean isManualSubproteome() {
 		return isManualTarget() && targetInformation.getName().contains("Subproteome");
 	}
+	
+	public boolean isDownloading() {
+		return downloading;
+	}
 
 	public void setInputText(String inputText) {
 		this.inputText = inputText;
@@ -239,7 +245,9 @@ public class TargetView implements Serializable {
 			inputText = ">unnamed\n" + inputText;
 		int i1 = 1, i2;
 		do {
-			i2 = inputText.indexOf('>', i1);
+			i2 = inputText.indexOf('\n', i1); // header
+			if( i2 > 0 && inputText.length() > i2 )
+				i2 = inputText.indexOf('>', i2+1); // sequence
 			String protein = inputText.substring(i1, i2 > 0 ? i2 : inputText.length());
 			Fasta fasta = new Fasta(protein, SequenceType.PROTEIN);
 			if( inputGroups == null )
@@ -291,7 +299,9 @@ public class TargetView implements Serializable {
 		if( iName > 0 )
 			baseFileName = inputText.substring(iName+1, inputText.length()-1);
 		String query = String.format("(%s) AND (organism_id:9606) AND (reviewed:true)", go);
+		downloading = true;
 		String fasta = Fetcher.queryFasta(query);
+		downloading = false;
 		parseIputFasta(fasta);
 	}
 }

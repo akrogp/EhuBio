@@ -87,7 +87,7 @@ public final class Fasta {
 		}
 	}
 	
-	public Fasta( String fasta, SequenceType type ) throws InvalidSequenceException {
+	public Fasta( String fasta, SequenceType type ) throws InvalidSequenceException {		
 		int off = fasta.indexOf('\n');
 		header = fasta.substring(0, off).trim();
 		sequence = trim(fasta.substring(off+1));

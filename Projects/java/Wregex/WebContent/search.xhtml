@@ -13,7 +13,7 @@
 		</ui:define>
 		<ui:define name="content">
 <!-- 			<h:form enctype="multipart/form-data" rendered="#{databasesBean.initialized}"> -->
-			<h:form enctype="multipart/form-data">
+			<h:form enctype="multipart/form-data" id="searchForm">
 				<p:panelGrid headerClass="cfg_header">
 					<f:facet name="header">Search configuration</f:facet>
 					
@@ -142,7 +142,7 @@
 							<p:panelGrid style="border-style:hidden;">
 								<p:row>
 								<p:column>
-									<p:selectOneMenu value="#{targetView.target}"
+									<p:selectOneMenu id="targetSelect" value="#{targetView.target}"
 										valueChangeListener="#{targetView.onChangeTarget}">
 										<f:selectItem itemLabel="--- Select target ---" itemValue="Default" />
 										<f:selectItems value="#{databasesBean.targets}" />
@@ -162,7 +162,8 @@
 									</h:panelGroup>
 									<h:panelGroup rendered="#{targetView.manualSubproteome}">
 										<br/><br/>Enter Gene Ontology term:<br/>
-										<p:autoComplete minQueryLength="3" forceSelection="true" maxResults="10" value="#{targetView.inputText}" completeMethod="#{targetView.completeGo}" placeholder="#{targetView.targetInformation.hint}" size="40">
+										<p:autoComplete id="goInput" minQueryLength="3" forceSelection="true" maxResults="100" scrollHeight="250" size="40"
+											value="#{targetView.inputText}" completeMethod="#{targetView.completeGo}" placeholder="#{targetView.targetInformation.hint}">
 											<p:ajax event="itemSelect" listener="#{targetView.onChangeInput()}" update="@form"/>
 										</p:autoComplete>
 									</h:panelGroup>
@@ -323,6 +324,9 @@
 						<h:outputLink rendered="#{item.dbPtmUrl != null}" value="#{item.dbPtmUrl}" target="_blank">#{item.dbPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>					
 				</p:dataTable>
+				<p:blockUI block="searchForm" trigger="goInput">
+					Loading...
+				</p:blockUI>
 			</h:form>
 <!-- 			<h:outputText value="Sorry, databases are beeing updated, please try again later" rendered="#{!databasesBean.initialized}"/> -->
 		</ui:define>
