@@ -19,4 +19,15 @@ public final class StringUtils {
 		LocalDate ld = date.toInstant().atZone(zoneId).toLocalDate();
 		return ld.format(dateFormatter).toUpperCase();
 	}
+
+	public static String truncate(String str, int len, String suffix) {
+		if( str.length() <= len )
+			return str;
+		if( suffix != null )
+			len -= suffix.length();
+		if( len < 0 )
+			len = 0;
+		str = str.substring(0, len);		
+		return suffix != null ? str+suffix : str;
+	}
 }

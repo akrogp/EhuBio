@@ -83,28 +83,22 @@ public class ResultEx implements Comparable<ResultEx> {
 			return -1;
 		if( getScore() < o.getScore() )
 			return 1;
-		// 4. Aux Score
+		// 4. PTMs
+		if( getDbPtms() != o.getDbPtms() )
+			return o.getDbPtms() - getDbPtms();
+		// 5. Aux Score (combinations)
 		if( getAuxScore() == null && o.getAuxScore() != null )
 			return 1;
 		if( getAuxScore() != null && o.getAuxScore() == null )
 			return -1;
 		if( getAuxScore() != null && o.getAuxScore() != null )
-			return (int)Math.signum(o.getAuxScore() - getAuxScore());
-		// 5. PTMs
-		if( getDbPtms() > o.getDbPtms() )
-			return -1;
-		if( getDbPtms() < o.getDbPtms() )
-			return 1;
+			return (int)Math.signum(o.getAuxScore() - getAuxScore());		
 		// 6. Wregex Combinations
-		if( getCombinations() > o.getCombinations() )
-			return -1;
-		if( getCombinations() < o.getCombinations() )
-			return 1;
+		if( getCombinations() != o.getCombinations() )
+			return o.getCombinations() - getCombinations();
 		// 7. Match length
-		if( getMatch().length() > o.getMatch().length() )
-			return -1;
-		if( getMatch().length() < o.getMatch().length() )
-			return 1;
+		if( getMatch().length() != o.getMatch().length() )
+			return o.getMatch().length() - getMatch().length();
 		return 0;
 	}
 	

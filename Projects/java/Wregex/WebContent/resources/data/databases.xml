@@ -12,13 +12,15 @@
         <type>manual</type>
         <hint>Q13285&#xA;O15405&#xA;P78424</hint>
         <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
+        <wregexVersion>3</wregexVersion>
     </database>
     <database>
         <name>Custom list of human official gene symbols</name>
         <type>manual</type>
         <hint>NR5A1&#xA;TOX3&#xA;POU6F2</hint>
         <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
-    </database>
+        <wregexVersion>3</wregexVersion>
+    </database>    
     <database>
         <name>ELM</name>
         <type>elm</type>
@@ -36,13 +38,13 @@
         <type>dbptm</type>
         <path>/media/data/Sequences/dbPTM/dbPTM2022</path>
         <version>2022</version>
-        <wregexVersion>0</wregexVersion>
+        <wregexVersion>3</wregexVersion>
     </database>
     <database>
         <name>Gene Ontology</name>
         <type>go</type>
         <path>/media/data/Sequences/GO/current/go.obo</path>
-        <wregexVersion>0</wregexVersion>
+        <wregexVersion>3</wregexVersion>
     </database>
     <database>
         <name>Wregex Cache</name>
@@ -50,17 +52,22 @@
         <path>/media/data/Sequences/Wregex</path>        
     </database>
     <database>
-        <name>UniProtKB/Swiss-Prot Human Subproteome</name>
-        <type>manual</type>
-        <hint>GO:0007049 (cell cycle)</hint>
-        <wregexVersion>0</wregexVersion>
-    </database>
+    	<name>--- Human datasets ---</name>
+    	<type>separator</type>
+    	<wregexVersion>3</wregexVersion>
+    </database>    
     <database>
         <name>UniProtKB/Swiss-Prot Human Proteome</name>
         <type>fasta</type>
         <path>/media/data/Sequences/UniProt/current/SP_HUMAN.fasta.gz</path>
         <versionFile>/media/data/Sequences/UniProt/current/version.txt</versionFile>
         <wregexVersion>2</wregexVersion>
+    </database>
+    <database>
+        <name>UniProtKB/Swiss-Prot Human Subproteome</name>
+        <type>manual</type>
+        <hint>GO:0007049 (cell cycle)</hint>
+        <wregexVersion>3</wregexVersion>
     </database>
     <database>
         <name>Proteins of Cancer Genes</name>
@@ -70,17 +77,54 @@
         <wregexVersion>0</wregexVersion>
     </database>
     <database>
+    	<name>--- Ribo-seq datasets ---</name>
+    	<type>separator</type>
+    	<wregexVersion>0</wregexVersion>
+    </database>
+    <database>
         <name>SmProt human high-confidence</name>
         <type>fasta</type>
         <path>/media/data/Sequences/SmProt/current/highConfidenceHuman.fasta</path>
         <versionFile>/media/data/Sequences/SmProt/current/version.txt</versionFile>
-        <wregexVersion>3</wregexVersion>
+        <wregexVersion>0</wregexVersion>
     </database>
     <database>
         <name>Standardized human Ribo-seq ORFs catalog</name>
         <type>fasta</type>
         <path>/media/data/Sequences/RiboSeq/ribo-seq.fasta</path>
         <versionFile>/media/data/Sequences/RiboSeq/version.txt</versionFile>
+        <wregexVersion>0</wregexVersion>
+    </database>
+    <database>
+    	<name>--- NES datasets ---</name>
+    	<type>separator</type>
+    </database>
+    <database>
+        <name>Cargo A</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/CargoA.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/Kirli.version</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
+        <name>Cargo B</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/CargoB.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/Kirli.version</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
+        <name>Cargo C</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/CargoC.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/Kirli.version</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
+        <name>Non-binder</name>
+        <type>fasta</type>
+        <path>/media/data/Sequences/Fasta/Non-binder.fasta</path>
+        <versionFile>/media/data/Sequences/Fasta/Kirli.version</versionFile>
         <wregexVersion>3</wregexVersion>
     </database>
     <database>

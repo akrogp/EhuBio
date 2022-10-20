@@ -36,6 +36,8 @@ import es.ehubio.wregex.data.MotifConfiguration;
 import es.ehubio.wregex.data.MotifDefinition;
 import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.MotifReference;
+import es.ehubio.wregex.data.PresetBean;
+import es.ehubio.wregex.data.PresetConfiguration;
 import es.ehubio.wregex.data.Versions;
 
 @Named
@@ -45,9 +47,11 @@ public class DatabasesBean implements Serializable {
 	private final static Logger logger = Logger.getLogger(DatabasesBean.class.getName());
 	private static final String WregexMotifsPath = "/resources/data/motifs.xml";
 	private static final String DatabasesPath = "/resources/data/databases.xml";
+	private static final String PresetsPath = "/resources/data/presets.xml";
 	
 	private MotifConfiguration motifConfiguration;
 	private DatabaseConfiguration databaseConfiguration;
+	private PresetConfiguration presetConfiguration;
 	private List<MotifInformation> elmMotifs;
 	private List<MotifInformation> allMotifs;
 	private List<String> redundantMotifs;
@@ -77,7 +81,7 @@ public class DatabasesBean implements Serializable {
 		loadDatabases();
 	}
 
-	private void loadDatabases() throws IOException, InvalidSequenceException {
+	private void loadDatabases() throws IOException, InvalidSequenceException {		
 		// Wregex motifs
 		Reader rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(WregexMotifsPath)); 		
 		motifConfiguration = MotifConfiguration.load(rd);
@@ -134,6 +138,15 @@ public class DatabasesBean implements Serializable {
 		
 		refreshCosmic();
 		refreshDbPtm();
+		
+		// Presets
+		rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(PresetsPath));
+		presetConfiguration = PresetConfiguration.load(rd);
+		rd.close();
+	}
+	
+	public List<PresetBean> getPresets() {
+		return presetConfiguration.getPresets();
 	}
 	
 	private void filterPrivateMotifs() {

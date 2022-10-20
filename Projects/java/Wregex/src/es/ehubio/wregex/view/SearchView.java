@@ -10,20 +10,25 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.enterprise.context.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.io.IOUtils;
 
+import es.ehubio.db.fasta.Fasta;
 import es.ehubio.io.Streams;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
+import es.ehubio.wregex.data.PresetBean;
+import es.ehubio.wregex.data.ResultComparator;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
@@ -45,13 +50,15 @@ public class SearchView implements Serializable {
 	private TargetView targetView;
 	@Inject
 	private SearchOptionsView options;
-	private final Services services;	
+	private final Services services;
+	private String preset;
 	
 	public SearchView() {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
 	}
 	
 	public void resetResult() {
+		preset = null;
 		searchError = null;
 		results = null;
 	}
@@ -89,7 +96,7 @@ public class SearchView implements Serializable {
 				searchCosmic();
 			if( options.isDbPtm() )
 				searchDbPtm();
-			Collections.sort(results);
+			Collections.sort(results, new ResultComparator(options.getSelectedPtms()));
 		} catch( IOException e ) {
 			searchError = "File error: " + e.getMessage();
 		} catch( PssmBuilderException e ) {
@@ -236,6 +243,21 @@ public class SearchView implements Serializable {
 	public void downloadAuxPssm() {
 		downloadFile(motifView.getAuxMotif().getPssmFile());
 	}
+	
+	public void downloadFasta() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    ExternalContext ec = fc.getExternalContext();
+	    ec.responseReset();
+	    ec.setResponseContentType("text");
+	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+targetView.getBaseFileName()+".fasta\"");
+		try {
+			OutputStream output = ec.getResponseOutputStream();
+			Fasta.writeEntries(new OutputStreamWriter(output), targetView.getInputGroups().stream().map(inputGroup -> inputGroup.getFasta()).collect(Collectors.toList()));
+		} catch( Exception e ) {
+			e.printStackTrace();
+		}
+		fc.responseComplete();
+	}
 
 	public boolean getAssayScores() {
 		return assayScores;
@@ -243,5 +265,54 @@ public class SearchView implements Serializable {
 	
 	public void onChangeOption() {
 		resetResult();
-	}	
+	}
+
+	public String getPreset() {
+		return preset;
+	}
+
+	public void setPreset(String preset) {
+		this.preset = preset;
+	}
+	
+	public void onSelectPreset(ValueChangeEvent event) {
+		resetResult();		
+		PresetBean preset = string2preset(event.getNewValue().toString());
+		if( preset == null )
+			return;
+		
+		motifView.getMainMotif().setMotif(preset.getMainMotif());
+		event = new ValueChangeEvent(event.getComponent(), null, preset.getMainMotif());
+		motifView.onChangeMainMotif(event);
+		
+		motifView.setUseAuxMotif(preset.getAuxMotif() != null);
+		if( motifView.isUseAuxMotif() ) {
+			motifView.getAuxMotif().setMotif(preset.getAuxMotif());
+			event = new ValueChangeEvent(event.getComponent(), null, preset.getAuxMotif());
+			motifView.onChangeAuxMotif(event);
+		}
+		
+		targetView.setTarget(preset.getTarget());
+		event = new ValueChangeEvent(event.getComponent(), null, preset.getTarget());
+		targetView.onChangeTarget(event);
+		if( preset.getTargetInput() != null ) {
+			targetView.setInputText(preset.getTargetInput());
+			targetView.onChangeInput();
+		}
+		
+		options.setCosmic(preset.isCosmic());
+		options.setDbPtm(preset.getPtms() != null && !preset.getPtms().isEmpty());
+		if( options.isDbPtm() )			
+			options.setSelectedPtms(preset.getPtms().toArray(new String[0]));
+		onChangeOption();
+		
+		search();
+	}
+
+	private PresetBean string2preset(String value) {
+		for( PresetBean preset : databases.getPresets() )
+			if( preset.getName().equals(value) )
+				return preset;
+		return null;
+	}
 }

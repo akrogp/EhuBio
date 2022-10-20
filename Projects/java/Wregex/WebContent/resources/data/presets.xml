@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<presets>
+	<preset>
+		<name>Case study 1: NES/CRM1 candidates with auxiliar NLS motif in Cargo A proteins (Kirli et al., 2015)</name>
+		<mainMotif>NES/CRM1</mainMotif>
+		<auxMotif>TRG_NLS_MonoCore_2</auxMotif>
+		<target>Cargo A</target>
+	</preset>
+	<preset>
+		<name>Case study 2: Combining PLK4 motif matches with dbPTM phosphorilations in human centrosome</name>
+		<mainMotif>MOD_Plk_4</mainMotif>
+		<target>UniProtKB/Swiss-Prot Human Subproteome</target>
+		<targetInput>GO:0005813 (centrosome)</targetInput>
+		<ptm>Phosphorylation</ptm>
+	</preset>
+</presets>

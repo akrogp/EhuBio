@@ -18,6 +18,17 @@
 					<f:facet name="header">Search configuration</f:facet>
 					
 					<p:row>
+						<p:column>Preset:</p:column>
+						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+							<p:selectOneMenu id="preset" value="#{searchView.preset}" valueChangeListener="#{searchView.onSelectPreset}">
+								<f:selectItem itemLabel="No preset (manual configuration)" itemValue="none" />
+								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.name}"/>
+								<p:ajax update="@form" />
+							</p:selectOneMenu>
+						</p:column>
+					</p:row>
+					
+					<p:row>
 						<p:column>Motif:</p:column>
 						<p:column>
 							<p:selectOneMenu value="#{motifView.mainMotif.motif}"
@@ -32,7 +43,7 @@
 									itemValue="ELM" />
 								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
-							</p:selectOneMenu>
+							</p:selectOneMenu>&nbsp;
 							<p:selectOneMenu value="#{motifView.mainMotif.configuration}"
 								valueChangeListener="#{motifView.onChangeMainDefinition}"
 								rendered="#{motifView.mainMotif.motifInformation != null and !motifView.mainMotif.custom }">
@@ -112,7 +123,7 @@
 								<h:outputText value="#{motifView.mainMotif.pssmFile}" />
 								<h:outputText
 									value="Not available (scores will not be available)"
-									rendered="#{motifView.mainMotif.motifInformation != null and motifView.mainMotif.pssmFile == null}" />
+									rendered="#{motifView.mainMotif.motifInformation != null and motifView.mainMotif.pssmFile == null}" />&nbsp;
 								<p:commandButton value="Download"
 									actionListener="#{searchView.downloadPssm}"
 									rendered="#{motifView.mainMotif.pssmFile != null}" ajax="false" />
@@ -144,8 +155,8 @@
 								<p:column>
 									<p:selectOneMenu id="targetSelect" value="#{targetView.target}"
 										valueChangeListener="#{targetView.onChangeTarget}">
-										<f:selectItem itemLabel="--- Select target ---" itemValue="Default" />
-										<f:selectItems value="#{databasesBean.targets}" />
+										<f:selectItem itemLabel="--- Select target ---" itemValue="none" />
+										<f:selectItems value="#{databasesBean.targets}" var="db" itemLabel="#{db.fullName}" itemValue="#{db.name}" itemDisabled="#{db.type == 'separator'}"/>
 										<p:ajax update="@form" />
 									</p:selectOneMenu>
 									<h:panelGroup rendered="#{targetView.manualTarget and !targetView.manualSubproteome}">
@@ -169,7 +180,8 @@
 									</h:panelGroup>
 								</p:column>								
 								<p:column rendered="#{targetView.fastaSummary != null}">
-									<h:outputText id="fasta" value="#{targetView.fastaSummary}" />
+									<h:outputText id="fasta" value="#{targetView.fastaSummary}" />&nbsp;
+									<p:commandButton value="Download Fasta" ajax="false" action="#{searchView.downloadFasta()}"/>
 								</p:column>
 								</p:row>
 							</p:panelGrid>
@@ -250,43 +262,67 @@
 				<br/>
 				<p:dataTable value="#{searchView.results}" rowIndexVar="row" var="item" rendered="#{searchView.results != null and searchView.configError == null}" scrollable="true" scrollHeight="300" liveScroll="true" scrollRows="40">
 					<f:facet name="header">Search results - live scroll (scroll and wait for more results)</f:facet>
-					<p:column width="50" style="text-align:center;">
-						<f:facet name="header">#</f:facet>
+					<p:column width="50" style="text-align:center;" id="search_id">
+						<f:facet name="header">
+							#
+							<p:tooltip value="Result rank" for="search_id"/>
+						</f:facet>
 						<h:outputText value="#{row + 1}"/>
 					</p:column>
-					<p:column width="250">
-						<f:facet name="header">Entry</f:facet>
+					<p:column width="250" id="search_entry">
+						<f:facet name="header">
+							Entry
+							<p:tooltip value="Fasta header before first space" for="search_entry"/>
+						</f:facet>
 						<h:outputText value="#{item.entry}" rendered="#{item.protUrl == null}"/>
 						<h:outputLink value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
-					<p:column styleClass="trn_pos">
-						<f:facet name="header">Start</f:facet>
+					<p:column id="search_start" styleClass="trn_pos">
+						<f:facet name="header">
+							Start
+							<p:tooltip value="Start position of the motif in the entry sequence" for="search_start"/>
+						</f:facet>						
 						<h:outputText value="#{item.start}"/>
 					</p:column>
-					<p:column styleClass="trn_pos">
-						<f:facet name="header">End</f:facet>
+					<p:column id="search_stop" styleClass="trn_pos">
+						<f:facet name="header">
+							End
+							<p:tooltip value="End position of the motif in the entry sequence" for="search_stop"/>
+						</f:facet>
 						<h:outputText value="#{item.end}"/>
 					</p:column>
 					<p:column rendered="#{motifView.allMotifs}" width="200">
 						<f:facet name="header">Motif</f:facet>
 						<h:outputLink value="#{item.motifUrl}" target="_blank">#{item.motif}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
-					<p:column>
-						<f:facet name="header">Sequence</f:facet>
+					<p:column id="search_seq">
+						<f:facet name="header">
+							Sequence
+							<p:tooltip value="Sequence of motif match separating capturing groups (if any)" for="search_seq"/>
+						</f:facet>
 						<h:outputText value="#{item.alignment}"/>
 					</p:column>
-					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}">
-						<f:facet name="header">Mutant</f:facet>
+					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}" id="search_mutant">
+						<f:facet name="header">
+							Mutant
+							<p:tooltip value="Mutation in motif match sequence (lost if no more matches)" for="search_mutant"/>
+						</f:facet>
 						<h:outputText value="#{item.mutLeft}"/>
 						<h:outputText value="#{item.mutAa}" style="color:red"/>
 						<h:outputText value="#{item.mutRight}"/>
 					</p:column>
-					<p:column styleClass="trn_pos">
-						<f:facet name="header">"!"</f:facet>
+					<p:column styleClass="trn_pos" id="search_comb">
+						<f:facet name="header">
+							"!"
+							<p:tooltip value="Number of overlapping motif matches" for="search_comb"/>
+						</f:facet>
 						<h:outputText value="#{item.combinations}"/>
 					</p:column>
-					<p:column styleClass="trn_weight">
-						<f:facet name="header">Score</f:facet>
+					<p:column styleClass="trn_weight" id="search_score">
+						<f:facet name="header">
+							Score
+							<p:tooltip value="Wregex score" for="search_score"/>
+						</f:facet>
 						<h:outputText value="#{item.scoreAsString}" rendered="#{motifView.usingPssm}" />
 						<h:outputText value="N/A" rendered="#{!motifView.usingPssm}"/>
 					</p:column>
@@ -298,33 +334,47 @@
 						<f:facet name="header">Aux score</f:facet>
 						<h:outputText value="#{item.auxScoreAsString}"/>
 					</p:column>		
-					<p:column rendered="#{searchOptionsView.cosmic}" width="100">
-						<f:facet name="header">Gene</f:facet>
+					<p:column rendered="#{searchOptionsView.cosmic}" width="100" id="search_gene">
+						<f:facet name="header">
+							Gene
+							<p:tooltip value="Gene name used for external searches" for="search_gene"/>
+						</f:facet>
 						<h:outputText value="#{item.gene}"/>
 					</p:column>
-					<p:column rendered="#{searchOptionsView.cosmic}" width="80" style="text-align:center;">
-						<f:facet name="header">COSMIC missense</f:facet>
+					<p:column rendered="#{searchOptionsView.cosmic}" width="80" style="text-align:center;" id="search_cosmic">
+						<f:facet name="header">
+							COSMIC missense
+							<p:tooltip value="Mutation count" for="search_cosmic"/>
+						</f:facet>
 						<h:outputText rendered="#{item.cosmicUrl == null}" value="#{item.cosmicMissenseAsString}"/>
 						<h:outputLink rendered="#{item.cosmicUrl != null}" value="#{item.cosmicUrl}" target="_blank">#{item.cosmicMissenseAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
-					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}" width="80" style="text-align:center;">
-						<f:facet name="header">Mutation impact</f:facet>
+					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}" width="80" style="text-align:center;" id="search_impact">
+						<f:facet name="header">
+							Mutation impact
+							<p:tooltip value="Impact on Wregex score after mutation" for="search_impact"/>
+						</f:facet>
 						<h:outputText value="NA" rendered="#{item.mutScore == null}"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore lt 0}" style="color:red"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore gt 0}" style="color:blue"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore == 0}"/>						
 					</p:column>
 					<p:columns value="#{searchOptionsView.selectedPtms}" var="ptm" rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;text-overflow:ellipsis;">
-						<f:facet name="header">#{ptm}</f:facet>
+						<f:facet name="header">
+							#{ptm}
+						</f:facet>
 						<h:outputText value="#{item.ptmCounts.get(ptm)}" />
 					</p:columns>
-					<p:column rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;">
-						<f:facet name="header">dbPTM entries</f:facet>
+					<p:column rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;" id="search_ptms">
+						<f:facet name="header">
+							dbPTM entries
+							<p:tooltip value="Total number of PTMs (of any type) within the motif match" for="search_ptms"/>
+						</f:facet>
 						<h:outputText rendered="#{item.dbPtmUrl == null}" value="#{item.dbPtmsAsString}"/>
 						<h:outputLink rendered="#{item.dbPtmUrl != null}" value="#{item.dbPtmUrl}" target="_blank">#{item.dbPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>					
 				</p:dataTable>
-				<p:blockUI block="searchForm" trigger="goInput">
+				<p:blockUI block="searchForm" trigger="preset, goInput">
 					Loading...
 				</p:blockUI>
 			</h:form>

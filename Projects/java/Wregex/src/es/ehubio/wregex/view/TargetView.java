@@ -78,7 +78,7 @@ public class TargetView implements Serializable {
 	public void onChangeTarget( ValueChangeEvent event ) {
 		reset(true);
 		Object value = event.getNewValue();		
-		if( value == null || value.toString().equals("Default") ) {
+		if( value == null || value.toString().equals("none") ) {
 			targetInformation = null;
 			return;
 		}
@@ -240,7 +240,9 @@ public class TargetView implements Serializable {
 		return result;
 	}
 
-	private void parseIputFasta(String inputText) throws InvalidSequenceException {
+	private void parseIputFasta(String inputText) throws Exception {
+		if( inputText == null || inputText.isBlank() )
+			throw new Exception("Empty input");
 		if( inputText.charAt(0) != '>' )
 			inputText = ">unnamed\n" + inputText;
 		int i1 = 1, i2;
@@ -288,12 +290,14 @@ public class TargetView implements Serializable {
 			throw new Exception(String.format("%s%s %s cannot be mapped to %s",
 				StringUtils.capitalize(idType),
 				missing.size() == 1 ? "" : "s",
-				missing.size() == 1 ? missing.iterator().next() : missing.toString(),
+				missing.size() == 1 ? missing.iterator().next() : es.ehubio.io.StringUtils.truncate(missing.toString(), 100, "...]"),
 				databases.getHumanProteomeInformation().getFullName()));
 		}
+		if( set.size() == 1 )
+			baseFileName = set.iterator().next();
 	}
 	
-	private void downloadGo(String inputText) throws InvalidSequenceException, IOException {
+	private void downloadGo(String inputText) throws Exception {
 		String go = inputText.split(" ")[0];
 		int iName = inputText.indexOf('(');
 		if( iName > 0 )

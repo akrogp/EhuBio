@@ -18,12 +18,12 @@
 			<attribute name="org.eclipse.jst.component.dependency" value="../"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar">
+	<classpathentry exported="true" kind="lib" path="libs/commons-io-2.4.jar" sourcepath="/home/gorka/.m2/repository/commons-io/commons-io/2.4/commons-io-2.4-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="../"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry exported="true" kind="lib" path="libs/commons-lang-2.6.jar">
+	<classpathentry exported="true" kind="lib" path="libs/commons-lang-2.6.jar" sourcepath="/home/gorka/.m2/repository/commons-lang/commons-lang/2.6/commons-lang-2.6-sources.jar">
 		<attributes>
 			<attribute name="org.eclipse.jst.component.dependency" value="../"/>
 		</attributes>
