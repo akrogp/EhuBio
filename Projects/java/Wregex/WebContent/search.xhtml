@@ -233,7 +233,7 @@
 								<p:ajax event="change" update="@form" />
 								<f:selectItems value="#{databasesBean.dbPtms}"/>
 							</p:selectManyCheckbox>
-							<p:selectManyCheckbox rendered="#{searchOptionsView.psp}" layout="grid" columns="6" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">
+							<p:selectManyCheckbox rendered="#{searchOptionsView.psp}" layout="grid" columns="4" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">
 								<p:ajax event="change" update="@form" />
 								<f:selectItems value="#{databasesBean.pspPtms}"/>
 							</p:selectManyCheckbox>
@@ -366,19 +366,19 @@
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore gt 0}" style="color:blue"/>
 						<h:outputText value="#{item.mutScoreAsString}" rendered="#{item.mutScore != null and item.mutScore == 0}"/>						
 					</p:column>
-					<p:columns value="#{searchOptionsView.selectedPtms}" var="ptm" rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;text-overflow:ellipsis;">
+					<p:columns value="#{searchOptionsView.selectedPtms}" var="ptm" rendered="#{searchOptionsView.ptm}" width="80" style="text-align:center;text-overflow:ellipsis;">
 						<f:facet name="header">
 							#{ptm}
 						</f:facet>
 						<h:outputText value="#{item.ptmCounts.get(ptm)}" />
 					</p:columns>
-					<p:column rendered="#{searchOptionsView.dbPtm}" width="80" style="text-align:center;" id="search_ptms">
+					<p:column rendered="#{searchOptionsView.ptm}" width="80" style="text-align:center;" id="search_ptms">
 						<f:facet name="header">
-							dbPTM entries
+							Total PTMs
 							<p:tooltip value="Total number of PTMs (of any type) within the motif match" for="search_ptms"/>
 						</f:facet>
-						<h:outputText rendered="#{item.dbPtmUrl == null}" value="#{item.dbPtmsAsString}"/>
-						<h:outputLink rendered="#{item.dbPtmUrl != null}" value="#{item.dbPtmUrl}" target="_blank">#{item.dbPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+						<h:outputText rendered="#{item.ptmUrl == null}" value="#{item.totalPtmsAsString}"/>
+						<h:outputLink rendered="#{item.ptmUrl != null}" value="#{item.ptmUrl}" target="_blank">#{item.totalPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>					
 				</p:dataTable>
 				<p:blockUI block="searchForm" trigger="preset, goInput">

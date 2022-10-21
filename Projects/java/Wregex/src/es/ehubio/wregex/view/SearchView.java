@@ -28,6 +28,7 @@ import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
 import es.ehubio.wregex.data.PresetBean;
+import es.ehubio.wregex.data.PtmProvider;
 import es.ehubio.wregex.data.ResultComparator;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
@@ -93,8 +94,8 @@ public class SearchView implements Serializable {
 				searchAux();
 			if( options.isCosmic() )
 				searchCosmic();
-			if( options.isDbPtm() )
-				searchDbPtm();
+			if( options.isPtm() )
+				searchPtm();
 			Collections.sort(results, new ResultComparator(options.getSelectedPtms()));
 		} catch( IOException e ) {
 			searchError = "File error: " + e.getMessage();
@@ -132,8 +133,11 @@ public class SearchView implements Serializable {
 		Services.searchCosmic(databases.getMapCosmic(), results, motifView.isUsingPssm());
 	}
 	
-	private void searchDbPtm() {
-		Services.searchDbPtm(databases.getMapDbPtm(), results);
+	private void searchPtm() {
+		if( options.isDbPtm() )
+			Services.searchPtm(PtmProvider.DBPTM, databases.getMapDbPtm(), results);
+		else if( options.isPsp() )
+			Services.searchPtm(PtmProvider.PSP, databases.getMapPsp(), results);
 	}
 	
 	private void searchAux() throws Exception {

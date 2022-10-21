@@ -25,6 +25,7 @@ import es.ehubio.wregex.data.BubbleChartData;
 import es.ehubio.wregex.data.DatabaseInformation;
 import es.ehubio.wregex.data.MotifDefinition;
 import es.ehubio.wregex.data.MotifInformation;
+import es.ehubio.wregex.data.PtmProvider;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
@@ -199,7 +200,7 @@ public class StatisticsView {
 	private void searchDb( String db, List<ResultEx> results ) {
 		switch( db ) {
 			case "COSMIC": Services.searchCosmic(databases.getMapCosmic(), results, false); break;
-			case "dbPTM": Services.searchDbPtm(databases.getMapDbPtm(), results); break;
+			case "dbPTM": Services.searchPtm(PtmProvider.DBPTM, databases.getMapDbPtm(), results); break;
 		}
 	}
 	
@@ -250,7 +251,7 @@ public class StatisticsView {
 	private static int getSize( String chart, ResultEx result ) {
 		switch( chart ) {
 			case "COSMIC": return result.getCosmicMissense();
-			case "dbPTM": return result.getDbPtms();
+			case "dbPTM": return result.getTotalPtms();
 		}
 		return 0;
 	}

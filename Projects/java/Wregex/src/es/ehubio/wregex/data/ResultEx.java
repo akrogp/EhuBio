@@ -20,8 +20,8 @@ public class ResultEx implements Comparable<ResultEx> {
 	private final Result result;
 	private int cosmicMissense = -1;
 	private String cosmicUrl;
-	private int dbPtms = -1;
-	private String dbPtmUrl;
+	private int totalPtms = -1;
+	private String ptmUrl;
 	private final Map<String, Integer> ptmCounts = new HashMap<>();
 	private String motif;
 	private String motifUrl;
@@ -49,8 +49,8 @@ public class ResultEx implements Comparable<ResultEx> {
 		this.result = result.getResult();
 		setCosmicMissense(result.getCosmicMissense());
 		setCosmicUrl(result.getCosmicUrl());
-		setDbPtms(result.getDbPtms());
-		setDbPtmUrl(result.getDbPtmUrl());
+		setTotalPtms(result.getTotalPtms());
+		setPtmUrl(result.getPtmUrl());
 		setMotif(result.getMotif());
 		setMotifUrl(result.getMotifUrl());
 		setMutSequence(result.getMutSequence());
@@ -84,8 +84,8 @@ public class ResultEx implements Comparable<ResultEx> {
 		if( getScore() < o.getScore() )
 			return 1;
 		// 4. PTMs
-		if( getDbPtms() != o.getDbPtms() )
-			return o.getDbPtms() - getDbPtms();
+		if( getTotalPtms() != o.getTotalPtms() )
+			return o.getTotalPtms() - getTotalPtms();
 		// 5. Aux Score (combinations)
 		if( getAuxScore() == null && o.getAuxScore() != null )
 			return 1;
@@ -313,7 +313,7 @@ public class ResultEx implements Comparable<ResultEx> {
 					Integer n = result.ptmCounts.get(ptm);
 					fields.add(n == null ? "" : n.toString());
 				}
-				fields.add(result.getDbPtmsAsString());
+				fields.add(result.getTotalPtmsAsString());
 			}
 			pw.println(CsvUtils.getCsv(separator, fields.toArray()));
 		}
@@ -386,24 +386,24 @@ public class ResultEx implements Comparable<ResultEx> {
 		this.motifUrl = motifUrl;
 	}
 
-	public int getDbPtms() {
-		return dbPtms;
+	public int getTotalPtms() {
+		return totalPtms;
 	}
 	
-	public String getDbPtmsAsString() {
-		return dbPtms < 0 ? "?" : ""+dbPtms;
+	public String getTotalPtmsAsString() {
+		return totalPtms < 0 ? "?" : ""+totalPtms;
 	}
 
-	public void setDbPtms(int dbPtms) {
-		this.dbPtms = dbPtms;
+	public void setTotalPtms(int totalPtms) {
+		this.totalPtms = totalPtms;
 	}
 
-	public String getDbPtmUrl() {
-		return dbPtmUrl;
+	public String getPtmUrl() {
+		return ptmUrl;
 	}
 
-	public void setDbPtmUrl(String dbPtmUrl) {
-		this.dbPtmUrl = dbPtmUrl;
+	public void setPtmUrl(String ptmUrl) {
+		this.ptmUrl = ptmUrl;
 	}
 
 	public String getMutSequence() {

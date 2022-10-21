@@ -57,6 +57,10 @@ public class SearchOptionsView implements Serializable {
 	public void setCosmic(boolean cosmic) {
 		this.cosmic = cosmic;
 	}
+	
+	public boolean isPtm() {
+		return isDbPtm() || isPsp();
+	}
 
 	public boolean isDbPtm() {
 		return dbPtm;

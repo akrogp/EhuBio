@@ -39,8 +39,8 @@ public class ResultComparator implements Comparator<ResultEx> {
 		if( ptms1 != ptms2 )
 			return ptms2 - ptms1;
 		// 5. All PTMs
-		if( o1.getDbPtms() != o2.getDbPtms() )
-			return o2.getDbPtms() - o1.getDbPtms();
+		if( o1.getTotalPtms() != o2.getTotalPtms() )
+			return o2.getTotalPtms() - o1.getTotalPtms();
 		// 6. Aux Score (combinations)
 		if( o1.getAuxScore() == null && o2.getAuxScore() != null )
 			return 1;
@@ -59,8 +59,8 @@ public class ResultComparator implements Comparator<ResultEx> {
 
 	private int countPtms(ResultEx o) {
 		Map<String, Integer> map = o.getPtmCounts();
-		if( o.getDbPtms() < 0 || map == null || map.isEmpty() )
-			return o.getDbPtms();
+		if( o.getTotalPtms() < 0 || map == null || map.isEmpty() )
+			return o.getTotalPtms();
 		int count = 0;
 		for( String ptm : ptms ) {
 			Integer inc = map.get(ptm);

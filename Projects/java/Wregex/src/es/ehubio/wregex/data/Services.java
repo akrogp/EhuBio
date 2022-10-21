@@ -246,10 +246,10 @@ public class Services {
 		return results;
 	}
 	
-	public static void searchDbPtm(Map<String, ProteinPtms> dbPtm, List<ResultEx> results) {
+	public static void searchPtm(PtmProvider db, Map<String, ProteinPtms> mapPtm, List<ResultEx> results) {
 		int count;
 		for( ResultEx result : results ) {
-			ProteinPtms ptms = dbPtm.get(result.getAccession());
+			ProteinPtms ptms = mapPtm.get(result.getAccession());
 			if( ptms == null )
 				continue;
 			count = 0;
@@ -265,9 +265,13 @@ public class Services {
 						result.getPtmCounts().put(type, typeCount);
 					}
 				}
-			result.setDbPtmUrl(String.format(
-				"https://awi.cuhk.edu.cn/dbPTM/info.php?id=%s",ptms.getProtein()));
-			result.setDbPtms(count);			
+			result.setTotalPtms(count);
+			String url = null;
+			if( db == PtmProvider.DBPTM )
+				url = String.format("https://awi.cuhk.edu.cn/dbPTM/info.php?id=%s",ptms.getProtein());
+			else if( db == PtmProvider.PSP )
+				url = String.format("https://www.phosphosite.org/simpleSearchSubmitAction.action?searchStr=%s",ptms.getProtein());
+			result.setPtmUrl(url);
 		}
 	}
 	
