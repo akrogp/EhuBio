@@ -199,7 +199,11 @@
 								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
 									<p:ajax event="change" update="@form" />
 								</p:selectBooleanCheckbox>
-								&nbsp;Threshold:
+								&nbsp;
+								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchView.onChangeOption}" update="@form">
+									<p:ajax event="change" update="@form" />
+								</p:selectBooleanCheckbox><br/><br/>
+								Threshold:								
 								<p:spinner value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
 									<p:ajax event="change" update="@form" />
 								</p:spinner>
@@ -207,11 +211,7 @@
 								<p:spinner value="#{searchOptionsView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
 									<p:ajax event="change" update="@form" />
 								</p:spinner>
-								&nbsp;
-								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchView.onChangeOption}" update="@form">
-									<p:ajax event="change" update="@form" />
-								</p:selectBooleanCheckbox>
-								&nbsp;
+								&nbsp;								
 							</h:panelGroup>							
 						</p:column>
 					</p:row>

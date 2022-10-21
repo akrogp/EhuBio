@@ -15,6 +15,8 @@ public class PresetBean {
 	private String auxMotif;
 	private String target;
 	private String targetInput;
+	private boolean grouping = true;
+	private boolean filterSimilar;
 	private boolean cosmic;
 	@XmlElement(name="ptm")
 	private List<String> ptms;
@@ -57,6 +59,22 @@ public class PresetBean {
 	
 	public void setTargetInput(String targetInput) {
 		this.targetInput = targetInput;
+	}
+	
+	public boolean isGrouping() {
+		return grouping;
+	}
+	
+	public void setGrouping(boolean grouping) {
+		this.grouping = grouping;
+	}
+	
+	public boolean isFilterSimilar() {
+		return filterSimilar;
+	}
+	
+	public void setFilterSimilar(boolean filterSimilar) {
+		this.filterSimilar = filterSimilar;
 	}
 
 	public boolean isCosmic() {

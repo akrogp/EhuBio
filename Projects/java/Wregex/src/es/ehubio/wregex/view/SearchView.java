@@ -300,6 +300,8 @@ public class SearchView implements Serializable {
 			targetView.onChangeInput();
 		}
 		
+		options.setGrouping(preset.isGrouping());
+		options.setFilterEqual(preset.isFilterSimilar());
 		options.setCosmic(preset.isCosmic());
 		options.setDbPtm(preset.getPtms() != null && !preset.getPtms().isEmpty());
 		if( options.isDbPtm() )			
