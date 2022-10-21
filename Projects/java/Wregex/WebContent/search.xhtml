@@ -23,7 +23,7 @@
 							<p:selectOneMenu id="preset" value="#{searchView.preset}" valueChangeListener="#{searchView.onSelectPreset}">
 								<f:selectItem itemLabel="No preset (manual configuration)" itemValue="none" />
 								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.name}"/>
-								<p:ajax update="@form" />
+								<p:ajax event="change" update="@form" />
 							</p:selectOneMenu>
 						</p:column>
 					</p:row>
@@ -250,7 +250,7 @@
 					<p:row rendered="#{searchView.configError == null and searchView.results == null}">
 						<p:column>
 							<p:commandButton value="Search!" actionListener="#{searchView.search}" ajax="false"/>
-						</p:column>
+						</p:column>&nbsp;
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
 							<h:outputText id="search" value="#{searchView.searchError}" rendered="#{searchView.searchError != null}" style="color:red"/>
 						</p:column>

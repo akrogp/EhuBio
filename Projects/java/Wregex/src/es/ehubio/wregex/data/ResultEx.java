@@ -279,7 +279,7 @@ public class ResultEx implements Comparable<ResultEx> {
 		if( cosmic ) { fields.add("Gene"); fields.add("Mutant"); fields.add("Mutation effect"); fields.add("COSMIC:Missense"); }
 		if( dbPtm ) {
 			fields.addAll(Arrays.asList(selectedPtms));
-			fields.add("dbPTM");
+			fields.add("PTMs");
 		}
 		pw.println(CsvUtils.getCsv(separator, fields.toArray()));
 		long count = 1;
