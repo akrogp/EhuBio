@@ -217,18 +217,25 @@
 					</p:row>
 					
 					<p:row>
-            			<p:column style="vertical-align:baseline;">Connections:</p:column>
+            			<p:column style="vertical-align:baseline;"><br/>Connections:</p:column>
             			<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
             				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
-							<br/>
+							<br/><br/>
+							<p:selectBooleanCheckbox itemLabel="PhosphoSitePlus (20220909)" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>&nbsp;&nbsp;		
 							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
 								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>
+							</p:selectBooleanCheckbox>							
 							<p:selectManyCheckbox rendered="#{searchOptionsView.dbPtm}" layout="grid" columns="6" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">
 								<p:ajax event="change" update="@form" />
-								<f:selectItems value="#{databasesBean.ptms}"/>
+								<f:selectItems value="#{databasesBean.dbPtms}"/>
+							</p:selectManyCheckbox>
+							<p:selectManyCheckbox rendered="#{searchOptionsView.psp}" layout="grid" columns="6" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">
+								<p:ajax event="change" update="@form" />
+								<f:selectItems value="#{databasesBean.pspPtms}"/>
 							</p:selectManyCheckbox>
             			</p:column>
            			</p:row>

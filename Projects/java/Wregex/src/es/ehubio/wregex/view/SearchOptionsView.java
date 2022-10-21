@@ -15,6 +15,7 @@ public class SearchOptionsView implements Serializable {
 	private int flanking = 0;
 	private boolean cosmic = false;
 	private boolean dbPtm = false;
+	private boolean psp = false;
 	private String[] selectedPtms;
 	
 	public boolean isGrouping() {
@@ -63,6 +64,18 @@ public class SearchOptionsView implements Serializable {
 
 	public void setDbPtm(boolean dbPtm) {
 		this.dbPtm = dbPtm;
+		if( dbPtm )
+			setPsp(false);
+	}
+	
+	public boolean isPsp() {
+		return psp;
+	}
+	
+	public void setPsp(boolean psp) {
+		this.psp = psp;
+		if( psp )
+			setDbPtm(false);
 	}
 
 	public String[] getSelectedPtms() {

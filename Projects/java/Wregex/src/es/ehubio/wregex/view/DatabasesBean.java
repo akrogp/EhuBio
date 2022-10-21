@@ -21,12 +21,15 @@ import javax.enterprise.context.ApplicationScoped;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
 
+import es.ehubio.db.PtmItem;
 import es.ehubio.db.cosmic.CosmicStats;
 import es.ehubio.db.dbptm.Entry;
 import es.ehubio.db.dbptm.TxtReader;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.go.Ontology;
 import es.ehubio.db.go.Term;
+import es.ehubio.db.psp.PspFile;
+import es.ehubio.db.psp.Site;
 import es.ehubio.dbptm.ProteinPtms;
 import es.ehubio.io.UnixCfgReader;
 import es.ehubio.wregex.InputGroup;
@@ -60,16 +63,20 @@ public class DatabasesBean implements Serializable {
 	private DatabaseInformation elm;
 	private DatabaseInformation cosmic;
 	private DatabaseInformation dbPtm;
+	private DatabaseInformation psp;
 	private DatabaseInformation dbWregex;
 	private DatabaseInformation humanProteome;
 	private Map<String,FastaDb> mapFasta;
 	private Map<String,CosmicStats> mapCosmic;
 	private Map<String, ProteinPtms> mapDbPtm;
-	private List<String> ptms;
+	private Map<String, ProteinPtms> mapPsp;
+	private List<String> ptmsDbPtm;
+	private List<String> ptmsPsp;
 	private List<Term> goTerms;
 	private long lastModifiedCosmic;
 	private long lastModifiedElm;
-	private long lastModifiedDbPtm;	
+	private long lastModifiedDbPtm;
+	private long lastModifiedPsp;
 	private int initialized = 0;	
 	
 	private class FastaDb {
@@ -116,6 +123,11 @@ public class DatabasesBean implements Serializable {
 				//refreshDbPtm();
 				continue;
 			}
+			if( database.getType().equals("psp") ) {
+				psp = database;
+				//refreshDbPsp();
+				continue;
+			}
 			if( database.getType().equals("go") ) {
 				goTerms = Ontology.loadTerms(database.getPath());
 				continue;
@@ -138,6 +150,7 @@ public class DatabasesBean implements Serializable {
 		
 		refreshCosmic();
 		refreshDbPtm();
+		refreshPsp();
 		
 		// Presets
 		rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(PresetsPath));
@@ -257,8 +270,18 @@ public class DatabasesBean implements Serializable {
 		return mapDbPtm;
 	}
 	
-	public List<String> getPtms() {
-		return ptms;
+	public Map<String, ProteinPtms> getMapPsp() throws ReloadException {
+		if( !isInitialized() || refreshPsp() )
+			throw new ReloadException(psp.getFullName());
+		return mapPsp;
+	}
+	
+	public List<String> getDbPtms() {
+		return ptmsDbPtm;
+	}
+	
+	public List<String> getPspPtms() {
+		return ptmsPsp;
 	}
 	
 	public List<Term> getGoTerms() {
@@ -300,6 +323,17 @@ public class DatabasesBean implements Serializable {
 		if( file.lastModified() == lastModifiedDbPtm )
 			return false;
 		Initializer initializer = new Initializer(dbPtm.getName());
+		initializer.start();
+		return true;
+	}
+	
+	private boolean refreshPsp() {
+		if( psp == null )
+			return false;
+		File file = new File(psp.getPath());
+		if( file.lastModified() == lastModifiedPsp )
+			return false;
+		Initializer initializer = new Initializer(psp.getName());
 		initializer.start();
 		return true;
 	}
@@ -355,25 +389,39 @@ public class DatabasesBean implements Serializable {
 		logger.info("Loading DB: " + cosmic.getFullName());
 		mapCosmic = CosmicStats.load(cosmic.getPath());
 		lastModifiedCosmic = new File(cosmic.getPath()).lastModified();
-		logger.info("Loaded!");
+		logger.info("Loaded " + cosmic.getFullName() + "!");
 	}
 	
 	private void loadDbPtm() throws IOException {
 		logger.info("Loading DB: " + dbPtm.getFullName());
 		List<Entry> list = TxtReader.readFile(dbPtm.getPath());
 		mapDbPtm = ProteinPtms.load(list);
-		//ptms = list.stream().map(ptm -> ptm.getType()).distinct().collect(Collectors.toList());
-		ptms = list.stream().map(Entry::getType)
+		ptmsDbPtm = buildPtmList(list);
+		lastModifiedDbPtm = new File(dbPtm.getPath()).lastModified();
+		logger.info("Loaded" + dbPtm.getFullName() + "!");
+	}
+	
+	private void loadPsp() throws IOException {
+		logger.info("Loading DB: " + psp.getFullName());
+		List<Site> list = PspFile.readDir(psp.getPath()).stream()
+			.filter(site -> site.getOrganism().equals("human"))
+			.collect(Collectors.toList());
+		mapPsp = ProteinPtms.load(list);
+		ptmsPsp = buildPtmList(list);
+		lastModifiedPsp = new File(psp.getPath()).lastModified();
+		logger.info("Loaded" + psp.getFullName() + "!");
+	}
+	
+	private List<String> buildPtmList(List<? extends PtmItem> list) {
+		return list.stream().map(PtmItem::getType)
 			.collect(Collectors.groupingBy(Function.identity(), Collectors.counting())) 
 		    .entrySet()
 		    .stream()
 		    .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
 		    .map(Map.Entry::getKey)
 		    .collect(Collectors.toList());
-		lastModifiedDbPtm = new File(dbPtm.getPath()).lastModified();
-		logger.info("Loaded!");
 	}
-	
+
 	private class Initializer extends Thread {
 		private final String db;
 		
@@ -391,6 +439,8 @@ public class DatabasesBean implements Serializable {
 					loadCosmic();
 				else if( dbPtm != null && db.equals(dbPtm.getName()) )
 					loadDbPtm();
+				else if( psp != null && db.equals(psp.getName()) )
+					loadPsp();
 				initialized++;
 			} catch( Exception e ) {
 				e.printStackTrace();

@@ -33,7 +33,7 @@ public final class TxtReader {
 				if( fields[5].length() < 11 )
 					continue;
 				Entry entry = new Entry();
-				entry.setId(fields[0]);
+				entry.setProtein(fields[0]);
 				entry.setAccession(fields[1]);
 				entry.setPosition(Integer.parseInt(fields[2]));
 				entry.setType(fields[3]);

@@ -5,33 +5,33 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import es.ehubio.db.dbptm.Entry;
+import es.ehubio.db.PtmItem;
 
 public class ProteinPtms {
 	private Map<Integer,Ptm> ptms = new HashMap<>();
-	private String id;
+	private String protein;
 	
 	public Map<Integer,Ptm> getPtms() {
 		return ptms;
 	}
 	
-	public String getId() {
-		return id;
+	public String getProtein() {
+		return protein;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
+	public void setProtein(String id) {
+		this.protein = id;
 	}
 	
-	public static Map<String,ProteinPtms> load( List<Entry> list ) throws IOException {
+	public static Map<String,ProteinPtms> load( List<? extends PtmItem> list ) throws IOException {
 		Map<String,ProteinPtms> map = new HashMap<>();
 		//List<Entry> list = TxtReader.readFile(path);
 		Ptm ptm;
-		for( Entry entry : list ) {
+		for( PtmItem entry : list ) {
 			ProteinPtms protein = map.get(entry.getAccession());
 			if( protein == null ) {
 				protein = new ProteinPtms();
-				protein.setId(entry.getId());
+				protein.setProtein(entry.getProtein());
 				map.put(entry.getAccession(), protein);
 			}
 			// Filter predicted PTMs

@@ -266,7 +266,7 @@ public class Services {
 					}
 				}
 			result.setDbPtmUrl(String.format(
-				"https://awi.cuhk.edu.cn/dbPTM/info.php?id=%s",ptms.getId()));
+				"https://awi.cuhk.edu.cn/dbPTM/info.php?id=%s",ptms.getProtein()));
 			result.setDbPtms(count);			
 		}
 	}

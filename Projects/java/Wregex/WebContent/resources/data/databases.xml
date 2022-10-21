@@ -41,6 +41,13 @@
         <wregexVersion>3</wregexVersion>
     </database>
     <database>
+        <name>PhosphoSitePlus</name>
+        <type>psp</type>
+        <path>/media/data/Sequences/PSP/current</path>
+        <versionFile>/media/data/Sequences/PSP/current/version.txt</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
         <name>Gene Ontology</name>
         <type>go</type>
         <path>/media/data/Sequences/GO/current/go.obo</path>

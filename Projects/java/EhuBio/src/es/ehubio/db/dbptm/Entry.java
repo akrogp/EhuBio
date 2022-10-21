@@ -2,13 +2,15 @@ package es.ehubio.db.dbptm;
 
 import java.util.Set;
 
-public class Entry {
-	public String getId() {
-		return id;
+import es.ehubio.db.PtmItem;
+
+public class Entry implements PtmItem {
+	public String getProtein() {
+		return protein;
 	}
 	
-	public void setId(String id) {
-		this.id = id;
+	public void setProtein(String id) {
+		this.protein = id;
 	}
 	
 	public String getAccession() {
@@ -69,7 +71,7 @@ public class Entry {
 	
 	@Override
 	public String toString() {
-		StringBuilder str = new StringBuilder(id+":"+accession+":"+position+":"+aminoacid+":"+type);
+		StringBuilder str = new StringBuilder(protein+":"+accession+":"+position+":"+aminoacid+":"+type);
 		boolean first = true;
 		for( String id : pubmedIds )
 			if( first ) {
@@ -80,7 +82,7 @@ public class Entry {
 		return str.toString();
 	}
 	
-	private String id;
+	private String protein;
 	private String accession;
 	private int position;
 	//private String modification;
