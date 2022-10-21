@@ -2,7 +2,6 @@ package es.ehubio.wregex.view;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -66,6 +65,7 @@ public class DatabasesBean implements Serializable {
 	private DatabaseInformation psp;
 	private DatabaseInformation dbWregex;
 	private DatabaseInformation humanProteome;
+	private DatabaseInformation go;
 	private Map<String,FastaDb> mapFasta;
 	private Map<String,CosmicStats> mapCosmic;
 	private Map<String, ProteinPtms> mapDbPtm;
@@ -73,11 +73,6 @@ public class DatabasesBean implements Serializable {
 	private List<String> ptmsDbPtm;
 	private List<String> ptmsPsp;
 	private List<Term> goTerms;
-	private long lastModifiedCosmic;
-	private long lastModifiedElm;
-	private long lastModifiedDbPtm;
-	private long lastModifiedPsp;
-	private int initialized = 0;	
 	
 	private class FastaDb {
 		public long lastModified;
@@ -90,72 +85,59 @@ public class DatabasesBean implements Serializable {
 
 	private void loadDatabases() throws IOException, InvalidSequenceException {		
 		// Wregex motifs
-		Reader rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(WregexMotifsPath)); 		
-		motifConfiguration = MotifConfiguration.load(rd);
-		filterPrivateMotifs();
-		rd.close();
-		redundantMotifs = new ArrayList<>();
-		for( MotifInformation motifInformation : motifConfiguration.getMotifs() )
-			if( motifInformation.getReplaces() != null )
-				redundantMotifs.add(motifInformation.getReplaces());		
-		
-		// Databases
-		rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(DatabasesPath)); 		
-		databaseConfiguration = DatabaseConfiguration.load(rd);
-		rd.close();
-		mapFasta = new HashMap<>();
-		targets = new ArrayList<>();
-		for( DatabaseInformation database : databaseConfiguration.getDatabases() ) {
-			if( Versions.PROD && database.getWregexVersion() != null && (database.getWregexVersion() == 0 || Versions.MAJOR < database.getWregexVersion()) )
-				continue;
-			if( database.getType().equals("elm") ) {
-				elm = database;
-				refreshElm();
-				continue;
-			}
-			if( database.getType().equals("cosmic") ) {
-				cosmic = database;
-				//refreshCosmic();
-				continue;
-			}
-			if( database.getType().equals("dbptm") ) {
-				dbPtm = database;
-				//refreshDbPtm();
-				continue;
-			}
-			if( database.getType().equals("psp") ) {
-				psp = database;
-				//refreshDbPsp();
-				continue;
-			}
-			if( database.getType().equals("go") ) {
-				goTerms = Ontology.loadTerms(database.getPath());
-				continue;
-			}
-			if( database.getType().equals("wregex") ) {
-				dbWregex = database;
-				continue;
-			}
-			targets.add(database);
-			if( !database.getType().equals("fasta") )
-				continue;
-			FastaDb fasta = new FastaDb();			
-			File f = new File(database.getPath());
-			fasta.lastModified = f.lastModified();
-			fasta.entries = loadFasta(database.getPath());
-			mapFasta.put(database.getPath(), fasta);
-			if( database.getName().contains("Human Proteome") )
-				humanProteome = database;
+		try(Reader rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(WregexMotifsPath))) { 		
+			motifConfiguration = MotifConfiguration.load(rd);
+			filterPrivateMotifs();
+			redundantMotifs = new ArrayList<>();
+			for( MotifInformation motifInformation : motifConfiguration.getMotifs() )
+				if( motifInformation.getReplaces() != null )
+					redundantMotifs.add(motifInformation.getReplaces());		
 		}
 		
-		refreshCosmic();
-		refreshDbPtm();
-		refreshPsp();
+		// Databases
+		try(Reader rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(DatabasesPath))) { 		
+			databaseConfiguration = DatabaseConfiguration.load(rd);
+			mapFasta = new HashMap<>();
+			targets = new ArrayList<>();
+			for( DatabaseInformation database : databaseConfiguration.getDatabases() ) {
+				if( Versions.PROD && database.getWregexVersion() != null && (database.getWregexVersion() == 0 || Versions.MAJOR < database.getWregexVersion()) )
+					continue;
+				if( database.getType().equals("elm") ) {
+					elm = database;
+					continue;
+				}
+				if( database.getType().equals("cosmic") ) {
+					cosmic = database;
+					continue;
+				}
+				if( database.getType().equals("dbptm") ) {
+					dbPtm = database;
+					continue;
+				}
+				if( database.getType().equals("psp") ) {
+					psp = database;
+					continue;
+				}
+				if( database.getType().equals("go") ) {
+					go = database;
+					continue;
+				}
+				if( database.getType().equals("wregex") ) {
+					dbWregex = database;
+					continue;
+				}
+				targets.add(database);
+				if( !database.getType().equals("fasta") )
+					continue;
+				if( database.getName().contains("Human Proteome") )
+					humanProteome = database;
+			}
+		}
 		
 		// Presets
-		rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(PresetsPath));
-		presetConfiguration = PresetConfiguration.load(rd);
-		rd.close();
+		try( Reader rd = new InputStreamReader(FacesContext.getCurrentInstance().getExternalContext().getResourceAsStream(PresetsPath)) ) {
+			presetConfiguration = PresetConfiguration.load(rd);
+		}
 	}
 	
 	public List<PresetBean> getPresets() {
@@ -192,13 +174,13 @@ public class DatabasesBean implements Serializable {
 	}
 	
 	public List<MotifInformation> getElmMotifs() {
-		refreshElm();	
+		if( elmMotifs == null )
+			loadElmMotifs();
 		return elmMotifs;
 	}
 	
 	public List<MotifInformation> getAllMotifs() {
-		File file = new File(elm.getPath());
-		if( file.lastModified() != lastModifiedElm || allMotifs == null ) {
+		if( allMotifs == null ) {
 			allMotifs = new ArrayList<>();
 			allMotifs.addAll(getWregexMotifs());
 			allMotifs.addAll(getElmMotifs());
@@ -207,8 +189,7 @@ public class DatabasesBean implements Serializable {
 	}
 	
 	public List<MotifInformation> getNrMotifs() {
-		File file = new File(elm.getPath());
-		if( file.lastModified() != lastModifiedElm || nrMotifs == null ) {
+		if( nrMotifs == null ) {
 			nrMotifs = new ArrayList<>();
 			nrMotifs.addAll(getWregexMotifs());
 			getElmMotifs();
@@ -258,87 +239,43 @@ public class DatabasesBean implements Serializable {
 		return dbWregex;
 	}
 	
-	public Map<String,CosmicStats> getMapCosmic() throws ReloadException {
-		if( !isInitialized() || refreshCosmic() )
-			throw new ReloadException(cosmic.getFullName());
+	public Map<String,CosmicStats> getMapCosmic() {
+		if( mapCosmic == null )
+			loadCosmic();
 		return mapCosmic;
 	}
 	
-	public Map<String, ProteinPtms> getMapDbPtm() throws ReloadException {
-		if( !isInitialized() || refreshDbPtm() )
-			throw new ReloadException(dbPtm.getFullName());
+	public Map<String, ProteinPtms> getMapDbPtm() {
+		if( mapDbPtm == null )
+			loadDbPtm();
 		return mapDbPtm;
 	}
 	
-	public Map<String, ProteinPtms> getMapPsp() throws ReloadException {
-		if( !isInitialized() || refreshPsp() )
-			throw new ReloadException(psp.getFullName());
+	public Map<String, ProteinPtms> getMapPsp() {
+		if( mapPsp == null )
+			loadPsp();
 		return mapPsp;
 	}
 	
 	public List<String> getDbPtms() {
+		if( ptmsDbPtm == null )
+			loadDbPtm();
 		return ptmsDbPtm;
 	}
 	
 	public List<String> getPspPtms() {
+		if( ptmsPsp == null )
+			loadPsp();
 		return ptmsPsp;
 	}
 	
 	public List<Term> getGoTerms() {
+		if( goTerms == null )
+			loadGo();
 		return goTerms;
 	}
-
-	public boolean isInitialized() {
-		return initialized == 0;
-	}	
 	
-	private boolean refreshElm() {		
-		try {
-			File file = new File(elm.getPath());
-			if( file.lastModified() == lastModifiedElm )
-				return false;
-			loadElmMotifs();
-		} catch (IOException e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-	}	
-	
-	private boolean refreshCosmic() {
-		if( cosmic == null )
-			return false;
-		File file = new File(cosmic.getPath());
-		if( file.lastModified() == lastModifiedCosmic )
-			return false;
-		Initializer initializer = new Initializer(cosmic.getName());
-		initializer.start();
-		return true;
-	}
-	
-	private boolean refreshDbPtm() {
-		if( dbPtm == null )
-			return false;
-		File file = new File(dbPtm.getPath());
-		if( file.lastModified() == lastModifiedDbPtm )
-			return false;
-		Initializer initializer = new Initializer(dbPtm.getName());
-		initializer.start();
-		return true;
-	}
-	
-	private boolean refreshPsp() {
-		if( psp == null )
-			return false;
-		File file = new File(psp.getPath());
-		if( file.lastModified() == lastModifiedPsp )
-			return false;
-		Initializer initializer = new Initializer(psp.getName());
-		initializer.start();
-		return true;
-	}
-	
-	private void loadElmMotifs() throws IOException {
+	private void loadElmMotifs() {
 		logger.info("Loading DB: " + elm.getPath());
 		elmMotifs = new ArrayList<>();
 		MotifInformation motif;
@@ -377,39 +314,59 @@ public class DatabasesBean implements Serializable {
 				motif.setReferences(references);
 				elmMotifs.add(motif);
 			}
-			lastModifiedElm = elmFile.lastModified();
 			String version = rd.getComment("ELM_Classes_Download_Date");
 			if( version != null )
 				elm.setVersion(version.split(" ")[1]);
 			logger.info("Loaded " + elm.getFullName() + "!");
+		} catch (Exception e) {
+			e.printStackTrace();
 		}		
 	}
 	
-	private void loadCosmic() throws FileNotFoundException, IOException {
+	private void loadCosmic() {
 		logger.info("Loading DB: " + cosmic.getFullName());
-		mapCosmic = CosmicStats.load(cosmic.getPath());
-		lastModifiedCosmic = new File(cosmic.getPath()).lastModified();
-		logger.info("Loaded " + cosmic.getFullName() + "!");
+		try {
+			mapCosmic = CosmicStats.load(cosmic.getPath());
+			logger.info("Loaded " + cosmic.getFullName() + "!");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}		
 	}
 	
-	private void loadDbPtm() throws IOException {
+	private void loadDbPtm() {
 		logger.info("Loading DB: " + dbPtm.getFullName());
-		List<Entry> list = TxtReader.readFile(dbPtm.getPath());
-		mapDbPtm = ProteinPtms.load(list);
-		ptmsDbPtm = buildPtmList(list);
-		lastModifiedDbPtm = new File(dbPtm.getPath()).lastModified();
-		logger.info("Loaded" + dbPtm.getFullName() + "!");
+		try {
+			List<Entry> list = TxtReader.readFile(dbPtm.getPath());
+			mapDbPtm = ProteinPtms.load(list);
+			ptmsDbPtm = buildPtmList(list);
+			logger.info("Loaded " + dbPtm.getFullName() + "!");
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 	
-	private void loadPsp() throws IOException {
+	private void loadPsp() {
 		logger.info("Loading DB: " + psp.getFullName());
-		List<Site> list = PspFile.readDir(psp.getPath()).stream()
-			.filter(site -> site.getOrganism().equals("human"))
-			.collect(Collectors.toList());
-		mapPsp = ProteinPtms.load(list);
-		ptmsPsp = buildPtmList(list);
-		lastModifiedPsp = new File(psp.getPath()).lastModified();
-		logger.info("Loaded" + psp.getFullName() + "!");
+		try {
+			List<Site> list = PspFile.readDir(psp.getPath()).stream()
+				.filter(site -> site.getOrganism().equals("human"))
+				.collect(Collectors.toList());
+			mapPsp = ProteinPtms.load(list);
+			ptmsPsp = buildPtmList(list);
+			logger.info("Loaded " + psp.getFullName() + "!");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadGo() {
+		logger.info("Loading DB: " + go.getFullName());
+		try {
+			goTerms = Ontology.loadTerms(go.getPath());
+			logger.info("Loaded " + go.getFullName() + "!");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	private List<String> buildPtmList(List<? extends PtmItem> list) {
@@ -420,42 +377,5 @@ public class DatabasesBean implements Serializable {
 		    .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
 		    .map(Map.Entry::getKey)
 		    .collect(Collectors.toList());
-	}
-
-	private class Initializer extends Thread {
-		private final String db;
-		
-		public Initializer( String db ) {
-			this.db = db;
-		}
-		
-		@Override
-		public void run() {
-			initialized--;
-			try { 
-				if( elm != null && db.equals(elm.getName()) )
-					loadElmMotifs();
-				else if( cosmic != null && db.equals(cosmic.getName()) )
-					loadCosmic();
-				else if( dbPtm != null && db.equals(dbPtm.getName()) )
-					loadDbPtm();
-				else if( psp != null && db.equals(psp.getName()) )
-					loadPsp();
-				initialized++;
-			} catch( Exception e ) {
-				e.printStackTrace();
-			}
-		}				
-	}
-	
-	public static class ReloadException extends Exception {
-		private static final long serialVersionUID = 1L;
-		private static final String message = "beeing updated, please try again later";
-		public ReloadException() {
-			super("Databases are "+message);
-		}
-		public ReloadException( String db ) {
-			super(db+" database is "+message);
-		}
 	}
 }

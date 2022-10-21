@@ -196,20 +196,11 @@ public class StatisticsView {
 		logger.info("finished!");
 	}
 	
-	private void searchDb( String db, List<ResultEx> results ) throws InterruptedException {
-		boolean retry;
-		do {
-			retry = false;
-			try {
-				switch( db ) {
-					case "COSMIC": Services.searchCosmic(databases.getMapCosmic(), results, false); break;
-					case "dbPTM": Services.searchDbPtm(databases.getMapDbPtm(), results); break;
-				}				
-			} catch( DatabasesBean.ReloadException e ) {
-				Thread.sleep(5000);
-				retry = true;
-			}
-		} while( retry );
+	private void searchDb( String db, List<ResultEx> results ) {
+		switch( db ) {
+			case "COSMIC": Services.searchCosmic(databases.getMapCosmic(), results, false); break;
+			case "dbPTM": Services.searchDbPtm(databases.getMapDbPtm(), results); break;
+		}
 	}
 	
 	private static void addBubbles(

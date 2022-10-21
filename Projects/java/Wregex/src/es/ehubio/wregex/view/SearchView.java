@@ -32,7 +32,6 @@ import es.ehubio.wregex.data.ResultComparator;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
-import es.ehubio.wregex.view.DatabasesBean.ReloadException;
 
 @Named
 @SessionScoped
@@ -129,11 +128,11 @@ public class SearchView implements Serializable {
 		return results;
 	}	
 
-	private void searchCosmic() throws ReloadException {
+	private void searchCosmic() {
 		Services.searchCosmic(databases.getMapCosmic(), results, motifView.isUsingPssm());
 	}
 	
-	private void searchDbPtm() throws ReloadException {
+	private void searchDbPtm() {
 		Services.searchDbPtm(databases.getMapDbPtm(), results);
 	}
 	
