@@ -21,8 +21,7 @@
 						<p:column>Preset:</p:column>
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
 							<p:selectOneMenu id="preset" value="#{searchView.preset}" valueChangeListener="#{searchView.onSelectPreset}">
-								<f:selectItem itemLabel="No preset (manual configuration)" itemValue="none" />
-								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.name}"/>
+								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.value}"/>
 								<p:ajax event="change" update="@form" />
 							</p:selectOneMenu>
 						</p:column>
@@ -34,7 +33,7 @@
 							<p:selectOneMenu value="#{motifView.mainMotif.motif}"
 								valueChangeListener="#{motifView.onChangeMainMotif}">
 								<f:selectItem itemLabel="--- Select motif ---"
-									itemValue="Default" />
+									itemValue="none" />
 <!-- 								<f:selectItem itemLabel="All motifs" itemValue="All" /> -->
 								<f:selectItem itemLabel="Custom" itemValue="Custom" />
 								<f:selectItems value="#{databasesBean.wregexMotifs}" />
@@ -56,7 +55,7 @@
 							<p:selectOneMenu value="#{motifView.auxMotif.motif}"
 								valueChangeListener="#{motifView.onChangeAuxMotif}">
 								<f:selectItem itemLabel="--- Select motif ---"
-									itemValue="Default" />
+									itemValue="none" />
 								<f:selectItems value="#{databasesBean.wregexMotifs}" />
 								<f:selectItem
 									itemLabel="--- #{databasesBean.elmInformation.fullName} ---"

@@ -8,7 +8,7 @@ import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.MotifReference;
 
 public class MotifBean {
-	private String motif;
+	private String motif = "none";
 	private String definition;
 	private MotifInformation motifInformation;
 	private MotifDefinition motifDefinition;

@@ -1,22 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <presets>
 	<preset>
+		<name>No preset (manual configuration)</name>
+		<value>none</value>
+	</preset>
+	<preset>
 		<name>Case study 1: NES/CRM1 candidates in human proteins of Cajal bodies</name>
+		<value>case1</value>
 		<mainMotif>NES/CRM1</mainMotif>
 		<target>UniProtKB/Swiss-Prot Human Subproteome</target>
 		<targetInput>GO:0015030 (Cajal body)</targetInput>
 	</preset>
 	<preset>
 		<name>Case study 2: NES/CRM1 candidates with auxiliar NLS motif in Cargo A proteins (Kirli et al., 2015)</name>
+		<value>case2</value>
 		<mainMotif>NES/CRM1</mainMotif>
 		<auxMotif>TRG_NLS_MonoCore_2</auxMotif>
 		<target>Cargo A</target>
 	</preset>
 	<preset>
 		<name>Case study 3: Combining PLK4 motif matches with dbPTM phosphorilations in human centrosome</name>
+		<value>case3</value>
 		<mainMotif>MOD_Plk_4</mainMotif>
 		<target>UniProtKB/Swiss-Prot Human Subproteome</target>
 		<targetInput>GO:0005813 (centrosome)</targetInput>
+		<dbPtm>true</dbPtm>
 		<ptm>Phosphorylation</ptm>
 	</preset>
 </presets>

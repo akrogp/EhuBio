@@ -278,25 +278,31 @@ public class SearchView implements Serializable {
 		this.preset = preset;
 	}
 	
-	public void onSelectPreset(ValueChangeEvent event) {
-		resetResult();		
-		PresetBean preset = string2preset(event.getNewValue().toString());
+	public void onSelectPreset(ValueChangeEvent event) {		
+		String value = event.getNewValue().toString();
+		if( value != null && value.equals(preset) )
+			return;
+		resetResult();
+		PresetBean preset = string2preset(value);
 		if( preset == null )
 			return;
 		
-		motifView.getMainMotif().setMotif(preset.getMainMotif());
-		event = new ValueChangeEvent(event.getComponent(), null, preset.getMainMotif());
+		value = presetValue(preset.getMainMotif()); 
+		motifView.getMainMotif().setMotif(value);
+		event = new ValueChangeEvent(event.getComponent(), null, value);
 		motifView.onChangeMainMotif(event);
 		
+		value = presetValue(preset.getAuxMotif());
 		motifView.setUseAuxMotif(preset.getAuxMotif() != null);
 		if( motifView.isUseAuxMotif() ) {
-			motifView.getAuxMotif().setMotif(preset.getAuxMotif());
-			event = new ValueChangeEvent(event.getComponent(), null, preset.getAuxMotif());
+			motifView.getAuxMotif().setMotif(value);
+			event = new ValueChangeEvent(event.getComponent(), null, value);
 			motifView.onChangeAuxMotif(event);
 		}
 		
-		targetView.setTarget(preset.getTarget());
-		event = new ValueChangeEvent(event.getComponent(), null, preset.getTarget());
+		value = presetValue(preset.getTarget());
+		targetView.setTarget(value);
+		event = new ValueChangeEvent(event.getComponent(), null, value);
 		targetView.onChangeTarget(event);
 		if( preset.getTargetInput() != null ) {
 			targetView.setInputText(preset.getTargetInput());
@@ -306,17 +312,24 @@ public class SearchView implements Serializable {
 		options.setGrouping(preset.isGrouping());
 		options.setFilterEqual(preset.isFilterSimilar());
 		options.setCosmic(preset.isCosmic());
-		options.setDbPtm(preset.getPtms() != null && !preset.getPtms().isEmpty());
-		if( options.isDbPtm() )			
+		options.setDbPtm(preset.isDbPtm());
+		options.setPsp(preset.isPsp());
+		if( preset.getPtms() != null )			
 			options.setSelectedPtms(preset.getPtms().toArray(new String[0]));
+		else
+			options.setSelectedPtms(new String[0]);
 		onChangeOption();
 		
 		search();
 	}
 
+	private String presetValue(String value) {
+		return value == null ? "none" : value;
+	}
+
 	private PresetBean string2preset(String value) {
 		for( PresetBean preset : databases.getPresets() )
-			if( preset.getName().equals(value) )
+			if( preset.getValue().equals(value) )
 				return preset;
 		return null;
 	}

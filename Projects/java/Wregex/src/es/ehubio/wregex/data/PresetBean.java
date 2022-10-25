@@ -11,6 +11,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PresetBean {
 	private String name;
+	private String value;
 	private String mainMotif;
 	private String auxMotif;
 	private String target;
@@ -18,6 +19,8 @@ public class PresetBean {
 	private boolean grouping = true;
 	private boolean filterSimilar;
 	private boolean cosmic;
+	private boolean dbPtm;
+	private boolean psp;
 	@XmlElement(name="ptm")
 	private List<String> ptms;
 	
@@ -91,5 +94,29 @@ public class PresetBean {
 	
 	public void setPtms(List<String> ptms) {
 		this.ptms = ptms;
+	}
+
+	public boolean isDbPtm() {
+		return dbPtm;
+	}
+
+	public void setDbPtm(boolean dbPtm) {
+		this.dbPtm = dbPtm;
+	}
+
+	public boolean isPsp() {
+		return psp;
+	}
+
+	public void setPsp(boolean psp) {
+		this.psp = psp;
+	}
+
+	public String getValue() {
+		return value;
+	}
+
+	public void setValue(String value) {
+		this.value = value;
 	}
 }
