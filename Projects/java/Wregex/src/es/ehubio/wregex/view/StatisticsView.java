@@ -29,7 +29,6 @@ import es.ehubio.wregex.data.PtmProvider;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
 import es.ehubio.wregex.data.Services;
-import es.ehubio.wregex.data.Versions;
 
 @Named
 @ApplicationScoped
@@ -61,8 +60,8 @@ public class StatisticsView {
 		services = new Services(FacesContext.getCurrentInstance().getExternalContext());
 		items = new ArrayList<SelectItem>();
 		items.add(new SelectItem("COSMIC", "COSMIC missense mutations"));
-		if( Versions.DEV )
-			items.add(new SelectItem("dbPTM", "dbPTM experimental PTMs"));
+		//if( Versions.MAJOR >= databases.getDbPtmInformation().getWregexVersion() )
+		items.add(new SelectItem("dbPTM", "dbPTM experimental PTMs"));
 	}	
 
 	@PostConstruct

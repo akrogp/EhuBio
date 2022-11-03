@@ -144,6 +144,10 @@ public class DatabasesBean implements Serializable {
 		return presetConfiguration.getPresets();
 	}
 	
+	public List<PresetBean> getCaseStudies() {
+		return getPresets().stream().filter(preset -> preset.getValue().startsWith("case")).collect(Collectors.toList());
+	}
+	
 	private void filterPrivateMotifs() {
 		List<MotifInformation> filter = new ArrayList<>();
 		for( MotifInformation motif : motifConfiguration.getMotifs() )

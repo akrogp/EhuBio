@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-	<ui:composition template="./template.xhtml">
+	<ui:composition template="./WEB-INF/templates/template.xhtml">
 		<ui:define name="title">Search</ui:define>
 		<ui:define name="htmlhead">
 			<meta name="description" content="Wregex search page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
@@ -190,28 +190,30 @@
             		<p:row>
             			<p:column>Options:</p:column>	
 						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
-							<p:selectBooleanCheckbox itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
+							<p:selectBooleanCheckbox id="grouping" itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
+							<p:tooltip for="grouping" value="Collapse overlapping candidates into a single result"/>
 							&nbsp;
-							<h:panelGroup rendered="#{homeView.development}">
-								<p:selectBooleanCheckbox itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
-									<p:ajax event="change" update="@form" />
-								</p:selectBooleanCheckbox>
-								&nbsp;
-								<p:selectBooleanCheckbox itemLabel="Auxiliar motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchView.onChangeOption}" update="@form">
-									<p:ajax event="change" update="@form" />
-								</p:selectBooleanCheckbox><br/><br/>
-								Threshold:								
-								<p:spinner value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
-									<p:ajax event="change" update="@form" />
-								</p:spinner>
-								&nbsp;Flanking:
-								<p:spinner value="#{searchOptionsView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
-									<p:ajax event="change" update="@form" />
-								</p:spinner>
-								&nbsp;								
-							</h:panelGroup>							
+							<p:selectBooleanCheckbox id="similar" itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>
+							<p:tooltip for="similar" value="Remove results with the same matching sequence"/>
+							&nbsp;
+							<p:selectBooleanCheckbox id="auxiliary" itemLabel="Auxiliary motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchView.onChangeOption}" update="@form">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox><br/><br/>
+							<p:tooltip for="auxiliary" value="Enable a second auxiliary motif"/>
+							Threshold:								
+							<p:spinner id="threshold" value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
+								<p:ajax event="change" update="@form" />
+							</p:spinner>
+							<p:tooltip for="threshold" value="Score threshold for main motif matches"/>
+							&nbsp;Flanking:
+							<p:spinner id="flanking" value="#{searchOptionsView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
+								<p:ajax event="change" update="@form" />
+							</p:spinner>
+							<p:tooltip for="flanking" value="Number of additional amino acids to show at both sides of the match"/>							
 						</p:column>
 					</p:row>
 					
@@ -222,10 +224,10 @@
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							<br/><br/>
-							<p:selectBooleanCheckbox itemLabel="PhosphoSitePlus (20220909)" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
+							<p:selectBooleanCheckbox itemLabel="PhosphoSitePlus (20220909)" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>&nbsp;&nbsp;		
-							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}" rendered="#{homeView.development}">
+							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>							
 							<p:selectManyCheckbox rendered="#{searchOptionsView.dbPtm}" layout="grid" columns="6" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">

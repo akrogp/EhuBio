@@ -290,6 +290,8 @@ public class SearchView implements Serializable {
 		value = presetValue(preset.getMainMotif()); 
 		motifView.getMainMotif().setMotif(value);
 		event = new ValueChangeEvent(event.getComponent(), null, value);
+		options.setScoreThreshold(preset.getThreshold());
+		options.setFlanking(preset.getFlanking());
 		motifView.onChangeMainMotif(event);
 		
 		value = presetValue(preset.getAuxMotif());

@@ -5,6 +5,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.enterprise.context.ApplicationScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ValueChangeEvent;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import es.ehubio.wregex.data.LatestNew;
@@ -15,15 +19,62 @@ import es.ehubio.wregex.data.Versions;
 @ApplicationScoped
 public class HomeView implements Serializable {
 	private static final long serialVersionUID = 1L;
-	private final List<PageSummary> pages;
-	private List<PageSummary> firstPages = new ArrayList<>();
+	private final List<PageSummary> pages = new ArrayList<>();
+	private final List<PageSummary> firstPages = new ArrayList<>();
+	private final List<CompatibilityBean> compat = new ArrayList<>();
 	private PageSummary lastPage = null;
-	private final List<LatestNew> news;	
+	private final List<LatestNew> news = new ArrayList<>();
+	@Inject
+	private SearchView searchView;
+	
+	public HomeView() {
+		populatePages();
+		populateLog();
+		populateCompat();
+	}
+	
+	private void populateCompat() {
+		CompatibilityBean test = new CompatibilityBean();
+		test.setOs("Linux");
+		test.setOsVersion("Ubuntu 20.04 LTS");
+		test.getBrowser().put("Firefox", "105.0");
+		test.getBrowser().put("Google Chrome", "106.0.5249.103");
+		test.getBrowser().put("Microsoft Edge", "n/a");
+		test.getBrowser().put("Safari", "n/a");
+		compat.add(test);
+		
+		test = new CompatibilityBean();
+		test.setOs("macOS");
+		test.setOsVersion("Monterey 12.6");
+		test.getBrowser().put("Firefox", "105.0.3");
+		test.getBrowser().put("Google Chrome", "106.0.5249.119");
+		test.getBrowser().put("Microsoft Edge", "n/a");
+		test.getBrowser().put("Safari", "16.0");
+		compat.add(test);	
+		
+		test = new CompatibilityBean();
+		test.setOs("Windows");
+		test.setOsVersion("Server 2016");
+		test.getBrowser().put("Firefox", "104.0.1");
+		test.getBrowser().put("Google Chrome", "107.0.5304.88");
+		test.getBrowser().put("Microsoft Edge", "107.0.1418.26");
+		test.getBrowser().put("Safari", "n/a");
+		compat.add(test);
+	}
 
 	@SuppressWarnings("unused")
-	public HomeView() {
-		pages = new ArrayList<>();
-		
+	private void populateLog() {
+		if( Versions.DEV )
+			setWregexLogDev(news);
+		else if( Versions.MAJOR == 1 )
+			setWregexLog1(news);
+		else if( Versions.MAJOR == 2 )
+			setWregexLog2(news);		
+		else if( Versions.MAJOR == 3 )
+			setWregexLog3(news);
+	}
+
+	private void populatePages() {
 		PageSummary page = new PageSummary();
 		page.setName("Home");
 		page.setDescription( "The Wregex home page." );
@@ -70,16 +121,13 @@ public class HomeView implements Serializable {
 		page.setAction("downloads");
 		addPage(page);
 		
-		news = new ArrayList<>();
-		if( Versions.DEV )
-			setWregexLogDev(news);
-		else if( Versions.MAJOR == 1 )
-			setWregexLog1(news);
-		else if( Versions.MAJOR == 2 )
-			setWregexLog2(news);
-			
+		page = new PageSummary();
+		page.setName("About");
+		page.setDescription( "Publications and authors." );
+		page.setAction("about");
+		addPage(page);		
 	}
-	
+
 	private void setWregexLogDev(List<LatestNew> news) {
 		news.add(new LatestNew("Jun 30, 2022", "Databases updated"));
 		news.add(new LatestNew("Sep 10, 2020", "Databases updated"));
@@ -110,6 +158,13 @@ public class HomeView implements Serializable {
 		news.add(new LatestNew("Feb 11, 2014", "Included beta support for COSMIC database! Results are sorted by mutations when COSMIC is enabled"));
 		news.add(new LatestNew("Feb 10, 2014", "Included human proteome as a predefined target"));
 		news.add(new LatestNew("Jan 06, 2014", "Wregex v1.0 published in Bioinformatics"));
+	}
+	
+	private void setWregexLog3(List<LatestNew> news) {
+		news.add(new LatestNew("Nov 03, 2022", "Wregex v3.0 preview published"));
+		news.add(new LatestNew("Sep 26, 2017", "Wregex v2.1 published"));
+		news.add(new LatestNew("May 12, 2016", "Wregex v2.0 published in Scientific Reports"));
+		news.add(new LatestNew("Jan 06, 2014", "Wregex v1.0 published in Bioinformatics"));		
 	}
 
 	private void setWregexLog2(List<LatestNew> news) {
@@ -175,7 +230,7 @@ public class HomeView implements Serializable {
 	}
 	
 	public String getWebUrl() {
-		return "http://ehubio.ehu.eus/wregex/";
+		return "https://ehubio.ehu.eus/wregex/";
 	}
 	
 	public String getWikiUrl() {
@@ -187,6 +242,21 @@ public class HomeView implements Serializable {
 	}
 	
 	public String getBinaryUrl() {
-		return "http://ehubio.ehu.eus/static/wregex.war";
+		return "https://ehubio.ehu.eus/static/wregex.war";
+	}
+	
+	public List<CompatibilityBean> getCompat() {
+		return compat;
+	}
+	
+	public List<String> getBrowsers() {
+		return new ArrayList<>(compat.get(0).getBrowser().keySet());
+	}
+	
+	public String navigateCase(String preset) {
+		UIComponent component = UIComponent.getCurrentComponent(FacesContext.getCurrentInstance());
+		ValueChangeEvent event = new ValueChangeEvent(component, null, preset);
+		searchView.onSelectPreset(event);
+		return "search";
 	}
 }

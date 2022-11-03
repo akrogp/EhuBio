@@ -11,8 +11,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class PresetBean {
 	private String name;
+	private String description;
 	private String value;
 	private String mainMotif;
+	private double threshold;
+	private int flanking;
 	private String auxMotif;
 	private String target;
 	private String targetInput;
@@ -118,5 +121,29 @@ public class PresetBean {
 
 	public void setValue(String value) {
 		this.value = value;
+	}
+
+	public double getThreshold() {
+		return threshold;
+	}
+
+	public void setThreshold(double threshold) {
+		this.threshold = threshold;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public int getFlanking() {
+		return flanking;
+	}
+
+	public void setFlanking(int flanking) {
+		this.flanking = flanking;
 	}
 }

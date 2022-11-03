@@ -6,34 +6,33 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-	<ui:composition template="./template.xhtml">
+	<ui:composition template="./WEB-INF/templates/template.xhtml">
 		<ui:define name="title">Documentation</ui:define>
 		<ui:define name="htmlhead">
 			<meta name="description" content="Wregex documentation. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
 		</ui:define>
 		<ui:define name="content">
-		<p>Following there is the Wregex user manual. For a technical explanation on the Wregex approach, please refer to:</p>
-
-		<p><i><a href="http://bioinformatics.oxfordjournals.org/content/30/9/1220" target="_blank">
-		Prediction of nuclear export signals using weighted regular expressions (Wregex)</a></i><br/>
-		Gorka Prieto; Asier Fullaondo; Jose A. Rodriguez<br/>
-		Bioinformatics 2014; doi: 10.1093/bioinformatics/btu016</p>
-		
-		<p><i><a href="http://www.nature.com/articles/srep25869" target="_blank">
-		Proteome-wide search for functional motifs altered in tumors: Prediction of nuclear export signals inactivated by cancer-related mutations</a></i><br/>
-		Gorka Prieto; Asier Fullaondo; Jose A. Rodriguez<br/>
-		Scientific Reports 2016; doi: 10.1038/srep25869</p>
-
-		<p:separator/>
+		<h:form id="docForm">
 		
 		<h3>Table of Contents</h3>
-		<ul>
+		<ul style="margin: 20px">
+		<li><a href="#compat">Browser compatibility</a></li>
 		<li><a href="#overview">Overview</a></li>
 		<li><a href="#search">Basic Search</a></li>
-		<li><a href="#custom">Custom Search</a></li>
+		<li><a href="#cases">Case Studies</a></li>
+		<li><a href="#custom">Advanced Search</a></li>
 		<li><a href="#training">Building a Custom PSSM</a></li>
 		<li><a href="#local">Running Wregex on your Local PC</a></li>
 		</ul>
+		
+		<h3><a id="compat">Browser compatibility</a></h3>
+		<p:dataTable value="#{homeView.compat}" var="test" tableStyle="width:auto">
+			<p:column headerText="OS">#{test.os}</p:column>
+			<p:column headerText="Version">#{test.osVersion}</p:column>
+			<p:columns value="#{homeView.browsers}" var="browser" headerText="#{browser}">
+				#{test.browser.get(browser)}
+			</p:columns>
+		</p:dataTable>
 		
 		<h3><a id="overview">Overview</a></h3>
 		<h:graphicImage name="tutorial/BasicSearch.png" style="float:right"/>
@@ -44,8 +43,7 @@
 		<p>Wregex supports all motifs in <a href="http://elm.eu.org/">ELM</a> as regular expressions, and
 		a PSSM has already been built for some of them. In the case your motif is not included in the list
 		or a PSSM is not available, you can easily build your own as detailed later. Then you can also notify us
-		your motif definition by sending a mail to <a href="mailto:wregex@ehubio.es">wregex@ehubio.es</a> and we will be
-		happy to include it in the default motif list used in the basic search.</p>
+		your motif definition and we will be happy to include it in the default motif list used in the basic search.</p>
 		
 		<h3><a id="search">Basic Search</a></h3>		
 		<p>The basic search consists on searching a fasta file with protein sequences (provided by the user)
@@ -70,10 +68,18 @@
 		Finally, if there are motif annotations with scores in the input fasta sequences, their score is also displayed
 		as the assay score.</p>
 		<p>A threshold (arbitrarily selected by the user) can be applied to Wregex scores, thus introducing a second
-		filter for candidate motif selection. Based on our experience, a threshold value of 50 offers a good tradeoff
-		between true positives and false positives.</p>		
+		filter for candidate motif selection.</p>
 		
-		<h3><a id="custom">Custom Search</a></h3>
+		<h3><a id="cases">Case Studies</a></h3>		
+		<p:dataTable id="casesTable" value="#{databasesBean.caseStudies}" var="case" rowIndexVar="idx" tableStyle="width:auto">
+			<p:column headerText="Case">#{case.name}</p:column>
+			<p:column headerText="Description">#{case.description}</p:column>
+			<p:column>
+				<p:commandButton action="#{homeView.navigateCase(case.value)}" value="Load Case Study ##{idx+1}" styleClass="caseButton"/>
+			</p:column>
+		</p:dataTable>
+		
+		<h3><a id="custom">Advanced Search</a></h3>
 		<h:graphicImage name="tutorial/Custom.png" style="float:right"/>
 		<p>In the motif dropdown list "Custom" can be selected to let the user enter a custom motif, consisting on
 		a custom regular expression and an optional custom PSSM.</p>
@@ -116,20 +122,24 @@
 		a local file. This file can then be selected together with the custom regex for being used in the custom
 		search option described above.</p>
 		<p>If you define a custom regex and custom PSSM that you think they could be of interest for others,
-		please send then by mail to <a href="mailto:wregex@ehubio.es">wregex@ehubio.es</a> indicating also references
-		to any paper from you or others supporting that evidence. We will be happy to include that custom motif
-		in the dropdown list to share it through the basic search.</p>
+		please send then to us indicating also references to any paper from you or others supporting that evidence.
+		We will be happy to include that custom motif in the dropdown list to share it through the basic search.</p>
 		
 		<h3><a id="local">Running Wregex on your Local PC</a></h3>
 		<p>In case you need intensive Wregex execution, you could opt to run it locally on your PC. This can be
-		done by running it on a local servlet 2.5 container like Apache Tomcat, or creating a custom Java front-end
+		done by running it on a local Java EE application server, or creating a custom Java front-end
 		using the provided Wregex Java class. Both the *.war binary file and the Java code can be accessed from the
 		Downloads page.</p>
 		<p>Wregex execution at #{homeView.webUrl} has some constraints, i.e. input fasta file size and execution time
 		in order to avoid denial of service to other users. This constrains can be avoided when running Wregex
-		locally. For more information, please go to the <a href="#{homeView.wikiUrl}" target="_blank">
-		Wregex Wiki page</a>.</p>				
-		
+		locally by changing the default limits at <tt>WEB-INF/web.xml</tt>. Please take into account that Wregex uses
+		a predefined set of databases which must be present in the system. You can modify (add/delete) these databases
+		by editing the <tt>resources/data/databases.xml</tt> file.</p>				
+
+		<p:blockUI block="docForm" trigger="@(.caseButton)">
+			Loading...
+		</p:blockUI>
+		</h:form>		
 		</ui:define>
 	</ui:composition>
 </h:body>

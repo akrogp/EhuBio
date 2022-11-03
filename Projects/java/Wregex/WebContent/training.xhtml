@@ -6,7 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <h:body>
-	<ui:composition template="./template.xhtml">
+	<ui:composition template="./WEB-INF/templates/template.xhtml">
 		<ui:define name="title">Training</ui:define>
 		<ui:define name="htmlhead">
 			<meta name="description" content="Wregex training page. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
@@ -15,15 +15,16 @@
 			<h:form>
 				<p:panelGrid columns="2" headerClass="cfg_header">
 					<f:facet name="header">Training parameters</f:facet>
+					
+					<p:commandButton value="Regular expression" actionListener="#{trainingView.refresh}" ajax="false"/>
+					<p:inputText value="#{trainingView.regex}" styleClass="trn_regex" />
+					
 					<p:commandButton value="Input motifs" action="tmotifs" ajax="false"/>
 					<h:outputText value="#{trainingView.inputSummary}"
 						rendered="#{trainingView.inputSummary != null}" />
 					<h:outputText
 						value="You must upload a fasta file with training motifs"
-						rendered="#{trainingView.inputSummary == null}" style="color:red" />
-
-					<p:commandButton value="Regular expression" actionListener="#{trainingView.refresh}" ajax="false"/>
-					<p:inputText value="#{trainingView.regex}" styleClass="trn_regex" />
+						rendered="#{trainingView.inputSummary == null}" style="color:red" />					
 
 					<p:commandButton value="Refresh" actionListener="#{trainingView.refresh}" ajax="false"/>
 					<h:outputText value="#{trainingView.trainingSummary}"
