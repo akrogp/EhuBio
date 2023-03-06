@@ -10,8 +10,10 @@ public class Site implements PtmItem {
 	private String rsd;
 	private char aminoacid;
 	private int position = -1;
+	private String group;
 	private String organism;
-	private String sequence;	
+	private String sequence;
+	private boolean ambiguous;
 	
 	public String getType() {
 		return type;
@@ -73,5 +75,17 @@ public class Site implements PtmItem {
 	}
 	public void setSequence(String sequence) {
 		this.sequence = sequence;
+	}
+	public String getGroup() {
+		return group;
+	}
+	public void setGroup(String group) {
+		this.group = group;
+	}
+	public boolean isAmbiguous() {
+		return ambiguous;
+	}
+	public void setAmbiguous(boolean ambiguous) {
+		this.ambiguous = ambiguous;
 	}	
 }

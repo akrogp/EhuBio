@@ -27,7 +27,8 @@ public class MotifView implements Serializable {
 	private final MotifBean mainMotif = new MotifBean();
 	private final MotifBean auxMotif = new MotifBean();	
 	private boolean useAuxMotif = false; 
-	private boolean allMotifs = false;	
+	private boolean allMotifs = false;
+	private boolean allElmMotifs = false;	
 	@Inject
 	private DatabasesBean databases;
 	@Inject
@@ -59,6 +60,14 @@ public class MotifView implements Serializable {
 		this.allMotifs = allMotifs;
 	}
 	
+	public boolean isAllElmMotifs() {
+		return allElmMotifs;
+	}
+	
+	public void setAllElmMotifs(boolean allElmMotifs) {
+		this.allElmMotifs = allElmMotifs;
+	}
+	
 	public void onChangeMainMotif( ValueChangeEvent event ) {
 		motifError = null;
 		onChangeMotif(event, mainMotif);
@@ -82,7 +91,7 @@ public class MotifView implements Serializable {
 				return "A regular expression must be defined";
 			/*if( Wregex.countCapturingGroups(customRegex) > 0 && customPssm == null )
 				return "A PSSM must be provided when using regex groups";*/
-		} else if( !allMotifs ) {
+		} else if( !allMotifs && !allElmMotifs) {
 			if( mainMotif.getMotifInformation() == null )
 				return "A motif must be selected";
 			if( mainMotif.getMotifDefinition() == null )
@@ -101,12 +110,15 @@ public class MotifView implements Serializable {
 		Object value = event.getNewValue();
 		motif.setCustom(false);
 		allMotifs = false;
+		allElmMotifs = false;
 		motif.setMotifInformation(null);
 		if( value != null ) {			
 			if( value.toString().equals("Custom") )
 				motif.setCustom(true);
 			else if( value.toString().equals("All") )
 				allMotifs = true;
+			else if( value.toString().equals("AllELM") )
+				allElmMotifs = true;
 			else
 				motif.setMotifInformation(stringToMotif(event.getNewValue()));
 		}
@@ -142,7 +154,7 @@ public class MotifView implements Serializable {
 	}
 	
 	public boolean isUsingPssm() {
-		return isAllMotifs() || mainMotif.getPssm() != null;
+		return !isAllElmMotifs() || isAllMotifs() || mainMotif.getPssm() != null;
 	}
 	
 	public boolean isShowMotifDetails() {

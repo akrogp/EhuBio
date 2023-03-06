@@ -33,5 +33,4 @@ public class DecoyCreator implements Command.Interface {
 		String prefix = args.length >= 5 ? args[4] : "decoy-";
 		DecoyDb.create(target, decoy, strategy, enzyme, prefix);		
 	}
-
 }

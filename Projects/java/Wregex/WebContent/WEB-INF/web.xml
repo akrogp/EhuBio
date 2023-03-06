@@ -19,7 +19,7 @@
   </context-param>
   <context-param>
     <param-name>wregex.allMotifs</param-name>
-    <param-value>350</param-value>
+    <param-value>100</param-value>
   </context-param>
   <context-param>
     <param-name>javax.faces.STATE_SAVING_METHOD</param-name>

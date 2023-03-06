@@ -38,7 +38,7 @@ public class PhosphoEntry extends ProteinModification {
 	}
 	public void setOrg(String org) {
 		this.org = org;
-	}	
+	}
 	private String protein;
 	private String accession;
 	private String gene;

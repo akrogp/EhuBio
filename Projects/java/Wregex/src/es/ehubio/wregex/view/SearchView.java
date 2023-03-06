@@ -27,6 +27,7 @@ import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
 import es.ehubio.wregex.Wregex;
 import es.ehubio.wregex.Wregex.WregexException;
+import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.PresetBean;
 import es.ehubio.wregex.data.PtmProvider;
 import es.ehubio.wregex.data.ResultComparator;
@@ -77,7 +78,7 @@ public class SearchView implements Serializable {
 		error = targetView.checkConfigError();
 		if( error != null )
 			return error;		
-		if( motifView.isAllMotifs() && targetView.getInputGroups().size() > services.getInitNumber("wregex.allMotifs") )
+		if( (motifView.isAllMotifs() || motifView.isAllElmMotifs()) && targetView.getInputGroups().size() > services.getInitNumber("wregex.allMotifs") )
 			return String.format("Sorry, when searching for all motifs the number of target sequences is limited to %d", services.getInitNumber("wregex.allMotifs"));
 		return null;
 	}
@@ -86,7 +87,7 @@ public class SearchView implements Serializable {
 		resetResult();		
 		try {
 			updateAssayScores();
-			List<ResultGroupEx> resultGroups = motifView.isAllMotifs() == false ? singleSearch() : allSearch();
+			List<ResultGroupEx> resultGroups = (motifView.isAllMotifs() == false && motifView.isAllElmMotifs() == false) ? singleSearch() : allSearch();
 			results = Services.expand(resultGroups, options.isGrouping());				
 			results = Services.filter(results, options.isFilterEqual(), options.getScoreThreshold());
 			Services.flanking(results, options.getFlanking());
@@ -125,7 +126,8 @@ public class SearchView implements Serializable {
 		//long div = getWregexMotifs().size() + getElmMotifs().size();
 		//long tout = getInitNumber("wregex.watchdogtimer")*1000/div;
 		long tout = services.getInitNumber("wregex.watchdogtimer")*1000;
-		List<ResultGroupEx> results = services.searchAll(databases.getAllMotifs(), targetView.getInputGroups(), tout);
+		List<MotifInformation> motifs = motifView.isAllElmMotifs() ? databases.getElmMotifs() : databases.getAllMotifs();
+		List<ResultGroupEx> results = services.searchAll(motifs, targetView.getInputGroups(), tout);
 		return results;
 	}	
 

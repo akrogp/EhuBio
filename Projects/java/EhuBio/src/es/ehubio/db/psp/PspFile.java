@@ -39,8 +39,10 @@ public class PspFile {
 				site.setProtein(fields[1]);
 				site.setAccession(fields[2]);
 				site.setRsd(fields[4]);
+				site.setGroup(fields[5]);
 				site.setOrganism(fields[6]);
 				site.setSequence(fields[9]);
+				site.setAmbiguous(fields[14].equals("1"));
 				list.add(site);
 			}
 			return list;

@@ -34,12 +34,13 @@
 								valueChangeListener="#{motifView.onChangeMainMotif}">
 								<f:selectItem itemLabel="--- Select motif ---"
 									itemValue="none" />
-<!-- 								<f:selectItem itemLabel="All motifs" itemValue="All" /> -->
+ 								<f:selectItem itemLabel="All motifs" itemValue="All" />
 								<f:selectItem itemLabel="Custom" itemValue="Custom" />
 								<f:selectItems value="#{databasesBean.wregexMotifs}" />
 								<f:selectItem
 									itemLabel="--- #{databasesBean.elmInformation.fullName} ---"
 									itemValue="ELM" />
+								<f:selectItem itemLabel="All ELM motifs" itemValue="AllELM" />
 								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
 							</p:selectOneMenu>&nbsp;
