@@ -126,8 +126,10 @@ public class Services {
 			res.addFlanking(flanking);
 	}
 	
-	public static void searchAux(Wregex wregex, List<ResultEx> results) {
+	public static void searchAux(Wregex wregex, MotifInformation motif, List<ResultEx> results) {
 		for( ResultEx result : results ) {
+			if( motif != null )
+				result.setAuxMotif(motif.getName());
 			List<ResultGroup> groups = wregex.searchGrouping(result.getResult().getFasta());
 			if( wregex.getPssm() == null ) {
 				result.setAuxScore((double)groups.size());

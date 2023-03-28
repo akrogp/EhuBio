@@ -31,6 +31,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	private String mutAa;
 	private Double mutScore;
 	private Wregex wregex;
+	private String auxMotif;
 	private Double auxScore;
 	private String sequence;
 	private String alignment;
@@ -205,6 +206,14 @@ public class ResultEx implements Comparable<ResultEx> {
 			return "?";
 		return String.format("%.1f", getAuxScore());
 	}
+	
+	public String getAuxMotif() {
+		return auxMotif;
+	}
+	
+	public void setAuxMotif(String auxMotif) {
+		this.auxMotif = auxMotif;
+	}
 
 	public int getStart() {
 		return result.getStart();
@@ -275,7 +284,10 @@ public class ResultEx implements Comparable<ResultEx> {
 		List<String> fields = new ArrayList<>();
 		fields.addAll(Arrays.asList(new String[]{"#","ID","Entry","Motif","Begin","End","Combinations","Sequence","Alignment","Score"}));
 		if( assays ) { fields.add("Assay"); fields.add("Assay"); }
-		if( aux ) fields.add("Aux");
+		if( aux ) {
+			fields.add("AuxMotif");
+			fields.add("AuxScore");
+		}
 		if( cosmic ) { fields.add("Gene"); fields.add("Mutant"); fields.add("Mutation effect"); fields.add("COSMIC:Missense"); }
 		if( dbPtm ) {
 			fields.addAll(Arrays.asList(selectedPtms));
@@ -300,8 +312,10 @@ public class ResultEx implements Comparable<ResultEx> {
 				fields.add(result.getGroupAssayAsString());
 				fields.add(""+result.getGroupAssay());
 			}
-			if( aux )
+			if( aux ) {
+				fields.add(result.getAuxMotif());
 				fields.add(result.getAuxScore().toString());
+			}
 			if( cosmic ) {
 				fields.add(result.getGene());
 				fields.add(result.getMutSequence());

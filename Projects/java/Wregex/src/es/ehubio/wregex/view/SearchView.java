@@ -147,7 +147,7 @@ public class SearchView implements Serializable {
 		if( motif.getPssmFile() != null )
 			motif.setPssm(services.getPssm(motif.getPssmFile()));
 		Wregex wregex = new Wregex(motif.getRegex(), motif.getPssm());		
-		Services.searchAux(wregex, results);
+		Services.searchAux(wregex, motif.getMotifInformation(), results);
 	}
 	
 	private void updateAssayScores() {
@@ -297,12 +297,9 @@ public class SearchView implements Serializable {
 		motifView.onChangeMainMotif(event);
 		
 		value = presetValue(preset.getAuxMotif());
-		motifView.setUseAuxMotif(preset.getAuxMotif() != null);
-		if( motifView.isUseAuxMotif() ) {
-			motifView.getAuxMotif().setMotif(value);
-			event = new ValueChangeEvent(event.getComponent(), null, value);
-			motifView.onChangeAuxMotif(event);
-		}
+		motifView.getAuxMotif().setMotif(preset.getAuxMotif());
+		event = new ValueChangeEvent(event.getComponent(), null, value);
+		motifView.onChangeAuxMotif(event);
 		
 		value = presetValue(preset.getTarget());
 		targetView.setTarget(value);

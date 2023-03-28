@@ -19,7 +19,7 @@
 					
 					<p:row>
 						<p:column>Preset:</p:column>
-						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+						<p:column colspan="2">
 							<p:selectOneMenu id="preset" value="#{searchView.preset}" valueChangeListener="#{searchView.onSelectPreset}">
 								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.value}"/>
 								<p:ajax event="change" update="@form" />
@@ -28,7 +28,7 @@
 					</p:row>
 					
 					<p:row>
-						<p:column>Motif:</p:column>
+						<p:column>Motifs:</p:column>
 						<p:column>
 							<p:selectOneMenu value="#{motifView.mainMotif.motif}" filter="true" filterMatchMode="contains"
 								valueChangeListener="#{motifView.onChangeMainMotif}">
@@ -39,7 +39,8 @@
 								<f:selectItems value="#{databasesBean.wregexMotifs}" />
 								<f:selectItem
 									itemLabel="--- #{databasesBean.elmInformation.fullName} ---"
-									itemValue="ELM" />
+									itemValue="ELM"
+									itemDisabled="true"/>
 								<f:selectItem itemLabel="All ELM motifs" itemValue="AllELM" />
 								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
@@ -47,27 +48,28 @@
 							<p:selectOneMenu value="#{motifView.mainMotif.configuration}"
 								valueChangeListener="#{motifView.onChangeMainDefinition}"
 								rendered="#{motifView.mainMotif.motifInformation != null and !motifView.mainMotif.custom }">
-								<f:selectItem itemLabel="--- Select configuration ---" itemValue="Default" />
+								<f:selectItem itemLabel="--- Select configuration ---" itemValue="Default" itemDisabled="true"/>
 								<f:selectItems value="#{motifView.mainMotif.definitions}" />
 								<p:ajax update="@form" />
 							</p:selectOneMenu>
 						</p:column>
-						<p:column rendered="#{motifView.useAuxMotif}">
-							<p:selectOneMenu value="#{motifView.auxMotif.motif}"
+						<p:column>
+							<p:selectOneMenu value="#{motifView.auxMotif.motif}" filter="true" filterMatchMode="contains"
 								valueChangeListener="#{motifView.onChangeAuxMotif}">
-								<f:selectItem itemLabel="--- Select motif ---"
+								<f:selectItem itemLabel="--- No auxiliary motif ---"
 									itemValue="none" />
 								<f:selectItems value="#{databasesBean.wregexMotifs}" />
 								<f:selectItem
 									itemLabel="--- #{databasesBean.elmInformation.fullName} ---"
-									itemValue="ELM" />
+									itemValue="ELM"
+									itemDisabled="true"/>
 								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
-							</p:selectOneMenu>
+							</p:selectOneMenu>&nbsp;
 							<p:selectOneMenu value="#{motifView.auxMotif.configuration}"
 								valueChangeListener="#{motifView.onChangeAuxDefinition}"
 								rendered="#{motifView.auxMotif.motifInformation != null}">
-								<f:selectItem itemLabel="--- Select configuration ---" itemValue="Default" />
+								<f:selectItem itemLabel="--- Select configuration ---" itemValue="Default" itemDisabled="true"/>
 								<f:selectItems value="#{motifView.auxMotif.definitions}" />
 								<p:ajax update="@form" />
 							</p:selectOneMenu>
@@ -77,13 +79,13 @@
 					<p:row rendered="#{motifView.showMotifDetails}">
 						<p:column>Summary:</p:column>
 						<p:column>#{motifView.mainMotif.summary}</p:column>
-						<p:column rendered="#{motifView.useAuxMotif}">#{motifView.auxMotif.summary}</p:column>
+						<p:column>#{motifView.auxMotif.summary}</p:column>
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails}">
 						<p:column>Description:</p:column>
 						<p:column>#{motifView.mainMotif.description}</p:column>
-						<p:column rendered="#{motifView.useAuxMotif}">#{motifView.auxMotif.description}</p:column>
+						<p:column>#{motifView.auxMotif.description}</p:column>
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails}">
@@ -95,7 +97,7 @@
 								</h:outputLink>
 							</p:dataList>
 						</p:column>
-						<p:column rendered="#{motifView.useAuxMotif}">					
+						<p:column>					
 							<p:dataList value="#{motifView.auxMotif.references}" var="ref" type="ordered" emptyMessage="">
 								<h:outputLink value="#{ref.link}" target="_blank">
 									<h:outputText value="#{ref.html}" escape="false"/>&nbsp;<h:graphicImage name="images/link.png" height="15"/>
@@ -113,7 +115,7 @@
 								<p:ajax event="change" update="@form"/>
 							</p:inputText>
 						</p:column>
-						<p:column rendered="#{motifView.useAuxMotif}">#{motifView.auxMotif.regex}</p:column>
+						<p:column>#{motifView.auxMotif.regex}</p:column>
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
@@ -139,7 +141,7 @@
 								<h:outputText id="pssm" value="#{motifView.pssmSummary}" />
 							</h:panelGroup>
 						</p:column>
-						<p:column rendered="#{motifView.useAuxMotif}">
+						<p:column>
 							#{motifView.auxMotif.pssmFile}
 							<p:commandButton value="Download"
 								actionListener="#{searchView.downloadAuxPssm}"
@@ -149,7 +151,7 @@
             		
             		<p:row>
             			<p:column>Target:</p:column>
-            			<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+            			<p:column colspan="2">
 							<p:panelGrid style="border-style:hidden;">
 								<p:row>
 								<p:column>
@@ -197,7 +199,7 @@
             	
             		<p:row>
             			<p:column>Options:</p:column>	
-						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+						<p:column colspan="2">
 							<p:selectBooleanCheckbox id="grouping" itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
@@ -205,13 +207,8 @@
 							&nbsp;
 							<p:selectBooleanCheckbox id="similar" itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip for="similar" value="Remove results with the same matching sequence"/>
-							&nbsp;
-							<p:selectBooleanCheckbox id="auxiliary" itemLabel="Auxiliary motif" value="#{motifView.useAuxMotif}" valueChangeListener="#{searchView.onChangeOption}" update="@form">
-								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox><br/><br/>
-							<p:tooltip for="auxiliary" value="Enable a second auxiliary motif"/>
+							<p:tooltip for="similar" value="Remove results with the same matching sequence"/>
 							Threshold:								
 							<p:spinner id="threshold" value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
 								<p:ajax event="change" update="@form" />
@@ -227,7 +224,7 @@
 					
 					<p:row>
             			<p:column style="vertical-align:baseline;"><br/>Connections:</p:column>
-            			<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+            			<p:column colspan="2">
             				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
@@ -251,7 +248,7 @@
 					
 					<p:row rendered="#{searchView.configError != null}">
 						<p:column>Status:</p:column>
-						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+						<p:column colspan="2">
 							<h:outputText value="#{searchView.configError}" style="color:red"/>
 						</p:column>						
 					</p:row>
@@ -260,14 +257,14 @@
 						<p:column>
 							<p:commandButton value="Search!" actionListener="#{searchView.search}" ajax="false"/>
 						</p:column>&nbsp;
-						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+						<p:column colspan="2">
 							<h:outputText id="search" value="#{searchView.searchError}" rendered="#{searchView.searchError != null}" style="color:red"/>
 						</p:column>
 					</p:row>
 					
 					<p:row rendered="#{searchView.results != null and searchView.configError == null and searchView.searchError == null}">
 						<p:column>Results:</p:column>
-						<p:column colspan="#{motifView.useAuxMotif ? 2 : 1}">
+						<p:column colspan="2">
 							<h:outputText value="#{searchView.numberOfResults}"/>&nbsp;
 							<p:commandButton value="Download as CSV" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadCsv}" ajax="false"/>
 							<p:commandButton value="Download as ALN" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadAln}" ajax="false"/>
@@ -293,7 +290,7 @@
 						<h:outputText value="#{item.entry}" rendered="#{item.protUrl == null}"/>
 						<h:outputLink value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
-					<p:column width="200" id="search_motif">
+					<p:column styleClass="trn_name" width="200" id="search_motif">
 						<f:facet name="header">
 							Motif
 							<p:tooltip value="Matching motif" for="search_motif"/>
@@ -352,6 +349,10 @@
 					<p:column rendered="#{searchView.assayScores}" styleClass="trn_weight">
 						<f:facet name="header">Assay</f:facet>
 						<h:outputText value="#{item.assayAsString}"/>
+					</p:column>
+					<p:column styleClass="trn_name" width="200" rendered="#{motifView.useAuxMotif}">
+						<f:facet name="header">Aux motif</f:facet>
+						<h:outputText value="#{item.auxMotif}"/>
 					</p:column>
 					<p:column styleClass="trn_weight" rendered="#{motifView.useAuxMotif}">
 						<f:facet name="header">Aux score</f:facet>

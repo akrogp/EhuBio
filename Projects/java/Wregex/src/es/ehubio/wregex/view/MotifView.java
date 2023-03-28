@@ -26,7 +26,6 @@ public class MotifView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private final MotifBean mainMotif = new MotifBean();
 	private final MotifBean auxMotif = new MotifBean();	
-	private boolean useAuxMotif = false; 
 	private boolean allMotifs = false;
 	private boolean allElmMotifs = false;	
 	@Inject
@@ -41,11 +40,7 @@ public class MotifView implements Serializable {
 	}
 	
 	public boolean isUseAuxMotif() {
-		return useAuxMotif;
-	}
-	
-	public void setUseAuxMotif(boolean useAuxMotif) {
-		this.useAuxMotif = useAuxMotif;
+		return auxMotif.getMotifInformation() != null;
 	}
 	
 	public MotifBean getAuxMotif() {
