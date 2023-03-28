@@ -86,21 +86,21 @@
     <database>
     	<name>--- Ribo-seq datasets ---</name>
     	<type>separator</type>
-    	<wregexVersion>0</wregexVersion>
+    	<wregexVersion>3</wregexVersion>
     </database>
     <database>
         <name>SmProt human high-confidence</name>
         <type>fasta</type>
         <path>/media/data/Sequences/SmProt/current/highConfidenceHuman.fasta</path>
         <versionFile>/media/data/Sequences/SmProt/current/version.txt</versionFile>
-        <wregexVersion>0</wregexVersion>
+        <wregexVersion>3</wregexVersion>
     </database>
     <database>
         <name>Standardized human Ribo-seq ORFs catalog</name>
         <type>fasta</type>
         <path>/media/data/Sequences/RiboSeq/ribo-seq.fasta</path>
         <versionFile>/media/data/Sequences/RiboSeq/version.txt</versionFile>
-        <wregexVersion>0</wregexVersion>
+        <wregexVersion>3</wregexVersion>
     </database>
     <database>
     	<name>--- NES datasets ---</name>

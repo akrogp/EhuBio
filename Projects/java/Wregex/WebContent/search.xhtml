@@ -32,7 +32,7 @@
 						<p:column>
 							<p:selectOneMenu value="#{motifView.mainMotif.motif}" filter="true" filterMatchMode="contains"
 								valueChangeListener="#{motifView.onChangeMainMotif}">
-								<f:selectItem itemLabel="--- Select motif ---"
+								<f:selectItem itemLabel="--- Select main motif ---"
 									itemValue="none" />
  								<f:selectItem itemLabel="All motifs" itemValue="All" />
 								<f:selectItem itemLabel="Custom" itemValue="Custom" />
@@ -155,7 +155,7 @@
 							<p:panelGrid style="border-style:hidden;">
 								<p:row>
 								<p:column>
-									<p:selectOneMenu id="targetSelect" value="#{targetView.target}"
+									<p:selectOneMenu id="targetSelect" value="#{targetView.target}" filter="true" filterMatchMode="contains"
 										valueChangeListener="#{targetView.onChangeTarget}">
 										<f:selectItem itemLabel="--- Select target ---" itemValue="none" />
 										<f:selectItems value="#{databasesBean.targets}" var="db" itemLabel="#{db.fullName}" itemValue="#{db.name}" itemDisabled="#{db.type == 'separator'}"/>
@@ -208,7 +208,7 @@
 							<p:selectBooleanCheckbox id="similar" itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox><br/><br/>
-							<p:tooltip for="similar" value="Remove results with the same matching sequence"/>
+							<p:tooltip for="similar" value="Keep only the first result for the same matched sequence"/>
 							Threshold:								
 							<p:spinner id="threshold" value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
 								<p:ajax event="change" update="@form" />
