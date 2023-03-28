@@ -30,7 +30,7 @@
 					<p:row>
 						<p:column>Motif:</p:column>
 						<p:column>
-							<p:selectOneMenu value="#{motifView.mainMotif.motif}"
+							<p:selectOneMenu value="#{motifView.mainMotif.motif}" filter="true" filterMatchMode="contains"
 								valueChangeListener="#{motifView.onChangeMainMotif}">
 								<f:selectItem itemLabel="--- Select motif ---"
 									itemValue="none" />
@@ -292,6 +292,13 @@
 						</f:facet>
 						<h:outputText value="#{item.entry}" rendered="#{item.protUrl == null}"/>
 						<h:outputLink value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+					</p:column>
+					<p:column width="200" id="search_motif">
+						<f:facet name="header">
+							Motif
+							<p:tooltip value="Matching motif" for="search_motif"/>
+						</f:facet>
+						<h:outputText value="#{item.motif}"/>
 					</p:column>
 					<p:column id="search_start" styleClass="trn_pos">
 						<f:facet name="header">

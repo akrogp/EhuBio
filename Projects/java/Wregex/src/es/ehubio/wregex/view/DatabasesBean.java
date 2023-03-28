@@ -352,10 +352,11 @@ public class DatabasesBean implements Serializable {
 	private void loadPsp() {
 		logger.info("Loading DB: " + psp.getFullName());
 		try {
-			List<Site> list = PspFile.readDir(psp.getPath());
-				/*.stream()
-				.filter(site -> site.getOrganism().equals("human"))
-				.collect(Collectors.toList());*/
+			List<Site> list = PspFile.readDir(psp.getPath())
+				.stream()
+				//.filter(site -> site.getOrganism().equals("human"))
+				.filter(site -> !site.isAmbiguous())
+				.collect(Collectors.toList());
 			mapPsp = ProteinPtms.load(list);
 			ptmsPsp = buildPtmList(list);
 			logger.info("Loaded " + psp.getFullName() + "!");

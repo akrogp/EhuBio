@@ -88,6 +88,10 @@ img {
 	padding: 8px 10px;
 }
 
+.ui-selectonemenu-panel .ui-selectonemenu-filter-container .ui-icon {
+	display: none;
+}
+
 /* Training */
 .trn_name {
 }
