@@ -31,6 +31,7 @@ import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.fasta.Fasta.SequenceType;
 import es.ehubio.db.uniprot.Fetcher;
 import es.ehubio.db.uniprot.UniProtUtils;
+import es.ehubio.proteomics.pipeline.DecoyDb;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.data.DatabaseInformation;
 
@@ -41,6 +42,7 @@ public class TargetView implements Serializable {
 	private String target;
 	private DatabaseInformation targetInformation;
 	private List<InputGroup> inputGroups = null;
+	private List<InputGroup> decoyGroups = null;
 	@Inject
 	private DatabasesBean databases;
 	@Inject
@@ -48,6 +50,7 @@ public class TargetView implements Serializable {
 	private String baseFileName, fileName;
 	private String inputText = "", targetError;
 	private boolean downloading;
+	private boolean decoy;
 	
 	public DatabaseInformation getTargetInformation() {
 		return targetInformation;
@@ -61,13 +64,37 @@ public class TargetView implements Serializable {
 		this.target = target;
 	}
 	
-	public List<InputGroup> getInputGroups() {
-		return inputGroups;
+	public boolean isDecoy() {
+		return decoy;
 	}
 	
+	public void setDecoy(boolean decoy) {
+		this.decoy = decoy;
+	}
+	
+	public List<InputGroup> getInputGroups() {
+		if( !decoy )
+			return inputGroups;
+		if( decoyGroups == null )
+			buildDecoy();
+		return decoyGroups;
+	}
+	
+	private void buildDecoy() {
+		if( inputGroups == null )
+			return;
+		decoyGroups = new ArrayList<>(inputGroups.size());
+		for( InputGroup inputGroup : inputGroups ) {
+			Fasta inputFasta = inputGroup.getFasta();
+			Fasta decoyFasta = DecoyDb.getDecoy(inputFasta, DecoyDb.Strategy.SHUFFLE, null, "shuffle-");
+			decoyGroups.add(new InputGroup(decoyFasta));
+		}
+	}
+
 	private void reset(boolean resetInput) {
 		searchBean.resetResult();
 		inputGroups = null;
+		decoyGroups = null;
 		if( resetInput )
 			inputText = "";
 		targetError = null;
@@ -91,6 +118,15 @@ public class TargetView implements Serializable {
 				targetError = e.getMessage();
 			}
 		}
+	}
+	
+	public void onChangeDecoy( ValueChangeEvent event ) {
+		searchBean.resetResult();
+		decoyGroups = null;
+	}
+	
+	public void onBuildDecoy( ValueChangeEvent event ) {
+		searchBean.resetResult();
 	}
 	
 	private DatabaseInformation stringToTarget( Object object ) {
@@ -161,7 +197,8 @@ public class TargetView implements Serializable {
 	}	
 
 	public String getBaseFileName() {
-		return baseFileName != null ? baseFileName : "results";
+		String name = baseFileName != null ? baseFileName : "results";
+		return decoy ? "decoy-" + name : name;
 	}
 	
 	public String getFastaSummary() {

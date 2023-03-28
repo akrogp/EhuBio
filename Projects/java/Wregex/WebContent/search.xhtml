@@ -177,9 +177,16 @@
 											value="#{targetView.inputText}" completeMethod="#{targetView.completeGo}" placeholder="#{targetView.targetInformation.hint}">
 											<p:ajax event="itemSelect" listener="#{targetView.onChangeInput()}" update="@form"/>
 										</p:autoComplete>
-									</h:panelGroup>
+									</h:panelGroup>									
 								</p:column>								
 								<p:column rendered="#{targetView.fastaSummary != null}">
+									<h:panelGroup>										
+										<p:selectBooleanCheckbox id="decoy" itemLabel="Build decoy" value="#{targetView.decoy}" valueChangeListener="#{targetView.onChangeDecoy}">
+											<p:ajax event="change" update="@form" />
+										</p:selectBooleanCheckbox>
+										<p:tooltip for="decoy" value="Shuffles amino acids (starting at the second one) for each sequence"/>
+										<br/><br/>
+									</h:panelGroup>
 									<h:outputText id="fasta" value="#{targetView.fastaSummary}" />&nbsp;
 									<p:commandButton value="Download Fasta" ajax="false" action="#{searchView.downloadFasta()}"/>
 								</p:column>

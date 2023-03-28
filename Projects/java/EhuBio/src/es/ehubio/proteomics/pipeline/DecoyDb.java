@@ -76,16 +76,19 @@ public class DecoyDb {
 		return result;
 	}
 	
-	// Shuffle
+	// Shuffle (respecting first amino acid)
 	
 	private static String shuffle( String seq ) {
-		List<Character> list = new ArrayList<>();
-		for( char c : seq.toCharArray() )
-			list.add(c);
+		if( seq == null || seq.length() < 3 )
+			return seq;
+		List<Character> list = new ArrayList<>(seq.length()-1);
+		for( int i = 1; i < seq.length(); i++ )
+			list.add(seq.charAt(i));
 		
 		Collections.shuffle(list);
 		
 		StringBuilder str = new StringBuilder();
+		str.append(seq.charAt(0));
 		for( Character c : list )
 			str.append(c);
 		return str.toString();

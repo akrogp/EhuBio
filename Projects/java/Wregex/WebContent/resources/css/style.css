@@ -84,6 +84,10 @@ img {
 	list-style-position: inside;
 }
 
+.ui-panelgrid td {
+	padding: 8px 10px;
+}
+
 /* Training */
 .trn_name {
 }
