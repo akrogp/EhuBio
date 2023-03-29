@@ -18,7 +18,7 @@
 					<f:facet name="header">Search configuration</f:facet>
 					
 					<p:row>
-						<p:column>Preset:</p:column>
+						<p:column styleClass="nowrap">0. Preset:</p:column>
 						<p:column colspan="2">
 							<p:selectOneMenu id="preset" value="#{searchView.preset}" valueChangeListener="#{searchView.onSelectPreset}">
 								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.value}"/>
@@ -28,7 +28,7 @@
 					</p:row>
 					
 					<p:row>
-						<p:column>Motifs:</p:column>
+						<p:column styleClass="nowrap">1. Motif:</p:column>
 						<p:column>
 							<p:selectOneMenu value="#{motifView.mainMotif.motif}" filter="true" filterMatchMode="contains"
 								valueChangeListener="#{motifView.onChangeMainMotif}">
@@ -77,19 +77,19 @@
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails}">
-						<p:column>Summary:</p:column>
+						<p:column styleClass="subitem">Summary:</p:column>
 						<p:column>#{motifView.mainMotif.summary}</p:column>
 						<p:column>#{motifView.auxMotif.summary}</p:column>
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails}">
-						<p:column>Description:</p:column>
+						<p:column styleClass="subitem">Description:</p:column>
 						<p:column>#{motifView.mainMotif.description}</p:column>
 						<p:column>#{motifView.auxMotif.description}</p:column>
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails}">
-						<p:column>References:</p:column>
+						<p:column styleClass="subitem">References:</p:column>
 						<p:column>					
 							<p:dataList value="#{motifView.mainMotif.references}" var="ref" type="ordered" emptyMessage="">
 								<h:outputLink value="#{ref.link}" target="_blank">
@@ -107,7 +107,7 @@
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
-						<p:column>Regex:</p:column>
+						<p:column styleClass="subitem">Regex:</p:column>
 						<p:column>
 							<h:outputText value="#{motifView.mainMotif.regex}" rendered="#{!motifView.mainMotif.custom and !motifView.allMotifs}"/>
 							<h:outputText value="All Wregex and ELM regular expressions" rendered="#{motifView.allMotifs}"/>
@@ -119,7 +119,7 @@
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
-						<p:column>PSSM file:</p:column>
+						<p:column styleClass="subitem">PSSM file:</p:column>
 						<p:column>
 							<h:panelGroup rendered="#{!motifView.mainMotif.custom and !motifView.allMotifs}">
 								<h:outputText value="#{motifView.mainMotif.pssmFile}" />
@@ -150,7 +150,7 @@
             		</p:row>
             		
             		<p:row>
-            			<p:column>Target:</p:column>
+            			<p:column styleClass="nowrap">2. Target:</p:column>
             			<p:column colspan="2">
 							<p:panelGrid style="border-style:hidden;">
 								<p:row>
@@ -198,7 +198,7 @@
             		</p:row>
             	
             		<p:row>
-            			<p:column>Options:</p:column>	
+            			<p:column styleClass="nowrap">3. Options:</p:column>	
 						<p:column colspan="2">
 							<p:selectBooleanCheckbox id="grouping" itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
@@ -223,7 +223,7 @@
 					</p:row>
 					
 					<p:row>
-            			<p:column style="vertical-align:baseline;"><br/>Connections:</p:column>
+            			<p:column style="vertical-align:baseline;" styleClass="nowrap"><br/>4. Connections:</p:column>
             			<p:column colspan="2">
             				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />

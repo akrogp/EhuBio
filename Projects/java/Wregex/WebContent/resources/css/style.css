@@ -70,6 +70,14 @@ img {
 	font-style : italic;
 }
 
+.subitem::before {
+	content: "➥ "
+}
+
+.subitem {
+	white-space: nowrap;
+}
+
 /* PrimeFaces */
 .ui-button-text {
 	display:none;
@@ -92,8 +100,13 @@ img {
 	display: none;
 }
 
+.nowrap {
+	white-space: nowrap;
+}
+
 /* Training */
 .trn_name {
+	white-space: nowrap;
 }
 
 .trn_pos {
