@@ -42,7 +42,8 @@ public class SearchView implements Serializable {
 	private String searchError;
 	private List<ResultEx> results = null;
 	private String cachedAlnPath;
-	private boolean assayScores = false;	
+	private boolean assayScores = false;
+	private boolean motifProbs = false;
 	@Inject
 	private DatabasesBean databases;
 	@Inject
@@ -78,7 +79,7 @@ public class SearchView implements Serializable {
 		error = targetView.checkConfigError();
 		if( error != null )
 			return error;		
-		if( (motifView.isAllMotifs() || motifView.isAllElmMotifs()) && targetView.getInputGroups().size() > services.getInitNumber("wregex.allMotifs") )
+		if( motifView.isMultiMotif() && targetView.getInputGroups().size() > services.getInitNumber("wregex.allMotifs") )
 			return String.format("Sorry, when searching for all motifs the number of target sequences is limited to %d", services.getInitNumber("wregex.allMotifs"));
 		return null;
 	}
@@ -87,7 +88,7 @@ public class SearchView implements Serializable {
 		resetResult();		
 		try {
 			updateAssayScores();
-			List<ResultGroupEx> resultGroups = (motifView.isAllMotifs() == false && motifView.isAllElmMotifs() == false) ? singleSearch() : allSearch();
+			List<ResultGroupEx> resultGroups = motifView.isMultiMotif() ?  allSearch() : singleSearch();
 			results = Services.expand(resultGroups, options.isGrouping());				
 			results = Services.filter(results, options.isFilterEqual(), options.getScoreThreshold());
 			Services.flanking(results, options.getFlanking());
@@ -98,6 +99,7 @@ public class SearchView implements Serializable {
 			if( options.isPtm() )
 				searchPtm();
 			Collections.sort(results, new ResultComparator(options.getSelectedPtms()));
+			updateMotifProbs();
 		} catch( IOException e ) {
 			searchError = "File error: " + e.getMessage();
 		} catch( PssmBuilderException e ) {
@@ -105,6 +107,7 @@ public class SearchView implements Serializable {
 		} catch( WregexException e ) {
 			searchError = "Invalid configuration: " + e.getMessage();
 		} catch( Exception e ) {
+			e.printStackTrace();
 			searchError = e.getMessage();
 		}
 	}	
@@ -112,7 +115,7 @@ public class SearchView implements Serializable {
 	private List<ResultGroupEx> singleSearch() throws NumberFormatException, Exception {
 		initPssm();		
 		Wregex wregex = new Wregex(motifView.getMainMotif().getSingleRegex(), motifView.getMainMotif().getPssm());
-		return Services.search(wregex, motifView.getMainMotif().getMotifInformation(), targetView.getInputGroups(), assayScores, services.getInitNumber("wregex.watchdogtimer")*1000);
+		return Services.search(wregex, motifView.getMainMotif().getMotifInformation(), motifView.getMainMotif().getMotifDefinition(), targetView.getInputGroups(), assayScores, services.getInitNumber("wregex.watchdogtimer")*1000);
 	}
 	
 	private void initPssm() throws IOException, PssmBuilderException {
@@ -126,7 +129,20 @@ public class SearchView implements Serializable {
 		//long div = getWregexMotifs().size() + getElmMotifs().size();
 		//long tout = getInitNumber("wregex.watchdogtimer")*1000/div;
 		long tout = services.getInitNumber("wregex.watchdogtimer")*1000;
-		List<MotifInformation> motifs = motifView.isAllElmMotifs() ? databases.getElmMotifs() : databases.getAllMotifs();
+		List<MotifInformation> motifs = null;
+		switch( motifView.getMultiType() ) {
+			case ALL:
+				motifs = databases.getAllMotifs();
+				break;
+			case ELM:
+				motifs = databases.getElmMotifs();
+				break;
+			case ELM_HUMAN:
+				motifs = databases.getElmHumanMotifs();
+				break;
+			default:
+				throw new Exception("MultiMotif type not supported");
+		}
 		List<ResultGroupEx> results = services.searchAll(motifs, targetView.getInputGroups(), tout);
 		return results;
 	}	
@@ -147,7 +163,7 @@ public class SearchView implements Serializable {
 		if( motif.getPssmFile() != null )
 			motif.setPssm(services.getPssm(motif.getPssmFile()));
 		Wregex wregex = new Wregex(motif.getRegex(), motif.getPssm());		
-		Services.searchAux(wregex, motif.getMotifInformation(), results);
+		Services.searchAux(wregex, motif.getMotifInformation(), motif.getMotifDefinition(), results);
 	}
 	
 	private void updateAssayScores() {
@@ -155,6 +171,15 @@ public class SearchView implements Serializable {
 		for( InputGroup inputGroup : targetView.getInputGroups() )
 			if( !inputGroup.hasScores() ) {
 				assayScores = false;
+				break;
+			}
+	}
+	
+	private void updateMotifProbs() {
+		motifProbs = false;
+		for( ResultEx result : getResults() )
+			if( result.getMotifProb() != null ) {
+				motifProbs = true;
 				break;
 			}
 	}
@@ -189,7 +214,7 @@ public class SearchView implements Serializable {
 	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+targetView.getBaseFileName()+".csv\"");
 		try {
 			OutputStream output = ec.getResponseOutputStream();
-			ResultEx.saveCsv(new OutputStreamWriter(output), results, assayScores, motifView.isUseAuxMotif(), options.isCosmic(), options.isPtm(), options.getSelectedPtms() );
+			ResultEx.saveCsv(new OutputStreamWriter(output), results, getAssayScores(), isMotifProbs() ,motifView.isUseAuxMotif(), options.isCosmic(), options.isPtm(), options.getSelectedPtms() );
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}
@@ -266,7 +291,11 @@ public class SearchView implements Serializable {
 
 	public boolean getAssayScores() {
 		return assayScores;
-	}	
+	}
+	
+	public boolean isMotifProbs() {
+		return motifProbs;
+	}
 	
 	public void onChangeOption() {
 		resetResult();

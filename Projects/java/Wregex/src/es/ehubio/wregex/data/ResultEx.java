@@ -25,6 +25,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	private final Map<String, Integer> ptmCounts = new HashMap<>();
 	private String motif;
 	private String motifUrl;
+	private Double motifProb;
 	private String mutSequence;
 	private String mutLeft;
 	private String mutRight;
@@ -33,6 +34,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	private Wregex wregex;
 	private String auxMotif;
 	private Double auxScore;
+	private Double auxProb;
 	private String sequence;
 	private String alignment;
 	private int flanking = 0;
@@ -94,10 +96,17 @@ public class ResultEx implements Comparable<ResultEx> {
 			return -1;
 		if( getAuxScore() != null && o.getAuxScore() != null )
 			return (int)Math.signum(o.getAuxScore() - getAuxScore());		
-		// 6. Wregex Combinations
+		// 6. Motif probability
+		if( getMotifProb() == null && o.getMotifProb() != null )
+			return 1;
+		if( getMotifProb() != null && o.getMotifProb() == null )
+			return -1;
+		if( getMotifProb() != null && o.getMotifProb() != null )
+			return (int)Math.signum(getMotifProb() - o.getMotifProb());
+		// 7. Wregex Combinations
 		if( getCombinations() != o.getCombinations() )
 			return o.getCombinations() - getCombinations();
-		// 7. Match length
+		// 8. Match length
 		if( getMatch().length() != o.getMatch().length() )
 			return o.getMatch().length() - getMatch().length();
 		return 0;
@@ -207,6 +216,18 @@ public class ResultEx implements Comparable<ResultEx> {
 		return String.format("%.1f", getAuxScore());
 	}
 	
+	public String getMotifProbAsString() {
+		if( getMotifProb() == null )
+			return "?";
+		return String.format("%.3e", getMotifProb());
+	}
+	
+	public String getAuxProbAsString() {
+		if( getAuxProb() == null )
+			return "?";
+		return String.format("%.3e", getAuxProb());
+	}
+	
 	public String getAuxMotif() {
 		return auxMotif;
 	}
@@ -279,11 +300,13 @@ public class ResultEx implements Comparable<ResultEx> {
 		pw.flush();
 	}
 	
-	public static void saveCsv(Writer wr, List<ResultEx> results, boolean assays, boolean aux, boolean cosmic, boolean dbPtm, String[] selectedPtms ) {
+	public static void saveCsv(Writer wr, List<ResultEx> results, boolean assays, boolean probs, boolean aux, boolean cosmic, boolean dbPtm, String[] selectedPtms ) {
 		PrintWriter pw = new PrintWriter(wr);
 		List<String> fields = new ArrayList<>();
 		fields.addAll(Arrays.asList(new String[]{"#","ID","Entry","Motif","Begin","End","Combinations","Sequence","Alignment","Score"}));
 		if( assays ) { fields.add("Assay"); fields.add("Assay"); }
+		if( probs )
+			fields.add("MotifProbability");
 		if( aux ) {
 			fields.add("AuxMotif");
 			fields.add("AuxScore");
@@ -312,6 +335,8 @@ public class ResultEx implements Comparable<ResultEx> {
 				fields.add(result.getGroupAssayAsString());
 				fields.add(""+result.getGroupAssay());
 			}
+			if( probs )
+				fields.add(result.getMotifProbAsString());
 			if( aux ) {
 				fields.add(result.getAuxMotif());
 				fields.add(result.getAuxScore().toString());
@@ -507,5 +532,21 @@ public class ResultEx implements Comparable<ResultEx> {
 	
 	public Map<String, Integer> getPtmCounts() {
 		return ptmCounts;
+	}
+
+	public Double getMotifProb() {
+		return motifProb;
+	}
+
+	public void setMotifProb(Double motifProb) {
+		this.motifProb = motifProb;
+	}
+
+	public Double getAuxProb() {
+		return auxProb;
+	}
+
+	public void setAuxProb(Double auxProb) {
+		this.auxProb = auxProb;
 	}
 }

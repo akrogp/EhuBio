@@ -24,7 +24,7 @@
     <database>
         <name>ELM</name>
         <type>elm</type>
-        <path>/media/data/Sequences/ELM/current/elm_classes.tsv</path>
+        <path>/media/data/Sequences/ELM/current</path>
     </database>
     <database>
         <name>COSMIC</name>

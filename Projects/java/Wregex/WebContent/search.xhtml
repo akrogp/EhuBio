@@ -42,6 +42,7 @@
 									itemValue="ELM"
 									itemDisabled="true"/>
 								<f:selectItem itemLabel="All ELM motifs" itemValue="AllELM" />
+								<f:selectItem itemLabel="All ELM human motifs" itemValue="AllELMHuman" />
 								<f:selectItems value="#{databasesBean.elmMotifs}" />
 								<p:ajax update="@form" />
 							</p:selectOneMenu>&nbsp;
@@ -83,6 +84,12 @@
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails}">
+						<p:column styleClass="subitem">Organisms:</p:column>
+						<p:column><h:outputText value="#{motifView.mainMotif.organisms}" escape="false"/></p:column>
+						<p:column><h:outputText value="#{motifView.auxMotif.organisms}" escape="false"/></p:column>
+					</p:row>
+					
+					<p:row rendered="#{motifView.showMotifDetails}">
 						<p:column styleClass="subitem">Description:</p:column>
 						<p:column>#{motifView.mainMotif.description}</p:column>
 						<p:column>#{motifView.auxMotif.description}</p:column>
@@ -109,8 +116,8 @@
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
 						<p:column styleClass="subitem">Regex:</p:column>
 						<p:column>
-							<h:outputText value="#{motifView.mainMotif.regex}" rendered="#{!motifView.mainMotif.custom and !motifView.allMotifs}"/>
-							<h:outputText value="All Wregex and ELM regular expressions" rendered="#{motifView.allMotifs}"/>
+							<h:outputText value="#{motifView.mainMotif.regex}" rendered="#{!motifView.mainMotif.custom and !motifView.multiMotif}"/>
+							<h:outputText value="Multiple regular expressions" rendered="#{motifView.multiMotif}"/>
 							<p:inputText value="#{motifView.mainMotif.customRegex}" rendered="#{motifView.mainMotif.custom}" styleClass="trn_regex">
 								<p:ajax event="change" update="@form"/>
 							</p:inputText>
@@ -121,18 +128,24 @@
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
 						<p:column styleClass="subitem">PSSM file:</p:column>
 						<p:column>
-							<h:panelGroup rendered="#{!motifView.mainMotif.custom and !motifView.allMotifs}">
+							<h:panelGroup rendered="#{!motifView.mainMotif.custom and !motifView.multiMotif}">
 								<h:outputText value="#{motifView.mainMotif.pssmFile}" />
 								<h:outputText
-									value="Not available (scores will not be available)"
+									value="Not available (scores will not be available)."
 									rendered="#{motifView.mainMotif.motifInformation != null and motifView.mainMotif.pssmFile == null}" />&nbsp;
+								<h:panelGroup rendered="#{motifView.mainMotif.motifDefinition != null and motifView.mainMotif.motifDefinition.probability != null}">
+									ELM pattern probability:&nbsp;							
+									<h:outputText value="#{motifView.mainMotif.motifDefinition.probability}">
+										<f:convertNumber pattern="0.####E0" />
+									</h:outputText>.
+								</h:panelGroup>
 								<p:commandButton value="Download"
 									actionListener="#{searchView.downloadPssm}"
 									rendered="#{motifView.mainMotif.pssmFile != null}" ajax="false" />
 							</h:panelGroup>
 							<h:outputText
 								value="Scores will be available only for motifs with a PSSM (Wregex but not ELM)"
-								rendered="#{motifView.allMotifs}" />
+								rendered="#{motifView.multiMotif}" />
 							<h:panelGroup rendered="#{motifView.mainMotif.custom}">
 								<p:fileUpload fileUploadListener="#{motifView.uploadPssm}"
 									mode="advanced" sizeLimit="#{initParam['wregex.pssm']}"
@@ -146,6 +159,12 @@
 							<p:commandButton value="Download"
 								actionListener="#{searchView.downloadAuxPssm}"
 								rendered="#{motifView.auxMotif.pssmFile != null}" ajax="false" />
+							<h:panelGroup rendered="#{motifView.auxMotif.motifDefinition != null and motifView.auxMotif.motifDefinition.probability != null}">
+								ELM pattern probability:&nbsp;							
+								<h:outputText value="#{motifView.auxMotif.motifDefinition.probability}">
+									<f:convertNumber pattern="0.####E0" />
+								</h:outputText>.
+							</h:panelGroup>
 						</p:column>					
             		</p:row>
             		
@@ -311,7 +330,7 @@
 						</f:facet>
 						<h:outputText value="#{item.end}"/>
 					</p:column>
-					<p:column rendered="#{motifView.allMotifs}" width="200">
+					<p:column rendered="#{motifView.multiMotif}" width="200">
 						<f:facet name="header">Motif</f:facet>
 						<h:outputLink value="#{item.motifUrl}" target="_blank">#{item.motif}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
 					</p:column>
@@ -349,6 +368,13 @@
 					<p:column rendered="#{searchView.assayScores}" styleClass="trn_weight">
 						<f:facet name="header">Assay</f:facet>
 						<h:outputText value="#{item.assayAsString}"/>
+					</p:column>
+					<p:column styleClass="search_prob" id="motif_prob" rendered="#{searchView.motifProbs}">
+						<f:facet name="header">
+							Motif prob.
+							<p:tooltip value="ELM pattern probability" for="motif_prob"/>
+						</f:facet>
+						<h:outputText value="#{item.motifProbAsString}"/>
 					</p:column>
 					<p:column styleClass="trn_name" width="200" rendered="#{motifView.useAuxMotif}">
 						<f:facet name="header">Aux motif</f:facet>

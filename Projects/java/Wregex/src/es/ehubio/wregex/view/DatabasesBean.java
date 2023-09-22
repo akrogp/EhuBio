@@ -8,7 +8,9 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -24,13 +26,15 @@ import es.ehubio.db.PtmItem;
 import es.ehubio.db.cosmic.CosmicStats;
 import es.ehubio.db.dbptm.Entry;
 import es.ehubio.db.dbptm.TxtReader;
+import es.ehubio.db.elm.ElmClass;
+import es.ehubio.db.elm.ElmDb;
+import es.ehubio.db.elm.ElmInstance;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.go.Ontology;
 import es.ehubio.db.go.Term;
 import es.ehubio.db.psp.PspFile;
 import es.ehubio.db.psp.Site;
 import es.ehubio.dbptm.ProteinPtms;
-import es.ehubio.io.UnixCfgReader;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.data.DatabaseConfiguration;
 import es.ehubio.wregex.data.DatabaseInformation;
@@ -55,6 +59,7 @@ public class DatabasesBean implements Serializable {
 	private DatabaseConfiguration databaseConfiguration;
 	private PresetConfiguration presetConfiguration;
 	private List<MotifInformation> elmMotifs;
+	private List<MotifInformation> elmHumanMotifs;
 	private List<MotifInformation> allMotifs;
 	private List<String> redundantMotifs;
 	private List<MotifInformation> nrMotifs;
@@ -183,6 +188,14 @@ public class DatabasesBean implements Serializable {
 		return elmMotifs;
 	}
 	
+	public List<MotifInformation> getElmHumanMotifs() {
+		if( elmHumanMotifs == null )
+			elmHumanMotifs = getElmMotifs().stream()
+				.filter(motif -> motif.getOrganisms().contains("Homo sapiens") || motif.getOrganisms().contains("Human"))
+				.collect(Collectors.toList());
+		return elmHumanMotifs;
+	}
+	
 	public List<MotifInformation> getAllMotifs() {
 		if( allMotifs == null ) {
 			allMotifs = new ArrayList<>();
@@ -287,40 +300,55 @@ public class DatabasesBean implements Serializable {
 		List<MotifDefinition> definitions;
 		MotifReference reference;
 		List<MotifReference> references;
-		File elmFile = new File(elm.getPath());
-		try(UnixCfgReader rd = new UnixCfgReader(new FileReader(elmFile))) {
-			String line;
-			String[] fields;
-			boolean first = true;
-			while( (line=rd.readLine()) != null ) {
-				if( first == true ) {
-					first = false;
-					continue;
+		Map<String, Map<String, Integer>> mapOrganisms = new HashMap<>();
+		try {
+			ElmDb elmDb = new ElmDb();
+			elmDb.load(elm.getPath());
+			
+			for( ElmInstance elmInstance : elmDb.getElmInstances() ) {
+				Map<String, Integer> organisms = mapOrganisms.get(elmInstance.getCls());
+				if( organisms == null ) {
+					organisms = new HashMap<>();
+					mapOrganisms.put(elmInstance.getCls(), organisms);
 				}
-				if( !rd.getComment("ELM_Classes_Download_Version").contains("1.4") )
-					throw new IOException("ELM file version not supported");
-				fields = line.replaceAll("\"","").split("\t");
+				Integer count = organisms.get(elmInstance.getOrganism());
+				count = count == null ? 1 : count + 1;
+				organisms.put(elmInstance.getOrganism(), count);
+			}
+			
+			for( ElmClass elmClass : elmDb.getElmClasses() ) {
 				motif = new MotifInformation();
-				motif.setName(fields[1]);
-				motif.setSummary(fields[3]);
+				motif.setName(elmClass.getId());
+				motif.setSummary(elmClass.getDesc());
+				if( mapOrganisms.get(elmClass.getId()) != null )
+					motif.setOrganisms(mapOrganisms.get(elmClass.getId()).entrySet().stream().sorted(new Comparator<java.util.Map.Entry<String, Integer>>() {
+						@Override
+						public int compare(java.util.Map.Entry<String, Integer> arg0, java.util.Map.Entry<String, Integer> arg1) {
+							int comp = arg1.getValue() - arg0.getValue();
+							if( comp == 0 )
+								comp = arg0.getKey().length() - arg1.getKey().length();
+							if( comp == 0 )
+								comp = arg0.getKey().compareTo(arg1.getKey());
+							return comp;
+						}
+					}).map(entry -> entry.getKey()).collect(Collectors.toCollection(LinkedHashSet::new)));
 				definition = new MotifDefinition();
-				definition.setName(fields[0]);
+				definition.setName(elmClass.getAcc());
 				definition.setDescription("ELM regular expression without using Wregex capturing groups and PSSM capabilities");
-				definition.setRegex(fields[4].replaceAll("\\(", "(?:"));
+				definition.setRegex(elmClass.getRegex().replaceAll("\\(", "(?:"));
+				definition.setProbability(elmClass.getProb());
 				definitions = new ArrayList<>();
 				definitions.add(definition);
 				motif.setDefinitions(definitions);
 				reference = new MotifReference();
 				reference.setName("Original ELM entry");
-				reference.setLink("http://elm.eu.org/elms/elmPages/"+fields[1]+".html");
+				reference.setLink("http://elm.eu.org/elms/elmPages/"+elmClass.getId()+".html");
 				references = new ArrayList<>();
 				references.add(reference);
 				motif.setReferences(references);
 				elmMotifs.add(motif);
 			}
-			String version = rd.getComment("ELM_Classes_Download_Date");
-			if( version != null )
-				elm.setVersion(version.split(" ")[1]);
+			elm.setVersion(elmDb.getVersion());
 			logger.info("Loaded " + elm.getFullName() + "!");
 		} catch (Exception e) {
 			e.printStackTrace();

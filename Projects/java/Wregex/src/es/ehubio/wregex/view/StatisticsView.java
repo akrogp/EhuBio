@@ -173,7 +173,7 @@ public class StatisticsView {
 			pssm = services.getPssm(def.getPssm());
 			wregex = new Wregex(def.getRegex(), pssm);
 			try {
-				resultGroups = Services.search(wregex, motifInformation, databases.getHumanProteome(), false, tout);
+				resultGroups = Services.search(wregex, motifInformation, def, databases.getHumanProteome(), false, tout);
 			} catch( Exception e ) {
 				logger.severe("Discarded by tout");
 				continue;

@@ -1,0 +1,65 @@
+---
+title: "ELM probabilities"
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+library(conflicted)
+library(readr)
+library(tidyverse)
+
+conflicted::conflicts_prefer(dplyr::filter)
+
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+# Amino acid probabilities
+
+According to [ELM documentation](http://elm.eu.org/help.html#filter_probability):
+
+> For each ELM class, a probability score (expect cutoff) is calculated based on its regular expression, using the following amino acid probabilities (derived from uniprot and using an IUPred cutoff of >= 0.4):
+
+```{r}
+aa <- read_delim("~/Descargas/DataBases/Sequences/ELM/aa.csv", 
+    delim = ":", escape_double = FALSE, col_names = FALSE, 
+    trim_ws = TRUE) %>% 
+  rename(aa=1, prob=2)
+
+aa
+```
+
+```{r}
+A <- aa %>% filter(aa == 'A') %>% pull(prob)
+C <- aa %>% filter(aa == 'C') %>% pull(prob)
+D <- aa %>% filter(aa == 'D') %>% pull(prob)
+E <- aa %>% filter(aa == 'E') %>% pull(prob)
+F <- aa %>% filter(aa == 'F') %>% pull(prob)
+G <- aa %>% filter(aa == 'G') %>% pull(prob)
+H <- aa %>% filter(aa == 'H') %>% pull(prob)
+I <- aa %>% filter(aa == 'I') %>% pull(prob)
+K <- aa %>% filter(aa == 'K') %>% pull(prob)
+L <- aa %>% filter(aa == 'L') %>% pull(prob)
+M <- aa %>% filter(aa == 'M') %>% pull(prob)
+N <- aa %>% filter(aa == 'N') %>% pull(prob)
+P <- aa %>% filter(aa == 'P') %>% pull(prob)
+Q <- aa %>% filter(aa == 'Q') %>% pull(prob)
+R <- aa %>% filter(aa == 'R') %>% pull(prob)
+S <- aa %>% filter(aa == 'S') %>% pull(prob)
+T <- aa %>% filter(aa == 'T') %>% pull(prob)
+V <- aa %>% filter(aa == 'V') %>% pull(prob)
+W <- aa %>% filter(aa == 'W') %>% pull(prob)
+Y <- aa %>% filter(aa == 'Y') %>% pull(prob)
+```
+
+# ELM check
+
+[MOD_GSK3_1](http://elm.eu.org/elms/MOD_GSK3_1) should be `0.0267866`:
+
+```{r}
+(S+T)^2
+```
+
+[TRG_NES_CRM1_1](http://elm.eu.org/elms/TRG_NES_CRM1_1) should be `0.0007626`:
+
+

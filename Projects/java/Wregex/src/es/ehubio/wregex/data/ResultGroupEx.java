@@ -16,6 +16,7 @@ public class ResultGroupEx implements Iterable<ResultEx> {
 	private final Iterable<ResultEx> list;
 	private String motif;
 	private String motifUrl;
+	private Double motifProb;
 	
 	public ResultGroupEx( ResultGroup resultGroup ) {
 		this.resultGroup = resultGroup;		
@@ -78,5 +79,15 @@ public class ResultGroupEx implements Iterable<ResultEx> {
 	public void setWregex(Wregex wregex) {
 		for( ResultEx result : this )
 			result.setWregex(wregex);
+	}
+
+	public Double getMotifProb() {
+		return motifProb;
+	}
+
+	public void setMotifProb(Double motifProb) {
+		this.motifProb = motifProb;
+		for( ResultEx result : list )
+			result.setMotifProb(motifProb);
 	}
 }

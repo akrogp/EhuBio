@@ -47,11 +47,18 @@ public class ResultComparator implements Comparator<ResultEx> {
 		if( o1.getAuxScore() != null && o2.getAuxScore() == null )
 			return -1;
 		if( o1.getAuxScore() != null && o2.getAuxScore() != null )
-			return (int)Math.signum(o2.getAuxScore() - o1.getAuxScore());		
-		// 7. Wregex Combinations
+			return (int)Math.signum(o2.getAuxScore() - o1.getAuxScore());
+		// 7. Motif probability
+		if( o1.getMotifProb() == null && o2.getMotifProb() != null )
+			return 1;
+		if( o1.getMotifProb() != null && o2.getMotifProb() == null )
+			return -1;
+		if( o1.getMotifProb() != null && o2.getMotifProb() != null )
+			return (int)Math.signum(o1.getMotifProb() - o2.getMotifProb());
+		// 8. Wregex Combinations
 		if( o1.getCombinations() != o2.getCombinations() )
 			return o2.getCombinations() - o1.getCombinations();
-		// 8. Match length
+		// 9. Match length
 		if( o1.getMatch().length() != o2.getMatch().length() )
 			return o2.getMatch().length() - o1.getMatch().length();
 		return 0;

@@ -1,7 +1,9 @@
 package es.ehubio.wregex.data;
 
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -20,6 +22,8 @@ public final class MotifInformation implements Serializable {
 	private List<MotifDefinition> definitions;
 	@XmlElement(name="reference")
 	private List<MotifReference> references;
+	@XmlElement(name="organism")
+	private Set<String> organisms;
 	
 	public String getName() {
 		return name;
@@ -51,6 +55,16 @@ public final class MotifInformation implements Serializable {
 
 	public void setReferences(List<MotifReference> references) {
 		this.references = references;
+	}
+	
+	public Set<String> getOrganisms() {
+		if( organisms == null )
+			organisms = new HashSet<>();
+		return organisms;
+	}
+	
+	public void setOrganisms(Set<String> organisms) {
+		this.organisms = organisms;
 	}
 	
 	@Override

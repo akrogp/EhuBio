@@ -34,7 +34,7 @@ public class Services {
 	}
 	
 	public static List<ResultGroupEx> search(
-			Wregex wregex, MotifInformation motif, List<InputGroup> inputGroups, boolean assayScores, long tout ) throws Exception {
+			Wregex wregex, MotifInformation motif, MotifDefinition def, List<InputGroup> inputGroups, boolean assayScores, long tout ) throws Exception {
 		List<ResultGroupEx> resultGroupsEx = new ArrayList<>();
 		List<ResultGroup> resultGroups;
 		ResultGroupEx resultGroupEx;
@@ -53,8 +53,10 @@ public class Services {
 				resultGroupEx.setWregex(wregex);
 				if( motif != null ) {
 					resultGroupEx.setMotif(motif.getName());
-					resultGroupEx.setMotifUrl(motif.getReferences().get(0).getLink());
+					resultGroupEx.setMotifUrl(motif.getReferences().get(0).getLink());					
 				}
+				if( def != null )
+					resultGroupEx.setMotifProb(def.getProbability());
 				resultGroupsEx.add(resultGroupEx);
 			}
 			if( tout > 0 && System.currentTimeMillis() >= wdt )
@@ -73,7 +75,7 @@ public class Services {
 			def = motif.getDefinitions().get(0);
 			pssm = getPssm(def.getPssm());
 			wregex = new Wregex(def.getRegex(), pssm);
-			results.addAll(search(wregex, motif, inputGroups, false, tout));
+			results.addAll(search(wregex, motif, def, inputGroups, false, tout));
 		}
 		return results;
 	}
@@ -126,10 +128,12 @@ public class Services {
 			res.addFlanking(flanking);
 	}
 	
-	public static void searchAux(Wregex wregex, MotifInformation motif, List<ResultEx> results) {
+	public static void searchAux(Wregex wregex, MotifInformation motif, MotifDefinition def, List<ResultEx> results) {
 		for( ResultEx result : results ) {
 			if( motif != null )
 				result.setAuxMotif(motif.getName());
+			if( def != null )
+				result.setAuxProb(def.getProbability());
 			List<ResultGroup> groups = wregex.searchGrouping(result.getResult().getFasta());
 			if( wregex.getPssm() == null ) {
 				result.setAuxScore((double)groups.size());

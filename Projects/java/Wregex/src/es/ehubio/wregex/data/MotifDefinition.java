@@ -13,6 +13,7 @@ public final class MotifDefinition implements Serializable {
 	private String name;
 	private String description;
 	private String regex;
+	private Double probability;
 	private String pssm;
 	
 	public String getName() {
@@ -37,6 +38,14 @@ public final class MotifDefinition implements Serializable {
 	
 	public void setRegex(String regex) {
 		this.regex = regex;
+	}
+	
+	public Double getProbability() {
+		return probability;
+	}
+	
+	public void setProbability(Double probability) {
+		this.probability = probability;
 	}
 	
 	public String getPssm() {

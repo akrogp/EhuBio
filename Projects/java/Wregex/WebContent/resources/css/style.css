@@ -104,6 +104,12 @@ img {
 	white-space: nowrap;
 }
 
+/* Search */
+.search_prob {
+	width: 75px;
+	text-align: right;
+}
+
 /* Training */
 .trn_name {
 	white-space: nowrap;

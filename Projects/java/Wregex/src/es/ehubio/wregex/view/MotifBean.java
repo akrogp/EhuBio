@@ -1,6 +1,7 @@
 package es.ehubio.wregex.view;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import es.ehubio.wregex.Pssm;
 import es.ehubio.wregex.data.MotifDefinition;
@@ -116,5 +117,11 @@ public class MotifBean {
 	
 	public void setPssm(Pssm pssm) {
 		this.pssm = pssm;
-	}	
+	}
+	
+	public String getOrganisms() {
+		if( motifInformation == null || motifInformation.getOrganisms() == null )
+			return null;
+		return "<i>" + motifInformation.getOrganisms().stream().collect(Collectors.joining("</i>, <i>")) + "</i>";
+	}
 }
