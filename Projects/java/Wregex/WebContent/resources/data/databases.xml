@@ -2,20 +2,20 @@
 <!DOCTYPE project>
 <databases>
     <database>
-        <name>Custom fasta entries</name>
+        <name>Fasta entries</name>
         <type>manual</type>
         <hint>&gt;header&#xA;QELVLQLLALQLDRQE</hint>
         <extPattern>/(\.|\/)(fasta|fa|faa)$/</extPattern>        
     </database>
     <database>
-        <name>Custom list of human UniProtKB/Swiss-Prot accessions</name>
+        <name>List of human UniProtKB/Swiss-Prot accessions</name>
         <type>manual</type>
         <hint>Q13285&#xA;O15405&#xA;P78424</hint>
         <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>
         <wregexVersion>3</wregexVersion>
     </database>
     <database>
-        <name>Custom list of human official gene symbols</name>
+        <name>List of human official gene symbols</name>
         <type>manual</type>
         <hint>NR5A1&#xA;TOX3&#xA;POU6F2</hint>
         <extPattern>/(\.|\/)(te?xt|csv|tsv)$/</extPattern>

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +12,7 @@ import java.util.Set;
 
 import javax.faces.context.ExternalContext;
 
+import es.ehubio.Util;
 import es.ehubio.db.cosmic.CosmicStats;
 import es.ehubio.db.cosmic.Locus;
 import es.ehubio.db.fasta.Fasta;
@@ -92,15 +94,29 @@ public class Services {
 		return results;
 	}
 	
-	public static List<ResultEx> filter(List<ResultEx> candidates, boolean filterEqual, double scoreThreshold) {
+	public static List<ResultEx> filter(List<ResultEx> candidates, boolean filterEqual, boolean filterNoConn, String[] selectedPtms, double scoreThreshold) {
 		List<ResultEx> results = candidates;
 		if( scoreThreshold > 0.0 )
 			results = filterPoor(results, scoreThreshold);
 		if( filterEqual )
 			results = filterEqual(results);
+		if( filterNoConn )
+			results = filterWithoutConn(results, selectedPtms);
 		return results;
 	}
 	
+	private static List<ResultEx> filterWithoutConn(List<ResultEx> candidates, String[] selectedPtms) {
+		List<ResultEx> results = new ArrayList<>();
+		for( ResultEx result : candidates )
+			if( result.getCosmicMissense() > 0 )
+				results.add(result);
+			else if( Util.isEmpty(selectedPtms) && result.getTotalPtms() > 0 )
+				results.add(result);
+			else if( !Util.isEmpty(selectedPtms) && Arrays.stream(selectedPtms).anyMatch(ptm -> !Util.isEmpty(result.getPtmCounts().get(ptm))) )
+				results.add(result);
+		return results;
+	}
+
 	private static List<ResultEx> filterEqual(List<ResultEx> candidates) {
 		List<ResultEx> results = new ArrayList<>();
 		Set<String> sequences = new HashSet<>();

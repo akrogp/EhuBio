@@ -18,7 +18,7 @@
 					<f:facet name="header">Search configuration</f:facet>
 					
 					<p:row>
-						<p:column styleClass="nowrap">0. Preset:</p:column>
+						<p:column styleClass="nowrap">0. Examples:</p:column>
 						<p:column colspan="2">
 							<p:selectOneMenu id="preset" value="#{searchView.preset}" valueChangeListener="#{searchView.onSelectPreset}">
 								<f:selectItems value="#{databasesBean.presets}" var="preset" itemLabel="#{preset.name}" itemValue="#{preset.value}"/>
@@ -215,40 +215,15 @@
 							</p:panelGrid>
 						</p:column>						
             		</p:row>
-            	
-            		<p:row>
-            			<p:column styleClass="nowrap">3. Options:</p:column>	
-						<p:column colspan="2">
-							<p:selectBooleanCheckbox id="grouping" itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
-								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>
-							<p:tooltip for="grouping" value="Collapse overlapping candidates into a single result"/>
-							&nbsp;
-							<p:selectBooleanCheckbox id="similar" itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
-								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox><br/><br/>
-							<p:tooltip for="similar" value="Keep only the first result for the same matched sequence"/>
-							Threshold:								
-							<p:spinner id="threshold" value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
-								<p:ajax event="change" update="@form" />
-							</p:spinner>
-							<p:tooltip for="threshold" value="Score threshold for main motif matches"/>
-							&nbsp;Flanking:
-							<p:spinner id="flanking" value="#{searchOptionsView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
-								<p:ajax event="change" update="@form" />
-							</p:spinner>
-							<p:tooltip for="flanking" value="Number of additional amino acids to show at both sides of the match"/>							
-						</p:column>
-					</p:row>
 					
 					<p:row>
-            			<p:column style="vertical-align:baseline;" styleClass="nowrap"><br/>4. Connections:</p:column>
+            			<p:column style="vertical-align:baseline;" styleClass="nowrap"><br/>3. Connections:</p:column>
             			<p:column colspan="2">
             				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
 							<br/><br/>
-							<p:selectBooleanCheckbox itemLabel="PhosphoSitePlus (20220909)" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}">
+							<p:selectBooleanCheckbox itemLabel="#{databasesBean.pspInformation.fullName}" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>&nbsp;&nbsp;		
 							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}">
@@ -264,6 +239,36 @@
 							</p:selectManyCheckbox>
             			</p:column>
            			</p:row>
+           			
+           			<p:row>
+            			<p:column styleClass="nowrap">4. Options:</p:column>	
+						<p:column colspan="2">
+							<p:selectBooleanCheckbox id="grouping" itemLabel="Grouping" value="#{searchOptionsView.grouping}" valueChangeListener="#{searchView.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>
+							<p:tooltip for="grouping" value="Collapse overlapping candidates into a single result"/>
+							&nbsp;
+							<p:selectBooleanCheckbox id="similar" itemLabel="Filter similar" value="#{searchOptionsView.filterEqual}" valueChangeListener="#{searchView.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox>
+							<p:tooltip for="similar" value="Keep only the first result for the same matched sequence"/>
+							&nbsp;
+							<p:selectBooleanCheckbox id="noconn" itemLabel="Filter without connections" value="#{searchOptionsView.filterNoConn}" valueChangeListener="#{searchView.onChangeOption}">
+								<p:ajax event="change" update="@form" />
+							</p:selectBooleanCheckbox><br/><br/>
+							<p:tooltip for="noconn" value="Keep only the results with values for any of the external connections selected (only applied during search)"/>
+							Threshold:								
+							<p:spinner id="threshold" value="#{searchOptionsView.scoreThreshold}" valueChangeListener="#{searchView.onChangeOption}" min="0.00" max="100.00" stepFactor="10.00" size="7">
+								<p:ajax event="change" update="@form" />
+							</p:spinner>
+							<p:tooltip for="threshold" value="Score threshold for main motif matches"/>
+							&nbsp;Flanking:
+							<p:spinner id="flanking" value="#{searchOptionsView.flanking}" valueChangeListener="#{searchView.onChangeOption}" min="0" suffix=" aa" size="5">
+								<p:ajax event="change" update="@form" />
+							</p:spinner>
+							<p:tooltip for="flanking" value="Number of additional amino acids to show at both sides of the match"/>							
+						</p:column>
+					</p:row>
 					
 					<p:row rendered="#{searchView.configError != null}">
 						<p:column>Status:</p:column>
@@ -292,7 +297,7 @@
 				</p:panelGrid>
 				
 				<br/>
-				<p:dataTable value="#{searchView.results}" rowIndexVar="row" var="item" rendered="#{searchView.results != null and searchView.configError == null}" scrollable="true" scrollHeight="300" liveScroll="true" scrollRows="40">
+				<p:dataTable value="#{searchView.results}" rowIndexVar="row" var="item" rendered="#{not empty searchView.results and searchView.configError == null}" scrollable="true" scrollHeight="300" liveScroll="true" scrollRows="40">
 					<f:facet name="header">Search results - live scroll (scroll and wait for more results)</f:facet>
 					<p:column width="50" style="text-align:center;" id="search_id">
 						<f:facet name="header">

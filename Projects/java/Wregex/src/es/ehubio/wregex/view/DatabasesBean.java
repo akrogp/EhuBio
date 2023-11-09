@@ -189,10 +189,12 @@ public class DatabasesBean implements Serializable {
 	}
 	
 	public List<MotifInformation> getElmHumanMotifs() {
-		if( elmHumanMotifs == null )
+		if( elmHumanMotifs == null ) {
 			elmHumanMotifs = getElmMotifs().stream()
 				.filter(motif -> motif.getOrganisms().contains("Homo sapiens") || motif.getOrganisms().contains("Human"))
 				.collect(Collectors.toList());
+			logger.info("Selected " + elmHumanMotifs.size() + " ELM human motifs");
+		}
 		return elmHumanMotifs;
 	}
 	
@@ -250,6 +252,10 @@ public class DatabasesBean implements Serializable {
 	
 	public DatabaseInformation getDbPtmInformation() {
 		return dbPtm;
+	}
+	
+	public DatabaseInformation getPspInformation() {
+		return psp;
 	}
 	
 	public DatabaseInformation getDbWregex() {

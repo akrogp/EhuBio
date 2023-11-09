@@ -89,15 +89,15 @@ public class SearchView implements Serializable {
 		try {
 			updateAssayScores();
 			List<ResultGroupEx> resultGroups = motifView.isMultiMotif() ?  allSearch() : singleSearch();
-			results = Services.expand(resultGroups, options.isGrouping());				
-			results = Services.filter(results, options.isFilterEqual(), options.getScoreThreshold());
-			Services.flanking(results, options.getFlanking());
+			results = Services.expand(resultGroups, options.isGrouping());							
 			if( motifView.isUseAuxMotif() )
 				searchAux();
 			if( options.isCosmic() )
 				searchCosmic();
 			if( options.isPtm() )
 				searchPtm();
+			results = Services.filter(results, options.isFilterEqual(), options.isFilterNoConn(), options.getSelectedPtms(), options.getScoreThreshold());
+			Services.flanking(results, options.getFlanking());
 			Collections.sort(results, new ResultComparator(options.getSelectedPtms()));
 			updateMotifProbs();
 		} catch( IOException e ) {

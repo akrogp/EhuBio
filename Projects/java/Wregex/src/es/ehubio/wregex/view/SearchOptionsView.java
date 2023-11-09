@@ -11,6 +11,7 @@ public class SearchOptionsView implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private boolean grouping = true;
 	private boolean filterEqual = false;
+	private boolean filterNoConn = false;
 	private double scoreThreshold = 0.0;
 	private int flanking = 0;
 	private boolean cosmic = false;
@@ -32,6 +33,14 @@ public class SearchOptionsView implements Serializable {
 	
 	public void setFilterEqual(boolean filterEqual) {
 		this.filterEqual = filterEqual;
+	}
+	
+	public boolean isFilterNoConn() {
+		return filterNoConn;
+	}
+	
+	public void setFilterNoConn(boolean filterNoConn) {
+		this.filterNoConn = filterNoConn;
 	}
 	
 	public double getScoreThreshold() {
