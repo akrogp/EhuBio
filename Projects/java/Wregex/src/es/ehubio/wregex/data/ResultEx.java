@@ -10,6 +10,7 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import es.ehubio.Util;
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.uniprot.UniProtUtils;
 import es.ehubio.io.CsvUtils;
@@ -355,6 +356,18 @@ public class ResultEx implements Comparable<ResultEx> {
 				fields.add(result.getTotalPtmsAsString());
 			}
 			pw.println(CsvUtils.getCsv(separator, fields.toArray()));
+		}
+		pw.flush();
+	}
+	
+	public static void saveFasta(Writer wr, List<ResultEx> results) {
+		PrintWriter pw = new PrintWriter(wr);
+		for( ResultEx result : results ) {
+			pw.println(">" + result.getName());
+			if( !Util.isEmpty(result.getMutSequence()) )
+				pw.println(result.getMutSequence());
+			else
+				pw.println(result.getSequence());
 		}
 		pw.flush();
 	}

@@ -240,7 +240,23 @@ public class SearchView implements Serializable {
 			e.printStackTrace();
 		}
 		fc.responseComplete();
-	}	
+	}
+	
+	public void downloadResultsFasta() {
+		FacesContext fc = FacesContext.getCurrentInstance();
+	    ExternalContext ec = fc.getExternalContext();
+	    ec.responseReset();
+	    ec.setResponseContentType("text"); // Check http://www.iana.org/assignments/media-types for all types. Use if necessary ExternalContext#getMimeType() for auto-detection based on filename.
+	    //ec.setResponseContentLength(length);
+	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+targetView.getBaseFileName()+"-results.fasta\"");
+		try {
+			OutputStream output = ec.getResponseOutputStream();
+			ResultEx.saveFasta(new OutputStreamWriter(output), results);
+		} catch( Exception e ) {
+			e.printStackTrace();
+		}
+		fc.responseComplete();
+	}
 	
 	private void downloadFile( String name ) {
 		if( name == null )

@@ -290,8 +290,9 @@
 						<p:column>Results:</p:column>
 						<p:column colspan="2">
 							<h:outputText value="#{searchView.numberOfResults}"/>&nbsp;
-							<p:commandButton value="Download as CSV" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadCsv}" ajax="false"/>
-							<p:commandButton value="Download as ALN" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadAln}" ajax="false"/>
+							<p:commandButton value="Download CSV" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadCsv}" ajax="false"/>
+							<p:commandButton value="Download ALN" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadAln}" ajax="false"/>
+							<p:commandButton value="Download Fasta" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadResultsFasta}" ajax="false"/>
 						</p:column>
 					</p:row>
 				</p:panelGrid>
