@@ -161,7 +161,7 @@ public class HomeView implements Serializable {
 	}
 	
 	private void setWregexLog3(List<LatestNew> news) {
-		news.add(new LatestNew("Nov 03, 2022", "Wregex v3.0 preview published"));
+		news.add(new LatestNew("Nov 10, 2023", "Wregex v3.0 preview published"));
 		news.add(new LatestNew("Sep 26, 2017", "Wregex v2.1 published"));
 		news.add(new LatestNew("May 12, 2016", "Wregex v2.0 published in Scientific Reports"));
 		news.add(new LatestNew("Jan 06, 2014", "Wregex v1.0 published in Bioinformatics"));		
