@@ -7,19 +7,36 @@
 	<!--<h:outputStylesheet name="css/style.css" />-->
 	<title>Wregex: <ui:insert name="title" /></title>
 	<ui:insert name="htmlhead" />
-	<!-- Google Analytics -->
+	<!-- Cookie consent -->
 	<script>
-	  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-	  ga('create', 'UA-69742735-1', 'auto');
-	  ga('send', 'pageview');
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        
+        if(localStorage.getItem('consentMode') === null){
+            gtag('consent', 'default', {
+                'ad_storage': 'denied',
+                'analytics_storage': 'denied',
+                'personalization_storage': 'denied',
+                'functionality_storage': 'denied',
+                'security_storage': 'denied',
+            });
+        } else {
+            gtag('consent', 'default', JSON.parse(localStorage.getItem('consentMode')));
+        }
+    </script>	
+	<!-- Google tag (gtag.js) -->
+	<script async="true" src="https://www.googletagmanager.com/gtag/js?id=G-MDGQZKQGEL"></script>
+	<script>
+	  window.dataLayer = window.dataLayer || [];
+	  function gtag(){dataLayer.push(arguments);}
+	  gtag('js', new Date());
+	
+	  gtag('config', 'G-MDGQZKQGEL');
 	</script>
-	<!-- End Google Analytics -->
 </h:head>
 <h:body>
 	<h:outputStylesheet name="css/style.css" />
+	<h:outputStylesheet name="css/consent.css" />
 	<div id="container">
 	<div id="titlebar">
 		<a href="https://ehubio.ehu.eus/wregex" target="_blank"><h:graphicImage name="images/wregex.png" style="float:left;margin-left:10px;"/></a>
@@ -39,6 +56,60 @@
 	<div id="body">
 	<ui:insert name="content" />
 	</div>
+	<div id="cookie-consent-banner" class="cookie-consent-banner">
+	    <h3>Cookie settings</h3>
+	    <p>We use cookies to provide you with the best possible experience. They also allow us to analyze user behavior in order to constantly improve the website for you.</p>
+	    <button id="btn-accept-some" class="cookie-consent-button btn-outline">Accept Selection</button>
+	    <button id="btn-reject-all" class="cookie-consent-button btn-grayscale">Reject All</button>
+	    <div class="cookie-consent-options">
+	      <label><input id="consent-necessary" type="checkbox" value="Necessary" checked="true" disabled="true"/>Necessary</label>
+	      <label><input id="consent-analytics" type="checkbox" value="Analytics" checked="true"/>Analytics</label>
+	      <!--<label><input id="consent-preferences" type="checkbox" value="Preferences" checked>Preferences</label>
+	      <label><input id="consent-marketing" type="checkbox" value="Marketing">Marketing</label>-->
+	    </div>
+	</div>
+	
+	<script>
+	  
+	  function hideBanner() {
+	    document.getElementById('cookie-consent-banner').style.display = 'none';
+	  }
+	
+	  if(localStorage.getItem('consentMode') === null) {	    
+	    document.getElementById('btn-accept-some').addEventListener('click', function() {
+	      setConsent({
+	        necessary: true,
+	        analytics: document.getElementById('consent-analytics').checked,
+	        //preferences: document.getElementById('consent-preferences').checked,
+	        //marketing: document.getElementById('consent-marketing').checked
+	      });
+	      hideBanner();
+	    });
+	    document.getElementById('btn-reject-all').addEventListener('click', function() {
+	      setConsent({
+	        necessary: false,
+	        analytics: false,
+	        //preferences: false,
+	        //marketing: false
+	      });
+	      hideBanner();
+	    });
+	    document.getElementById('cookie-consent-banner').style.display = 'block';
+	  }
+	  
+	  function setConsent(consent) {
+	    const consentMode = {
+	      'functionality_storage': consent.necessary ? 'granted' : 'denied',
+	      'security_storage': consent.necessary ? 'granted' : 'denied',
+	      //'ad_storage': consent.marketing ? 'granted' : 'denied',
+	      'analytics_storage': consent.analytics ? 'granted' : 'denied',
+	      //'personalization': consent.preferences ? 'granted' : 'denied',
+	    };
+	    gtag('consent', 'update', consentMode);  
+	    localStorage.setItem('consentMode', JSON.stringify(consentMode));
+	  }
+	  
+	</script>
 	<!--<div id="footer">
 		<div style="float:left;margin-left:10px;">Copyright (C) 2013 Gorka Prieto (UPV/EHU)</div>
 		<div style="float:right;margin-right:10px;">Funding: Basque Country Government (SAIOTEK S-PE12UN005), University of the Basque Country (UFI11/20).</div>				
