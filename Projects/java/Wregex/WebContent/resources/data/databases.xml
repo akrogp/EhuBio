@@ -71,6 +71,13 @@
         <wregexVersion>2</wregexVersion>
     </database>
     <database>
+        <name>UniProtKB/Swiss-Prot Human Proteome</name>
+        <type>uniprot</type>
+        <path>/media/data/Sequences/UniProt/2024_01/UP000005640_9606.xml.gz</path>
+        <versionFile>/media/data/Sequences/UniProt/2024_01/version.txt</versionFile>
+        <wregexVersion>3</wregexVersion>
+    </database>
+    <database>
         <name>UniProtKB/Swiss-Prot Human Subproteome</name>
         <type>manual</type>
         <hint>GO:0007049 (cell cycle)</hint>

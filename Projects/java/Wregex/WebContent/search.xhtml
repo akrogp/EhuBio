@@ -375,6 +375,14 @@
 						<f:facet name="header">Assay</f:facet>
 						<h:outputText value="#{item.assayAsString}"/>
 					</p:column>
+					<p:column styleClass="disordered" id="disordered">
+						<f:facet name="header">
+							Disordered region
+							<p:tooltip value="Percentage of motif sequence in a disordered region according to UniProt" for="disordered"/>
+						</f:facet>
+						<h:outputText value="#{item.disorderedOverlapString}" styleClass="overlap_#{row}"/>
+						<p:tooltip value="#{item.disorderedSummary}" for="@(.overlap_#{row})"/>						
+					</p:column>
 					<p:column styleClass="search_prob" id="motif_prob" rendered="#{searchView.motifProbs}">
 						<f:facet name="header">
 							Motif prob.

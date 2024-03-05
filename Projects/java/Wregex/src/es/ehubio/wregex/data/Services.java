@@ -9,15 +9,19 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.faces.context.ExternalContext;
 
+import es.ehubio.Numbers;
 import es.ehubio.Util;
 import es.ehubio.db.cosmic.CosmicStats;
 import es.ehubio.db.cosmic.Locus;
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.fasta.Fasta.SequenceType;
+import es.ehubio.db.uniprot.xml.Entry;
+import es.ehubio.db.uniprot.xml.PositionType;
 import es.ehubio.dbptm.ProteinPtms;
 import es.ehubio.dbptm.Ptm;
 import es.ehubio.model.Aminoacid;
@@ -294,6 +298,30 @@ public class Services {
 			else if( db == PtmProvider.PSP )
 				url = String.format("https://www.phosphosite.org/simpleSearchSubmitAction.action?searchStr=%s",ptms.getProtein());
 			result.setPtmUrl(url);
+		}
+	}
+	
+	public static void addFeatures(Map<String, Entry> mapUniprot, List<ResultEx> results) {
+		for(ResultEx result : results) {
+			Entry entry = mapUniprot.get(result.getAccession());
+			if( entry == null)
+				continue;
+			result.getFeatures().addAll(
+				entry.getFeature().stream().filter(feat -> {
+					PositionType fpos = feat.getLocation().getPosition();
+					if( fpos != null )
+						return Numbers.between(fpos.getPosition(), result.getStart(), result.getEnd());
+					PositionType fbegin = feat.getLocation().getBegin();
+					PositionType fend = feat.getLocation().getEnd();
+					return Numbers.overlap(result.getStart(), result.getEnd(), fbegin.getPosition(), fend.getPosition()) > 0;
+				}).collect(Collectors.toList())
+			);
+			result.setDisordered(
+				result.getFeatures().stream()
+					.filter(feat -> feat.getDescription() != null && feat.getDescription().contains("isordered"))
+					.findFirst()
+					.orElse(null)
+			);
 		}
 	}
 	

@@ -46,19 +46,26 @@ public class ResultComparator implements Comparator<ResultEx> {
 			return 1;
 		if( o1.getAuxScore() != null && o2.getAuxScore() == null )
 			return -1;
-		if( o1.getAuxScore() != null && o2.getAuxScore() != null )
+		if( o1.getAuxScore() != null && o2.getAuxScore() != null && o1.getAuxScore() != o2.getAuxScore() )
 			return (int)Math.signum(o2.getAuxScore() - o1.getAuxScore());
-		// 7. Motif probability
+		// 7. Disordered region
+		if( o1.getDisordered() != null && o2.getDisordered() == null )
+			return -1;
+		if( o1.getDisordered() == null && o2.getDisordered() != null )
+			return 1;
+		if( o1.getDisordered() != null && o2.getDisordered() != null && o1.getDisorderedOverlap() != o2.getDisorderedOverlap() )
+			return (int)Math.signum(o2.getDisorderedOverlap() - o1.getDisorderedOverlap());
+		// 8. Motif probability
 		if( o1.getMotifProb() == null && o2.getMotifProb() != null )
 			return 1;
 		if( o1.getMotifProb() != null && o2.getMotifProb() == null )
 			return -1;
-		if( o1.getMotifProb() != null && o2.getMotifProb() != null )
+		if( o1.getMotifProb() != null && o2.getMotifProb() != null && o1.getMotifProb() != o2.getMotifProb() )
 			return (int)Math.signum(o1.getMotifProb() - o2.getMotifProb());
-		// 8. Wregex Combinations
+		// 9. Wregex Combinations
 		if( o1.getCombinations() != o2.getCombinations() )
 			return o2.getCombinations() - o1.getCombinations();
-		// 9. Match length
+		// 10. Match length
 		if( o1.getMatch().length() != o2.getMatch().length() )
 			return o2.getMatch().length() - o1.getMatch().length();
 		return 0;

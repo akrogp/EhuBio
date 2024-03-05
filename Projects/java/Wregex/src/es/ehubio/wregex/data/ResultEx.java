@@ -10,9 +10,11 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+import es.ehubio.Numbers;
 import es.ehubio.Util;
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.uniprot.UniProtUtils;
+import es.ehubio.db.uniprot.xml.FeatureType;
 import es.ehubio.io.CsvUtils;
 import es.ehubio.wregex.Result;
 import es.ehubio.wregex.Wregex;
@@ -39,6 +41,8 @@ public class ResultEx implements Comparable<ResultEx> {
 	private String sequence;
 	private String alignment;
 	private int flanking = 0;
+	private List<FeatureType> features = new ArrayList<>();
+	private FeatureType disordered;
 	private static final char separator = ',';
 	
 	public ResultEx( Result result ) {
@@ -95,19 +99,26 @@ public class ResultEx implements Comparable<ResultEx> {
 			return 1;
 		if( getAuxScore() != null && o.getAuxScore() == null )
 			return -1;
-		if( getAuxScore() != null && o.getAuxScore() != null )
-			return (int)Math.signum(o.getAuxScore() - getAuxScore());		
-		// 6. Motif probability
+		if( getAuxScore() != null && o.getAuxScore() != null && getAuxScore() != o.getAuxScore() )
+			return (int)Math.signum(o.getAuxScore() - getAuxScore());
+		// 6. Disordered region
+		if( getDisordered() != null && o.getDisordered() == null )
+			return -1;
+		if( getDisordered() == null && o.getDisordered() != null )
+			return 1;
+		if( getDisordered() != null && o.getDisordered() != null && getDisorderedOverlap() != o.getDisorderedOverlap() )
+			return (int)Math.signum(o.getDisorderedOverlap() - getDisorderedOverlap());
+		// 7. Motif probability
 		if( getMotifProb() == null && o.getMotifProb() != null )
 			return 1;
 		if( getMotifProb() != null && o.getMotifProb() == null )
 			return -1;
-		if( getMotifProb() != null && o.getMotifProb() != null )
+		if( getMotifProb() != null && o.getMotifProb() != null && getMotifProb() != o.getMotifProb() )
 			return (int)Math.signum(getMotifProb() - o.getMotifProb());
-		// 7. Wregex Combinations
+		// 8. Wregex Combinations
 		if( getCombinations() != o.getCombinations() )
 			return o.getCombinations() - getCombinations();
-		// 8. Match length
+		// 9. Match length
 		if( getMatch().length() != o.getMatch().length() )
 			return o.getMatch().length() - getMatch().length();
 		return 0;
@@ -561,5 +572,35 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public void setAuxProb(Double auxProb) {
 		this.auxProb = auxProb;
+	}
+	
+	public List<FeatureType> getFeatures() {
+		return features;
+	}
+	
+	public FeatureType getDisordered() {
+		return disordered;
+	}
+	
+	public void setDisordered(FeatureType disordered) {
+		this.disordered = disordered;
+	}
+	
+	public double getDisorderedOverlap() {
+		if( disordered == null )
+			return 0;
+		return Numbers.overlap(getStart(), getEnd(), disordered.getLocation().getBegin().getPosition(), disordered.getLocation().getEnd().getPosition());
+	}
+	
+	public String getDisorderedOverlapString() {
+		if( disordered == null )
+			return "";
+		return String.format("%.1f%%", getDisorderedOverlap()*100);
+	}
+	
+	public String getDisorderedSummary() {
+		if( disordered == null )
+			return "";
+		return String.format("%s %d..%d ",disordered.getDescription(), disordered.getLocation().getBegin().getPosition(), disordered.getLocation().getEnd().getPosition());
 	}
 }

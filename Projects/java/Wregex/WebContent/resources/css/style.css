@@ -135,6 +135,11 @@ img {
 	width: 700px;
 }
 
+.disordered {
+	width: 100px;
+	text-align: right;
+}
+
 .cfg_header {
 	text-align: left;
 }

@@ -36,5 +36,21 @@ public class Numbers {
 		return String.format(Locale.ENGLISH, "%e", num);
 	}
 	
+	public static boolean between(Number num, Number start, Number end) {
+		if( num == null || start == null || end == null )
+			return false;
+		return num.doubleValue() >= start.doubleValue() && num.doubleValue() <= end.doubleValue();
+	}
+	
+	public static double overlap(Number refStart, Number refEnd, Number testStart, Number testEnd) {
+		if( refStart == null || refEnd == null || testStart == null || testEnd == null )
+			return 0;
+		double start = Math.max(refStart.doubleValue(), testStart.doubleValue());
+		double end = Math.min(refEnd.doubleValue(), testEnd.doubleValue());
+		if( start > end )
+			return 0;
+		return (end - start + 1)/(refEnd.doubleValue() - refStart.doubleValue() + 1);
+	}
+	
 	private static final Pattern PATTERN = Pattern.compile("[^0-9\\.eE+-]");
 }

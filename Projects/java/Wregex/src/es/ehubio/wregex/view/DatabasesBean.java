@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Serializable;
@@ -34,6 +35,7 @@ import es.ehubio.db.go.Ontology;
 import es.ehubio.db.go.Term;
 import es.ehubio.db.psp.PspFile;
 import es.ehubio.db.psp.Site;
+import es.ehubio.db.uniprot.xml.UniprotStream;
 import es.ehubio.dbptm.ProteinPtms;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.data.DatabaseConfiguration;
@@ -64,6 +66,7 @@ public class DatabasesBean implements Serializable {
 	private List<String> redundantMotifs;
 	private List<MotifInformation> nrMotifs;
 	private List<DatabaseInformation> targets;
+	private DatabaseInformation uniprot;
 	private DatabaseInformation elm;
 	private DatabaseInformation cosmic;
 	private DatabaseInformation dbPtm;
@@ -75,6 +78,7 @@ public class DatabasesBean implements Serializable {
 	private Map<String,CosmicStats> mapCosmic;
 	private Map<String, ProteinPtms> mapDbPtm;
 	private Map<String, ProteinPtms> mapPsp;
+	private Map<String, es.ehubio.db.uniprot.xml.Entry> mapUniprot;
 	private List<String> ptmsDbPtm;
 	private List<String> ptmsPsp;
 	private List<Term> goTerms;
@@ -107,6 +111,10 @@ public class DatabasesBean implements Serializable {
 			for( DatabaseInformation database : databaseConfiguration.getDatabases() ) {
 				if( Versions.PROD && database.getWregexVersion() != null && (database.getWregexVersion() == 0 || Versions.MAJOR < database.getWregexVersion()) )
 					continue;
+				if( database.getType().equals("uniprot") ) {
+					uniprot = database;
+					continue;
+				}
 				if( database.getType().equals("elm") ) {
 					elm = database;
 					continue;
@@ -298,6 +306,12 @@ public class DatabasesBean implements Serializable {
 		return goTerms;
 	}
 	
+	public Map<String, es.ehubio.db.uniprot.xml.Entry> getMapUniprot() {
+		if( mapUniprot == null )
+			loadUniprot();
+		return mapUniprot;
+	}
+	
 	private void loadElmMotifs() {
 		logger.info("Loading DB: " + elm.getPath());
 		elmMotifs = new ArrayList<>();
@@ -405,6 +419,18 @@ public class DatabasesBean implements Serializable {
 			goTerms = Ontology.loadTerms(go.getPath());
 			logger.info("Loaded " + go.getFullName() + "!");
 		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private void loadUniprot() {
+		logger.info("Loading DB: " + uniprot.getFullName());
+		try(InputStream is = new GZIPInputStream(new FileInputStream(uniprot.getPath()))) {			
+			mapUniprot = UniprotStream.featureStreamFrom(is)
+				.filter(entry -> !entry.getFeature().isEmpty())
+				.collect(Collectors.toMap(entry -> entry.getAccession().get(0), Function.identity()));
+			logger.info("Loaded " + uniprot.getFullName() + "!");
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
