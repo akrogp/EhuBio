@@ -210,7 +210,15 @@ public class SearchView implements Serializable {
 	    ec.setResponseHeader("Content-Disposition", "attachment; filename=\""+targetView.getBaseFileName()+".csv\"");
 		try {
 			OutputStream output = ec.getResponseOutputStream();
-			ResultEx.saveCsv(new OutputStreamWriter(output), results, getAssayScores(), isMotifProbs() ,motifView.isUseAuxMotif(), options.isCosmic(), options.isPtm(), options.getSelectedPtms() );
+			ResultEx.CsvFields csvFields = new ResultEx.CsvFields();
+			csvFields.assays = getAssayScores();
+			csvFields.features = isFeatures();
+			csvFields.probs = isMotifProbs();
+			csvFields.aux = motifView.isUseAuxMotif();
+			csvFields.cosmic = options.isCosmic();
+			csvFields.dbPtm = options.isDbPtm();
+			csvFields.selectedPtms = options.getSelectedPtms();
+			ResultEx.saveCsv(new OutputStreamWriter(output), results, csvFields);
 		} catch( Exception e ) {
 			e.printStackTrace();
 		}

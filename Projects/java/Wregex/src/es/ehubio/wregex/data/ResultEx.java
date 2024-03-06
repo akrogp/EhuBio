@@ -47,6 +47,16 @@ public class ResultEx implements Comparable<ResultEx> {
 	private FeatureType disordered;
 	private static final char separator = ',';
 	
+	public static class CsvFields {
+		public boolean assays;
+		public boolean features;
+		public boolean probs;
+		public boolean aux;
+		public boolean cosmic;
+		public boolean dbPtm;
+		public String[] selectedPtms;
+	}
+	
 	public ResultEx( Result result ) {
 		this.result = result;
 		if( result != null ) {
@@ -314,20 +324,27 @@ public class ResultEx implements Comparable<ResultEx> {
 		pw.flush();
 	}
 	
-	public static void saveCsv(Writer wr, List<ResultEx> results, boolean assays, boolean probs, boolean aux, boolean cosmic, boolean dbPtm, String[] selectedPtms ) {
+	public static void saveCsv(Writer wr, List<ResultEx> results, CsvFields options ) {
 		PrintWriter pw = new PrintWriter(wr);
 		List<String> fields = new ArrayList<>();
 		fields.addAll(Arrays.asList(new String[]{"#","ID","Entry","Motif","Begin","End","Combinations","Sequence","Alignment","Score"}));
-		if( assays ) { fields.add("Assay"); fields.add("Assay"); }
-		if( probs )
+		if( options.assays ) {
+			fields.add("Assay");
+			fields.add("Assay");
+		}
+		if( options.features ) {
+			fields.add("Disordered");
+			fields.add("Features");
+		}
+		if( options.probs )
 			fields.add("MotifProbability");
-		if( aux ) {
+		if( options.aux ) {
 			fields.add("AuxMotif");
 			fields.add("AuxScore");
 		}
-		if( cosmic ) { fields.add("Gene"); fields.add("Mutant"); fields.add("Mutation effect"); fields.add("COSMIC:Missense"); }
-		if( dbPtm ) {
-			fields.addAll(Arrays.asList(selectedPtms));
+		if( options.cosmic ) { fields.add("Gene"); fields.add("Mutant"); fields.add("Mutation effect"); fields.add("COSMIC:Missense"); }
+		if( options.dbPtm ) {
+			fields.addAll(Arrays.asList(options.selectedPtms));
 			fields.add("PTMs");
 		}
 		pw.println(CsvUtils.getCsv(separator, fields.toArray()));
@@ -345,24 +362,28 @@ public class ResultEx implements Comparable<ResultEx> {
 			fields.add(result.getSequence());
 			fields.add(result.getAlignment());
 			fields.add(""+result.getScore());
-			if( assays ) {
+			if( options.assays ) {
 				fields.add(result.getGroupAssayAsString());
 				fields.add(""+result.getGroupAssay());
 			}
-			if( probs )
+			if( options.features ) {
+				fields.add(String.valueOf(result.getDisorderedOverlap()));
+				fields.add(String.valueOf(result.getFeatures().size()));
+			}
+			if( options.probs )
 				fields.add(result.getMotifProbAsString());
-			if( aux ) {
+			if( options.aux ) {
 				fields.add(result.getAuxMotif());
 				fields.add(result.getAuxScore().toString());
 			}
-			if( cosmic ) {
+			if( options.cosmic ) {
 				fields.add(result.getGene());
 				fields.add(result.getMutSequence());
 				fields.add(String.valueOf(result.getMutScore()));
 				fields.add(result.getCosmicMissenseAsString());
 			}
-			if( dbPtm ) {
-				for( String ptm : selectedPtms ) {
+			if( options.dbPtm ) {
+				for( String ptm : options.selectedPtms ) {
 					Integer n = result.ptmCounts.get(ptm);
 					fields.add(n == null ? "" : n.toString());
 				}
