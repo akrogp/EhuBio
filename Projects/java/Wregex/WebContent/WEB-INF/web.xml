@@ -66,7 +66,7 @@
   </filter-mapping>
   <error-page>
     <exception-type>javax.faces.application.ViewExpiredException</exception-type>
-    <location>expired.xhtml</location>
+    <location>/expired.xhtml</location>
   </error-page>
   <servlet>
     <servlet-name>Faces Servlet</servlet-name>
