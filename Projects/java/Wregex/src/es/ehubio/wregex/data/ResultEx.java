@@ -101,7 +101,7 @@ public class ResultEx implements Comparable<ResultEx> {
 			return 1;
 		if( getAuxScore() != null && o.getAuxScore() == null )
 			return -1;
-		if( getAuxScore() != null && o.getAuxScore() != null && getAuxScore() != o.getAuxScore() )
+		if( getAuxScore() != null && o.getAuxScore() != null && !getAuxScore().equals(o.getAuxScore()) )
 			return (int)Math.signum(o.getAuxScore() - getAuxScore());
 		// 6. Disordered region
 		if( getDisordered() != null && o.getDisordered() == null )
@@ -115,7 +115,7 @@ public class ResultEx implements Comparable<ResultEx> {
 			return 1;
 		if( getMotifProb() != null && o.getMotifProb() == null )
 			return -1;
-		if( getMotifProb() != null && o.getMotifProb() != null && getMotifProb() != o.getMotifProb() )
+		if( getMotifProb() != null && o.getMotifProb() != null && !getMotifProb().equals(o.getMotifProb()) )
 			return (int)Math.signum(getMotifProb() - o.getMotifProb());
 		// 8. Wregex Combinations
 		if( getCombinations() != o.getCombinations() )

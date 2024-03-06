@@ -46,7 +46,7 @@ public class ResultComparator implements Comparator<ResultEx> {
 			return 1;
 		if( o1.getAuxScore() != null && o2.getAuxScore() == null )
 			return -1;
-		if( o1.getAuxScore() != null && o2.getAuxScore() != null && o1.getAuxScore() != o2.getAuxScore() )
+		if( o1.getAuxScore() != null && o2.getAuxScore() != null && !o1.getAuxScore().equals(o2.getAuxScore()) )
 			return (int)Math.signum(o2.getAuxScore() - o1.getAuxScore());
 		// 7. Disordered region
 		if( o1.getDisordered() != null && o2.getDisordered() == null )
@@ -60,7 +60,7 @@ public class ResultComparator implements Comparator<ResultEx> {
 			return 1;
 		if( o1.getMotifProb() != null && o2.getMotifProb() == null )
 			return -1;
-		if( o1.getMotifProb() != null && o2.getMotifProb() != null && o1.getMotifProb() != o2.getMotifProb() )
+		if( o1.getMotifProb() != null && o2.getMotifProb() != null && !o1.getMotifProb().equals(o2.getMotifProb()) )
 			return (int)Math.signum(o1.getMotifProb() - o2.getMotifProb());
 		// 9. Wregex Combinations
 		if( o1.getCombinations() != o2.getCombinations() )
