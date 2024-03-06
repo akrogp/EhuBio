@@ -44,6 +44,8 @@ public class SearchView implements Serializable {
 	private String cachedAlnPath;
 	private boolean assayScores = false;
 	private boolean motifProbs = false;
+	private boolean disordered = false;
+	private boolean features = false;
 	@Inject
 	private DatabasesBean databases;
 	@Inject
@@ -100,7 +102,9 @@ public class SearchView implements Serializable {
 			Services.flanking(results, options.getFlanking());
 			Services.addFeatures(databases.getMapUniprot(), results);
 			Collections.sort(results, new ResultComparator(options.getSelectedPtms()));
-			updateMotifProbs();
+			motifProbs = results.stream().anyMatch(result -> result.getMotifProb() != null);
+			disordered = results.stream().anyMatch(result -> result.getDisordered() != null);
+			features = results.stream().anyMatch(result -> result.getFeatures() != null && !result.getFeatures().isEmpty());
 		} catch( IOException e ) {
 			searchError = "File error: " + e.getMessage();
 		} catch( PssmBuilderException e ) {
@@ -172,15 +176,6 @@ public class SearchView implements Serializable {
 		for( InputGroup inputGroup : targetView.getInputGroups() )
 			if( !inputGroup.hasScores() ) {
 				assayScores = false;
-				break;
-			}
-	}
-	
-	private void updateMotifProbs() {
-		motifProbs = false;
-		for( ResultEx result : getResults() )
-			if( result.getMotifProb() != null ) {
-				motifProbs = true;
 				break;
 			}
 	}
@@ -312,6 +307,14 @@ public class SearchView implements Serializable {
 	
 	public boolean isMotifProbs() {
 		return motifProbs;
+	}
+	
+	public boolean isDisordered() {
+		return disordered;
+	}
+	
+	public boolean isFeatures() {
+		return features;
 	}
 	
 	public void onChangeOption() {

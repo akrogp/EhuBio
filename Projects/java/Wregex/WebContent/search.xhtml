@@ -14,8 +14,12 @@
 		<ui:define name="content">
 <!-- 			<h:form enctype="multipart/form-data" rendered="#{databasesBean.initialized}"> -->
 			<h:form enctype="multipart/form-data" id="searchForm">
-				<p:panelGrid headerClass="cfg_header">
-					<f:facet name="header">Search configuration</f:facet>
+				<p:panelGrid>
+					<f:facet name="header">
+						<p:row>
+							<p:column colspan="3">Search configuration</p:column>
+						</p:row>
+					</f:facet>
 					
 					<p:row>
 						<p:column styleClass="nowrap">0. Examples:</p:column>
@@ -98,17 +102,19 @@
 					<p:row rendered="#{motifView.showMotifDetails}">
 						<p:column styleClass="subitem">References:</p:column>
 						<p:column>					
-							<p:dataList value="#{motifView.mainMotif.references}" var="ref" type="ordered" emptyMessage="">
-								<h:outputLink value="#{ref.link}" target="_blank">
-									<h:outputText value="#{ref.html}" escape="false"/>&nbsp;<h:graphicImage name="images/link.png" height="15"/>
+							<p:dataList value="#{motifView.mainMotif.references}" var="ref" type="definition" emptyMessage="" rowIndexVar="row">
+								<h:outputLink value="#{ref.link}" target="_blank" styleClass="link">
+									<h:outputText value="[#{row+1}] "/>
 								</h:outputLink>
+								<h:outputText value="#{ref.html}" escape="false"/>
 							</p:dataList>
 						</p:column>
 						<p:column>					
-							<p:dataList value="#{motifView.auxMotif.references}" var="ref" type="ordered" emptyMessage="">
-								<h:outputLink value="#{ref.link}" target="_blank">
-									<h:outputText value="#{ref.html}" escape="false"/>&nbsp;<h:graphicImage name="images/link.png" height="15"/>
+							<p:dataList value="#{motifView.auxMotif.references}" var="ref" type="definition" emptyMessage="" rowIndexVar="row">
+								<h:outputLink value="#{ref.link}" target="_blank" styleClass="link">
+									<h:outputText value="[#{row+1}] "/>
 								</h:outputLink>
+								<h:outputText value="#{ref.html}" escape="false"/>
 							</p:dataList>
 						</p:column>					
 					</p:row>
@@ -313,7 +319,8 @@
 							<p:tooltip value="Fasta header before first space" for="search_entry"/>
 						</f:facet>
 						<h:outputText value="#{item.entry}" rendered="#{item.protUrl == null}"/>
-						<h:outputLink value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+						<h:outputLink styleClass="entry_#{row} link" value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}</h:outputLink>
+						<p:tooltip escape="false" value="#{item.fasta.description}" rendered="#{not empty item.fasta.description}" for="@(.entry_#{row})"/>
 					</p:column>
 					<p:column styleClass="trn_name" width="200" id="search_motif">
 						<f:facet name="header">
@@ -338,7 +345,7 @@
 					</p:column>
 					<p:column rendered="#{motifView.multiMotif}" width="200">
 						<f:facet name="header">Motif</f:facet>
-						<h:outputLink value="#{item.motifUrl}" target="_blank">#{item.motif}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+						<h:outputLink value="#{item.motifUrl}" target="_blank" styleClass="link">#{item.motif}</h:outputLink>
 					</p:column>
 					<p:column id="search_seq">
 						<f:facet name="header">
@@ -375,13 +382,25 @@
 						<f:facet name="header">Assay</f:facet>
 						<h:outputText value="#{item.assayAsString}"/>
 					</p:column>
-					<p:column styleClass="disordered" id="disordered">
+					<p:column styleClass="disordered" id="disordered" rendered="#{searchView.disordered}">
 						<f:facet name="header">
 							Disordered region
-							<p:tooltip value="Percentage of motif sequence in a disordered region according to UniProt" for="disordered"/>
+							<p:tooltip value="Percentage of motif sequence in a disordered region annotated in UniProt human proteome" for="disordered"/>
 						</f:facet>
-						<h:outputText value="#{item.disorderedOverlapString}" styleClass="overlap_#{row}"/>
-						<p:tooltip value="#{item.disorderedSummary}" for="@(.overlap_#{row})"/>						
+						<h:outputLink value="#{item.featuresUrl}" target="_blank" rendered="#{item.features != null}" styleClass="overlap_#{row} link">
+							<h:outputText value="#{item.disorderedOverlapString}"/>
+							<p:tooltip escape="false" value="#{item.disorderedSummary}" for="@(.overlap_#{row})"/>
+						</h:outputLink>					
+					</p:column>
+					<p:column styleClass="features" id="features" rendered="#{searchView.features}">
+						<f:facet name="header">
+							Features
+							<p:tooltip value="Features in UniProt human proteome within the motif region" for="features"/>
+						</f:facet>
+						<h:outputLink value="#{item.featuresUrl}" target="_blank" rendered="#{item.features != null}" styleClass="features_#{row} link">
+							<h:outputText value="#{item.features.size()}"/>
+							<p:tooltip escape="false" value="#{item.featuresSummary}" for="@(.features_#{row})"/>
+						</h:outputLink>
 					</p:column>
 					<p:column styleClass="search_prob" id="motif_prob" rendered="#{searchView.motifProbs}">
 						<f:facet name="header">
@@ -411,7 +430,7 @@
 							<p:tooltip value="Mutation count" for="search_cosmic"/>
 						</f:facet>
 						<h:outputText rendered="#{item.cosmicUrl == null}" value="#{item.cosmicMissenseAsString}"/>
-						<h:outputLink rendered="#{item.cosmicUrl != null}" value="#{item.cosmicUrl}" target="_blank">#{item.cosmicMissenseAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+						<h:outputLink rendered="#{item.cosmicUrl != null}" value="#{item.cosmicUrl}" target="_blank" styleClass="link">#{item.cosmicMissenseAsString}</h:outputLink>
 					</p:column>
 					<p:column rendered="#{searchOptionsView.cosmic and motifView.usingPssm}" width="80" style="text-align:center;" id="search_impact">
 						<f:facet name="header">
@@ -435,7 +454,7 @@
 							<p:tooltip value="Total number of PTMs (of any type) within the motif match" for="search_ptms"/>
 						</f:facet>
 						<h:outputText rendered="#{item.ptmUrl == null}" value="#{item.totalPtmsAsString}"/>
-						<h:outputLink rendered="#{item.ptmUrl != null}" value="#{item.ptmUrl}" target="_blank">#{item.totalPtmsAsString}&nbsp;<h:graphicImage name="images/link.png" height="15"/></h:outputLink>
+						<h:outputLink rendered="#{item.ptmUrl != null}" value="#{item.ptmUrl}" target="_blank" styleClass="link">#{item.totalPtmsAsString}</h:outputLink>
 					</p:column>					
 				</p:dataTable>
 				<p:blockUI block="searchForm" trigger="preset, goInput">

@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -15,6 +16,7 @@ import es.ehubio.Util;
 import es.ehubio.db.fasta.Fasta;
 import es.ehubio.db.uniprot.UniProtUtils;
 import es.ehubio.db.uniprot.xml.FeatureType;
+import es.ehubio.db.uniprot.xml.LocationType;
 import es.ehubio.io.CsvUtils;
 import es.ehubio.wregex.Result;
 import es.ehubio.wregex.Wregex;
@@ -409,7 +411,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	
 	public String getGene() {
 		if( result.getFasta().getGeneName() == null )
-			return "?";
+			return "";
 		return result.getFasta().getGeneName();
 	}
 
@@ -418,7 +420,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	}
 	
 	public String getCosmicMissenseAsString() {
-		return cosmicMissense < 0 ? "?" : ""+cosmicMissense;
+		return cosmicMissense < 0 ? "" : ""+cosmicMissense;
 	}
 
 	public void setCosmicMissense(int cosmicMutations) {
@@ -454,7 +456,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	}
 	
 	public String getTotalPtmsAsString() {
-		return totalPtms < 0 ? "?" : ""+totalPtms;
+		return totalPtms < 0 ? "" : ""+totalPtms;
 	}
 
 	public void setTotalPtms(int totalPtms) {
@@ -599,8 +601,35 @@ public class ResultEx implements Comparable<ResultEx> {
 	}
 	
 	public String getDisorderedSummary() {
-		if( disordered == null )
+		return featureString(disordered);
+	}
+	
+	private String featureString(FeatureType feature) {
+		if( feature == null )
 			return "";
-		return String.format("%s %d..%d ",disordered.getDescription(), disordered.getLocation().getBegin().getPosition(), disordered.getLocation().getEnd().getPosition());
+		StringBuilder str = new StringBuilder();
+		LocationType location = feature.getLocation();
+		if( location != null ) {			
+			if( location.getPosition() != null )
+				str.append(location.getPosition().getPosition());
+			else {
+				str.append(location.getBegin().getPosition());
+				str.append("..");
+				str.append(location.getEnd().getPosition());
+			}
+			str.append(": ");
+		}
+		str.append(feature.getDescription() == null ? feature.getType() : feature.getDescription());
+		return str.toString();
+	}
+	
+	public String getFeaturesSummary() {
+		if( features == null || features.isEmpty() )
+			return "";
+		return features.stream().map(this::featureString).collect(Collectors.joining("<br/>"));
+	}
+	
+	public String getFeaturesUrl() {
+		return String.format("https://www.uniprot.org/uniprotkb/%s/entry#family_and_domains", getAccession());
 	}
 }

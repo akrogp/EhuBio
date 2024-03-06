@@ -140,6 +140,15 @@ img {
 	text-align: right;
 }
 
+.features {
+	width: 100px;
+	text-align: center;
+}
+
 .cfg_header {
 	text-align: left;
+}
+
+.link {
+	color: darkblue !important;
 }
