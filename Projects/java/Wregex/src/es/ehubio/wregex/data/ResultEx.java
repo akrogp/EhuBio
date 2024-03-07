@@ -622,32 +622,30 @@ public class ResultEx implements Comparable<ResultEx> {
 	}
 	
 	public String getDisorderedSummary() {
-		return featureString(disordered);
+		return disordered == null ? "" : String.format("%s: %s", locationString(disordered.getLocation()), disordered.getDescription());
 	}
 	
-	private String featureString(FeatureType feature) {
-		if( feature == null )
+	private String locationString(LocationType location) {
+		if( location == null )
 			return "";
-		StringBuilder str = new StringBuilder();
-		LocationType location = feature.getLocation();
-		if( location != null ) {			
-			if( location.getPosition() != null )
-				str.append(location.getPosition().getPosition());
-			else {
-				str.append(location.getBegin().getPosition());
-				str.append("..");
-				str.append(location.getEnd().getPosition());
-			}
-			str.append(": ");
-		}
-		str.append(feature.getDescription() == null ? feature.getType() : feature.getDescription());
-		return str.toString();
+		if( location.getPosition() != null )
+			return location.getPosition().getPosition().toString();
+		return location.getBegin().getPosition() + ".." + location.getEnd().getPosition(); 
 	}
 	
 	public String getFeaturesSummary() {
 		if( features == null || features.isEmpty() )
 			return "";
-		return features.stream().map(this::featureString).collect(Collectors.joining("<br/>"));
+		List<String> rows = new ArrayList<>();
+		for( FeatureType feat : features ) {
+			List<String> cols = new ArrayList<>();
+			cols.add(locationString(feat.getLocation()));
+			cols.add(feat.getType());
+			cols.add(feat.getDescription() == null ? "" : feat.getDescription());
+			rows.add(cols.stream().collect(Collectors.joining("</td><td>", "<td>", "</td")));
+		}
+		String header = String.format("<div class='ui-datatable ui-widget'><table style='width:auto'><caption class='ui-datatable-header ui-widget-header'>Features in region %d..%d</caption><tr class='ui-widget-header'><th class='ui-state-default'>Location</th><th class='ui-state-default'>Type</th><th class='ui-state-default'>Description</th></tr><tr class='ui-widget-content'>", getStart(), getEnd());
+		return rows.stream().collect(Collectors.joining("</tr><tr class='ui-widget-content'>", header, "</tr></table></div>"));
 	}
 	
 	public String getFeaturesUrl() {
