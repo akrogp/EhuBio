@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -102,24 +103,24 @@ public class ResultEx implements Comparable<ResultEx> {
 		if( getScore() > o.getScore() )
 			return -1;
 		if( getScore() < o.getScore() )
-			return 1;
-		// 4. PTMs
-		if( getTotalPtms() != o.getTotalPtms() )
-			return o.getTotalPtms() - getTotalPtms();
-		// 5. Aux Score (combinations)
+			return 1;		
+		// 4. Aux Score (combinations)
 		if( getAuxScore() == null && o.getAuxScore() != null )
 			return 1;
 		if( getAuxScore() != null && o.getAuxScore() == null )
 			return -1;
 		if( getAuxScore() != null && o.getAuxScore() != null && !getAuxScore().equals(o.getAuxScore()) )
 			return (int)Math.signum(o.getAuxScore() - getAuxScore());
-		// 6. Disordered region
+		// 5. Disordered region
 		if( getDisordered() != null && o.getDisordered() == null )
 			return -1;
 		if( getDisordered() == null && o.getDisordered() != null )
 			return 1;
 		if( getDisordered() != null && o.getDisordered() != null && getDisorderedOverlap() != o.getDisorderedOverlap() )
 			return (int)Math.signum(o.getDisorderedOverlap() - getDisorderedOverlap());
+		// 6. PTMs
+		if( getTotalPtms() != o.getTotalPtms() )
+			return o.getTotalPtms() - getTotalPtms();
 		// 7. Motif probability
 		if( getMotifProb() == null && o.getMotifProb() != null )
 			return 1;
@@ -482,6 +483,20 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public void setTotalPtms(int totalPtms) {
 		this.totalPtms = totalPtms;
+	}
+	
+	public String getPtmsSummary() {
+		if( ptmCounts.isEmpty() )
+			return "";
+		List<String> rows = new ArrayList<>();
+		for( Entry<String, Integer> entry : ptmCounts.entrySet() ) {
+			List<String> cols = new ArrayList<>();
+			cols.add(entry.getKey());
+			cols.add(String.valueOf(entry.getValue()));
+			rows.add(cols.stream().collect(Collectors.joining("</td><td>", "<td>", "</td")));
+		}
+		String header = String.format("<div class='ui-datatable ui-widget'><table style='width:auto'><caption class='ui-datatable-header ui-widget-header'>PTMs in region %d..%d</caption><tr class='ui-widget-header'><th class='ui-state-default'>PTM</th><th class='ui-state-default'>Count</th></tr><tr class='ui-widget-content'>", getStart(), getEnd());
+		return rows.stream().collect(Collectors.joining("</tr><tr class='ui-widget-content'>", header, "</tr></table></div>"));
 	}
 
 	public String getPtmUrl() {

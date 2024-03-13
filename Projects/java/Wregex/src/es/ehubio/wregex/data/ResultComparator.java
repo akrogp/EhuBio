@@ -37,24 +37,24 @@ public class ResultComparator implements Comparator<ResultEx> {
 		int ptms1 = countPtms(o1);
 		int ptms2 = countPtms(o2);
 		if( ptms1 != ptms2 )
-			return ptms2 - ptms1;
-		// 5. All PTMs
-		if( o1.getTotalPtms() != o2.getTotalPtms() )
-			return o2.getTotalPtms() - o1.getTotalPtms();
-		// 6. Aux Score (combinations)
+			return ptms2 - ptms1;		
+		// 5. Aux Score (combinations)
 		if( o1.getAuxScore() == null && o2.getAuxScore() != null )
 			return 1;
 		if( o1.getAuxScore() != null && o2.getAuxScore() == null )
 			return -1;
 		if( o1.getAuxScore() != null && o2.getAuxScore() != null && !o1.getAuxScore().equals(o2.getAuxScore()) )
 			return (int)Math.signum(o2.getAuxScore() - o1.getAuxScore());
-		// 7. Disordered region
+		// 6. Disordered region
 		if( o1.getDisordered() != null && o2.getDisordered() == null )
 			return -1;
 		if( o1.getDisordered() == null && o2.getDisordered() != null )
 			return 1;
 		if( o1.getDisordered() != null && o2.getDisordered() != null && o1.getDisorderedOverlap() != o2.getDisorderedOverlap() )
 			return (int)Math.signum(o2.getDisorderedOverlap() - o1.getDisorderedOverlap());
+		// 7. All PTMs
+		if( o1.getTotalPtms() != o2.getTotalPtms() )
+			return o2.getTotalPtms() - o1.getTotalPtms();
 		// 8. Motif probability
 		if( o1.getMotifProb() == null && o2.getMotifProb() != null )
 			return 1;

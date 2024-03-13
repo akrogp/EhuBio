@@ -452,9 +452,11 @@
 						<f:facet name="header">
 							Total PTMs
 							<p:tooltip value="Total number of PTMs (of any type) within the motif match" for="search_ptms"/>
-						</f:facet>
-						<h:outputText rendered="#{item.ptmUrl == null}" value="#{item.totalPtmsAsString}"/>
-						<h:outputLink rendered="#{item.ptmUrl != null}" value="#{item.ptmUrl}" target="_blank" styleClass="link">#{item.totalPtmsAsString}</h:outputLink>
+						</f:facet>						
+						<h:outputLink rendered="#{item.ptmUrl != null}" value="#{item.ptmUrl}" target="_blank" styleClass="ptms_#{row} link">
+							<h:outputText value="#{item.totalPtmsAsString}"/>
+							<p:tooltip escape="false" value="#{item.ptmsSummary}" for="@(.ptms_#{row})"/>
+						</h:outputLink>
 					</p:column>					
 				</p:dataTable>
 				<p:blockUI block="searchForm" trigger="preset, goInput">
