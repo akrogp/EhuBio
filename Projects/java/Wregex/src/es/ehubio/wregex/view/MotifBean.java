@@ -26,6 +26,13 @@ public class MotifBean {
 		return motifDefinition == null || motifInformation == null ? null : motifDefinition.getRegex();
 	}
 	
+	public String getRegexUrl() {
+		String regex = getRegex();
+		if( regex == null)
+			return null;
+		return "https://jex.im/regulex/#!embed=false&flags=&re=" + regex; 
+	}
+	
 	public String getSingleRegex() {
 		return isCustom() ? getCustomRegex() : getRegex();
 	}

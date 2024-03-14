@@ -122,13 +122,19 @@
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
 						<p:column styleClass="subitem">Regex:</p:column>
 						<p:column>
-							<h:outputText value="#{motifView.mainMotif.regex}" rendered="#{!motifView.mainMotif.custom and !motifView.multiMotif}"/>
+							<h:outputLink styleClass="link" value="#{motifView.mainMotif.regexUrl}" rendered="#{!motifView.mainMotif.custom and !motifView.multiMotif}" target="_blank">
+								#{motifView.mainMotif.regex}
+							</h:outputLink>
 							<h:outputText value="Multiple regular expressions" rendered="#{motifView.multiMotif}"/>
 							<p:inputText value="#{motifView.mainMotif.customRegex}" rendered="#{motifView.mainMotif.custom}" styleClass="trn_regex">
 								<p:ajax event="change" update="@form"/>
 							</p:inputText>
 						</p:column>
-						<p:column>#{motifView.auxMotif.regex}</p:column>
+						<p:column>
+							<h:outputLink styleClass="link" value="#{motifView.auxMotif.regexUrl}" rendered="#{motifView.auxMotif.regex != null}" target="_blank">
+								#{motifView.auxMotif.regex}
+							</h:outputLink>							
+						</p:column>
 					</p:row>
 					
 					<p:row rendered="#{motifView.showMotifDetails or motifView.mainMotif.custom}">
