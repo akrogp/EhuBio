@@ -368,7 +368,9 @@
 							"!"
 							<p:tooltip value="Number of overlapping motif matches" for="search_comb"/>
 						</f:facet>
-						<h:outputText value="#{item.combinations}"/>
+						<h:outputText value="#{item.combinations}" styleClass="combinations_#{row} link" rendered="#{item.combinations > 1}"/>
+						<h:outputText value="#{item.combinations}" rendered="#{item.combinations == 1}"/>						
+						<p:tooltip escape="false" value="#{item.combinationsSummary}" for="@(.combinations_#{row})"/>
 					</p:column>
 					<p:column styleClass="trn_weight" id="search_score">
 						<f:facet name="header">

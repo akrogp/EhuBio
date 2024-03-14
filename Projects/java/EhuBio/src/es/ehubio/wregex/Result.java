@@ -92,7 +92,11 @@ public final class Result implements Comparable<Result> {
 	
 	public double getAssay() {
 		return assay;
-	}			
+	}
+	
+	public ResultGroup getGroup() {
+		return group;
+	}
 	
 	public double getGroupAssay() {
 		return group.getAssay();

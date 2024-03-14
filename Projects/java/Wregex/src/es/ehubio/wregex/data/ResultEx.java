@@ -192,6 +192,21 @@ public class ResultEx implements Comparable<ResultEx> {
 	public int getCombinations() {
 		return result.getCombinations();
 	}
+	
+	public String getCombinationsSummary() {
+		if( getResult().getGroup() == null )
+			return "";
+		List<String> rows = new ArrayList<>();
+		for( Result result : getResult().getGroup() ) {			
+			List<String> cols = new ArrayList<>();
+			cols.add(String.format("%d..%d", result.getStart(), result.getEnd()));
+			cols.add(result.getGroups().stream().collect(Collectors.joining("-")));						
+			cols.add(String.valueOf(result.getMatch().length()));
+			rows.add(cols.stream().collect(Collectors.joining("</td><td>", "<td>", "</td")));
+		}
+		String header = "<div class='ui-datatable ui-widget'><table style='width:auto'><caption class='ui-datatable-header ui-widget-header'>Overlapping matches</caption><tr class='ui-widget-header'><th class='ui-state-default'>Position</th><th class='ui-state-default'>Alignment</th><th class='ui-state-default'>Length</th></tr><tr class='ui-widget-content'>";
+		return rows.stream().collect(Collectors.joining("</tr><tr class='ui-widget-content'>", header, "</tr></table></div>"));
+	}
 
 	public int getEnd() {
 		return result.getEnd();
