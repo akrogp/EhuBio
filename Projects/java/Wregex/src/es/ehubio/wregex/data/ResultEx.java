@@ -386,8 +386,10 @@ public class ResultEx implements Comparable<ResultEx> {
 				fields.add(String.valueOf(result.getDisorderedOverlap()));
 				fields.add(String.valueOf(result.getFeatures().size()));
 			}
-			if( options.probs )
-				fields.add(result.getMotifProbAsString());
+			if( options.probs ) {
+				//fields.add(result.getMotifProbAsString());
+				fields.add(""+result.getMotifProb());
+			}
 			if( options.aux ) {
 				fields.add(result.getAuxMotif());
 				fields.add(result.getAuxScore().toString());

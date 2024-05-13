@@ -62,4 +62,11 @@ Y <- aa %>% filter(aa == 'Y') %>% pull(prob)
 
 [TRG_NES_CRM1_1](http://elm.eu.org/elms/TRG_NES_CRM1_1) should be `0.0007626`:
 
+[LIG_ActinCP_CPI_1](http://elm.eu.org/elms/LIG_ActinCP_CPI_1) should be `0.0007251`:
+
+```{r}
+#L . ( ([H].[TQVG]) | ([SC].N) | (D.R) ) ..R[PAVT][KRHM][^DEN].{1,5} ( (R.) | (.[RK]) ) ..[PAS][^P]
+
+L * ( (H*(T+Q+V+G)) + ((S+C)*N) + (D*R) ) * R * (P+A+V+T) * (K+R+H+M) * (1-(D+E+N)) * (R+K) * (P+A+S) * (1-P)
+```
 
