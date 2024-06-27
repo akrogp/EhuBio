@@ -5,25 +5,36 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:p="http://primefaces.org/ui">
 
-<h:body>
+<h:body>	
 	<ui:composition template="./WEB-INF/templates/template.xhtml">
 		<ui:define name="title">Documentation</ui:define>
 		<ui:define name="htmlhead">
 			<meta name="description" content="Wregex documentation. A novel approach for amino acid motif searching combining a regular expression with a Position-Specific Scoring Matrix (PSSM)."/>
 		</ui:define>
 		<ui:define name="content">
+		<h:outputStylesheet name="css/documentation.css"/>
 		<h:form id="docForm">
 		
 		<h3>Table of Contents</h3>
 		<ul style="margin: 20px">
-		<li><a href="#compat">Browser compatibility</a></li>
 		<li><a href="#overview">Overview</a></li>
-		<li><a href="#search">Basic Search</a></li>
-		<li><a href="#cases">Case Studies</a></li>
+		<li><a href="#compat">Browser compatibility</a></li>
+		<li><a href="#cases">Examples</a></li>		
+		<li><a href="#search">Basic Search</a></li>		
 		<li><a href="#custom">Advanced Search</a></li>
 		<li><a href="#training">Building a Custom PSSM</a></li>
 		<li><a href="#local">Running Wregex on your Local PC</a></li>
-		</ul>
+		</ul>		
+		
+		<h3 class=".ui-state-default"><a id="overview">Overview</a></h3>		
+		<p>Wregex (weighted regular expression) offers a new approach for amino acid motif searching. Wregex
+		combines a regular expression with an optional Position-Specific Scoring Matrix (PSSM). The regular
+		expression is used to obtain a candidate list matching the desired conditions, and the PSSM
+		is used for computing a score that can be used to select the most promising of those candidates.</p>
+		<p>Wregex supports all motifs in <a href="http://elm.eu.org/">ELM</a> as regular expressions, and
+		a PSSM has already been built for some of them. In the case your motif is not included in the list
+		or a PSSM is not available, you can easily build your own as detailed later. Then you can also notify us
+		your motif definition and we will be happy to include it in the default motif list used in the basic search.</p>
 		
 		<h3><a id="compat">Browser compatibility</a></h3>
 		<p:dataTable value="#{homeView.compat}" var="test" tableStyle="width:auto">
@@ -34,43 +45,8 @@
 			</p:columns>
 		</p:dataTable>
 		
-		<h3><a id="overview">Overview</a></h3>
-		<h:graphicImage name="tutorial/BasicSearch.png" style="float:right"/>
-		<p>Wregex (weighted regular expression) offers a new approach for amino acid motif searching. Wregex
-		combines a regular expression with an optional Position-Specific Scoring Matrix (PSSM). The regular
-		expression is used to obtain a candidate list matching the desired conditions, and the PSSM
-		is used for computing a score that can be used to select the most promising of those candidates.</p>
-		<p>Wregex supports all motifs in <a href="http://elm.eu.org/">ELM</a> as regular expressions, and
-		a PSSM has already been built for some of them. In the case your motif is not included in the list
-		or a PSSM is not available, you can easily build your own as detailed later. Then you can also notify us
-		your motif definition and we will be happy to include it in the default motif list used in the basic search.</p>
-		
-		<h3><a id="search">Basic Search</a></h3>		
-		<p>The basic search consists on searching a fasta file with protein sequences (provided by the user)
-		for an amino acid motif selected in the dropdown lists (provided by Wregex). The first dropdown list
-		contains the motifs available, and the second dropdown list (the one to the right) allows the user
-		to select a specific motif configuration (different regular expressions and/or PSSMs).</p>
-		<p>The dropdown list containing the motifs is divided in two parts, the first one contains entries
-		specific of Wregex for which both a regular expression and a PSSM are available. The second part consists
-		on <a href="http://elm.eu.org/">ELM</a> entries without a PSSM.</p>
-		<p>Once a motif has been selected and an input fasta file uploaded, a search button will be shown. Clicking
-		this button starts a new search and a list of candidates will be shown when finished (if there is any match).</p>
-		<p>The grouping checkbox allows to configure whether overlapping candidates should be considered as
-		a single entry or separated into multiple entries. An overlap occurs when there are several combinations
-		that match the regular expression in the same region of the protein.</p>				
-		<h:graphicImage name="tutorial/Results.png" style="float:right"/>
-		<p>Results can be downloaded as a CSV file, useful for further analysis using any spreadsheet, or as
-		a Clustal ALN file, which can be used to display the alignments of the results using the groups indicated
-		between parenthesis () in the regular expression. These results are also displayed on a table with the following
-		columns: protein accession/entry from the fasta header, starting and ending positions of the candidate motif within
-		the protein sequence, candidate motif sequence with the regular expression groups indicated between dashes --,
-		number of combinations grouped in the same entry (overlapping positions) and Wregex score (ranging from 0 to 100).
-		Finally, if there are motif annotations with scores in the input fasta sequences, their score is also displayed
-		as the assay score.</p>
-		<p>A threshold (arbitrarily selected by the user) can be applied to Wregex scores, thus introducing a second
-		filter for candidate motif selection.</p>
-		
-		<h3><a id="cases">Case Studies</a></h3>		
+		<h3><a id="cases">Examples</a></h3>		
+		<p>To facilitate familiarity for novice users with the search form and the types of results obtained, the following presets are provided as example case studies:</p>		
 		<p:dataTable id="casesTable" value="#{databasesBean.caseStudies}" var="case" rowIndexVar="idx" tableStyle="width:auto">
 			<p:column headerText="Case">#{case.name}</p:column>
 			<p:column headerText="Description">#{case.description}</p:column>
@@ -78,6 +54,67 @@
 				<p:commandButton action="#{homeView.navigateCase(case.value)}" value="Load Case Study ##{idx+1}" styleClass="caseButton"/>
 			</p:column>
 		</p:dataTable>
+		
+		<h3><a id="search">Basic Search</a></h3>
+		<h:graphicImage name="tutorial/BasicSearch.png" style="float:right"/>		
+		<p>The basic search consists on searching a target protein dataset for one or several predefined short linear motifs (SLiMs):</p>
+		<ul>
+			<li>First of all, the main motif of interest must be selected from the dropdown list. This list is divided into a first part
+			containing entries specific of Wregex for which both a regular expression and a PSSM are available, and a second part consisting
+			on <a href="http://elm.eu.org/">ELM</a> entries without a PSSM. Once a motif is selected, a second dropdown list is shown to the
+			right allowing the user to select a specific motif configuration (different regular expression and/or PSSM) in case there are
+			several available.</li>
+			<li>Next, a target protein dataset must be specified. This can be done in multiple ways: by selecting a predefined dataset available
+			in the target dropdown list provided by Wregex, by providing a Gene Ontology (GO) term, by entering a list of
+			protein accessions or gene names, or by uploading a custom fasta file.</li>
+			<li>After completing the two steps above, a <i>Search!</i> button will be finally shown. Clicking
+			this button starts a new search and a list of candidates will be shown when finished (if there is any match).</li>			
+		</ul>
+		<p>Additionally, external database <i>Connections</i> can be enabled for conducting more specific searches:</p>
+		<ul>
+			<li>COSMIC: for each candidate motif above searches COSMIC missense mutations and ranks the results according to each mutation
+			impact and recurrence.</li>
+			<li>PhosphoSitePlus/dbPTM: allows selecting the desired PTM types and for each candidate motif above searches the selected PTMs
+			and ranks the results according to the number of PTMs present.</li>
+		</ul>
+		<p>The default Wregex behaviour can be customized by changing the <i>Options</i> section:</p>
+		<ul>
+			<li>The <i>Grouping</i> checkbox allows to configure whether overlapping candidates should be considered as
+			a single entry or separated into multiple entries. An overlap occurs when there are several combinations
+			that match the regular expression in the same region of the protein.</li>
+			<li>The <i>Filter similar</i> checkbox is useful when the user is interested only in the motif sequence. If enabled,
+			only the first result for the same matched sequence is shown.</li>
+			<li>The <i>Filter without connections</i> checkbox keeps only the results with values for any of the external connections
+			selected.</li>
+			<li>The score <i>Threshold</i> spinner keeps only main motif matches with a PSSM score equal or larger than the value specified.</li>
+			<li>The number of <i>Flanking</i> amino acids spinner shows additional amino acids at both sides of each match.</li>
+		</ul>		
+		<p>Finally, the results are displayed as follows:</p>
+		<ul><h:graphicImage name="tutorial/Download.png" style="float:right"/>
+			<li>First of all, the total number of results obtained is shown followed by three buttons that allow downloading
+			these results into a local file in the user's computer in the following formats respectively:
+				<ul>
+					<li>Comma Separated Values (CSV): useful for further analysis using any spreadsheet or statistical analysis software.</li>
+					<li>Clustal ALN file: can be used to display the alignments of the results using the capturing groups indicated between
+					parenthesis () in the regular expression.</li>
+					<li>Fasta: amino acid sequences that can also be used for training a PSSM as explained later on.</li>
+				</ul>
+			</li>
+			<li>These results are also displayed on a table with the following columns among others:
+				<ul><h:graphicImage name="tutorial/Results.png" style="float:right"/>
+					<li>Protein accession/entry from the fasta header.</li>
+					<li>Starting and ending positions of the candidate motif within the protein sequence.</li>
+					<li>Candidate motif sequence with the regular expression groups indicated between dashes (-).</li>
+					<li>Number of combinations grouped in the same entry (overlapping positions).</li>
+					<li>Wregex score (ranging from 0 to 100).</li>
+					<li>If there are motif annotations with scores in the input fasta sequences, their score is also displayed as the assay score.</li>
+					<li>Percentage of motif sequence within a disordered region annotated in UniProt.</li>
+					<li>Number of features within the motif region annotated in UniProt. By passing the mouse over this number, detailed results are shown.</li>
+					<li>If enabled, COSMIC mutated sequences, the mutation impact and recurrence.</li>
+					<li>If enabled, PSP/dbPTM modifications within the candidate motif.</li>
+				</ul>
+			</li>
+		</ul>
 		
 		<h3><a id="custom">Advanced Search</a></h3>
 		<h:graphicImage name="tutorial/Custom.png" style="float:right"/>

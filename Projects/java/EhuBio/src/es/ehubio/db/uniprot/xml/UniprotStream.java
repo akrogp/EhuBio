@@ -71,6 +71,13 @@ public class UniprotStream {
 	            			case "feature":
 	            				entry.getFeature().add(parseFeature(startElement));
 	            				break;
+	            			case "sequence":
+	            				String length = getAttributeValue(startElement, "length");
+	            				if( length != null ) {
+		            				SequenceType seq = new SequenceType();
+		            				seq.setLength(Integer.parseInt(length));
+		            				entry.setSequence(seq);
+	            				}
 	            				
 	            		}
 	            	}

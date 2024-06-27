@@ -31,9 +31,10 @@ import es.ehubio.db.fasta.Fasta.InvalidSequenceException;
 import es.ehubio.db.fasta.Fasta.SequenceType;
 import es.ehubio.db.uniprot.Fetcher;
 import es.ehubio.db.uniprot.UniProtUtils;
-import es.ehubio.proteomics.pipeline.DecoyDb;
+import es.ehubio.db.uniprot.xml.Entry;
 import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.data.DatabaseInformation;
+import es.ehubio.wregex.service.DecoyService;
 
 @Named
 @SessionScoped
@@ -51,6 +52,7 @@ public class TargetView implements Serializable {
 	private String inputText = "", targetError;
 	private boolean downloading;
 	private boolean decoy;
+	private boolean preserveIdrs;
 	
 	public DatabaseInformation getTargetInformation() {
 		return targetInformation;
@@ -86,7 +88,9 @@ public class TargetView implements Serializable {
 		decoyGroups = new ArrayList<>(inputGroups.size());
 		for( InputGroup inputGroup : inputGroups ) {
 			Fasta inputFasta = inputGroup.getFasta();
-			Fasta decoyFasta = DecoyDb.getDecoy(inputFasta, DecoyDb.Strategy.SHUFFLE, null, "shuffle-");
+			//Fasta decoyFasta = DecoyDb.getDecoy(inputFasta, DecoyDb.Strategy.SHUFFLE, null, "shuffle-");
+			Entry uniprot = preserveIdrs ? databases.getMapUniprot().get(inputFasta.getAccession()) : null;
+			Fasta decoyFasta = DecoyService.getDecoyUniprot(inputFasta, uniprot, "shuffle-");
 			decoyGroups.add(new InputGroup(decoyFasta));
 		}
 	}
@@ -344,5 +348,13 @@ public class TargetView implements Serializable {
 		String fasta = Fetcher.queryFasta(query);
 		downloading = false;
 		parseIputFasta(fasta);
+	}
+
+	public boolean isPreserveIdrs() {
+		return preserveIdrs;
+	}
+
+	public void setPreserveIdrs(boolean preserveIdrs) {
+		this.preserveIdrs = preserveIdrs;
 	}
 }

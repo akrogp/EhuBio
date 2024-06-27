@@ -13,7 +13,7 @@ import javax.inject.Named;
 
 import es.ehubio.wregex.data.LatestNew;
 import es.ehubio.wregex.data.PageSummary;
-import es.ehubio.wregex.data.Versions;
+import es.ehubio.wregex.service.Versions;
 
 @Named
 @ApplicationScoped
@@ -161,6 +161,7 @@ public class HomeView implements Serializable {
 	}
 	
 	private void setWregexLog3(List<LatestNew> news) {
+		news.add(new LatestNew("Jun 27, 2024", "Wregex v3.1 preview published"));
 		news.add(new LatestNew("Nov 10, 2023", "Wregex v3.0 preview published"));
 		news.add(new LatestNew("Sep 26, 2017", "Wregex v2.1 published"));
 		news.add(new LatestNew("May 12, 2016", "Wregex v2.0 published in Scientific Reports"));

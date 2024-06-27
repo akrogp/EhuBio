@@ -28,7 +28,7 @@ import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.PtmProvider;
 import es.ehubio.wregex.data.ResultEx;
 import es.ehubio.wregex.data.ResultGroupEx;
-import es.ehubio.wregex.data.Services;
+import es.ehubio.wregex.service.Services;
 
 @Named
 @ApplicationScoped

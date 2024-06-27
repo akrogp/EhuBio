@@ -1,0 +1,11 @@
+@charset "UTF-8";
+
+ul, ol {
+	list-style-position: inside;
+	padding-left: 0;
+}
+
+li {
+	text-indent: -1em;
+	padding-left: 1em;
+}

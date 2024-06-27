@@ -642,7 +642,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	}
 	
 	public double getDisorderedOverlap() {
-		if( disordered == null )
+		if( disordered == null || disordered.getLocation() == null || disordered.getLocation().getBegin() == null || disordered.getLocation().getEnd() == null )
 			return 0;
 		return Numbers.overlap(getStart(), getEnd(), disordered.getLocation().getBegin().getPosition(), disordered.getLocation().getEnd().getPosition());
 	}

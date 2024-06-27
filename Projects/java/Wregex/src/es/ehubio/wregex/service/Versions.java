@@ -1,4 +1,4 @@
-package es.ehubio.wregex.data;
+package es.ehubio.wregex.service;
 
 @SuppressWarnings("all")
 public final class Versions {
@@ -7,7 +7,7 @@ public final class Versions {
 	//public static final int MAJOR = 2;
 	public static final int MAJOR = 3;
 	//public static final int MINOR = 2;
-	public static final int MINOR = 0;
+	public static final int MINOR = 1;
 	public static final int ALPHA = 0;
 	//public static final int ALPHA = 1;
 	public static boolean DEV = ALPHA != 0;

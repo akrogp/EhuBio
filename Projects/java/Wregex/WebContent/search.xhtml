@@ -216,12 +216,16 @@
 									<h:panelGroup>										
 										<p:selectBooleanCheckbox id="decoy" itemLabel="Build decoy" value="#{targetView.decoy}" valueChangeListener="#{targetView.onChangeDecoy}">
 											<p:ajax event="change" update="@form" />
-										</p:selectBooleanCheckbox>
+										</p:selectBooleanCheckbox>										
 										<p:tooltip for="decoy" value="Shuffles amino acids (starting at the second one) for each sequence"/>
+										&nbsp;<p:selectBooleanCheckbox id="preserveIdrs" itemLabel="Preserve IDRs" value="#{targetView.preserveIdrs}" valueChangeListener="#{targetView.onChangeDecoy}" rendered="#{targetView.decoy}">
+											<p:ajax event="change" update="@form" />
+										</p:selectBooleanCheckbox>
+										<p:tooltip for="preserveIdrs" value="Retain intrinsically disordered regions (IDRs) amino acid composition when shuffling"/>
 										<br/><br/>
 									</h:panelGroup>
 									<h:outputText id="fasta" value="#{targetView.fastaSummary}" />&nbsp;
-									<p:commandButton value="Download Fasta" ajax="false" action="#{searchView.downloadFasta()}"/>
+									<p:commandButton id="downloadFasta" value="Download Fasta" ajax="false" action="#{searchView.downloadFasta()}"/>
 								</p:column>
 								</p:row>
 							</p:panelGrid>
@@ -231,16 +235,19 @@
 					<p:row>
             			<p:column style="vertical-align:baseline;" styleClass="nowrap"><br/>3. Connections:</p:column>
             			<p:column colspan="2">
-            				<p:selectBooleanCheckbox itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
+            				<p:selectBooleanCheckbox id="COSMIC" itemLabel="#{databasesBean.cosmicInformation.fullName}" value="#{searchOptionsView.cosmic}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
 							</p:selectBooleanCheckbox>
+							<p:tooltip for="COSMIC" value="For each candidate motif search COSMIC missense mutations and rank the results according to each mutation impact and recurrence"/>
 							<br/><br/>
-							<p:selectBooleanCheckbox itemLabel="#{databasesBean.pspInformation.fullName}" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}">
+							<p:selectBooleanCheckbox id="PSP" itemLabel="#{databasesBean.pspInformation.fullName}" value="#{searchOptionsView.psp}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>&nbsp;&nbsp;		
-							<p:selectBooleanCheckbox itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}">
+							</p:selectBooleanCheckbox>&nbsp;&nbsp;
+							<p:tooltip for="PSP" value="Select the desired PTM types and for each candidate motif search the selected PTMs and rank the results according to the number of PTMs found"/>		
+							<p:selectBooleanCheckbox id="dbPTM" itemLabel="#{databasesBean.dbPtmInformation.fullName}" value="#{searchOptionsView.dbPtm}" valueChangeListener="#{searchView.onChangeOption}">
 								<p:ajax event="change" update="@form" />
-							</p:selectBooleanCheckbox>							
+							</p:selectBooleanCheckbox>
+							<p:tooltip for="dbPTM" value="Select the desired PTM types and for each candidate motif search the selected PTMs and rank the results according to the number of PTMs found"/>							
 							<p:selectManyCheckbox rendered="#{searchOptionsView.dbPtm}" layout="grid" columns="6" style="margin-left:20px;" value="#{searchOptionsView.selectedPtms}">
 								<p:ajax event="change" update="@form" />
 								<f:selectItems value="#{databasesBean.dbPtms}"/>
@@ -291,7 +298,7 @@
 					
 					<p:row rendered="#{searchView.configError == null and searchView.results == null}">
 						<p:column>
-							<p:commandButton value="Search!" actionListener="#{searchView.search}" ajax="false"/>
+							<p:commandButton id="searchButton" value="Search!" actionListener="#{searchView.search}" ajax="false"/>
 						</p:column>&nbsp;
 						<p:column colspan="2">
 							<h:outputText id="search" value="#{searchView.searchError}" rendered="#{searchView.searchError != null}" style="color:red"/>
@@ -302,9 +309,9 @@
 						<p:column>Results:</p:column>
 						<p:column colspan="2">
 							<h:outputText value="#{searchView.numberOfResults}"/>&nbsp;
-							<p:commandButton value="Download CSV" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadCsv}" ajax="false"/>
-							<p:commandButton value="Download ALN" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadAln}" ajax="false"/>
-							<p:commandButton value="Download Fasta" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadResultsFasta}" ajax="false"/>
+							<p:commandButton id="downloadResultsCsv" value="Download CSV" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadCsv}" ajax="false"/>
+							<p:commandButton id="downloadResultsAln" value="Download ALN" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadAln}" ajax="false"/>
+							<p:commandButton id="downloadResultsFasta" value="Download Fasta" rendered="#{not empty searchView.results}" actionListener="#{searchView.downloadResultsFasta}" ajax="false"/>
 						</p:column>
 					</p:row>
 				</p:panelGrid>
@@ -467,7 +474,7 @@
 						</h:outputLink>
 					</p:column>					
 				</p:dataTable>
-				<p:blockUI block="searchForm" trigger="preset, goInput">
+				<p:blockUI block="searchForm" trigger="preset, targetSelect, goInput, decoy, preserveIdrs, PSP, dbPTM">
 					Loading...
 				</p:blockUI>
 			</h:form>

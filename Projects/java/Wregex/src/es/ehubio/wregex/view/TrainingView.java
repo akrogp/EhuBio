@@ -24,10 +24,10 @@ import es.ehubio.wregex.InputGroup;
 import es.ehubio.wregex.InputMotif;
 import es.ehubio.wregex.Pssm;
 import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
+import es.ehubio.wregex.service.Services;
 import es.ehubio.wregex.Trainer;
 import es.ehubio.wregex.TrainingGroup;
 import es.ehubio.wregex.TrainingMotif;
-import es.ehubio.wregex.data.Services;
 
 @Named
 @SessionScoped

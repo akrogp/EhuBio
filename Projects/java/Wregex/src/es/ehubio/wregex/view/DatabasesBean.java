@@ -46,7 +46,7 @@ import es.ehubio.wregex.data.MotifInformation;
 import es.ehubio.wregex.data.MotifReference;
 import es.ehubio.wregex.data.PresetBean;
 import es.ehubio.wregex.data.PresetConfiguration;
-import es.ehubio.wregex.data.Versions;
+import es.ehubio.wregex.service.Versions;
 
 @Named
 @ApplicationScoped

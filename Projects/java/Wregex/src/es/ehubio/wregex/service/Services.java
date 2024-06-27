@@ -1,4 +1,4 @@
-package es.ehubio.wregex.data;
+package es.ehubio.wregex.service;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -31,6 +31,11 @@ import es.ehubio.wregex.PssmBuilder.PssmBuilderException;
 import es.ehubio.wregex.Result;
 import es.ehubio.wregex.ResultGroup;
 import es.ehubio.wregex.Wregex;
+import es.ehubio.wregex.data.MotifDefinition;
+import es.ehubio.wregex.data.MotifInformation;
+import es.ehubio.wregex.data.PtmProvider;
+import es.ehubio.wregex.data.ResultEx;
+import es.ehubio.wregex.data.ResultGroupEx;
 
 public class Services {
 	private final ExternalContext context;
