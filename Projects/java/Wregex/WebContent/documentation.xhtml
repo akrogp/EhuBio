@@ -177,14 +177,20 @@
 		<p>As previously stated, when the <i>Input motifs</i> button is clicked an intermediate page will be shown to specify the training motifs in the
 		following manner:</p>
 		<ul>
-			<li>First of all, an input fasta file with the training sequences must be uploaded by clicking the <i>Select fasta</i> button.</li>
+			<li>First of all, an input fasta file with the training sequences must be uploaded by clicking the <i>Select fasta</i> button.
+			This fasta file does not have any special requirement, although internal annotations will be recognized if the file was generated
+			previously from this training page. By clicking the following button you can download the example fasta file used for this documentation:  
+			<h:form>
+				<p:commandButton value="Download ASPs-score.fasta" action="#{tutorialView.downloadFasta('ASPs-score.fasta')}" ajax="false"/>
+			</h:form>
+			</li>
 			<li>After selecting the fasta file, a table with the <i>Input motifs</i> will be displayed. From this table the user can optionally
 			assign a weight to each of the matches, and even re-define the position of the match if it is a part of a larger motif.
 			If this table is modified, the <i>Refresh</i> button must be pressed to show the updated results.
 			Finally, the <i>Matched</i> column displays the number of matches of the custom regex within the motif position range defined.
 			This number will be used to divide the motif weight between the different matches when building the PSSM.</li>
 			<li>The resulting training motif list can optionally be downloaded as a fasta file by clicking the <i>Download motifs</i> button.
-			This file has annotations of the motif positions and weights so that they can be recovered in the future if it is uploaded by clicking the
+			This file will have internal annotations of the motif positions and weights so that they can be recovered in the future if it is uploaded by clicking the
 			<i>Select fasta</i> button for refining or continuing the training process.</li>
 			<li>Once the input motif list has been defined, clicking the <i>Continue with PSSM training</i> button will redirect to the previous training
 			page to download the PSSM file as previously explained.</li>
