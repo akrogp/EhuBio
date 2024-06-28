@@ -30,6 +30,7 @@
 					<h:outputText value="#{trainingView.inputSummary}" rendered="#{trainingView.inputSummary != null and trainingView.uploadError == null and trainingView.trainingError == null}"/>
 					</h:panelGroup>
 					<p:commandButton value="Download motifs" actionListener="#{trainingView.downloadInputMotifs}" ajax="false"/>
+					<p:commandButton value="Continue with PSSM training" action="training" ajax="false"/>
 				</p:panelGrid>
 				<br/>
 				<p:dataTable value="#{trainingView.inputList}" var="item" rowIndexVar="row"

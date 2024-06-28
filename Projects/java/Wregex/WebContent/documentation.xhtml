@@ -21,7 +21,7 @@
 		<li><a href="#compat">Browser compatibility</a></li>
 		<li><a href="#cases">Examples</a></li>		
 		<li><a href="#search">Basic Search</a></li>		
-		<li><a href="#custom">Advanced Search</a></li>
+		<li><a href="#custom">Search with a Custom Motif</a></li>
 		<li><a href="#training">Building a Custom PSSM</a></li>
 		<li><a href="#local">Running Wregex on your Local PC</a></li>
 		</ul>		
@@ -50,7 +50,7 @@
 		<p:dataTable id="casesTable" value="#{databasesBean.caseStudies}" var="case" rowIndexVar="idx" tableStyle="width:auto">
 			<p:column headerText="Case">#{case.name}</p:column>
 			<p:column headerText="Description">#{case.description}</p:column>
-			<p:column>
+			<p:column headerText="Action">
 				<p:commandButton action="#{homeView.navigateCase(case.value)}" value="Load Case Study ##{idx+1}" styleClass="caseButton"/>
 			</p:column>
 		</p:dataTable>
@@ -60,10 +60,10 @@
 		<p>The basic search consists on searching a target protein dataset for one or several predefined short linear motifs (SLiMs):</p>
 		<ul>
 			<li>First of all, the main motif of interest must be selected from the dropdown list. This list is divided into a first part
-			containing entries specific of Wregex for which both a regular expression and a PSSM are available, and a second part consisting
-			on <a href="http://elm.eu.org/">ELM</a> entries without a PSSM. Once a motif is selected, a second dropdown list is shown to the
+			containing entries specific of Wregex (for which both a regular expression and a PSSM are available), and a second part consisting
+			on <a href="http://elm.eu.org/">ELM</a> entries (without a PSSM). Once a motif is selected, a second dropdown list is shown to the
 			right allowing the user to select a specific motif configuration (different regular expression and/or PSSM) in case there are
-			several available.</li>
+			several available. Optionally, this process can be repeated for a second auxiliary motif.</li>
 			<li>Next, a target protein dataset must be specified. This can be done in multiple ways: by selecting a predefined dataset available
 			in the target dropdown list provided by Wregex, by providing a Gene Ontology (GO) term, by entering a list of
 			protein accessions or gene names, or by uploading a custom fasta file.</li>
@@ -100,7 +100,7 @@
 					<li>Fasta: amino acid sequences that can also be used for training a PSSM as explained later on.</li>
 				</ul>
 			</li>
-			<li>These results are also displayed on a table with the following columns among others:
+			<li>These results are also displayed on a table with the following columns (among others):
 				<ul><h:graphicImage name="tutorial/Results.png" style="float:right"/>
 					<li>Protein accession/entry from the fasta header.</li>
 					<li>Starting and ending positions of the candidate motif within the protein sequence.</li>
@@ -110,68 +110,99 @@
 					<li>If there are motif annotations with scores in the input fasta sequences, their score is also displayed as the assay score.</li>
 					<li>Percentage of motif sequence within a disordered region annotated in UniProt.</li>
 					<li>Number of features within the motif region annotated in UniProt. By passing the mouse over this number, detailed results are shown.</li>
-					<li>If enabled, COSMIC mutated sequences, the mutation impact and recurrence.</li>
+					<li>If enabled, auxiliary motif score.</li>
+					<li>If enabled, COSMIC mutated sequence, the mutation impact and the mutation recurrence.</li>
 					<li>If enabled, PSP/dbPTM modifications within the candidate motif.</li>
 				</ul>
 			</li>
 		</ul>
 		
-		<h3><a id="custom">Advanced Search</a></h3>
+		<h3><a id="custom">Search with a Custom Motif</a></h3>
 		<h:graphicImage name="tutorial/Custom.png" style="float:right"/>
-		<p>In the motif dropdown list "Custom" can be selected to let the user enter a custom motif, consisting on
-		a custom regular expression and an optional custom PSSM.</p>
-		<p>The syntax for the regular expression is the one used by the <a href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" target="_blank">
-		Pattern Java class</a>. For instance <tt>[LIMA].{2,3}[LIVMF]</tt> means any of leucine (L), isoleucine (I), methionine (M)
-		or alanine (A) followed by 2 or 3 ({2,3}) occurrences of any (.) amino acid and then followed by any of
-		leucine (L), isoleucine (I), valine (V), methionine (M) or phenylalanine (F).</p>
-		<p>This regular expression can be complemented with a Position-Specific Scoring Matrix (PSSM) so that any
-		match of the regular expression in the input fasta file will be assigned a score. In order to use a PSSM, the
-		different positions must be indicated within the regular expression by using <a href="http://docs.oracle.com/javase/tutorial/essential/regex/groups.html" target="_blank">
-		capturing groups</a>. Using the previous example, the following regular expression <tt>([LIMA])(.{2,3})([LIVMF])</tt>
-		will match the same sequences than before but it will also define 3 positions: the first one consisting on
-		the first hydrophobic amino acid, the second one on the 2-3 amino acid separation, and the third one on the
+		<p>When a pattern is not available for the motif of interest or when the user is interested in exploring
+		a modification of an existing pattern, Wregex offers the possibility to define a custom pattern. To do so, in the
+		Motif dropdown list select <i>Custom</i> and then an input text box will be shown to type (or paste and
+		edit) the custom pattern. This amnino acid pattern must be defined using the syntax of the
+		<a href="http://docs.oracle.com/javase/7/docs/api/java/util/regex/Pattern.html" target="_blank">
+		Java Pattern class</a> for regular expressions. The <a href="https://jex.im/regulex" target="_blank">Regulex visualizer</a> may help
+		novice users with defining custom regular expressions. For instance <tt>[LIMA].{2,3}[LIVMF]</tt> means any of
+		leucine (L), isoleucine (I), methionine (M) or alanine (A) followed by 2 or 3 ({2,3}) occurrences of any (.)
+		amino acid and then followed by any of leucine (L), isoleucine (I), valine (V), methionine (M) or phenylalanine (F).</p>
+		<p>While not mandatory, Wregex exploits the use of regular expression <a href="https://docs.oracle.com/javase/tutorial/essential/regex/groups.html" target="_blank">
+		capturing groups</a> for marking regions of the motif. For instance, in the pattern defined above consisting of two hydrophobic amino acids separated
+		by a short variable-length region, each key hydrophobic amino acid position can be marked as a capturing group of a single amino acid, and the spacing
+		region as a capturing group of 2 or 3 amino acids. This will be used by Wregex to align matches across the capturing groups and to define the
+		Position-Specific Scoring Matrix (PSSM) positions as explained later on. Capturing groups are marked between parenthesis, so the updated regular
+		expression using capturing groups would be <tt>([LIMA])(.{2,3})([LIVMF])</tt>. In the case that capturing groups have been defined and a PSSM
+		file has previously been built, this PSSM file can optionally be used by clicking the <i>Select PSSM</i> button and thus
+		scores will be reported for each of the matches.</p>
+		<p>Finally, a target protein dataset can be selected as previously described and after clicking the <i>Search!</i> button the results
+		obtained with this custom motif will be available.</p>
+
+		<h3><a id="training">Building a Custom PSSM</a></h3>		
+		<p>A motif pattern, defined as a regular expression alone, can be used to report matches to the target protein sequences, but it does
+		not provide any kind of score to rank those matches and select the most promising ones. Wregex allows to optionally complement this regular expression		
+		with a Position-Specific Scoring Matrix (PSSM) so that any match of the regular expression to the target protein sequences will also be assigned a score.
+		Since motif matches usually have a variable amino acid length, Wregex exploits the use of regular expression <a href="http://docs.oracle.com/javase/tutorial/essential/regex/groups.html" target="_blank">
+		capturing groups</a> to define the positions that will be used in the PSSM instead of inserting "gaps".
+		Using the previous example, the following regular expression <tt>([LIMA])(.{2,3})([LIVMF])</tt>
+		has three capturing groups (regions between parenthesis) so it will also define three PSSM positions: the first one consists of
+		the first hydrophobic amino acid, the second one consists of the 2-3 amino acid separation, and the third one consists of the
 		final hydrophobic amino acid. Then, a custom PSSM indicating a weight for every amino acid in each of the
 		three positions can be provided for computing a match score.</p>
-		
-		<h3><a id="training">Building a Custom PSSM</a></h3>		
+		<h:graphicImage name="tutorial/Training.png" style="float:right"/>		
 		<p>A training web page is provided for allowing the user to build a custom PSSM. Basically this just requires
-		two steps: 1) define a custom regular expression with capturing groups to indicate the PSSM positions, and 2)
-		provide an input fasta file with the training sequences.</p>
+		the following steps:</p>
+		<ol>
+			<li>Enter into the input text box a regular expression with capturing groups to indicate the PSSM positions (see previous section).</li>
+			<li>Provide an input fasta file with the training sequences by clicking the <i>Input motifs</i> button. An intermediate page will be shown
+			as explained soon.</li>
+			<li>A table with the <i>Training motifs</i> used to build the PSSM is shown at the end of the page. This table also offers the possibility of removing
+			any of the motif matches that will be used for the training process just by clicking the recycle bin icon in the <i>Action</i> column.
+			If this removed motif match overlapped with another match(es), the weight (column <i>Weight'</i>) of the remaining match(es) will be updated to account
+			for the total weight (column <i>Weight</i>) considering the updated number of matches for that motif (column <i>"!"</i>).</li>
+			<li>Download the PSSM by clicking any of the following buttons:
+			<ul>
+				<li>The <i>Download Coarse PSSM</i> button will not use decimals in the scores, thus rounding the results to
+				coarse weights, which is suitable when the number of training sequences is not very large.</li>
+				<li>The <i>Download Fine PSSM</i> button will use one decimal precision, thus providing more adjusted weights, which
+				can be suitable if the number of training sequences is large enough. If in doubt, both PSSMs can be downloaded and tested
+				against a validation dataset not used for training the PSSM.</li>
+			</ul>
+			</li>
+			<li>This PSSM file can then be selected together with the custom regular expression to search for new motifs as previously explained
+			in the <i>Search with a Custom Motif</i> section.</li>			
+		</ol>		
 		<h:graphicImage name="tutorial/InputMotifs2.png" style="float:right"/><h:graphicImage name="tutorial/InputMotifs1.png" style="float:right"/>
-		<p>The regular expression must be indicated in the corresponding input text box of the training page. Then
-		clicking in the input motifs button will open a new input motifs page. In this input motifs page an input fasta file with
-		the training sequences must be selected. Then a table will be displayed when the user can assign a weight to
-		each of the matches, and even re-define the position of the match if it is a part of a larger motif.
-		The "Matched" column displays the number of matches of the custom regex within the motif position range defined.
-		This number will be used to divide the motif weight between the different matches when building the PSSM.</p>
-		<p>The resulting training motif list can be downloaded as a fasta file. This file will have annotations of
-		the motif positions and weights that will be recovered if the same file is used later for further training.</p>
-		<h:graphicImage name="tutorial/Training.png" style="float:right"/>
-		<p>Once the input motif list has been completed, clicking again in the training page will show the list of
-		training matches. Each of these matches will display the weight of the matched input motif, and the score resulting
-		from dividing this weight between the number of matches for that motif ("!"). If any of the matches is known to be
-		not valid, it can be disabled just by clicking the recycle bin icon in the "Action" column. This will display
-		a not-valid icon in the corresponding row, and decrease the number of matches for the corresponding motif.
-		This will also update the divided weight since the original input motif weight will be distributed between the
-		remaining matches for that motif. Any disabled match can be re-enabled at any time just by clicking the recycle
-		icon in the "Action" column.</p>
-		<p>Once the user finishes validating the list of training matches, the resulting PSSM can be downloaded to
-		a local file. This file can then be selected together with the custom regex for being used in the custom
-		search option described above.</p>
-		<p>If you define a custom regex and custom PSSM that you think they could be of interest for others,
-		please send then to us indicating also references to any paper from you or others supporting that evidence.
-		We will be happy to include that custom motif in the dropdown list to share it through the basic search.</p>
+		<p>As previously stated, when the <i>Input motifs</i> button is clicked an intermediate page will be shown to specify the training motifs in the
+		following manner:</p>
+		<ul>
+			<li>First of all, an input fasta file with the training sequences must be uploaded by clicking the <i>Select fasta</i> button.</li>
+			<li>After selecting the fasta file, a table with the <i>Input motifs</i> will be displayed. From this table the user can optionally
+			assign a weight to each of the matches, and even re-define the position of the match if it is a part of a larger motif.
+			If this table is modified, the <i>Refresh</i> button must be pressed to show the updated results.
+			Finally, the <i>Matched</i> column displays the number of matches of the custom regex within the motif position range defined.
+			This number will be used to divide the motif weight between the different matches when building the PSSM.</li>
+			<li>The resulting training motif list can optionally be downloaded as a fasta file by clicking the <i>Download motifs</i> button.
+			This file has annotations of the motif positions and weights so that they can be recovered in the future if it is uploaded by clicking the
+			<i>Select fasta</i> button for refining or continuing the training process.</li>
+			<li>Once the input motif list has been defined, clicking the <i>Continue with PSSM training</i> button will redirect to the previous training
+			page to download the PSSM file as previously explained.</li>
+		</ul>
+		<p>If you define a custom motif (custom regex and/or custom PSSM) that can be of interest to others, please contact us
+		and we will be happy to include it in the Wregex dropdown list of motifs to facilitate its use through the basic search form.</p>
 		
 		<h3><a id="local">Running Wregex on your Local PC</a></h3>
-		<p>In case you need intensive Wregex execution, you could opt to run it locally on your PC. This can be
-		done by running it on a local Java EE application server, or creating a custom Java front-end
-		using the provided Wregex Java class. Both the *.war binary file and the Java code can be accessed from the
+		<p>Wregex execution at #{homeView.webUrl} has some constraints in order to avoid denial of service to other users, i.e.
+		input target protein dataset limit and execution time limit. These constraints can be avoided by running Wregex
+		locally on your computer and changing the default limits.</p>
+		<p>To run Wregex on your local computer, you need a Java EE 8 (or later) application server. Then you can download the <tt>*.war</tt>
+		binary distributable and copy it into your deployments directory. Both the binary file and the Java code can be accessed from the
 		Downloads page.</p>
-		<p>Wregex execution at #{homeView.webUrl} has some constraints, i.e. input fasta file size and execution time
-		in order to avoid denial of service to other users. This constrains can be avoided when running Wregex
-		locally by changing the default limits at <tt>WEB-INF/web.xml</tt>. Please take into account that Wregex uses
-		a predefined set of databases which must be present in the system. You can modify (add/delete) these databases
-		by editing the <tt>resources/data/databases.xml</tt> file.</p>				
+		<p>You can change the default execution limits by editing the <tt>WEB-INF/web.xml</tt> file. Please take into account that Wregex uses
+		a predefined set of databases which must be present in your system. You can modify (add/delete) these databases
+		by editing the <tt>resources/data/databases.xml</tt> file. If you need help with this process please contact us and we will be happy to
+		assist you.</p>
 
 		<p:blockUI block="docForm" trigger="@(.caseButton)">
 			Loading...
