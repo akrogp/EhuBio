@@ -27,14 +27,17 @@
 		</ul>		
 		
 		<h3 class=".ui-state-default"><a id="overview">Overview</a></h3>		
-		<p>Wregex (weighted regular expression) offers a new approach for amino acid motif searching. Wregex
-		combines a regular expression with an optional Position-Specific Scoring Matrix (PSSM). The regular
-		expression is used to obtain a candidate list matching the desired conditions, and the PSSM
-		is used for computing a score that can be used to select the most promising of those candidates.</p>
-		<p>Wregex supports all motifs in <a href="http://elm.eu.org/">ELM</a> as regular expressions, and
-		a PSSM has already been built for some of them. In the case your motif is not included in the list
-		or a PSSM is not available, you can easily build your own as detailed later. Then you can also notify us
-		your motif definition and we will be happy to include it in the default motif list used in the basic search.</p>
+		<p>Wregex (weighted regular expression) searches for short linear motifs (SLiMs) candidates in
+		a target amino acid protein sequences dataset by combining a regular expression with an
+		optional Position-Specific Scoring Matrix (PSSM). The regular expression is used to obtain a
+		list of SLiM candidates matching the desired conditions, while the PSSM is used for computing
+		a score that allows to rank the matches and then select the most promising candidates.</p>
+		<p>Wregex supports all motifs in <a href="http://elm.eu.org/">ELM</a> as regular expressions and
+		also a number of custom motifs which include a PSSM. In case your motif of interest
+		is not included in the dropdown list of predefined motifs or if a PSSM is not available for it,
+		you can build your own custom motif following the steps detailed later on.
+		In that case you can send us your motif definition and we will be happy to include it in the
+		dropdown list of predefined motifs used in the basic search.</p>
 		
 		<h3><a id="compat">Browser compatibility</a></h3>
 		<p:dataTable value="#{homeView.compat}" var="test" tableStyle="width:auto">
