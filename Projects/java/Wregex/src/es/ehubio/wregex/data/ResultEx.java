@@ -30,6 +30,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	private String ptmUrl;
 	private final Map<String, Integer> ptmCounts = new HashMap<>();
 	private String motif;
+	private String motifDesc;
 	private String motifUrl;
 	private Double motifProb;
 	private String mutSequence;
@@ -73,6 +74,7 @@ public class ResultEx implements Comparable<ResultEx> {
 		setTotalPtms(result.getTotalPtms());
 		setPtmUrl(result.getPtmUrl());
 		setMotif(result.getMotif());
+		setMotifDesc(result.getMotifDesc());
 		setMotifUrl(result.getMotifUrl());
 		setMutSequence(result.getMutSequence());
 		setMutScore(result.getMutScore());
@@ -480,6 +482,14 @@ public class ResultEx implements Comparable<ResultEx> {
 
 	public void setMotif(String motif) {
 		this.motif = motif;
+	}
+	
+	public String getMotifDesc() {
+		return motifDesc;
+	}
+	
+	public void setMotifDesc(String motifDesc) {
+		this.motifDesc = motifDesc;
 	}
 
 	public String getMotifUrl() {

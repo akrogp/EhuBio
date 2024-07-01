@@ -64,6 +64,7 @@ public class Services {
 				resultGroupEx.setWregex(wregex);
 				if( motif != null ) {
 					resultGroupEx.setMotif(motif.getName());
+					resultGroupEx.setMotifDesc(motif.getSummary());
 					resultGroupEx.setMotifUrl(motif.getReferences().get(0).getLink());					
 				}
 				if( def != null )

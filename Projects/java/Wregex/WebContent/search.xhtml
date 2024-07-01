@@ -335,12 +335,15 @@
 						<h:outputLink styleClass="entry_#{row} link" value="#{item.protUrl}" target="_blank" rendered="#{item.protUrl != null}">#{item.entry}</h:outputLink>
 						<p:tooltip escape="false" value="#{item.fasta.description}" rendered="#{not empty item.fasta.description}" for="@(.entry_#{row})"/>
 					</p:column>
-					<p:column styleClass="trn_name" width="200" id="search_motif">
+					<p:column width="200" id="search_motif">
 						<f:facet name="header">
 							Motif
 							<p:tooltip value="Matching motif" for="search_motif"/>
 						</f:facet>
-						<h:outputText value="#{item.motif}"/>
+						<h:outputLink value="#{item.motifUrl}" target="_blank" styleClass="motif_#{row} link">
+							#{item.motif}
+							<p:tooltip escape="false" value="#{item.motifDesc}" for="@(.motif_#{row})"/>
+						</h:outputLink>
 					</p:column>
 					<p:column id="search_start" styleClass="trn_pos">
 						<f:facet name="header">
@@ -355,11 +358,7 @@
 							<p:tooltip value="End position of the motif in the entry sequence" for="search_stop"/>
 						</f:facet>
 						<h:outputText value="#{item.end}"/>
-					</p:column>
-					<p:column rendered="#{motifView.multiMotif}" width="200">
-						<f:facet name="header">Motif</f:facet>
-						<h:outputLink value="#{item.motifUrl}" target="_blank" styleClass="link">#{item.motif}</h:outputLink>
-					</p:column>
+					</p:column>					
 					<p:column id="search_seq">
 						<f:facet name="header">
 							Sequence

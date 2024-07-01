@@ -15,6 +15,7 @@ public class ResultGroupEx implements Iterable<ResultEx> {
 	private final Map<Result,ResultEx> map;
 	private final Iterable<ResultEx> list;
 	private String motif;
+	private String motifDesc;
 	private String motifUrl;
 	private Double motifProb;
 	
@@ -60,6 +61,16 @@ public class ResultGroupEx implements Iterable<ResultEx> {
 		this.motif = motif;
 		for( ResultEx result : list )
 			result.setMotif(motif);
+	}
+	
+	public String getMotifDesc() {
+		return motifDesc;
+	}
+	
+	public void setMotifDesc(String motifDesc) {
+		this.motifDesc = motifDesc;
+		for( ResultEx result : list )
+			result.setMotifDesc(motifDesc);
 	}
 
 	public String getMotifUrl() {
