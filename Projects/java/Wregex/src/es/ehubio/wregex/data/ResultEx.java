@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang.StringUtils;
@@ -29,6 +30,7 @@ public class ResultEx implements Comparable<ResultEx> {
 	private int totalPtms = -1;
 	private String ptmUrl;
 	private final Map<String, Integer> ptmCounts = new HashMap<>();
+	private final Map<String, Set<Integer>> ptmPositions = new HashMap<>();
 	private String motif;
 	private String motifDesc;
 	private String motifUrl;
@@ -621,6 +623,21 @@ public class ResultEx implements Comparable<ResultEx> {
 	
 	public Map<String, Integer> getPtmCounts() {
 		return ptmCounts;
+	}
+	
+	public Map<String, Set<Integer>> getPtmPositions() {
+		return ptmPositions;
+	}
+	
+	public Map<String, String> getPtmSummary() {
+		Map<String, String> result = new HashMap<>(getPtmPositions().size());
+		for( Entry<String, Set<Integer>> entry : getPtmPositions().entrySet() ) {
+			String summary = entry.getValue().stream()
+				.map(pos -> getSequence().charAt(pos-getStart())+"@"+pos)
+				.collect(Collectors.joining(", "));
+			result.put(entry.getKey(), summary);
+		}
+		return result;
 	}
 
 	public Double getMotifProb() {

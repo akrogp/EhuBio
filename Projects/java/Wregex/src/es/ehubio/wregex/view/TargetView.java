@@ -214,27 +214,27 @@ public class TargetView implements Serializable {
 	}
 	
 	public boolean isRemote() {
-		return targetInformation != null || targetInformation.getType().equals("remote");
+		return targetInformation != null || targetInformation.getType().equalsIgnoreCase("remote");
 	}
 	
 	public boolean isManualTarget() {
-		return targetInformation == null ? false : targetInformation.getType().equals("manual");
+		return targetInformation == null ? false : targetInformation.getType().equalsIgnoreCase("manual");
 	}
 	
 	public boolean isManualFasta() {
-		return isManualTarget() && targetInformation.getName().contains("fasta");
+		return isManualTarget() && targetInformation.getName().toLowerCase().contains("fasta");
 	}
 	
 	public boolean isManualUniprot() {
-		return isManualTarget() && targetInformation.getName().contains("UniProt");
+		return isManualTarget() && targetInformation.getName().toLowerCase().contains("uniprot");
 	}
 	
 	public boolean isManualGenes() {
-		return isManualTarget() && targetInformation.getName().contains("gene symbol");
+		return isManualTarget() && targetInformation.getName().toLowerCase().contains("gene symbol");
 	}
 	
 	public boolean isManualSubproteome() {
-		return isManualTarget() && targetInformation.getName().contains("Subproteome");
+		return isManualTarget() && targetInformation.getName().toLowerCase().contains("subproteome");
 	}
 	
 	public boolean isDownloading() {

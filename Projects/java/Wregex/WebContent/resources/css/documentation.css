@@ -1,5 +1,9 @@
 @charset "UTF-8";
 
+body {
+	line-height: 1.4;
+}
+
 ul, ol {
 	list-style-position: inside;
 	padding-left: 0;
@@ -13,4 +17,16 @@ ul > li {
 ol > li {
 	text-indent: -1.4em;
 	padding-left: 1.4em;
+}
+
+:not(#toc) > li {
+	margin-bottom: 10px;
+}
+
+li > ul {
+	margin-top: 10px;
+}
+
+li > ul, ol {
+    padding-bottom: 0px;
 }

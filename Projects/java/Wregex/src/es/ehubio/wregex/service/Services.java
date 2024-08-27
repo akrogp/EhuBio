@@ -6,6 +6,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -295,6 +296,13 @@ public class Services {
 						else
 							typeCount++;
 						result.getPtmCounts().put(type, typeCount);
+						
+						Set<Integer> positions = result.getPtmPositions().get(type);
+						if( positions == null ) {
+							positions = new LinkedHashSet<>();
+							result.getPtmPositions().put(type, positions);
+						}
+						positions.add(ptm.position);
 					}
 				}
 			result.setTotalPtms(count);

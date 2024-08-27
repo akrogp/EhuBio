@@ -218,7 +218,7 @@
 											<p:ajax event="change" update="@form" />
 										</p:selectBooleanCheckbox>										
 										<p:tooltip for="decoy" value="Shuffles amino acids (starting at the second one) for each sequence"/>
-										&nbsp;<p:selectBooleanCheckbox id="preserveIdrs" itemLabel="Preserve IDRs" value="#{targetView.preserveIdrs}" valueChangeListener="#{targetView.onChangeDecoy}" rendered="#{targetView.decoy}">
+										&nbsp;<p:selectBooleanCheckbox id="preserveIdrs" itemLabel="Preserve IDRs" value="#{targetView.preserveIdrs}" valueChangeListener="#{targetView.onChangeDecoy}" disabled="#{not targetView.decoy}">
 											<p:ajax event="change" update="@form" />
 										</p:selectBooleanCheckbox>
 										<p:tooltip for="preserveIdrs" value="Retain intrinsically disordered regions (IDRs) amino acid composition when shuffling"/>
@@ -460,7 +460,10 @@
 						<f:facet name="header">
 							#{ptm}
 						</f:facet>
-						<h:outputText value="#{item.ptmCounts.get(ptm)}" />
+						<h:outputLink rendered="#{not empty item.ptmPositions.get(ptm)}" value="#{item.ptmUrl}" target="_blank" styleClass="ptm_#{ptm}_#{row} link">
+							#{item.ptmPositions.get(ptm).size()}
+							<p:tooltip escape="false" value="#{item.ptmSummary.get(ptm)}" for="@(.ptm_#{ptm}_#{row})"/>
+						</h:outputLink>
 					</p:columns>
 					<p:column rendered="#{searchOptionsView.ptm}" width="80" style="text-align:center;" id="search_ptms">
 						<f:facet name="header">
