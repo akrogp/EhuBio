@@ -73,6 +73,8 @@ public class PubMed {
 			paper.setJournal(text);
 		else if( tag.equalsIgnoreCase("DEP") )
 			paper.setDate(new SimpleDateFormat("yyyyMMdd").parse(text));
+		else if( tag.equalsIgnoreCase("AID") && text.contains("[doi]") )
+			paper.setDoi(text.replace(" [doi]", ""));
 		else if( tag.equalsIgnoreCase("FAU") ) {
 			Author author = new Author();
 			author.setFullName(text);

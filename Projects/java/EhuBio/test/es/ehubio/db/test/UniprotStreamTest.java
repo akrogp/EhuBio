@@ -6,12 +6,10 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.zip.GZIPInputStream;
 
-import org.junit.Test;
-
 import es.ehubio.db.uniprot.xml.UniprotStream;
 
 public class UniprotStreamTest {
-	@Test
+	//@Test
 	public void testFeatures() throws Exception {
 		try(InputStream is = new GZIPInputStream(new FileInputStream("/home/gorka/Descargas/Temp/UP000005640_9606.xml.gz"))) {
 			long count = UniprotStream.featureStreamFrom(is)

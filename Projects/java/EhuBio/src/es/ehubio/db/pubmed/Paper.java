@@ -6,6 +6,7 @@ import java.util.List;
 
 public class Paper {
 	private String pmid;
+	private String doi;
 	private Date date;
 	private String title;
 	private String abs;
@@ -17,6 +18,12 @@ public class Paper {
 	}
 	public void setPmid(String pmid) {
 		this.pmid = pmid;
+	}
+	public String getDoi() {
+		return doi;
+	}
+	public void setDoi(String doi) {
+		this.doi = doi;
 	}
 	public Date getDate() {
 		return date;
