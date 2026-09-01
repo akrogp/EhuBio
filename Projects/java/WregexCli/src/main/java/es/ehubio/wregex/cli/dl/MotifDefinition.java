@@ -1,0 +1,68 @@
+package es.ehubio.wregex.cli.dl;
+
+import java.io.Serializable;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+
+/**
+ * Mirrors es.ehubio.wregex.data.MotifDefinition from the webapp so that this
+ * model can move to EhuBio later without changes if it ever needs to be
+ * shared between the webapp and this CLI.
+ */
+@XmlRootElement(name = "definition")
+@XmlAccessorType(XmlAccessType.FIELD)
+public final class MotifDefinition implements Serializable {
+	private static final long serialVersionUID = 1L;
+	private String name;
+	private String description;
+	private String regex;
+	private Double probability;
+	private String pssm;
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+	public String getRegex() {
+		return regex;
+	}
+
+	public void setRegex(String regex) {
+		this.regex = regex;
+	}
+
+	public Double getProbability() {
+		return probability;
+	}
+
+	public void setProbability(Double probability) {
+		this.probability = probability;
+	}
+
+	public String getPssm() {
+		return pssm;
+	}
+
+	public void setPssm(String pssm) {
+		this.pssm = pssm;
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+}

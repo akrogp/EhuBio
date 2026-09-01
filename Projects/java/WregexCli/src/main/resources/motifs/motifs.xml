@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<!-- Trimmed copy of the webapp's motifs.xml (NES and NLS entries only, full fidelity otherwise).
+     See Wregex/WebContent/resources/data/motifs.xml for the full catalog. -->
+<motifs>
+    <motif>
+        <name>NES/CRM1</name>
+        <summary>Leucine-rich nuclear export signal (NES) binding to the CRM1 exportin protein</summary>
+        <replaces>TRG_NES_CRM1_1</replaces>
+        <organism>Homo sapiens</organism>
+        <definition>
+            <name>Recommended</name>
+            <description>Regular expression updated and PSSM computed with ValidNES, DUBs and Ligases without assay scores</description>
+            <regex>([DEQS].{0,1})([LIMA])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NES-total.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Relaxed</name>
+            <description>Use when more candidates needed. Regular expression relaxed and PSSM computed with ValidNES, DUBs and Ligases without assay scores</description>
+            <regex>([LIVMFAWY])(.{2,3})([LIVMFAWY])([^P]{2,3})([LIVMFAWY])([^P])([LIVMFAWY])</regex>
+            <pssm>NES-total-phi.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex A</name>
+            <description>Regular expression derived from ELM and PSSM computed with NESsential training set</description>
+            <regex>([DEQ].{0,1})([LIM])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NESsential.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex B</name>
+            <description>Regular expression derived from ELM and PSSM computed with ValidNES and DUBs</description>
+            <regex>([DEQ].{0,1})([LIM])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>ValidNES-DUBs.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex C</name>
+            <description>Regular expression updated and PSSM computed with DUBs and Ligases without assay scores</description>
+            <regex>([DEQS].{0,1})([LIMA])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NES-no-score.pssm</pssm>
+        </definition>
+        <definition>
+            <name>Wregex D</name>
+            <description>Regular expression updated and PSSM computed with DUBs and Ligases using assay scores</description>
+            <regex>([DEQS].{0,1})([LIMA])(.{2,3})([LIVMF])([^P]{2,3})([LMVF])([^P])([LMIV])(.{0,3}[DEQ])</regex>
+            <pssm>NES-score.pssm</pssm>
+        </definition>
+        <reference>
+            <authors>Prieto, G., Fullaondo, A. and Rodriguez, J. A.</authors>
+            <year>2016</year>
+            <title>Proteome-wide search for functional motifs altered in tumors: Prediction of nuclear export signals inactivated by cancer-related mutations</title>
+            <journal>Scientific Reports</journal>
+            <doi>10.1038/srep25869</doi>
+            <link>https://doi.org/10.1038/srep25869</link>
+        </reference>
+        <reference>
+            <authors>Prieto, G., Fullaondo, A. and Rodriguez, J. A.</authors>
+            <year>2014</year>
+            <title>Prediction of nuclear export signals using weighted regular expressions (Wregex)</title>
+            <journal>Bioinformatics</journal>
+            <doi>10.1093/bioinformatics/btu016</doi>
+            <link>https://doi.org/10.1093/bioinformatics/btu016</link>
+        </reference>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NES_CRM1_1.html</link>
+        </reference>
+    </motif>
+    <motif>
+        <name>NLS_MonoCore</name>
+        <wregexVersion>2</wregexVersion>
+        <replaces>TRG_NLS_MonoCore_2</replaces>
+        <summary>Monopartite variant of the classical basically charged NLS. Strong core version</summary>
+        <organism>Homo sapiens</organism>
+        <definition>
+            <name>ELME000270</name>
+            <description>Original ELM regular expression. The PSSM has been computed from the 17 instances available at ELM</description>
+            <regex>([^DE])(?:(?:(K)([RK]))|(RK))([KRP])([KR])([^DE])</regex>
+            <pssm>TRG_NLS_MonoCore_2.pssm</pssm>
+        </definition>
+        <reference>
+            <name>Original ELM entry</name>
+            <link>http://elm.eu.org/elms/elmPages/TRG_NLS_MonoCore_2.html</link>
+        </reference>
+    </motif>
+</motifs>
