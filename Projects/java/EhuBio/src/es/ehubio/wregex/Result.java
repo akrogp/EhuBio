@@ -143,6 +143,10 @@ public final class Result implements Comparable<Result> {
 	
 	public static void saveAln(Writer wr, List<Result> results) {
 		PrintWriter pw = new PrintWriter(wr);
+		if( results.isEmpty() ) {
+			pw.flush();
+			return;
+		}
 		int groups = results.get(0).getGroups().size();
 		int[] sizes = new int[groups];
 		int first = 0, i;

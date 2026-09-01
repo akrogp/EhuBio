@@ -53,9 +53,7 @@
 	    <groupId>gnu.jpdf</groupId>
 	    <artifactId>jpdf</artifactId>
 	    <version>1.0</version>
-	    <scope>system</scope>
-	    <systemPath>${project.basedir}/libs/gnujpdf.jar</systemPath>
-	</dependency>	
+	</dependency>
   </dependencies>
   <build>
     <sourceDirectory>src</sourceDirectory>
