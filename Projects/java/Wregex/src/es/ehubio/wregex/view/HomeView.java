@@ -245,6 +245,10 @@ public class HomeView implements Serializable {
 		return "https://ehubio.ehu.eus/static/wregex.war";
 	}
 	
+	public String getCliUrl() {
+		return "https://ehubio.ehu.eus/static/wregex.jar";
+	}
+	
 	public List<CompatibilityBean> getCompat() {
 		return compat;
 	}
