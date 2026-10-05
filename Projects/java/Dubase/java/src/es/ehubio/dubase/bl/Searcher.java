@@ -63,13 +63,13 @@ public class Searcher {
 		gene = "%"+gene+"%";
 		List<Evidence> evs = new ArrayList<>();
 		evs.addAll(search(	// Manual
-			"SELECT a.evidenceBean FROM Ambiguity a" +
+			"SELECT DISTINCT a.evidenceBean FROM Ambiguity a" +
 			" WHERE a.proteinBean.geneBean.aliases LIKE :gene" +
 		    " AND a.evidenceBean.experimentBean.methodBean.type.id = :manual",
 			gene, 0, null));
 		for( Entry<Integer, Thresholds> entry : mapTh.entrySet() )
 			evs.addAll(search(
-				"SELECT a.evidenceBean FROM Ambiguity a WHERE a.evidenceBean.experimentBean.id = :expId AND a.proteinBean.geneBean.aliases LIKE :gene" +
+				"SELECT DISTINCT a.evidenceBean FROM Ambiguity a WHERE a.evidenceBean.experimentBean.id = :expId AND a.proteinBean.geneBean.aliases LIKE :gene" +
 			    " AND ( ( a.evidenceBean.experimentBean.methodBean.type.id = :proteomics" +
 					" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t1 AND (s.value >= :s11 OR s.value <= :s12)) > 0" +
 					" AND (SELECT COUNT(s) FROM a.evidenceBean.evScores s WHERE s.scoreType.id = :t2 AND s.value <= :s2) > 0" +
