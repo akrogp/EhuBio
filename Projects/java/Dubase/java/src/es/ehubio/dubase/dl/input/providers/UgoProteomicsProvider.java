@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.function.Function;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import es.ehubio.db.fasta.Fasta;
@@ -28,6 +29,7 @@ import es.ehubio.dubase.dl.input.ScoreType;
 import es.ehubio.io.CsvReader;
 
 public class UgoProteomicsProvider implements Provider {
+	private static final Logger LOG = Logger.getLogger(UgoProteomicsProvider.class.getName());
 
 	@Override
 	public List<Evidence> loadEvidences(String dir, Experiment exp) throws Exception {
@@ -58,6 +60,10 @@ public class UgoProteomicsProvider implements Provider {
 			csv.open(csvFile.getAbsolutePath());
 			
 			while( csv.readLine() != null ) {
+				if( csv.getIntField(IDX_TOTAL_PEPTS) == null || csv.getIntField(IDX_UNIQ_PEPTS) == null ) {
+					LOG.warning(String.format("Skipping '%s' (%s): no peptide counts", csv.getField(IDX_PROTS), csv.getField(IDX_GENES)));
+					continue;
+				}
 				Evidence ev = new Evidence();
 				ev.setExperimentBean(exp);
 				int uniq = setPeptides(ev, csv);
@@ -203,7 +209,7 @@ public class UgoProteomicsProvider implements Provider {
 		}
 	}
 
-	//private static final int IDX_GENES = 1;
+	private static final int IDX_GENES = 1;
 	//private static final int IDX_DESC = 2;
 	private static final int IDX_TOTAL_PEPTS = 3;
 	private static final int IDX_UNIQ_PEPTS = 4;
