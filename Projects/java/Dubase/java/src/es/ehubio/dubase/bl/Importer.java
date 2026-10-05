@@ -106,13 +106,20 @@ public class Importer {
 	private Paper savePublications(Experiment exp) throws Exception {
 		Paper first = null;
 		for( Publication pub : exp.getPublications() ) {
-			Paper paper = PubMed.fillPaper(pub.getPmid());
-			PubMed.waitLimit();
+			Paper paper;
+			if( pub.isPending() ) {
+				// manuscript not published yet: use the data provided in the XML instead of querying PubMed
+				paper = new Paper();
+				paper.setTitle(pub.getTitle());
+			} else {
+				paper = PubMed.fillPaper(pub.getPmid());
+				PubMed.waitLimit();
+				pub.setTitle(paper.getTitle());
+				pub.setJournal(paper.getJournal());
+			}
 			if( first == null )
 				first = paper;
 			pub.setExperiment(exp);
-			pub.setTitle(paper.getTitle());
-			pub.setJournal(paper.getJournal());
 			em.persist(pub);
 		}
 		return first;
@@ -143,7 +150,7 @@ public class Importer {
 		String doi = exp.getPublications().get(0).getDoi();
 		/*if( doi.equals("10.1038/s41467-018-07185-y") )
 			return new LiuUbiquitomicsProvider();*/
-		if( doi.equals("10.1016/j.molcel.2020.02.012") )
+		if( doi != null && doi.equals("10.1016/j.molcel.2020.02.012") )
 			return new PhuProteomicsProvider();
 		if( exp.getMethodBean().isProteomics() )
 			return new UgoProteomicsProvider();

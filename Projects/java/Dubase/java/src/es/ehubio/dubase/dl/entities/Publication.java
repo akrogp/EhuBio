@@ -26,7 +26,9 @@ public class Publication implements Serializable {
 	private String journal;
 	private String pmid;
 	private String title;
+	private String authors;
 	private int year;
+	private boolean pending;
 	private Experiment experiment;
 
 	public Publication() {
@@ -86,6 +88,24 @@ public class Publication implements Serializable {
 
 	public void setYear(int year) {
 		this.year = year;
+	}
+
+
+	public String getAuthors() {
+		return this.authors;
+	}
+
+	public void setAuthors(String authors) {
+		this.authors = authors;
+	}
+
+
+	public boolean isPending() {
+		return this.pending;
+	}
+
+	public void setPending(boolean pending) {
+		this.pending = pending;
 	}
 
 	@Transient
