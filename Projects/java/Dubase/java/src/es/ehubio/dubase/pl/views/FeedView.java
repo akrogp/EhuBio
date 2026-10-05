@@ -19,9 +19,13 @@ public class FeedView implements Serializable {
 	
 	public void saveUgoProteomics() {
 		String[] experiments = {
-			"USP1", "USP7", "USP9X", "USP11", "USP42",	// Ramirez et al.
+			//"USP1", "USP7", "USP9X", "USP11", "USP42",	// Ramirez et al.
 			//"USP14",		// Liu et al. (moved to manual)
-			"USP30"			// Phu et al.
+			//"USP30"			// Phu et al.
+			//"UCHL1"
+			//"UCHL3"
+			"UCHL5"
+			//"BAP1"
 		};
 		for( String experiment : experiments )
 			try {
