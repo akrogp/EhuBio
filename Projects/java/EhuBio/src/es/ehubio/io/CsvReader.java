@@ -83,7 +83,7 @@ public class CsvReader implements Closeable {
 	
 	public Integer getIntField( int i ) {
 		String field = getField(i);
-		if( field == null )
+		if( field == null || field.trim().isEmpty() )
 			return null;
 		field = formatNumber(field);
 		return Integer.parseInt(field);
@@ -91,7 +91,7 @@ public class CsvReader implements Closeable {
 	
 	public Double getDoubleField( int i ) {
 		String field = getField(i);
-		if( field == null )
+		if( field == null || field.trim().isEmpty() )
 			return null;
 		field = formatNumber(field);
 		return Double.parseDouble(field);
@@ -106,7 +106,7 @@ public class CsvReader implements Closeable {
 	
 	public Integer getIntField( String name ) {
 		String field = getField(name);
-		if( field == null )
+		if( field == null || field.trim().isEmpty() )
 			return null;
 		field = formatNumber(field);
 		return Integer.parseInt(field);
@@ -114,7 +114,7 @@ public class CsvReader implements Closeable {
 	
 	public Double getDoubleField( String name ) {
 		String field = getField(name);
-		if( field == null )
+		if( field == null || field.trim().isEmpty() )
 			return null;
 		field = formatNumber(field);
 		return Double.parseDouble(field);

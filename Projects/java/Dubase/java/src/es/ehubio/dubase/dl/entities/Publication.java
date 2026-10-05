@@ -21,14 +21,13 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQuery(name="Publication.findAll", query="SELECT p FROM Publication p")
 public class Publication implements Serializable {
 	private static final long serialVersionUID = 1L;
+	public static final String NO_ID = "0";
 	private int id;
-	private String doi;
+	private String doi = NO_ID;
 	private String journal;
-	private String pmid;
+	private String pmid = NO_ID;
 	private String title;
-	private String authors;
 	private int year;
-	private boolean pending;
 	private Experiment experiment;
 
 	public Publication() {
@@ -91,26 +90,18 @@ public class Publication implements Serializable {
 	}
 
 
-	public String getAuthors() {
-		return this.authors;
-	}
-
-	public void setAuthors(String authors) {
-		this.authors = authors;
-	}
-
-
+	// A paper without doi/pmid (left to the default "0", both columns are NOT NULL) is not published yet
+	@Transient
+	@XmlTransient
 	public boolean isPending() {
-		return this.pending;
-	}
-
-	public void setPending(boolean pending) {
-		this.pending = pending;
+		return NO_ID.equals(doi) && NO_ID.equals(pmid);
 	}
 
 	@Transient
 	@XmlTransient
 	public String getUrl() {
+		if( isPending() )
+			return null;
 		if( doi != null )
 			return "https://doi.org/" + doi;
 		if( pmid != null )
