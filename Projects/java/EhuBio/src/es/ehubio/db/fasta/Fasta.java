@@ -62,15 +62,27 @@ public final class Fasta {
 	}
 	
 	public Fasta( String header, String sequence, SequenceType type ) throws InvalidSequenceException {
-		this(header, guessParser(header), sequence, type);
+		this(header, sequence, type, true);
+	}
+	
+	public Fasta( String header, String sequence, SequenceType type, boolean validate ) throws InvalidSequenceException {
+		this(header, guessParser(header), sequence, type, validate);
 	}
 	
 	public Fasta( String header, HeaderParser parser, String sequence, SequenceType type ) throws InvalidSequenceException {
+		this(header, parser, sequence, type, true);
+	}
+	
+	/**
+	 * @param validate if false the sequence is not checked, useful when only the header information is needed
+	 */
+	public Fasta( String header, HeaderParser parser, String sequence, SequenceType type, boolean validate ) throws InvalidSequenceException {
 		assert header != null && sequence != null;
 		this.header = header;
 		this.sequence = trim(sequence);		
 		this.type = type;
-		checkSequence(this.sequence, type);
+		if( validate )
+			checkSequence(this.sequence, type);
 		this.entry = header.split("[ \t]")[0];
 		if( parser == null ) {
 			accession = null;
@@ -189,13 +201,21 @@ public final class Fasta {
 	}
 	
 	public static List<Fasta> readEntries( String path, SequenceType type ) throws IOException, InvalidSequenceException {
+		return readEntries(path, type, true);
+	}
+	
+	public static List<Fasta> readEntries( String path, SequenceType type, boolean validate ) throws IOException, InvalidSequenceException {
 		Reader rd = Streams.getTextReader(path);
-		List<Fasta> list = readEntries(rd, type);
+		List<Fasta> list = readEntries(rd, type, validate);
 		rd.close();
 		return list;
 	}
 	
 	public static List<Fasta> readEntries( Reader rd, SequenceType type ) throws IOException, InvalidSequenceException {
+		return readEntries(rd, type, true);
+	}
+	
+	public static List<Fasta> readEntries( Reader rd, SequenceType type, boolean validate ) throws IOException, InvalidSequenceException {
 		List<Fasta> list = new ArrayList<Fasta>();
 		UnixCfgReader br = new UnixCfgReader(rd);
 		String line, header = null;
@@ -203,14 +223,14 @@ public final class Fasta {
 		while( (line=br.readLine()) != null ) {
 			if( line.startsWith(">") ) {
 				if( header != null )
-					list.add(new Fasta(header, sequence.toString(), type));
+					list.add(new Fasta(header, sequence.toString(), type, validate));
 				header = line.substring(1).trim();
 				sequence = new StringBuilder();					
 			} else
 				sequence.append(line);
 		}
 		if( header != null )
-			list.add(new Fasta(header, sequence.toString(), type));
+			list.add(new Fasta(header, sequence.toString(), type, validate));
 		return list;
 	}
 	

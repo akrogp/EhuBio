@@ -51,7 +51,7 @@ public class UgoProteomicsProvider implements Provider {
 
 	private List<Evidence> loadUgoEvidences(Experiment exp, File csvFile, File fastaFile) throws Exception {		
 		List<Evidence> evs = new ArrayList<>();		
-		Map<String, Fasta> mapFasta = Fasta.readEntries(fastaFile.getAbsolutePath(), SequenceType.PROTEIN).stream()
+		Map<String, Fasta> mapFasta = Fasta.readEntries(fastaFile.getAbsolutePath(), SequenceType.PROTEIN, false).stream()
 			.collect(Collectors.toMap(Fasta::getAccession, Function.identity()));
 		
 		try( CsvReader csv = new CsvReader("\t", true, false) ) {
